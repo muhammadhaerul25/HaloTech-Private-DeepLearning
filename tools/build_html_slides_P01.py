@@ -2050,13 +2050,46 @@ def get_file_hash(lokasi_foto):
     </section>
 
     <!-- 54: PENUTUP -->
-    <section class="slide bg-blue" data-title="Penutup &amp; Langkah Berikutnya" data-notes="Alokasi waktu: 1 menit. Tutup sesi dengan apresiasi dan beri gambaran singkat topik berikutnya tentang bagaimana AI mulai belajar dari pola gambar.">
-      <div class="divider-center">
-        <span class="pill dark">SELESAI · TERIMA KASIH</span>
-        <h1>Terima Kasih &amp; Sampai Jumpa!</h1>
-        <p>Hari ini kita sudah memahami cara komputer membaca gambar, alasan melakukan <em>Image Processing</em>, dan cara mengaudit kualitas koleksi foto kita.<br /><br /><strong>Langkah Berikutnya:</strong> Setelah dataset foto kita bersih, terstandar, dan lolos audit kualitas, pada pertemuan mendatang kita akan mulai mempelajari bagaimana model AI mengekstrak pola visual dari angka-angka <em>pixel</em> tersebut.</p>
+    <section class="slide" data-title="Closing &amp; Key Quote" data-notes="Alokasi waktu: 1 menit. Tutup sesi dengan kutipan penutup, apresiasi, dan ajak peserta bersiap ke pertemuan berikutnya tentang bagaimana AI mengekstrak pola visual dari angka-angka pixel." style="background: repeating-linear-gradient(-35deg, rgba(66,133,244,0.025) 0px, rgba(66,133,244,0.025) 1px, transparent 1px, transparent 28px), #FFFFFF; justify-content: space-between;">
+      <div style="display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-family:var(--font-title); font-size:12px; font-weight:700; letter-spacing:1.8px; color:#80868B;">CLOSING</span>
+        <div style="display:flex; gap:6px;">
+          <span style="width:9px; height:9px; border-radius:50%; background:#4285F4;"></span>
+          <span style="width:9px; height:9px; border-radius:50%; background:#EA4335;"></span>
+          <span style="width:9px; height:9px; border-radius:50%; background:#FBBC04;"></span>
+          <span style="width:9px; height:9px; border-radius:50%; background:#34A853;"></span>
+        </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>54 / 54</span></div>
+
+      <div style="margin:auto 0; display:flex; flex-direction:column; align-items:center; text-align:center; gap:20px; padding:0 44px;">
+        <div style="font-family:var(--font-title); font-size:46px; font-weight:700; line-height:0.6; color:#D2E3FC; user-select:none;">&rdquo;</div>
+        <h1 style="font-family:var(--font-title); font-size:clamp(24px,2.55vw,33px); font-weight:700; line-height:1.38; color:#202124; max-width:860px; margin:0;">
+          <span style="color:#EA4335;">Data yang bersih</span> melahirkan model yang cerdas, sedangkan <span style="color:#1A73E8;">Image Processing &amp; EDA</span> memastikan AI belajar dari pola yang benar.
+        </h1>
+        <p style="font-size:14.5px; color:#5F6368; max-width:700px; margin:0; line-height:1.5;">
+          <strong>Langkah Berikutnya:</strong> Setelah dataset bersih dan lolos audit kualitas, di pertemuan selanjutnya kita akan mempelajari bagaimana model AI mengekstrak pola visual dari matriks <em>pixel</em>.
+        </p>
+
+        <div style="margin-top:6px; display:inline-flex; align-items:center; gap:18px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:16px; padding:12px 22px; box-shadow:0 6px 18px rgba(32,33,36,0.06);">
+          <div style="display:flex; align-items:center; gap:11px; text-align:left;">
+            <span style="width:38px; height:38px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:var(--font-title); font-size:13.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">MH</span>
+            <div>
+              <div style="font-family:var(--font-title); font-size:14.5px; font-weight:700; color:#202124;">Muhammad Haerul</div>
+              <div style="font-size:12px; font-weight:500; color:#1A73E8;">AI Engineer &amp; Trainer</div>
+            </div>
+          </div>
+          <div style="width:1px; height:32px; background:#DADCE0;"></div>
+          <div style="text-align:left;">
+            <div style="font-size:10px; font-weight:700; letter-spacing:1.1px; color:#80868B; margin-bottom:3px;">FOLLOW ME ON:</div>
+            <div style="display:flex; align-items:center; gap:14px; font-size:12.5px; font-weight:600;">
+              <span style="color:#EA4335;">Instagram: muhammadhaerul.25</span>
+              <span style="color:#1A73E8;">LinkedIn: Muhammad Haerul</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>54 / 54</span></div>
     </section>
 
   </div>
