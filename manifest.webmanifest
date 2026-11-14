@@ -1,6 +1,6 @@
 {
-  "name": "Memahami Gambar di Komputer & Image Processing",
-  "short_name": "Image Processing",
+  "name": "P1 - Understanding Images & Image Processing",
+  "short_name": "P1 Image Processing",
   "description": "Slide interaktif Deep Learning Untuk Pemula — Memahami Gambar di Komputer, Image Processing & EDA oleh Muhammad Haerul.",
   "start_url": "./slides/P01_image_processing_eda.html",
   "scope": "./",
