@@ -476,7 +476,7 @@ def build_html() -> str:
     <!-- 05: PEMANTIK -->
     <section class="slide" data-title="Pemanasan: Dari Angka Biasa ke Foto" data-notes="Alokasi waktu: 2 menit. Sebelumnya kita mengenal data dalam bentuk tabel angka biasa. Sekarang, bayangkan kalau input yang masuk ke komputer adalah foto dari kamera HP.">
       <div class="kicker">PEMANASAN</div>
-      <h2>Dari Tabel Angka Biasa ke <span class="hl-blue">Sebuah Foto</span></h2>
+      <h2>Dari Data Tabel Biasa ke <span class="hl-blue">Sebuah Foto</span></h2>
       <div class="grid-2">
         <div class="card surface">
           <div class="card-top-bar bar-blue"></div>
@@ -587,14 +587,14 @@ def build_html() -> str:
               <li><strong>Mode 3:</strong> Komputer hanya melihat angka <code>0–255</code>!</li>
             </ul>
           </div>
-          <div class="callout red">Komputer <strong>sama sekali tidak melihat apel atau bintang</strong> — di memorinya, foto hanyalah tabel angka!</div>
+          <div class="callout red">Komputer <strong>sama sekali tidak melihat apel atau bintang</strong> — di memorinya, foto hanyalah <em>pixel matrix</em> (array angka)!</div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>08 / 54</span></div>
     </section>
 
     <!-- 09: ILUSTRASI 3 - CARA KOMPUTER MENAMPILKAN GAMBAR -->
-    <section class="slide" data-title="Ilustrasi: Cara Komputer Menampilkan Gambar" data-notes="Alokasi waktu: 1.5 menit. Lalu bagaimana kita bisa melihat foto di layar HP? Komputer membaca tabel angka tadi, lalu menyalakan 3 lampu kecil Merah-Hijau-Biru di tiap titik layar.">
+    <section class="slide" data-title="Ilustrasi: Cara Komputer Menampilkan Gambar" data-notes="Alokasi waktu: 1.5 menit. Lalu bagaimana kita bisa melihat foto di layar HP? Komputer membaca pixel matrix tadi, lalu menyalakan 3 lampu kecil Merah-Hijau-Biru di tiap titik layar.">
       <div class="kicker">BAB 1 · ILUSTRASI 3</div>
       <h2>Cara <span class="hl-green">Komputer Menampilkan</span> Gambar ke Layar</h2>
       <p class="subtitle">Proses kebalikannya: angka diubah kembali menjadi cahaya lampu warna di layar HP atau laptop kita.</p>
@@ -734,7 +734,7 @@ def build_html() -> str:
         </div>
         <div class="card">
           <div class="card-top-bar bar-green"></div>
-          <div class="card-title">Cara Membaca Angka Kecerahan</div>
+          <div class="card-title">Cara Membaca Nilai Brightness</div>
           <div class="card-body">
             <ul>
               <li><strong>Angka 0 = Hitam Pekat</strong> (intensitas terendah / gelap total).</li>
@@ -842,7 +842,7 @@ def build_html() -> str:
           <div class="card-title">Beda Jumlah Channel Warna</div>
           <div class="card-body">
             <ul>
-              <li><strong>Grayscale (Abu-abu):</strong> Hanya punya <strong>1 channel</strong> (mengukur terang-gelap saja). Cocok saat kita cuma ingin mengukur <em>brightness</em> atau mencari garis tepi (<em>edge</em>).</li>
+              <li><strong>Grayscale (Abu-abu):</strong> Hanya punya <strong>1 channel</strong> (mengukur terang-gelap saja). Cocok saat kita cuma ingin mengukur <em>brightness</em> atau mendeteksi <em>edges</em> (tepi objek).</li>
               <li><strong>RGB (Warna):</strong> Punya <strong>3 channels</strong> (Red, Green, Blue). Wajib dipakai saat mengenali karakter, buah, rambu, atau benda yang warnanya jadi ciri khas!</li>
             </ul>
           </div>
@@ -980,15 +980,15 @@ def build_html() -> str:
         </div>
       </div>
       <div class="callout green" style="margin-top:12px;">
-        <strong>Intinya:</strong> <em>Image Processing</em> menyamakan ukuran, skala angka, dan standar kualitas foto sebelum masuk ke tahap pelatihan AI.
+        <strong>Intinya:</strong> <em>Image Processing</em> melakukan <em>resize</em>, menyetarakan skala angka, dan standar kualitas foto sebelum masuk ke tahap pelatihan AI.
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>19 / 54</span></div>
     </section>
 
     <!-- 20: ALASAN 1 - UKURAN & ASPECT RATIO -->
-    <section class="slide" data-title="Alasan 1: Menyamakan Ukuran Foto (Resolusi)" data-notes="Alokasi waktu: 1 menit. Jelaskan kenapa foto dari kamera HP harus diseragamkan ukurannya (misal 224x224) sebelum masuk ke AI.">
-      <div class="kicker">BAB 2 · MENYAMAKAN UKURAN</div>
-      <h2>Menyamakan Ukuran Foto (<span class="hl-blue">Resolution</span>)</h2>
+    <section class="slide" data-title="Alasan 1: Resize &amp; Uniform Resolution" data-notes="Alokasi waktu: 1 menit. Jelaskan kenapa foto dari kamera HP harus diseragamkan ukurannya (misal 224x224) sebelum masuk ke AI.">
+      <div class="kicker">BAB 2 · UNIFORM RESOLUTION</div>
+      <h2>Resize &amp; Uniform <span class="hl-blue">Resolution</span></h2>
       <div class="grid-2">
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
@@ -1052,7 +1052,7 @@ def build_html() -> str:
           <div class="card-title">Mengapa Angka 0–255 Perlu Diperkecil?</div>
           <div class="card-body">
             <ul>
-              <li>Komputer menyimpan kecerahan dalam angka <strong>0 sampai 255</strong>.</li>
+              <li>Komputer menyimpan <em>brightness</em> dalam angka <strong>0 sampai 255</strong>.</li>
               <li>Saat AI berhitung, angka ratusan (misal 250) terlalu besar dan membuat proses belajarnya tidak stabil.</li>
               <li>Maka seluruh angka kita bagi dengan 255, sehingga skalanya berubah menjadi <strong>0.0 sampai 1.0</strong>.</li>
             </ul>
@@ -1095,7 +1095,7 @@ def build_html() -> str:
     </section>
 
     <!-- 23: INTERACTIVE NORMALIZATION CALCULATOR -->
-    <section class="slide" data-title="Eksperimen: Kalkulator Penyetara Skala" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta menggeser slider kecerahan untuk melihat bagaimana angka asli 0-255 berubah menjadi skala 0-1 dan -1 sampai +1.">
+    <section class="slide" data-title="Eksperimen: Kalkulator Penyetara Skala" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta menggeser slider brightness untuk melihat bagaimana angka asli 0-255 berubah menjadi skala 0-1 dan -1 sampai +1.">
       <div class="kicker">BAB 2 · EKSPERIMEN INTERAKTIF</div>
       <h2>Coba Sendiri: <span class="hl-blue">Normalization Calculator</span></h2>
       <div class="grid-2">
@@ -1134,9 +1134,9 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
           <div class="card-title">Integer: 0, 1, 2, ..., 255</div>
           <div class="card-body">
             <ul>
-              <li>Kamera HP memakai angka bulat tanpa koma agar ukuran file foto <strong>kecil dan hemat memori</strong>.</li>
+              <li>Kamera HP memakai <em>integer</em> tanpa koma agar ukuran file foto <strong>kecil dan hemat memori</strong>.</li>
               <li>Istilah komputernya adalah <code>uint8</code>.</li>
-              <li><strong>Kekurangannya:</strong> Tidak bisa menyimpan angka pecahan seperti <code>0.5</code>!</li>
+              <li><strong>Kekurangannya:</strong> Tidak bisa menyimpan angka <em>decimal</em> seperti <code>0.5</code>!</li>
             </ul>
             <svg viewBox="0 0 320 62" style="width:100%; height:60px; margin-top:8px;">
               <rect x="0" y="0" width="320" height="62" rx="10" fill="#FFFFFF" stroke="#E0E3E7"/>
@@ -1154,7 +1154,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
             <ul>
               <li>Untuk menyetarakan skala ke <code>0–1</code>, angka harus bisa memakai koma (desimal).</li>
               <li>Istilah komputernya adalah <code>float32</code>.</li>
-              <li><strong>Aturannya:</strong> Ubah dulu ke mode desimal sebelum dibagi 255 agar pecahannya tidak hilang terpotong menjadi nol!</li>
+              <li><strong>Aturannya:</strong> Ubah dulu ke mode <em>floating-point</em> sebelum dibagi 255 agar nilai decimalnya tidak hilang terpotong menjadi nol!</li>
             </ul>
             <svg viewBox="0 0 320 62" style="width:100%; height:60px; margin-top:8px;">
               <rect x="0" y="0" width="320" height="62" rx="10" fill="#F8F9FA" stroke="#E0E3E7"/>
@@ -1169,7 +1169,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 25: QA REVEAL #3 -->
-    <section class="slide" data-title="Tanya-Jawab #3: Dampak Foto Gepeng" data-notes="Alokasi waktu: 1.5 menit. Pertanyaan refleksi penutup Bab 2 sebelum masuk ke EDA.">
+    <section class="slide" data-title="Tanya-Jawab #3: Dampak Aspect Ratio Terdistorsi" data-notes="Alokasi waktu: 1.5 menit. Pertanyaan refleksi penutup Bab 2 sebelum masuk ke EDA.">
       <div class="kicker">TANYA &amp; JAWAB INTERAKTIF · #3</div>
       <h2>Coba Tebak: <span class="hl-red">Apa Jadinya</span> Jika Aspect Ratio Terdistorsi?</h2>
       <div class="split-60-40">
@@ -1365,16 +1365,16 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 31: DETEKSI TEPI (MENJIPLAK GARIS) -->
-    <section class="slide" data-title="Mengukur Kerumitan Latar: Deteksi Garis Tepi (Edge Detection)" data-notes="Alokasi waktu: 1 menit. Jelaskan Canny Edge Detection secara sederhana: komputer mendeteksi garis batas (edge) objek di dalam foto untuk mengukur seberapa ramai latar belakangnya.">
+    <section class="slide" data-title="Mengukur Background Complexity: Edge Detection" data-notes="Alokasi waktu: 1 menit. Jelaskan Canny Edge Detection secara sederhana: komputer mendeteksi garis batas (edge) objek di dalam foto untuk mengukur seberapa ramai latar belakangnya.">
       <div class="kicker">BAB 3 · EDGE DETECTION &amp; EDGE DENSITY</div>
-      <h2>Mengukur Kerumitan Latar: <span class="hl-red">Edge Detection</span></h2>
+      <h2>Mengukur Background Complexity: <span class="hl-red">Edge Detection</span></h2>
       <div class="grid-2">
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title">Bagaimana Edge Detection Bekerja?</div>
           <div class="card-body">
             <ul>
-              <li>Algoritma mencari titik di mana <strong>perubahan warna atau kecerahan terjadi secara tajam</strong> (misalnya batas antara objek dan latar).</li>
+              <li>Algoritma mencari titik di mana <strong>perubahan warna atau <em>brightness</em> terjadi secara tajam</strong> (misalnya batas antara objek dan latar).</li>
               <li>Titik-titik perubahan tajam itu digambar sebagai <em>edge</em> putih di atas latar hitam (contoh populer: metode <em>Canny</em>).</li>
             </ul>
           </div>
@@ -1408,7 +1408,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 32: HASIL NYATA CANNY POLOS VS RAMAI -->
-    <section class="slide" data-title="Bukti Nyata: Latar Polos vs Latar Ramai" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan hasil nyata pada 119 foto valid: latar ramai punya kepadatan garis tepi sekitar 7 kali lipat lebih tinggi!">
+    <section class="slide" data-title="Bukti Nyata: Latar Polos vs Latar Ramai" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan hasil nyata pada 119 foto valid: latar ramai punya <em>edge density</em> sekitar 7 kali lipat lebih tinggi!">
       <div class="kicker">BAB 3 · HASIL DATA SAMPEL</div>
       <h2>Bukti Nyata: <span class="hl-blue">Latar Polos</span> vs <span class="hl-red">Latar Ramai</span></h2>
       <div class="img-box" style="flex:1; padding:10px;">
@@ -1590,9 +1590,9 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 38: JEBAKAN 2 - FOTO KEMBAR & BURST -->
-    <section class="slide" data-title="Jebakan #2: Foto Kembar &amp; Jepretan Beruntun (Burst)" data-notes="Alokasi waktu: 1.5 menit. Jelaskan bahaya foto duplikat dan foto jepretan beruntun (burst) yang hampir sama persis.">
+    <section class="slide" data-title="Jebakan #2: Duplicate Images &amp; Burst Photos" data-notes="Alokasi waktu: 1.5 menit. Jelaskan bahaya foto duplikat dan foto jepretan beruntun (burst) yang hampir sama persis.">
       <div class="kicker">BAB 4 · JEBAKAN #2</div>
-      <h2><span class="hl-blue">Duplicate</span> (Foto Kembar) &amp; <span class="hl-yellow">Burst Photos</span></h2>
+      <h2><span class="hl-blue">Duplicate Images</span> &amp; <span class="hl-yellow">Burst Photos</span></h2>
       <div class="grid-2">
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
@@ -1621,7 +1621,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
           <div class="card-body">
             <ul>
               <li>Saat memotret beruntun (<em>burst mode</em>), sudut dan cahayanya 99% sama.</li>
-              <li>Jika foto ke-1 masuk <strong>Train Set</strong> (data latih) dan foto ke-2 masuk <strong>Test Set</strong> (data uji), skor evaluasi AI akan <strong>inflated (tinggi semu)</strong>!</li>
+              <li>Jika foto ke-1 masuk <strong>Train Set</strong> dan foto ke-2 masuk <strong>Test Set</strong>, skor evaluasi AI akan mengalami <strong>inflated accuracy</strong>!</li>
             </ul>
             <svg viewBox="0 0 320 66" style="width:100%; height:64px; margin-top:8px;">
               <rect x="4" y="6" width="212" height="54" rx="8" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.5"/>
@@ -1642,7 +1642,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 39: JEBAKAN 3 - FILE RUSAK -->
-    <section class="slide" data-title="Jebakan #3: File Foto Rusak (Corrupted)" data-notes="Alokasi waktu: 1 menit. Satu file rusak bisa membuat proses latihan AI yang sudah berjalan berjam-jam tiba-tiba crash.">
+    <section class="slide" data-title="Jebakan #3: Corrupted Files" data-notes="Alokasi waktu: 1 menit. Satu file rusak bisa membuat proses latihan AI yang sudah berjalan berjam-jam tiba-tiba crash.">
       <div class="kicker">BAB 4 · JEBAKAN #3</div>
       <h2>Satu <span class="hl-red">Corrupted File</span> Bisa Menghentikan Semua Proses</h2>
       <div class="grid-2">
@@ -1704,13 +1704,13 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 41: QA REVEAL #5 -->
-    <section class="slide" data-title="Tanya-Jawab #5: Bahaya Kebocoran Data" data-notes="Alokasi waktu: 1.5 menit. Pertanyaan terakhir sebelum masuk ke praktik: apa bahayanya jika foto kembar bocor ke bahan ujian AI?">
+    <section class="slide" data-title="Tanya-Jawab #5: Bahaya Data Leakage" data-notes="Alokasi waktu: 1.5 menit. Pertanyaan terakhir sebelum masuk ke praktik: apa bahayanya jika foto kembar bocor ke bahan ujian AI?">
       <div class="kicker">TANYA &amp; JAWAB INTERAKTIF · #5</div>
       <h2>Coba Pikirkan: Bahaya <span class="hl-red">Data Leakage</span></h2>
       <div class="split-60-40">
         <div class="qa-box" style="margin:0; justify-content:center;">
           <div class="qa-question">
-            Kita punya 2 foto <em>duplicate</em> (kembar persis). Satu ditaruh di <strong>Train Set</strong> (data latih), dan satu lagi ditaruh di <strong>Test Set</strong> (data uji). Mengapa hal ini sangat berbahaya?
+            Kita punya 2 <em>duplicate images</em>. Satu ditaruh di <strong>Train Set</strong>, dan satu lagi ditaruh di <strong>Test Set</strong>. Mengapa hal ini sangat berbahaya?
           </div>
           <div class="qa-choices">
             <div class="qa-choice"><strong>A.</strong> Komputer akan hang karena gambarnya sama.</div>
@@ -1762,7 +1762,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="kicker">BAB 4 · ATURAN EMAS</div>
       <h2>4 Aturan Emas <span class="hl-green">Menjaga Kejujuran Data</span></h2>
       <div class="grid-2">
-        <div class="card"><div class="card-top-bar bar-blue"></div><div class="card-title">1. Hapus Duplicate Sebelum Split</div><div class="card-body">Pastikan tidak ada foto kembar identik sebelum membagi dataset menjadi <em>Train Set</em> (data latih) dan <em>Test Set</em> (data uji).</div></div>
+        <div class="card"><div class="card-top-bar bar-blue"></div><div class="card-title">1. Hapus Duplicate Sebelum Split</div><div class="card-body">Pastikan tidak ada <em>duplicate images</em> sebelum membagi dataset menjadi <strong>Train Set</strong> dan <strong>Test Set</strong>.</div></div>
         <div class="card"><div class="card-top-bar bar-red"></div><div class="card-title">2. Jaga Group Sesi Foto</div><div class="card-body"><em>Burst photos</em> dari momen yang sama harus masuk ke satu kelompok yang sama (jangan terpecah antara <em>train</em> dan <em>test</em>).</div></div>
         <div class="card"><div class="card-top-bar bar-yellow"></div><div class="card-title">3. Test Set Disimpan Rapat</div><div class="card-body">Jangan mengintip atau menyetel aturan berdasarkan <em>Test Set</em>; biarkan ia menjadi ujian terakhir yang murni.</div></div>
         <div class="card"><div class="card-top-bar bar-green"></div><div class="card-title">4. Catat Semua Pembersihan</div><div class="card-body">Simpan daftar <em>corrupted files</em> dan <em>duplicates</em> yang dibuang agar audit data tetap transparan.</div></div>
@@ -1789,7 +1789,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
         <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Saring Corrupted File &amp; Hitung Keseimbangan</div><div class="step-desc">Periksa semua file di folder, sisihkan file yang gagal dibuka, dan cek apakah jumlah foto tiap jenis seimbang.</div></div></div>
         <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Deteksi Duplicate Images</div><div class="step-desc">Hitung <em>file hash</em> (SHA-256) untuk tiap <em>valid image</em> dan tandai jika ada <em>duplicates</em>.</div></div></div>
         <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Ukur Brightness, Contrast &amp; Edge Density</div><div class="step-desc">Hitung rata-rata <em>brightness</em>, <em>contrast</em>, dan <em>edge density</em> pada setiap <em>valid image</em>.</div></div></div>
-        <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Bandingkan Kondisi Polos vs Ramai</div><div class="step-desc">Buat grafik perbandingan agar terlihat jelas perbedaan tingkat terang dan kerumitan latar belakangnya.</div></div></div>
+        <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Bandingkan Kondisi Polos vs Ramai</div><div class="step-desc">Buat grafik perbandingan agar terlihat jelas perbedaan <em>brightness</em> dan <em>background complexity</em>-nya.</div></div></div>
         <div class="step-item"><div class="step-num red">06</div><div><div class="step-title">Simpan Ringkasan Audit Data</div><div class="step-desc">Simpan tabel hasil pemeriksaan dan gambar grafik ke folder hasil agar bisa dijadikan pegangan langkah selanjutnya.</div></div></div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>44 / 54</span></div>
@@ -1829,7 +1829,7 @@ with Image.open(lokasi_foto) as img:
     </section>
 
     <!-- 46: INTIP DI BALIK LAYAR - SIDIK JARI FOTO -->
-    <section class="slide" data-title="Di Balik Layar: Mencari Foto Kembar" data-notes="Alokasi waktu: 1 menit. Jelaskan konsep sidik jari file (hash) dengan bahasa sehari-hari.">
+    <section class="slide" data-title="Di Balik Layar: Mendeteksi Duplicate Images" data-notes="Alokasi waktu: 1 menit. Jelaskan konsep sidik jari file (hash) dengan bahasa sehari-hari.">
       <div class="kicker">PRAKTIK · DI BALIK LAYAR</div>
       <h2>Cara Komputer <span class="hl-yellow">Mendeteksi Duplicate Images</span></h2>
       <div class="grid-2">
@@ -1939,7 +1939,7 @@ def get_file_hash(lokasi_foto):
           <div class="card-title">Apa yang sebenarnya dilihat komputer saat membaca sebuah foto?</div>
           <div class="card-body">A. Bentuk benda secara langsung seperti mata manusia.<br />B. Matriks pixel berisi nilai intensitas 0–255.<br />C. Rekaman suara kamera.</div>
           <button class="btn-ui" onclick="toggleAns('q1', this)">Lihat Jawaban</button>
-          <div id="q1" class="quiz-ans"><strong>Jawaban: B.</strong> Komputer tidak punya mata; ia hanya membaca deretan angka kecerahan (0–255) di setiap pixel.</div>
+          <div id="q1" class="quiz-ans"><strong>Jawaban: B.</strong> Komputer tidak punya mata; ia hanya membaca deretan nilai <em>brightness</em> (0–255) di setiap pixel.</div>
         </div>
         <div class="quiz-item">
           <span class="pill green">SOAL 2 · WARNA RGB</span>
@@ -1984,7 +1984,7 @@ def get_file_hash(lokasi_foto):
           <div class="quiz-item">
             <span class="pill red">SOAL 5 · KEJUJURAN DATA</span>
             <div class="card-title">Apa bahayanya jika foto <em>duplicate</em> dibiarkan masuk ke <em>Train Set</em> dan <em>Test Set</em> sekaligus?</div>
-            <div class="card-body">A. AI akan menolak membuka gambar tersebut.<br />B. Nilai ujian AI mengalami <em>inflated accuracy</em> (tinggi semu) akibat <em>data leakage</em>.<br />C. Gambar akan otomatis terhapus oleh komputer.</div>
+            <div class="card-body">A. AI akan menolak membuka gambar tersebut.<br />B. Nilai ujian AI mengalami <em>inflated accuracy</em> akibat <em>data leakage</em>.<br />C. Gambar akan otomatis terhapus oleh komputer.</div>
             <button class="btn-ui" onclick="toggleAns('q5', this)">Lihat Jawaban</button>
             <div id="q5" class="quiz-ans"><strong>Jawaban: B.</strong> Duplicate images menyebabkan <em>data leakage</em>: akurasi evaluasi tampak tinggi, padahal gagal saat bertemu foto baru di dunia nyata!</div>
           </div>
@@ -2030,7 +2030,7 @@ def get_file_hash(lokasi_foto):
         <div class="card" style="background:#292A2D; border-color:#3C4043;">
           <div class="card-top-bar bar-blue"></div>
           <div class="big-num" style="color:var(--blue);">01</div>
-          <div class="card-title" style="color:white;">Foto = Tabel Angka</div>
+          <div class="card-title" style="color:white;">Image = Pixel Matrix</div>
           <div class="card-body" style="color:#BDC1C6;">Mata kita melihat bentuk, sedangkan komputer hanya membaca matriks pixel berisi nilai 0–255 dan 3 RGB channels.</div>
         </div>
         <div class="card" style="background:#292A2D; border-color:#3C4043;">
@@ -2043,7 +2043,7 @@ def get_file_hash(lokasi_foto):
           <div class="card-top-bar bar-red"></div>
           <div class="big-num" style="color:var(--red);">03</div>
           <div class="card-title" style="color:white;">Exploratory Data Analysis (EDA)</div>
-          <div class="card-body" style="color:#BDC1C6;">Memeriksa cahaya, kerumitan latar polos vs ramai, foto EXIF orientation=6, file rusak, dan foto kembar menjaga agar AI belajar secara jujur.</div>
+          <div class="card-body" style="color:#BDC1C6;">Memeriksa cahaya, <em>background complexity</em> (polos vs ramai), EXIF orientation=6, <em>corrupted files</em>, dan <em>duplicate images</em> menjaga agar AI belajar secara jujur.</div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>53 / 54</span></div>
