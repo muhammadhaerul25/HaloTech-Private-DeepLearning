@@ -1,0 +1,52 @@
+{
+  "total_metadata_rows": 120,
+  "valid_images": 119,
+  "corrupted_count": 1,
+  "corrupted_files": [
+    {
+      "file": "segitiga/ramai/segitiga_ramai_12.jpg",
+      "error": "Truncated File Read"
+    }
+  ],
+  "duplicate_groups": [
+    [
+      "lingkaran/polos/lingkaran_polos_01.jpg",
+      "lingkaran/polos/lingkaran_polos_02.jpg"
+    ]
+  ],
+  "duplicate_file_count": 2,
+  "exif_orientation_6_count": 2,
+  "exif_orientation_6_files": [
+    "persegi/polos/persegi_polos_01.jpg",
+    "bintang/ramai/bintang_ramai_01.jpg"
+  ],
+  "classes": [
+    "bintang",
+    "heksagon",
+    "lingkaran",
+    "persegi",
+    "segitiga"
+  ],
+  "conditions": [
+    "polos",
+    "ramai"
+  ],
+  "by_condition": {
+    "polos": {
+      "count": 60,
+      "mean_brightness": 228.11,
+      "mean_contrast": 45.21,
+      "mean_edge_density": 0.0121,
+      "min_edge_density": 0.0083,
+      "max_edge_density": 0.0154
+    },
+    "ramai": {
+      "count": 59,
+      "mean_brightness": 127.21,
+      "mean_contrast": 54.69,
+      "mean_edge_density": 0.0853,
+      "min_edge_density": 0.0462,
+      "max_edge_density": 0.1194
+    }
+  }
+}
