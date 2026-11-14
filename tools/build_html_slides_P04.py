@@ -377,7 +377,7 @@ def build_html() -> str:
           </h1>
           <div style="height:4px; width:100%; max-width:580px; border-radius:999px; margin:10px 0 12px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%);"></div>
           <div style="font-size:clamp(15px,1.55vw,20px); font-weight:500; color:#5F6368; line-height:1.35;">
-            Dari Cara Komputer Membaca Foto Hingga Audit Kesehatan Dataset
+            Mengubah Foto Mentah Menjadi Data Siap Latih untuk AI
           </div>
           <div style="margin-top:10px; display:inline-flex; align-items:center; gap:8px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:5px 14px 5px 7px; box-shadow:0 3px 10px rgba(66,133,244,0.08);">
             <span style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:var(--font-title); font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
