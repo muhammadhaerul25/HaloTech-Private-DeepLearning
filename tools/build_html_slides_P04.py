@@ -30,6 +30,9 @@ def build_html() -> str:
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#202124" />
+  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="assets/P04/icon-192.png" />
   <title>Memahami Gambar di Komputer &amp; Image Processing (54 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -2359,6 +2362,9 @@ def get_file_hash(lokasi_foto):
     }}
 
     (function initSlide() {{
+      if ('serviceWorker' in navigator && location.protocol !== 'file:') {{
+        navigator.serviceWorker.register('../sw.js', {{ scope: '../' }}).catch(() => {{}});
+      }}
       const m = window.location.hash.match(/^#slide-(\\d+)$/);
       if (m) {{
         showSlide(parseInt(m[1], 10) - 1);

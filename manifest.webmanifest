@@ -1,0 +1,25 @@
+{
+  "name": "Memahami Gambar di Komputer & Image Processing",
+  "short_name": "Image Processing",
+  "description": "Slide interaktif Deep Learning Untuk Pemula — Memahami Gambar di Komputer, Image Processing & EDA oleh Muhammad Haerul.",
+  "start_url": "./slides/P04_image_processing_eda.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#F8F9FA",
+  "theme_color": "#202124",
+  "icons": [
+    {
+      "src": "./slides/assets/P04/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./slides/assets/P04/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
