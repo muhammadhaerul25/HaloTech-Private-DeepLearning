@@ -15,6 +15,14 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 ├── PLAN.md                             # Kurikulum utama
 ├── docs/
 │   └── PROGRESS.md                     # Status implementasi & hasil validasi
+├── Materials/                          # Paket materi siap pakai per pertemuan
+│   └── P01 - Understanding Images & Image Processing/
+│       ├── P01_image_processing_eda.html
+│       ├── P01_image_processing_eda.pdf
+│       ├── P01_image_processing_eda.pptx
+│       ├── P01_image_processing_eda.ipynb
+│       ├── solutions/P01_image_processing_eda.ipynb
+│       └── assets/P01/
 ├── slides/
 │   ├── P01_image_processing_eda.html   # Dek interaktif 54 slide (HTML5)
 │   ├── P01_image_processing_eda.pdf    # Ekspor PDF vektor 54 halaman (16:9)
@@ -33,6 +41,7 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
     ├── build_slides_P01.py
     ├── make_sample_data.py
     ├── slide_theme.py
+    ├── sync_materials.py
     └── validate_and_render_P01.py
 ```
 
@@ -42,4 +51,5 @@ pip install -r requirements.txt
 python tools/make_sample_data.py
 python tools/build_html_slides_P01.py
 python tools/build_notebooks_P01.py
+python tools/sync_materials.py
 ```
