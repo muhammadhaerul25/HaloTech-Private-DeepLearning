@@ -33,14 +33,15 @@ SESSIONS = [
 def sync_session(session: dict[str, str]) -> Path:
     code = session["code"]
     slug = session["slug"]
-    target_dir = MATERIALS_DIR / session["folder"]
+    title = session["folder"]
+    target_dir = MATERIALS_DIR / title
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Slides (.html, .pdf, .pptx)
+    # 1. Slides (.html, .pdf, .pptx) dengan nama sesuai judul pertemuan
     for ext in ("html", "pdf", "pptx"):
         src = ROOT / "slides" / f"{slug}.{ext}"
         if src.exists():
-            shutil.copy2(src, target_dir / src.name)
+            shutil.copy2(src, target_dir / f"{title}.{ext}")
 
     # 2. Slide assets agar file .html bisa dibuka langsung dari Materials/
     assets_src = ROOT / "slides" / "assets" / code
@@ -53,13 +54,13 @@ def sync_session(session: dict[str, str]) -> Path:
     # 3. Notebook peserta & solusi (.ipynb)
     nb_src = ROOT / "notebooks" / f"{slug}.ipynb"
     if nb_src.exists():
-        shutil.copy2(nb_src, target_dir / nb_src.name)
+        shutil.copy2(nb_src, target_dir / f"{title}.ipynb")
 
     sol_src = ROOT / "notebooks" / "solutions" / f"{slug}.ipynb"
     if sol_src.exists():
         sol_dir = target_dir / "solutions"
         sol_dir.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(sol_src, sol_dir / sol_src.name)
+        shutil.copy2(sol_src, sol_dir / f"{title}.ipynb")
 
     # 4. Data sampel agar notebook di Materials/ bisa langsung dijalankan standalone
     data_src = ROOT / "data" / "sample"
