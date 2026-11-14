@@ -24,7 +24,7 @@ MATERIALS_DIR = ROOT / "Materials"
 SESSIONS = [
     {
         "code": "P01",
-        "folder": "P01 - Understanding Images & Image Processing",
+        "folder": "P01 - Understanding Images, Image Processing & EDA",
         "slug": "P01_image_processing_eda",
     },
 ]

@@ -16,7 +16,7 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 ├── docs/
 │   └── PROGRESS.md                     # Status implementasi & hasil validasi
 ├── Materials/                          # Paket materi siap pakai per pertemuan
-│   └── P01 - Understanding Images & Image Processing/
+│   └── P01 - Understanding Images, Image Processing & EDA/
 │       ├── P01_image_processing_eda.html
 │       ├── P01_image_processing_eda.pdf
 │       ├── P01_image_processing_eda.pptx
