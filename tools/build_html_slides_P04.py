@@ -369,24 +369,24 @@ def build_html() -> str:
         </div>
       </div>
 
-      <div style="position:relative; z-index:1; display:grid; grid-template-columns: 1.5fr 0.8fr; align-items:center; gap:24px; margin:auto 0;">
+      <div style="position:relative; z-index:1; display:grid; grid-template-columns: 1.65fr 0.72fr; align-items:center; gap:18px; margin:auto 0;">
         <div>
-          <h1 style="font-family:var(--font-title); font-size:clamp(34px,4.1vw,52px); font-weight:700; line-height:1.12; color:#202124; margin:0; letter-spacing:-0.8px;">
+          <h1 style="font-family:var(--font-title); font-size:clamp(28px,3.5vw,46px); font-weight:700; line-height:1.12; color:#202124; margin:0; letter-spacing:-0.6px;">
             Memahami Gambar di<br />
             <span style="display:inline-block; padding-top:2px; background:linear-gradient(90deg, #4285F4 0%, #8E24AA 55%, #EA4335 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Komputer &amp; Image Processing</span>
           </h1>
-          <div style="height:5px; width:100%; max-width:620px; border-radius:999px; margin:14px 0 16px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%);"></div>
-          <div style="font-size:clamp(18px,1.9vw,23px); font-weight:500; color:#5F6368; line-height:1.38;">
+          <div style="height:4px; width:100%; max-width:580px; border-radius:999px; margin:10px 0 12px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%);"></div>
+          <div style="font-size:clamp(15px,1.55vw,20px); font-weight:500; color:#5F6368; line-height:1.35;">
             Dari Cara Komputer Membaca Foto Hingga Audit Kesehatan Dataset
           </div>
-          <div style="margin-top:14px; display:inline-flex; align-items:center; gap:10px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:6px 16px 6px 8px; box-shadow:0 3px 10px rgba(66,133,244,0.08);">
-            <span style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:var(--font-title); font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
-            <span style="font-size:14px; color:#5F6368;">Presented by <strong style="color:#202124; font-weight:700;">Muhammad Haerul</strong></span>
+          <div style="margin-top:10px; display:inline-flex; align-items:center; gap:8px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:5px 14px 5px 7px; box-shadow:0 3px 10px rgba(66,133,244,0.08);">
+            <span style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:var(--font-title); font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
+            <span style="font-size:13.5px; color:#5F6368;">Presented by <strong style="color:#202124; font-weight:700;">Muhammad Haerul</strong></span>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:center;">
-          <svg viewBox="0 0 260 260" style="width:240px; height:240px;">
+          <svg viewBox="0 0 260 260" style="width:200px; height:200px;">
             <defs>
               <filter id="coverGlow" x="-30%" y="-30%" width="160%" height="160%">
                 <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#4285F4" flood-opacity="0.20"/>
@@ -416,17 +416,17 @@ def build_html() -> str:
         </div>
       </div>
 
-      <div style="position:relative; z-index:1; display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding-bottom:6px;">
-        <span class="pill red" style="font-size:11.5px; padding:5px 12px;">Mata vs Komputer</span>
-        <span class="pill green" style="font-size:11.5px; padding:5px 12px;">Pixel &amp; RGB</span>
-        <span class="pill blue" style="font-size:11.5px; padding:5px 12px;">Aspect Ratio</span>
-        <span class="pill blue" style="font-size:11.5px; padding:5px 12px;">Normalization</span>
-        <span class="pill yellow" style="font-size:11.5px; padding:5px 12px;">EDA Foto</span>
-        <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:11.5px; padding:5px 12px;">Edge Density</span>
-        <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:11.5px; padding:5px 12px;">EXIF &amp; Hash</span>
-        <span class="pill solid-blue" style="font-size:11.5px; padding:5px 14px;">Python</span>
-        <span class="pill" style="background:#EA4335; color:#FFFFFF; font-size:11.5px; padding:5px 14px;">OpenCV</span>
-        <span class="pill" style="background:#34A853; color:#FFFFFF; font-size:11.5px; padding:5px 14px;">NumPy</span>
+      <div style="position:relative; z-index:1; display:flex; gap:6px; flex-wrap:wrap; align-items:center; padding-bottom:2px;">
+        <span class="pill red" style="font-size:10.5px; padding:4px 10px;">Mata vs Komputer</span>
+        <span class="pill green" style="font-size:10.5px; padding:4px 10px;">Pixel &amp; RGB</span>
+        <span class="pill blue" style="font-size:10.5px; padding:4px 10px;">Aspect Ratio</span>
+        <span class="pill blue" style="font-size:10.5px; padding:4px 10px;">Normalization</span>
+        <span class="pill yellow" style="font-size:10.5px; padding:4px 10px;">EDA Foto</span>
+        <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:10.5px; padding:4px 10px;">Edge Density</span>
+        <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:10.5px; padding:4px 10px;">EXIF &amp; Hash</span>
+        <span class="pill solid-blue" style="font-size:10.5px; padding:4px 12px;">Python</span>
+        <span class="pill" style="background:#EA4335; color:#FFFFFF; font-size:10.5px; padding:4px 12px;">OpenCV</span>
+        <span class="pill" style="background:#34A853; color:#FFFFFF; font-size:10.5px; padding:4px 12px;">NumPy</span>
       </div>
     </section>
 
