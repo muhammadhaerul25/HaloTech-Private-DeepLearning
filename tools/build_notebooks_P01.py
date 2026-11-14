@@ -1,12 +1,12 @@
-"""Generator notebook peserta dan kunci jawaban untuk Hands-on P4: Image Processing & EDA."""
+"""Generator notebook peserta dan kunci jawaban untuk Hands-on P1: Image Processing & EDA."""
 
 from pathlib import Path
 import nbformat as nbf
 
 
 ROOT = Path(__file__).resolve().parent.parent
-NB_STUDENT = ROOT / "notebooks" / "P04_image_processing_eda.ipynb"
-NB_SOLUTION = ROOT / "notebooks" / "solutions" / "P04_image_processing_eda.ipynb"
+NB_STUDENT = ROOT / "notebooks" / "P01_image_processing_eda.ipynb"
+NB_SOLUTION = ROOT / "notebooks" / "solutions" / "P01_image_processing_eda.ipynb"
 
 
 def md(text: str):
@@ -479,7 +479,7 @@ axes[2].set_ylabel("Proporsi Piksel Tepi (0-1)")
 
 plt.suptitle("")
 plt.tight_layout()
-out_plot = RESULTS_DIR / "p04_eda_polos_vs_ramai.png"
+out_plot = RESULTS_DIR / "p01_eda_polos_vs_ramai.png"
 plt.savefig(out_plot, dpi=150)
 plt.show()
 print("Grafik perbandingan disimpan ke:", out_plot)
@@ -494,7 +494,7 @@ print("Grafik perbandingan disimpan ke:", out_plot)
 ---
 ## Langkah 6 (7 menit): Simpan Ringkasan Audit Data & *Mini-Challenge*
 
-Kita simpan tabel audit per foto (`p04_audit_metadata.csv`) dan tabel ringkasan statistik (`p04_eda_summary.csv`) ke folder `results/` sebagai pegangan sebelum tahap *dataset splitting*.
+Kita simpan tabel audit per foto (`p01_audit_metadata.csv`) dan tabel ringkasan statistik (`p01_eda_summary.csv`) ke folder `results/` sebagai pegangan sebelum tahap *dataset splitting*.
 """
         )
     )
@@ -502,8 +502,8 @@ Kita simpan tabel audit per foto (`p04_audit_metadata.csv`) dan tabel ringkasan 
     cells.append(
         code(
             """
-audit_csv = RESULTS_DIR / "p04_audit_metadata.csv"
-summary_csv = RESULTS_DIR / "p04_eda_summary.csv"
+audit_csv = RESULTS_DIR / "p01_audit_metadata.csv"
+summary_csv = RESULTS_DIR / "p01_eda_summary.csv"
 
 df_eda.to_csv(audit_csv, index=False)
 summary.to_csv(summary_csv)

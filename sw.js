@@ -1,20 +1,20 @@
-const CACHE_NAME = 'p04-slides-pwa-v1';
+const CACHE_NAME = 'p01-slides-pwa-v1';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './slides/P04_image_processing_eda.html',
-  './slides/assets/P04/icon-192.png',
-  './slides/assets/P04/icon-512.png',
-  './slides/assets/P04/01_opening_character.png',
-  './slides/assets/P04/04_grayscale_vs_rgb.png',
-  './slides/assets/P04/05_rgb_channels.png',
-  './slides/assets/P04/06_resize_aspect_ratio.png',
-  './slides/assets/P04/07_histogram_brightness_contrast.png',
-  './slides/assets/P04/07b_brightness_contrast_box.png',
-  './slides/assets/P04/08_canny_edge_density.png',
-  './slides/assets/P04/09_exif_trap.png',
-  './slides/assets/P04/human_vision_realistic.jpg',
+  './slides/P01_image_processing_eda.html',
+  './slides/assets/P01/icon-192.png',
+  './slides/assets/P01/icon-512.png',
+  './slides/assets/P01/01_opening_character.png',
+  './slides/assets/P01/04_grayscale_vs_rgb.png',
+  './slides/assets/P01/05_rgb_channels.png',
+  './slides/assets/P01/06_resize_aspect_ratio.png',
+  './slides/assets/P01/07_histogram_brightness_contrast.png',
+  './slides/assets/P01/07b_brightness_contrast_box.png',
+  './slides/assets/P01/08_canny_edge_density.png',
+  './slides/assets/P01/09_exif_trap.png',
+  './slides/assets/P01/human_vision_realistic.jpg',
 ];
 
 self.addEventListener('install', (event) => {

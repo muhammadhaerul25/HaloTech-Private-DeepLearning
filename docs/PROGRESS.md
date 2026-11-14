@@ -1,20 +1,20 @@
 # PROGRESS.md — Disney Deep Learning Course
 
-## P4 — Image Processing & EDA Foto Sendiri
+## P1 — Image Processing & Exploratory Data Analysis (EDA)
 
 ### 1. Status Implementasi
-- **Status:** **FINAL & SIAP DIGUNAKAN** untuk P04 — mencakup dek slide interaktif HTML 54 slide + ekspor PDF vektor 54 halaman (`slides/P04_image_processing_eda.html` & `slides/P04_image_processing_eda.pdf`), notebook peserta & kunci jawaban (`notebooks/P04_image_processing_eda.ipynb` & `notebooks/solutions/P04_image_processing_eda.ipynb`), dataset sampel sintetis, dan validasi end-to-end.
+- **Status:** **FINAL & SIAP DIGUNAKAN** untuk **P1** (sesuai arahan pengguna, materi ini dijadikan pertemuan pembuka / P1) — mencakup dek slide interaktif HTML 54 slide + ekspor PDF vektor 54 halaman (`slides/P01_image_processing_eda.html` & `slides/P01_image_processing_eda.pdf`), PWA (`manifest.webmanifest` + `sw.js`), notebook peserta & kunci jawaban (`notebooks/P01_image_processing_eda.ipynb` & `notebooks/solutions/P01_image_processing_eda.ipynb`), dataset sampel sintetis, dan validasi end-to-end.
 - **Tanggal:** 14 November 2026.
 
 ### 2. File yang Dibuat / Dimodifikasi
 - `tools/slide_theme.py` — tema presentasi terinspirasi gaya konferensi Google I/O (konstanta warna, tipografi, margin, badge sesi, kartu, tag pil, kluster 4 bentuk, pembatas bagian, slide keynote, tabel, footer, dan speaker notes OOXML).
 - `tools/make_sample_data.py` — generator dataset sintetis deterministik (`SEED=42`) di `data/sample/`.
-- `tools/build_slides_P04.py` — skrip analisis data sampel, generator visualisasi Matplotlib/OpenCV (`slides/assets/P04/`), dan pembangun 22 slide PPTX.
-- `tools/build_html_slides_P04.py` — pembangun dek presentasi web interaktif 54 slide bergaya Google I/O conference (Bahasa Indonesia + istilah teknis Inggris natural, tanpa kode sesi/tugas rumah, simulator komputer membaca gambar 4×4 s/d 64×64, ilustrasi manusia melihat gambar realistis, Q&A dengan visual tersembunyi hingga diklik, persistensi halaman `#slide-N` + `localStorage`, dan `#page-jump`).
-- `tools/build_notebooks_P04.py` — generator notebook peserta (`# TODO`) dan notebook kunci jawaban P04.
-- `slides/P04_image_processing_eda.html` & `slides/P04_image_processing_eda.pdf` — dek final P4 (54 slide HTML interaktif & 54 halaman PDF 16:9).
-- `notebooks/P04_image_processing_eda.ipynb` — notebook peserta (berjalan hingga sel `# TODO` pertama tanpa error).
-- `notebooks/solutions/P04_image_processing_eda.ipynb` — notebook kunci jawaban (lolos semua sel & `assert` dengan `SMOKE_TEST=1`).
+- `tools/build_slides_P01.py` — skrip analisis data sampel, generator visualisasi Matplotlib/OpenCV (`slides/assets/P01/`), dan pembangun 22 slide PPTX.
+- `tools/build_html_slides_P01.py` — pembangun dek presentasi web interaktif 54 slide bergaya Google I/O conference (Bahasa Indonesia + istilah teknis Inggris, tanpa kode sesi/tugas rumah, simulator komputer membaca gambar 4×4 s/d 64×64, ilustrasi manusia melihat gambar realistis, Q&A dengan visual tersembunyi hingga diklik, persistensi halaman `#slide-N` + `localStorage`, `#page-jump`, dan dukungan PWA).
+- `tools/build_notebooks_P01.py` — generator notebook peserta (`# TODO`) dan notebook kunci jawaban P1 (6 langkah selaras Slide 44).
+- `slides/P01_image_processing_eda.html` & `slides/P01_image_processing_eda.pdf` — dek final P1 (54 slide HTML interaktif & 54 halaman PDF 16:9).
+- `notebooks/P01_image_processing_eda.ipynb` — notebook peserta (berjalan hingga sel `# TODO` pertama tanpa error).
+- `notebooks/solutions/P01_image_processing_eda.ipynb` — notebook kunci jawaban (lolos semua sel & `assert` dengan `SMOKE_TEST=1`).
 - `tools/validate_and_render_P04.py` — skrip validasi struktural PPTX, validasi dataset, dan rendering PNG/PDF alternatif.
 - `data/sample/` + `data/sample/metadata.csv` — 120 file gambar sintetis + metadata.
 - `slides/assets/P04/` — 10 aset visualisasi PNG (termasuk `07b_brightness_contrast_box.png`) + `sample_stats.json` + folder `rendered/` (22 PNG + `P04_preview.pdf`) + folder `rendered_html/` + `rendered_all/` (audit seluruh 54 halaman).

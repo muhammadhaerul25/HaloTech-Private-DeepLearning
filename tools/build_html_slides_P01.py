@@ -1,4 +1,4 @@
-"""Generate 54-slide beginner-friendly interactive HTML5 presentation slides/P04_image_processing_eda.html.
+"""Generate 54-slide beginner-friendly interactive HTML5 presentation slides/P01_image_processing_eda.html.
 
 Designed for non-IT / non-technical learners:
 - Clear flow from how humans see images -> how computers read & display images ->
@@ -16,8 +16,8 @@ import re
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-STATS_PATH = ROOT_DIR / "slides" / "assets" / "P04" / "sample_stats.json"
-OUT_HTML = ROOT_DIR / "slides" / "P04_image_processing_eda.html"
+STATS_PATH = ROOT_DIR / "slides" / "assets" / "P01" / "sample_stats.json"
+OUT_HTML = ROOT_DIR / "slides" / "P01_image_processing_eda.html"
 
 
 def build_html() -> str:
@@ -32,7 +32,7 @@ def build_html() -> str:
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#202124" />
   <link rel="manifest" href="../manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="assets/P04/icon-192.png" />
+  <link rel="apple-touch-icon" href="assets/P01/icon-192.png" />
   <title>Memahami Gambar di Komputer &amp; Image Processing (54 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -541,7 +541,7 @@ def build_html() -> str:
       <h2>Cara <span class="hl-blue">Mata Manusia</span> Melihat Gambar</h2>
       <p class="subtitle">Otak kita sangat hebat: begitu cahaya masuk ke mata, kita langsung mengenali bentuk, warna, dan maknanya.</p>
       <div class="card surface" style="flex:1; padding:12px 16px; justify-content:space-between; align-items:center;">
-        <img src="assets/P04/human_vision_realistic.jpg" alt="Ilustrasi realistis mata manusia dan otak melihat objek" style="max-height:305px; max-width:100%; object-fit:contain; border-radius:12px;" />
+        <img src="assets/P01/human_vision_realistic.jpg" alt="Ilustrasi realistis mata manusia dan otak melihat objek" style="max-height:305px; max-width:100%; object-fit:contain; border-radius:12px;" />
         <div class="grid-3" style="width:100%; flex:0 0 auto; gap:12px;">
           <div class="callout" style="margin:0; text-align:center;"><strong>1. Objek Nyata:</strong> Cahaya memantul dari apel merah.</div>
           <div class="callout yellow" style="margin:0; text-align:center;"><strong>2. Mata Menangkap:</strong> Lensa memfokuskan cahaya ke retina.</div>
@@ -713,7 +713,7 @@ def build_html() -> str:
           <div class="callout">Semakin banyak kotaknya, foto terlihat makin <strong>halus dan tajam</strong>.</div>
         </div>
         <div class="img-box">
-          <img src="assets/P04/01_opening_character.png" alt="Contoh gambar geometris sintetis" />
+          <img src="assets/P01/01_opening_character.png" alt="Contoh gambar geometris sintetis" />
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>11 / 54</span></div>
@@ -835,7 +835,7 @@ def build_html() -> str:
       <h2><span class="hl-blue">Grayscale</span> (1 Channel) vs <span class="hl-red">RGB</span> (3 Channels)</h2>
       <div class="split-60-40">
         <div class="img-box">
-          <img src="assets/P04/04_grayscale_vs_rgb.png" alt="Perbandingan RGB dan Grayscale" />
+          <img src="assets/P01/04_grayscale_vs_rgb.png" alt="Perbandingan RGB dan Grayscale" />
         </div>
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
@@ -857,7 +857,7 @@ def build_html() -> str:
       <div class="kicker">BAB 1 · RGB CHANNELS</div>
       <h2>Mengintip <span class="hl-blue">3 RGB Channels</span> dalam 1 Foto</h2>
       <div class="img-box" style="flex:1; padding:12px;">
-        <img src="assets/P04/05_rgb_channels.png" alt="Pemisahan channel R G B" />
+        <img src="assets/P01/05_rgb_channels.png" alt="Pemisahan channel R G B" />
       </div>
       <div class="callout" style="margin-top:10px;">
         <strong>Cara membacanya:</strong> Area yang berwarna terang pada <em>Channel R (Red)</em> berarti memiliki intensitas <em>Red</em> yang tinggi. Tiga <em>channel</em> inilah yang digabung menjadi satu foto penuh warna.
@@ -1033,7 +1033,7 @@ def build_html() -> str:
       <div class="kicker">BAB 2 · MENJAGA PROPORSI</div>
       <h2>Jangan Sampai Foto <span class="hl-red">Menjadi Distorted!</span></h2>
       <div class="img-box" style="flex:1; padding:12px;">
-        <img src="assets/P04/06_resize_aspect_ratio.png" alt="Perbandingan aspect ratio benar vs gepeng" />
+        <img src="assets/P01/06_resize_aspect_ratio.png" alt="Perbandingan aspect ratio benar vs gepeng" />
       </div>
       <div class="grid-2" style="flex:0 0 auto; margin-top:10px;">
         <div class="callout red"><strong>Cara Salah (Tarik Paksa):</strong> Lingkaran berubah menjadi lonjong. AI bisa salah mengira itu benda lain!</div>
@@ -1322,7 +1322,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <h2>Grafik <span class="hl-blue">Histogram</span>: Cek Foto Terlalu Gelap / Silau</h2>
       <div class="split-60-40">
         <div class="img-box">
-          <img src="assets/P04/07_histogram_brightness_contrast.png" alt="Histogram foto polos vs ramai" />
+          <img src="assets/P01/07_histogram_brightness_contrast.png" alt="Histogram foto polos vs ramai" />
         </div>
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
@@ -1346,7 +1346,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <h2>Mengukur <span class="hl-blue">Brightness</span> &amp; <span class="hl-red">Contrast</span> Koleksi Foto</h2>
       <div class="split-60-40">
         <div class="img-box">
-          <img src="assets/P04/07b_brightness_contrast_box.png" alt="Boxplot Brightness dan Contrast Polos vs Ramai" />
+          <img src="assets/P01/07b_brightness_contrast_box.png" alt="Boxplot Brightness dan Contrast Polos vs Ramai" />
         </div>
         <div class="card">
           <div class="card-top-bar bar-green"></div>
@@ -1412,7 +1412,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="kicker">BAB 3 · HASIL DATA SAMPEL</div>
       <h2>Bukti Nyata: <span class="hl-blue">Latar Polos</span> vs <span class="hl-red">Latar Ramai</span></h2>
       <div class="img-box" style="flex:1; padding:10px;">
-        <img src="assets/P04/08_canny_edge_density.png" alt="Deteksi tepi polos vs ramai" />
+        <img src="assets/P01/08_canny_edge_density.png" alt="Deteksi tepi polos vs ramai" />
       </div>
       <div class="callout red" style="margin-top:10px;">
         <strong>Contoh data sampel (119 valid images):</strong> Rata-rata <em>edge density</em> latar polos hanya <code>{polos['mean_edge_density']:.4f}</code>, sedangkan latar ramai melonjak menjadi <code>{ramai['mean_edge_density']:.4f}</code> (<strong>~7× lebih padat!</strong>).
@@ -1571,7 +1571,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <h2>Terlihat Tegak di HP, <span class="hl-red">Tapi Terputar di Program!</span></h2>
       <div class="split-60-40">
         <div class="img-box">
-          <img src="assets/P04/09_exif_trap.png" alt="Jebakan EXIF Orientation" />
+          <img src="assets/P01/09_exif_trap.png" alt="Jebakan EXIF Orientation" />
         </div>
         <div class="card">
           <div class="card-top-bar bar-red"></div>
@@ -2099,7 +2099,7 @@ def get_file_hash(lokasi_foto):
       document.getElementById('notes-text').textContent = slides[idx].dataset.notes || 'Tidak ada catatan.';
       if (syncHash) {{
         try {{ history.replaceState(null, '', '#slide-' + (idx + 1)); }} catch (e) {{}}
-        try {{ localStorage.setItem('p04_slide_idx', String(idx)); }} catch (e) {{}}
+        try {{ localStorage.setItem('p01_slide_idx', String(idx)); }} catch (e) {{}}
       }}
     }}
     function jumpToSlide(val) {{
@@ -2371,7 +2371,7 @@ def get_file_hash(lokasi_foto):
         return;
       }}
       try {{
-        const saved = localStorage.getItem('p04_slide_idx');
+        const saved = localStorage.getItem('p01_slide_idx');
         if (saved !== null) {{
           showSlide(parseInt(saved, 10));
           return;
@@ -2395,15 +2395,15 @@ def verify_html(path_str: str) -> None:
     # Verify no P3/P4/P5/P7/P8/P04/P13 labels in visible slide sections
     body_part = text.split('<div id="stage-wrap">', 1)[1].split('<div id="controls">', 1)[0]
     p_codes = re.findall(r'\bP(?:0?[34578]|1[0-3])\b', body_part)
-    # Exclude asset path 'assets/P04/'
+    # Exclude asset path 'assets/P01/'
     non_asset_codes = [
         m.group(0)
-        for m in re.finditer(r'\bP(?:0?[34578]|1[0-3])\b', re.sub(r'assets/P04/', '', body_part))
+        for m in re.finditer(r'\bP(?:0?[34578]|1[0-3])\b', re.sub(r'assets/P01/', '', body_part))
     ]
     assert not non_asset_codes, f"Found unwanted session codes in slides: {non_asset_codes}"
 
     # Verify every image referenced exists
-    imgs = re.findall(r'src="(assets/P04/[^"]+)"', text)
+    imgs = re.findall(r'src="(assets/P01/[^"]+)"', text)
     missing = [img for img in imgs if not (ROOT_DIR / "slides" / img).exists()]
     assert not missing, f"Missing image assets: {missing}"
 
