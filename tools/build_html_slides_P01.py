@@ -1108,6 +1108,22 @@ def build_html() -> str:
             <div class="card surface" style="padding:12px; align-items:center;"><div style="font-size:12px; color:var(--muted);">Skala 0–1</div><div id="n-01" class="big-num hl-green" style="font-size:26px;">0.502</div></div>
             <div class="card surface" style="padding:12px; align-items:center;"><div style="font-size:12px; color:var(--muted);">Skala −1–1</div><div id="n-11" class="big-num hl-blue" style="font-size:26px;">0.004</div></div>
           </div>
+          <div style="display:flex; flex-direction:column; gap:8px; margin-top:12px;">
+            <div class="card surface" style="padding:10px 12px; gap:4px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                <strong class="hl-green">Formula Skala 0–1</strong>
+                <code style="font-size:12px;">x' = x / 255</code>
+              </div>
+              <div id="f-01" style="font-family:'Roboto Mono',monospace; font-size:12px; color:var(--muted);">128 / 255 = 0.502</div>
+            </div>
+            <div class="card surface" style="padding:10px 12px; gap:4px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px;">
+                <strong class="hl-blue">Formula Skala −1–1 (MobileNetV2)</strong>
+                <code style="font-size:12px;">x' = (x / 127.5) − 1</code>
+              </div>
+              <div id="f-11" style="font-family:'Roboto Mono',monospace; font-size:12px; color:var(--muted);">(128 / 127.5) − 1 = 0.004</div>
+            </div>
+          </div>
           <div class="callout" style="margin-top:auto;">Perhatikan: saat angka asli di tengah (<code>128</code>), skala 0–1 menjadi sekitar <code>0.5</code> dan skala −1–1 mendekati <code>0</code>!</div>
         </div>
         <div class="card">
@@ -1284,7 +1300,14 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Hal yang persis sama terjadi pada AI jika jumlah fotonya timpang (istilahnya: <em>Class Imbalance</em>).</li>
             </ul>
           </div>
-          <svg viewBox="0 0 360 90" style="width:100%; max-height:88px; margin-top:auto;">
+          <div style="background:#FFFFFF; border:1px solid #F4C7C3; border-radius:14px; padding:8px 12px; margin:6px 0; display:flex; flex-direction:column; align-items:center; gap:6px;">
+            <img src="assets/P01/cat_dog_imbalance.jpg" alt="Ilustrasi Kucing 95 foto vs Anjing 5 foto" style="width:100%; max-height:112px; object-fit:contain; border-radius:8px;" />
+            <div style="width:100%; display:flex; justify-content:space-around; font-size:12px; font-weight:700;">
+              <span style="background:#FCE8E6; color:#C5221F; padding:2px 10px; border-radius:999px;">Kucing: 95 foto</span>
+              <span style="background:#FEF7E0; color:#8A5700; padding:2px 10px; border-radius:999px;">Anjing: 5 foto</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 360 90" style="width:100%; max-height:82px; margin-top:auto;">
             <text x="4" y="24" font-family="Roboto, sans-serif" font-size="12" font-weight="700" fill="#C5221F">Kucing (95)</text>
             <rect x="95" y="10" width="245" height="18" rx="6" fill="#EA4335"/>
             <text x="4" y="64" font-family="Roboto, sans-serif" font-size="12" font-weight="700" fill="#5F6368">Anjing (5)</text>
@@ -1321,8 +1344,18 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="kicker">BAB 3 · CEK PENCAHAYAAN</div>
       <h2>Grafik <span class="hl-blue">Histogram</span>: Cek Foto Terlalu Gelap / Silau</h2>
       <div class="split-60-40">
-        <div class="img-box">
-          <img src="assets/P01/07_histogram_brightness_contrast.png" alt="Histogram foto polos vs ramai" />
+        <div class="img-box" style="flex-direction:column; gap:10px; padding:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
+              <img src="assets/P01/sample_polos.jpg" alt="Contoh Gambar Kondisi Polos" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
+              <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Contoh Gambar Polos</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
+              <img src="assets/P01/sample_ramai.jpg" alt="Contoh Gambar Kondisi Ramai" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
+              <span style="font-size:11.5px; font-weight:700; color:#C5221F;">Contoh Gambar Ramai</span>
+            </div>
+          </div>
+          <img src="assets/P01/07_histogram_brightness_contrast.png" alt="Histogram foto polos vs ramai" style="max-height:220px;" />
         </div>
         <div class="card">
           <div class="card-top-bar bar-blue"></div>
@@ -1345,20 +1378,30 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="kicker">BAB 3 · BRIGHTNESS &amp; CONTRAST</div>
       <h2>Mengukur <span class="hl-blue">Brightness</span> &amp; <span class="hl-red">Contrast</span> Koleksi Foto</h2>
       <div class="split-60-40">
-        <div class="img-box">
-          <img src="assets/P01/07b_brightness_contrast_box.png" alt="Boxplot Brightness dan Contrast Polos vs Ramai" />
+        <div class="img-box" style="flex-direction:column; gap:10px; padding:14px;">
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
+              <img src="assets/P01/sample_polos.jpg" alt="Contoh Foto Latar Polos" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
+              <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Contoh Latar Polos</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
+              <img src="assets/P01/sample_ramai.jpg" alt="Contoh Foto Latar Ramai" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
+              <span style="font-size:11.5px; font-weight:700; color:#C5221F;">Contoh Latar Ramai</span>
+            </div>
+          </div>
+          <img src="assets/P01/07b_brightness_contrast_box.png" alt="Boxplot Brightness dan Contrast Polos vs Ramai" style="max-height:220px;" />
         </div>
-        <div class="card">
+        <div class="card" style="padding:18px 20px; gap:8px;">
           <div class="card-top-bar bar-green"></div>
           <span class="pill green">CONTOH DATA SAMPEL (119 FOTO VALID)</span>
-          <div class="card-title">Temuan Nyata: Polos vs Ramai</div>
-          <div class="card-body">
-            <ul>
+          <div class="card-title" style="font-size:19px;">Temuan Nyata: Polos vs Ramai</div>
+          <div class="card-body" style="font-size:14.5px; line-height:1.45;">
+            <ul style="gap:6px;">
               <li><strong>Brightness (Rata-rata Intensitas):</strong><br />Polos: <strong>{polos['mean_brightness']:.2f}</strong> · Ramai: <strong>{ramai['mean_brightness']:.2f}</strong><br />Foto latar polos jauh lebih terang karena didominasi latar putih.</li>
               <li><strong>Contrast (Simpangan Baku):</strong><br />Polos: <strong>{polos['mean_contrast']:.2f}</strong> · Ramai: <strong>{ramai['mean_contrast']:.2f}</strong><br />Foto latar ramai lebih bervariasi gelap-terangnya.</li>
             </ul>
           </div>
-          <div class="callout yellow">Jika perbedaan ini terlalu ekstrem, AI bisa menebak hanya dari terangnya foto!</div>
+          <div class="callout yellow" style="margin-top:auto; font-size:13.5px; padding:10px 12px;">Jika perbedaan ini terlalu ekstrem, AI bisa menebak hanya dari terangnya foto!</div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>30 / 54</span></div>
@@ -1378,7 +1421,37 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Titik-titik perubahan tajam itu digambar sebagai <em>edge</em> putih di atas latar hitam (contoh populer: metode <em>Canny</em>).</li>
             </ul>
           </div>
-          <div class="callout">Semakin banyak <em>edge</em> yang terdeteksi, semakin kompleks isi latar belakang foto tersebut.</div>
+          <div style="background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:10px 12px; margin:6px 0; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Animasi Kernel 3×3 Menggeser (Sliding Window)</span>
+              <div style="display:flex; gap:6px; align-items:center;">
+                <button id="edge-toggle" type="button" onclick="toggleEdgeAnim()" style="font-size:11px; padding:2px 8px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600; color:#202124;">Pause</button>
+                <button type="button" onclick="openEdgeModal()" style="font-size:11px; padding:2px 9px; border-radius:999px; border:1px solid #1A73E8; background:#E8F0FE; cursor:pointer; font-weight:700; color:#1A73E8;">⤢ Expand</button>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                <span style="font-size:10.5px; color:#5F6368; font-weight:600;">Gambar Input (5×5)</span>
+                <div id="edge-in" style="position:relative; display:grid; grid-template-columns:repeat(5, 22px); grid-template-rows:repeat(5, 22px); gap:2px; background:#E8EAED; padding:2px; border-radius:6px;">
+                  <div id="edge-win" style="position:absolute; width:72px; height:72px; border:2.5px solid #4285F4; background:rgba(66,133,244,0.16); border-radius:5px; pointer-events:none; transition:left 0.35s ease, top 0.35s ease; left:1px; top:1px;"></div>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                <span style="font-size:10.5px; color:#5F6368; font-weight:600;">Kernel 3×3</span>
+                <div style="display:grid; grid-template-columns:repeat(3, 22px); gap:2px; background:#E8F0FE; padding:3px; border-radius:6px; border:1px solid #AECBFA; font-family:'Roboto Mono',monospace; font-size:9.5px; font-weight:700; text-align:center;">
+                  <span style="background:#FFF; border-radius:3px; line-height:18px; color:#C5221F;">-1</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#137333;">+1</span>
+                  <span style="background:#FFF; border-radius:3px; line-height:18px; color:#C5221F;">-2</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#137333;">+2</span>
+                  <span style="background:#FFF; border-radius:3px; line-height:18px; color:#C5221F;">-1</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:3px; line-height:18px; color:#137333;">+1</span>
+                </div>
+              </div>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                <span style="font-size:10.5px; color:#5F6368; font-weight:600;">Peta Edge (3×3)</span>
+                <div id="edge-out" style="display:grid; grid-template-columns:repeat(3, 24px); grid-template-rows:repeat(3, 24px); gap:2px; background:#202124; padding:3px; border-radius:6px;"></div>
+              </div>
+            </div>
+            <div id="edge-status" style="font-family:'Roboto Mono',monospace; font-size:11px; color:#202124; background:#FFF; border:1px solid #E8EAED; border-radius:6px; padding:4px 8px; text-align:center;">Posisi (0,0) → Selisih kiri-kanan = 920 → EDGE TERDETEKSI!</div>
+          </div>
+          <div class="callout" style="margin-top:auto;">Semakin banyak <em>edge</em> yang terdeteksi, semakin kompleks isi latar belakang foto tersebut.</div>
         </div>
         <div class="card surface">
           <div class="card-top-bar bar-red"></div>
@@ -1411,8 +1484,20 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     <section class="slide" data-title="Bukti Nyata: Latar Polos vs Latar Ramai" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan hasil nyata pada 119 foto valid: latar ramai punya <em>edge density</em> sekitar 7 kali lipat lebih tinggi!">
       <div class="kicker">BAB 3 · HASIL DATA SAMPEL</div>
       <h2>Bukti Nyata: <span class="hl-blue">Latar Polos</span> vs <span class="hl-red">Latar Ramai</span></h2>
-      <div class="img-box" style="flex:1; padding:10px;">
-        <img src="assets/P01/08_canny_edge_density.png" alt="Deteksi tepi polos vs ramai" />
+      <div style="flex:1; min-height:0; display:grid; grid-template-columns:190px 1fr; gap:12px;">
+        <div class="card" style="padding:10px; gap:8px; justify-content:space-around; align-items:center;">
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; width:100%;">
+            <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Foto Asli: Polos</span>
+            <img src="assets/P01/orig_heksagon_polos.jpg" alt="Foto Asli Latar Polos" style="width:128px; height:128px; object-fit:cover; border-radius:8px; border:1px solid #DADCE0;" />
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; gap:4px; width:100%;">
+            <span style="font-size:11.5px; font-weight:700; color:#C5221F;">Foto Asli: Ramai</span>
+            <img src="assets/P01/orig_heksagon_ramai.jpg" alt="Foto Asli Latar Ramai" style="width:128px; height:128px; object-fit:cover; border-radius:8px; border:1px solid #DADCE0;" />
+          </div>
+        </div>
+        <div class="img-box" style="padding:10px;">
+          <img src="assets/P01/08_canny_edge_density.png" alt="Deteksi tepi polos vs ramai" />
+        </div>
       </div>
       <div class="callout red" style="margin-top:10px;">
         <strong>Contoh data sampel (119 valid images):</strong> Rata-rata <em>edge density</em> latar polos hanya <code>{polos['mean_edge_density']:.4f}</code>, sedangkan latar ramai melonjak menjadi <code>{ramai['mean_edge_density']:.4f}</code> (<strong>~7× lebih padat!</strong>).
@@ -1440,34 +1525,56 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
             Komputer selalu mencari jalan pintas termudah. Jika objek A ditaruh di depan tembok putih saat diuji nanti, AI bisa salah menebaknya sebagai Objek B! Itulah mengapa memisahkan evaluasi foto <strong>polos vs ramai</strong> sangat penting untuk menguji kepintaran AI yang sesungguhnya.
           </div>
         </div>
-        <div class="card surface" style="align-items:center; justify-content:center; padding:16px;">
-          <svg id="qa4-vis" viewBox="0 0 320 265" style="width:100%; height:100%; max-height:360px;">
-            <rect x="12" y="14" width="138" height="106" rx="12" fill="#D7CCC8" stroke="#795548" stroke-width="2"/>
-            <line x1="20" y1="36" x2="142" y2="36" stroke="#A1887F" stroke-width="2"/>
-            <line x1="20" y1="70" x2="142" y2="70" stroke="#A1887F" stroke-width="2"/>
-            <circle cx="81" cy="64" r="22" fill="#4285F4"/>
-            <text x="81" y="69" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">A</text>
-            <text x="81" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#4E342E">Latar Meja Kayu</text>
+        <div class="card surface" style="align-items:center; justify-content:center; padding:14px;">
+          <svg id="qa4-vis" viewBox="0 0 320 278" style="width:100%; height:100%; max-height:370px;">
+            <!-- Header Latihan -->
+            <text x="160" y="13" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="700" fill="#5F6368">SAAT AI BELAJAR (LATIHAN)</text>
 
-            <rect x="170" y="14" width="138" height="106" rx="12" fill="#FFFFFF" stroke="#BDC1C6" stroke-width="2"/>
-            <rect x="217" y="42" width="44" height="44" rx="8" fill="#34A853"/>
-            <text x="239" y="69" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">B</text>
-            <text x="239" y="108" text-anchor="middle" font-size="10.5" font-weight="700" fill="#5F6368">Latar Tembok Putih</text>
+            <!-- Kartu Kiri: Objek A (Bintang) di Meja Kayu Berantakan -->
+            <rect x="8" y="20" width="144" height="106" rx="12" fill="#EFEBE9" stroke="#8D6E63" stroke-width="2"/>
+            <!-- Tekstur meja & barang berantakan -->
+            <line x1="16" y1="42" x2="144" y2="42" stroke="#D7CCC8" stroke-width="2"/>
+            <line x1="16" y1="88" x2="144" y2="88" stroke="#D7CCC8" stroke-width="2"/>
+            <rect x="18" y="28" width="22" height="28" rx="3" fill="#FFF" stroke="#BCAAA4" stroke-width="1.2" transform="rotate(-12 29 42)"/>
+            <line x1="116" y1="30" x2="138" y2="52" stroke="#FBBC04" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="132" cy="76" r="8" fill="none" stroke="#A1887F" stroke-width="1.5"/>
+            <!-- Objek A: Bintang Biru -->
+            <polygon points="80,36 86,52 103,52 89,62 94,78 80,68 66,78 71,62 57,52 74,52" fill="#4285F4" stroke="#1A73E8" stroke-width="1.8"/>
+            <text x="80" y="63" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">A</text>
+            <rect x="16" y="102" width="128" height="18" rx="9" fill="#5D4037"/>
+            <text x="80" y="114" text-anchor="middle" font-size="9.5" font-weight="700" fill="#FFFFFF">Objek A + Meja Berantakan</text>
 
-            <rect x="46" y="138" width="228" height="36" rx="18" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
-            <text x="160" y="161" text-anchor="middle" font-size="11.5" font-weight="700" fill="#202124">Saat Ujian: Objek A di Tembok Putih</text>
+            <!-- Kartu Kanan: Objek B (Kotak) di Tembok Putih Polos -->
+            <rect x="168" y="20" width="144" height="106" rx="12" fill="#FFFFFF" stroke="#BDC1C6" stroke-width="2"/>
+            <!-- Objek B: Kotak Hijau -->
+            <rect x="218" y="38" width="44" height="44" rx="10" fill="#34A853" stroke="#137333" stroke-width="1.8"/>
+            <text x="240" y="65" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">B</text>
+            <rect x="178" y="102" width="124" height="18" rx="9" fill="#5F6368"/>
+            <text x="240" y="114" text-anchor="middle" font-size="9.5" font-weight="700" fill="#FFFFFF">Objek B + Tembok Putih</text>
 
+            <!-- Panah ke Ujian -->
+            <path d="M160 130 L160 142" stroke="#FBBC04" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="34" y="143" width="252" height="28" rx="14" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
+            <text x="160" y="161" text-anchor="middle" font-size="11" font-weight="700" fill="#202124">SAAT UJIAN: Objek A ditaruh di Tembok Putih!</text>
+
+            <!-- Hasil Ujian: Tembok Putih berisi Objek A -->
             <g class="vis-q">
-              <rect x="76" y="188" width="168" height="66" rx="12" fill="#FFFFFF" stroke="#4285F4" stroke-width="2.5" stroke-dasharray="6 4"/>
-              <circle cx="132" cy="221" r="18" fill="#4285F4"/>
-              <text x="132" y="226" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">A</text>
-              <text x="196" y="227" text-anchor="middle" font-size="18" font-weight="700" fill="#1A73E8">→ ?</text>
+              <rect x="44" y="182" width="232" height="86" rx="14" fill="#FFFFFF" stroke="#4285F4" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <polygon points="94,196 99,210 114,210 102,219 107,233 94,224 81,233 86,219 74,210 89,210" fill="#4285F4" stroke="#1A73E8" stroke-width="1.5"/>
+              <text x="94" y="220" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">A</text>
+              <text x="94" y="252" text-anchor="middle" font-size="9" font-weight="700" fill="#5F6368">Latar Tembok Putih</text>
+              <text x="198" y="218" text-anchor="middle" font-size="12" font-weight="700" fill="#1A73E8">Tebakan AI:</text>
+              <text x="198" y="242" text-anchor="middle" font-size="20" font-weight="700" fill="#1A73E8">A atau B?</text>
             </g>
             <g class="vis-a">
-              <rect x="76" y="188" width="168" height="66" rx="12" fill="#FFFFFF" stroke="#EA4335" stroke-width="2.5"/>
-              <circle cx="132" cy="221" r="18" fill="#4285F4"/>
-              <text x="132" y="226" text-anchor="middle" font-size="12" font-weight="700" fill="#FFFFFF">A</text>
-              <text x="196" y="226" text-anchor="middle" font-size="16" font-weight="700" fill="#EA4335">→ B ?!</text>
+              <rect x="44" y="182" width="232" height="86" rx="14" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.5"/>
+              <rect x="54" y="192" width="76" height="66" rx="10" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.5"/>
+              <polygon points="92,199 97,211 110,211 100,219 104,231 92,223 80,231 84,219 74,211 87,211" fill="#4285F4" stroke="#1A73E8" stroke-width="1.5"/>
+              <text x="92" y="220" text-anchor="middle" font-size="9.5" font-weight="700" fill="#FFFFFF">A</text>
+              <text x="92" y="248" text-anchor="middle" font-size="8.5" font-weight="700" fill="#5F6368">Tembok Putih</text>
+              <text x="200" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#C5221F">AI Menebak: "B!"</text>
+              <text x="200" y="234" text-anchor="middle" font-size="10" font-weight="600" fill="#202124">Salah! AI tertipu oleh</text>
+              <text x="200" y="248" text-anchor="middle" font-size="10" font-weight="600" fill="#202124">latar tembok putihnya</text>
             </g>
           </svg>
         </div>
@@ -1485,7 +1592,18 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
           <span class="pill blue">UJI KONDISI BERSIH</span>
           <div class="card-title">Belajar dari Latar Polos → Diuji di Latar Ramai</div>
           <div class="card-body">Jika AI hanya berlatih di studio yang bersih, apakah ia masih sanggup mengenali objek yang sama di jalanan atau ruangan ramai? Di sinilah ketangguhannya diuji!</div>
-          <svg viewBox="0 0 360 76" style="width:100%; max-height:74px; margin-top:auto;">
+          <div style="display:flex; align-items:center; justify-content:space-around; gap:8px; background:#FFFFFF; border:1px solid #D2E3FC; border-radius:12px; padding:10px; margin:6px 0;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <img src="assets/P01/sample_polos.jpg" alt="Contoh Train Polos" style="width:74px; height:74px; object-fit:cover; border-radius:8px; border:2px solid #4285F4;" />
+              <span style="font-size:11px; font-weight:700; color:#1A73E8;">Studio Polos</span>
+            </div>
+            <span style="font-size:20px; font-weight:700; color:#1A73E8;">&rarr;</span>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
+              <img src="assets/P01/sample_ramai.jpg" alt="Contoh Test Ramai" style="width:74px; height:74px; object-fit:cover; border-radius:8px; border:2px solid #EA4335;" />
+              <span style="font-size:11px; font-weight:700; color:#C5221F;">Dunia Ramai (?)</span>
+            </div>
+          </div>
+          <svg viewBox="0 0 360 76" style="width:100%; max-height:70px; margin-top:auto;">
             <rect x="10" y="14" width="128" height="48" rx="10" fill="#FFFFFF" stroke="#4285F4" stroke-width="2"/>
             <text x="74" y="42" text-anchor="middle" font-size="11.5" font-weight="700" fill="#1A73E8">Train: Polos</text>
             <path d="M148 38 L208 38" stroke="#1A73E8" stroke-width="3"/><polygon points="206,32 218,38 206,44" fill="#1A73E8"/>
@@ -1498,7 +1616,19 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
           <span class="pill green">UJI KONDISI CAMPURAN</span>
           <div class="card-title">Belajar dari Foto Campuran (Polos + Ramai)</div>
           <div class="card-body">Dengan memberi variasi latar belakang sejak awal, AI dipaksa fokus pada <strong>bentuk objeknya</strong>, bukan menghafal tembok atau mejanya.</div>
-          <svg viewBox="0 0 360 76" style="width:100%; max-height:74px; margin-top:auto;">
+          <div style="display:flex; align-items:center; justify-content:space-around; gap:6px; background:#FFFFFF; border:1px solid #CEEAD6; border-radius:12px; padding:10px; margin:6px 0;">
+            <div style="display:flex; align-items:center; gap:6px;">
+              <img src="assets/P01/sample_polos.jpg" alt="Polos" style="width:64px; height:64px; object-fit:cover; border-radius:8px; border:2px solid #34A853;" />
+              <span style="font-size:16px; font-weight:700; color:#137333;">+</span>
+              <img src="assets/P01/sample_ramai.jpg" alt="Ramai" style="width:64px; height:64px; object-fit:cover; border-radius:8px; border:2px solid #34A853;" />
+            </div>
+            <span style="font-size:20px; font-weight:700; color:#137333;">&rarr;</span>
+            <div style="background:#E6F4EA; border:1.5px solid #34A853; border-radius:10px; padding:8px 10px; text-align:center;">
+              <div style="font-size:12px; font-weight:700; color:#137333;">Fokus Bentuk</div>
+              <div style="font-size:10.5px; color:#202124;">Bukan Latar!</div>
+            </div>
+          </div>
+          <svg viewBox="0 0 360 76" style="width:100%; max-height:70px; margin-top:auto;">
             <rect x="10" y="14" width="140" height="48" rx="10" fill="#FFFFFF" stroke="#34A853" stroke-width="2"/>
             <text x="80" y="42" text-anchor="middle" font-size="11.5" font-weight="700" fill="#137333">Train: Polos + Ramai</text>
             <path d="M160 38 L210 38" stroke="#137333" stroke-width="3"/><polygon points="208,32 220,38 208,44" fill="#137333"/>
@@ -1524,21 +1654,13 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Objek yang memakai baju bermotif garis-garis atau kotak-kotak akan menghasilkan banyak <em>edge</em>, walaupun difoto di depan tembok polos!</li>
               <li>Sebaliknya, latar belakang yang buram (efek <em>bokeh</em> kamera HP) punya sedikit <em>edge</em> meski sebenarnya berada di tempat ramai.</li>
             </ul>
-            <svg viewBox="0 0 340 100" style="width:100%; height:96px; margin-top:10px;">
-              <rect x="4" y="4" width="156" height="92" rx="10" fill="#F8F9FA" stroke="#EA4335" stroke-width="1.5"/>
-              <rect x="52" y="14" width="60" height="50" rx="8" fill="#FFFFFF" stroke="#202124" stroke-width="1.5"/>
-              <line x1="56" y1="24" x2="108" y2="24" stroke="#202124" stroke-width="2"/>
-              <line x1="56" y1="34" x2="108" y2="34" stroke="#202124" stroke-width="2"/>
-              <line x1="56" y1="44" x2="108" y2="44" stroke="#202124" stroke-width="2"/>
-              <line x1="56" y1="54" x2="108" y2="54" stroke="#202124" stroke-width="2"/>
-              <text x="82" y="84" text-anchor="middle" font-size="10" font-weight="700" fill="#C5221F">Motif Garis → High Edge</text>
-
-              <rect x="180" y="4" width="156" height="92" rx="10" fill="#F8F9FA" stroke="#4285F4" stroke-width="1.5"/>
-              <circle cx="218" cy="36" r="14" fill="#AECBFA" opacity="0.5"/>
-              <circle cx="294" cy="40" r="16" fill="#FDE293" opacity="0.5"/>
-              <circle cx="258" cy="39" r="18" fill="#34A853"/>
-              <text x="258" y="84" text-anchor="middle" font-size="10" font-weight="700" fill="#1A73E8">Latar Bokeh → Low Edge</text>
-            </svg>
+            <div style="background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:8px; margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+              <img src="assets/P01/edge_exceptions.jpg" alt="Ilustrasi baju motif garis di tembok polos vs latar bokeh" style="width:100%; max-height:132px; object-fit:contain; border-radius:8px;" />
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; text-align:center; font-size:11px; font-weight:700;">
+                <span style="background:#FCE8E6; color:#C5221F; padding:3px 6px; border-radius:999px;">Motif Garis &rarr; High Edge</span>
+                <span style="background:#E8F0FE; color:#1A73E8; padding:3px 6px; border-radius:999px;">Latar Bokeh &rarr; Low Edge</span>
+              </div>
+            </div>
           </div>
         </div>
         <div class="card surface">
@@ -1550,6 +1672,19 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Tetap luangkan waktu melihat langsung beberapa contoh foto dengan mata kepala sendiri untuk memastikan kondisi sebenarnya.</li>
             </ul>
           </div>
+          <svg viewBox="0 0 340 104" style="width:100%; max-height:104px; margin-top:auto;">
+            <rect x="4" y="18" width="96" height="68" rx="10" fill="#FFFFFF" stroke="#4285F4" stroke-width="2"/>
+            <text x="52" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#1A73E8">1. Statistik</text>
+            <text x="52" y="64" text-anchor="middle" font-size="9.5" fill="#5F6368">Saring cepat</text>
+            <path d="M104 52 L118 52" stroke="#5F6368" stroke-width="2.5"/><polygon points="116,47 125,52 116,57" fill="#5F6368"/>
+            <rect x="126" y="18" width="96" height="68" rx="10" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
+            <text x="174" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#8A5700">2. Cek Visual</text>
+            <text x="174" y="64" text-anchor="middle" font-size="9.5" fill="#5F6368">Lihat sampel foto</text>
+            <path d="M226 52 L240 52" stroke="#5F6368" stroke-width="2.5"/><polygon points="238,47 247,52 238,57" fill="#5F6368"/>
+            <rect x="248" y="18" width="88" height="68" rx="10" fill="#34A853"/>
+            <text x="292" y="46" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">3. Valid!</text>
+            <text x="292" y="64" text-anchor="middle" font-size="9.5" fill="#E6F4EA">Data terjamin</text>
+          </svg>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>35 / 54</span></div>
@@ -1570,8 +1705,21 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="kicker">BAB 4 · JEBAKAN #1</div>
       <h2>Terlihat Tegak di HP, <span class="hl-red">Tapi Terputar di Program!</span></h2>
       <div class="split-60-40">
-        <div class="img-box">
-          <img src="assets/P01/09_exif_trap.png" alt="Jebakan EXIF Orientation" />
+        <div class="img-box" style="display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:16px; align-items:stretch;">
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:8px; background:#FCE8E6; border:2px solid #EA4335; border-radius:16px; padding:12px;">
+            <span style="font-size:13px; font-weight:700; color:#C5221F; text-align:center; line-height:1.3;">Tanpa Koreksi EXIF<br />(Terputar 90°)</span>
+            <div style="width:100%; max-width:200px; aspect-ratio:1/1; border-radius:12px; overflow:hidden; background:#FFFFFF; border:1px solid #F4C7C3; display:flex; align-items:center; justify-content:center;">
+              <img src="assets/P01/exif_puppy.jpg" alt="Foto terputar 90 derajat tanpa koreksi EXIF" style="width:100%; height:100%; object-fit:cover; transform:rotate(-90deg);" />
+            </div>
+            <span style="font-size:11.5px; color:#C5221F; font-weight:600; text-align:center;">Program membaca piksel miring!</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:space-between; gap:8px; background:#E6F4EA; border:2px solid #34A853; border-radius:16px; padding:12px;">
+            <span style="font-size:13px; font-weight:700; color:#137333; text-align:center; line-height:1.3;">Dengan <code>exif_transpose()</code><br />(Tegak Benar)</span>
+            <div style="width:100%; max-width:200px; aspect-ratio:1/1; border-radius:12px; overflow:hidden; background:#FFFFFF; border:1px solid #CEEAD6; display:flex; align-items:center; justify-content:center;">
+              <img src="assets/P01/exif_puppy.jpg" alt="Foto tegak benar dengan exif_transpose" style="width:100%; height:100%; object-fit:cover;" />
+            </div>
+            <span style="font-size:11.5px; color:#137333; font-weight:600; text-align:center;">Orientasi tegak sesuai galeri HP</span>
+          </div>
         </div>
         <div class="card">
           <div class="card-top-bar bar-red"></div>
@@ -1602,16 +1750,20 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Sering terjadi tanpa sengaja saat kita menyalin foto dua kali dengan nama file berbeda (misal <code>foto1.jpg</code> dan <code>salinan_foto1.jpg</code>).</li>
               <li>Komputer mendeteksinya otomatis dengan membuat <strong><em>file hash</em> (SHA-256)</strong>.</li>
             </ul>
-            <svg viewBox="0 0 320 66" style="width:100%; height:64px; margin-top:8px;">
-              <rect x="4" y="6" width="96" height="54" rx="8" fill="#E8F0FE" stroke="#4285F4"/>
-              <text x="52" y="28" text-anchor="middle" font-size="10" font-weight="700" fill="#1A73E8">foto1.jpg</text>
-              <text x="52" y="46" text-anchor="middle" font-size="9" fill="#5F6368">Hash: 9f8a...</text>
-              <rect x="116" y="6" width="104" height="54" rx="8" fill="#FCE8E6" stroke="#EA4335"/>
-              <text x="168" y="28" text-anchor="middle" font-size="10" font-weight="700" fill="#C5221F">salinan_foto1.jpg</text>
-              <text x="168" y="46" text-anchor="middle" font-size="9" fill="#C5221F">Hash: 9f8a... (Sama!)</text>
-              <rect x="232" y="16" width="82" height="34" rx="17" fill="#EA4335"/>
-              <text x="273" y="37" text-anchor="middle" font-size="10.5" font-weight="700" fill="#FFFFFF">Buang 1!</text>
-            </svg>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:10px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:10px;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#E8F0FE; border:1.5px solid #4285F4; border-radius:10px; padding:6px 8px; flex:1;">
+                <img src="assets/P01/exif_puppy.jpg" alt="foto1.jpg" style="width:64px; height:64px; object-fit:cover; border-radius:6px; border:1px solid #AECBFA;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; color:#1A73E8;">foto1.jpg</span>
+                <span style="font-size:9.5px; color:#5F6368;">Hash: 9f8a...</span>
+              </div>
+              <span style="font-size:16px; font-weight:700; color:#5F6368;">=</span>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#FCE8E6; border:1.5px solid #EA4335; border-radius:10px; padding:6px 8px; flex:1;">
+                <img src="assets/P01/exif_puppy.jpg" alt="salinan_foto1.jpg" style="width:64px; height:64px; object-fit:cover; border-radius:6px; border:1px solid #F4C7C3;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; color:#C5221F;">salinan_foto1.jpg</span>
+                <span style="font-size:9.5px; color:#C5221F;">Hash: 9f8a... (Sama!)</span>
+              </div>
+              <span style="background:#EA4335; color:#FFFFFF; font-size:11px; font-weight:700; padding:6px 10px; border-radius:999px; white-space:nowrap;">Buang 1!</span>
+            </div>
           </div>
           <div class="callout">Jika dua file punya <em>hash</em> yang persis sama, sisakan satu dan buang duplikatnya!</div>
         </div>
@@ -1623,17 +1775,23 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Saat memotret beruntun (<em>burst mode</em>), sudut dan cahayanya 99% sama.</li>
               <li>Jika foto ke-1 masuk <strong>Train Set</strong> dan foto ke-2 masuk <strong>Test Set</strong>, skor evaluasi AI akan mengalami <strong>inflated accuracy</strong>!</li>
             </ul>
-            <svg viewBox="0 0 320 66" style="width:100%; height:64px; margin-top:8px;">
-              <rect x="4" y="6" width="212" height="54" rx="8" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.5"/>
-              <rect x="14" y="14" width="56" height="38" rx="6" fill="#FFFFFF" stroke="#F9AB00"/>
-              <text x="42" y="37" text-anchor="middle" font-size="9.5" font-weight="700" fill="#202124">00:01.1</text>
-              <rect x="82" y="14" width="56" height="38" rx="6" fill="#FFFFFF" stroke="#F9AB00"/>
-              <text x="110" y="37" text-anchor="middle" font-size="9.5" font-weight="700" fill="#202124">00:01.3</text>
-              <rect x="150" y="14" width="56" height="38" rx="6" fill="#FFFFFF" stroke="#F9AB00"/>
-              <text x="178" y="37" text-anchor="middle" font-size="9.5" font-weight="700" fill="#202124">00:01.5</text>
-              <rect x="226" y="16" width="88" height="34" rx="17" fill="#202124"/>
-              <text x="270" y="37" text-anchor="middle" font-size="10" font-weight="700" fill="#FBBC04">1 id_sesi</text>
-            </svg>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:10px; background:#FEF7E0; border:1.5px solid #FBBC04; border-radius:12px; padding:10px;">
+              <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; flex:1;">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#FFF; border:1px solid #F9AB00; border-radius:8px; padding:4px;">
+                  <img src="assets/P01/exif_puppy.jpg" alt="Burst 00:01.1" style="width:54px; height:54px; object-fit:cover; border-radius:5px; transform:rotate(-3deg);" />
+                  <span style="font-family:'Roboto Mono',monospace; font-size:9.5px; font-weight:700; color:#202124;">00:01.1</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#FFF; border:1px solid #F9AB00; border-radius:8px; padding:4px;">
+                  <img src="assets/P01/exif_puppy.jpg" alt="Burst 00:01.3" style="width:54px; height:54px; object-fit:cover; border-radius:5px;" />
+                  <span style="font-family:'Roboto Mono',monospace; font-size:9.5px; font-weight:700; color:#202124;">00:01.3</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#FFF; border:1px solid #F9AB00; border-radius:8px; padding:4px;">
+                  <img src="assets/P01/exif_puppy.jpg" alt="Burst 00:01.5" style="width:54px; height:54px; object-fit:cover; border-radius:5px; transform:rotate(3deg);" />
+                  <span style="font-family:'Roboto Mono',monospace; font-size:9.5px; font-weight:700; color:#202124;">00:01.5</span>
+                </div>
+              </div>
+              <span style="background:#202124; color:#FBBC04; font-family:'Roboto Mono',monospace; font-size:10.5px; font-weight:700; padding:7px 10px; border-radius:999px; white-space:nowrap;">1 id_sesi</span>
+            </div>
           </div>
           <div class="callout yellow">Beri kode <code>id_sesi</code> agar foto dari sesi yang sama tidak terpecah antara <em>train</em> dan <em>test</em>.</div>
         </div>
@@ -1656,13 +1814,28 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Efeknya: saat AI melatih ratusan foto, program tiba-tiba berhenti error tepat ketika menyentuh <em>corrupted file</em> tersebut!</li>
             </ul>
           </div>
-          <svg viewBox="0 0 360 76" style="width:100%; max-height:74px; margin-top:auto;">
-            <rect x="12" y="14" width="60" height="48" rx="8" fill="#FFFFFF" stroke="#EA4335" stroke-width="2"/>
-            <path d="M28 28 L56 48 M56 28 L28 48" stroke="#EA4335" stroke-width="3.5" stroke-linecap="round"/>
-            <path d="M84 38 L135 38" stroke="#EA4335" stroke-width="3" stroke-dasharray="5,4"/>
-            <rect x="145" y="17" width="195" height="42" rx="10" fill="#EA4335"/>
-            <text x="242" y="43" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="#FFFFFF">Proses Latih AI Macet!</text>
-          </svg>
+          <div style="background:#FFFFFF; border:1px solid #F4C7C3; border-radius:12px; padding:10px; margin-top:auto; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#E6F4EA; border:1.5px solid #34A853; border-radius:8px; padding:5px 7px;">
+                <img src="assets/P01/exif_puppy.jpg" alt="foto_01" style="width:44px; height:44px; object-fit:cover; border-radius:4px;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:9px; color:#137333; font-weight:700;">01.jpg ✓</span>
+              </div>
+              <span style="color:#5F6368; font-weight:700;">&rarr;</span>
+              <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#E6F4EA; border:1.5px solid #34A853; border-radius:8px; padding:5px 7px;">
+                <img src="assets/P01/exif_puppy.jpg" alt="foto_02" style="width:44px; height:44px; object-fit:cover; border-radius:4px;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:9px; color:#137333; font-weight:700;">02.jpg ✓</span>
+              </div>
+              <span style="color:#EA4335; font-weight:700;">&rarr;</span>
+              <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; background:#FCE8E6; border:2px dashed #EA4335; border-radius:8px; padding:5px 8px;">
+                <div style="width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:#FFFFFF; border-radius:4px; color:#EA4335; font-size:22px; font-weight:700;">✕</div>
+                <span style="font-family:'Roboto Mono',monospace; font-size:9px; color:#C5221F; font-weight:700;">03.jpg (0 KB)</span>
+              </div>
+              <span style="color:#EA4335; font-weight:700;">&rarr;</span>
+              <div style="background:#EA4335; color:#FFFFFF; border-radius:10px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; line-height:1.25;">
+                Program<br />Macet!
+              </div>
+            </div>
+          </div>
         </div>
         <div class="card">
           <div class="card-top-bar bar-green"></div>
@@ -1673,6 +1846,28 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Catat nama file yang gagal dibuka, lalu sisihkan dari perhitungan statistik maupun daftar latih AI.</li>
             </ul>
           </div>
+          <svg viewBox="0 0 340 108" style="width:100%; max-height:108px; margin-top:auto;">
+            <rect x="4" y="26" width="76" height="56" rx="10" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.5"/>
+            <text x="42" y="50" text-anchor="middle" font-size="11.5" font-weight="700" fill="#202124">120 File</text>
+            <text x="42" y="67" text-anchor="middle" font-size="9.5" fill="#5F6368">Dataset awal</text>
+
+            <path d="M84 54 L104 54" stroke="#5F6368" stroke-width="2.5"/><polygon points="102,49 111,54 102,59" fill="#5F6368"/>
+
+            <rect x="112" y="22" width="94" height="64" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+            <text x="159" y="50" text-anchor="middle" font-size="11" font-weight="700" fill="#1A73E8">Uji Buka</text>
+            <text x="159" y="67" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" fill="#1A73E8">verify()</text>
+
+            <path d="M210 42 L232 28" stroke="#34A853" stroke-width="2.5"/><polygon points="228,25 237,25 233,33" fill="#34A853"/>
+            <path d="M210 66 L232 80" stroke="#EA4335" stroke-width="2.5"/><polygon points="233,75 237,83 228,83" fill="#EA4335"/>
+
+            <rect x="238" y="8" width="98" height="38" rx="9" fill="#E6F4EA" stroke="#34A853" stroke-width="1.5"/>
+            <text x="287" y="25" text-anchor="middle" font-size="10.5" font-weight="700" fill="#137333">119 Valid ✓</text>
+            <text x="287" y="39" text-anchor="middle" font-size="9" fill="#137333">Lanjut ke AI</text>
+
+            <rect x="238" y="62" width="98" height="38" rx="9" fill="#FCE8E6" stroke="#EA4335" stroke-width="1.5"/>
+            <text x="287" y="79" text-anchor="middle" font-size="10.5" font-weight="700" fill="#C5221F">1 Rusak ✕</text>
+            <text x="287" y="93" text-anchor="middle" font-size="9" fill="#C5221F">Disisihkan</text>
+          </svg>
           <div class="callout green">Di data sampel kita, ada 1 file sengaja dibuat rusak agar kita terbiasa menyaringnya sejak awal.</div>
         </div>
       </div>
@@ -1690,14 +1885,45 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
         <div class="card tint-red"><div class="big-num hl-red">{stats['corrupted_count']}</div><div class="card-title">Corrupted File</div><div class="card-body">Disisihkan otomatis.</div></div>
         <div class="card tint-yellow"><div class="big-num hl-yellow">{stats['duplicate_file_count'] + stats['exif_orientation_6_count']}</div><div class="card-title">Perlu Perhatian</div><div class="card-body">{stats['duplicate_file_count']} duplicate + {stats['exif_orientation_6_count']} EXIF orientation=6.</div></div>
       </div>
-      <div class="card surface" style="margin-top:14px; flex:1; justify-content:center;">
-        <div class="card-title">Daftar Temuan Khusus pada Sampel:</div>
-        <div class="card-body">
-          <ul>
-            <li><strong>Corrupted file:</strong> <code>segitiga_ramai_12.jpg</code> — gagal uji buka, langsung dikecualikan agar tidak merusak hitungan rata-rata.</li>
-            <li><strong>Duplicate images:</strong> <code>lingkaran_polos_01.jpg</code> dan <code>lingkaran_polos_02.jpg</code> — memiliki <em>file hash</em> SHA-256 identik.</li>
-            <li><strong>Foto EXIF orientation=6:</strong> <code>persegi_polos_01.jpg</code> dan <code>bintang_ramai_01.jpg</code> — otomatis diputar tegak saat dibuka.</li>
-          </ul>
+      <div style="margin-top:14px; flex:1; min-height:0; display:grid; grid-template-columns:1.25fr 1fr; gap:14px;">
+        <div class="card surface" style="justify-content:center; padding:16px 20px;">
+          <div class="card-title" style="font-size:18px;">Daftar Temuan Khusus pada Sampel:</div>
+          <div class="card-body" style="font-size:14.5px; line-height:1.45;">
+            <ul style="gap:6px;">
+              <li><strong>Corrupted file:</strong> <code>segitiga_ramai_12.jpg</code> — gagal uji buka, langsung dikecualikan agar tidak merusak hitungan rata-rata.</li>
+              <li><strong>Duplicate images:</strong> <code>lingkaran_polos_01.jpg</code> &amp; <code>02.jpg</code> — memiliki <em>file hash</em> SHA-256 identik.</li>
+              <li><strong>Foto EXIF orientation=6:</strong> <code>persegi_polos_01.jpg</code> &amp; <code>bintang_ramai_01.jpg</code> — otomatis diputar tegak saat dibuka.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card" style="padding:14px 16px; justify-content:center; gap:8px;">
+          <div class="card-title" style="font-size:16px;">Cuplikan File Dataset Sampel</div>
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
+              <img src="assets/P01/sample_lingkaran_01.jpg" alt="lingkaran_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#1A73E8; font-weight:700;">lingkaran (Dup)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
+              <img src="assets/P01/sample_persegi_01.jpg" alt="persegi_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#8A5700; font-weight:700;">persegi (EXIF=6)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
+              <img src="assets/P01/sample_bintang_01.jpg" alt="bintang_ramai_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#8A5700; font-weight:700;">bintang (EXIF=6)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#FCE8E6; border:1px dashed #EA4335; border-radius:8px; padding:5px;">
+              <div style="width:52px; height:52px; display:flex; align-items:center; justify-content:center; background:#FFF; border-radius:5px; color:#EA4335; font-size:20px; font-weight:700;">✕</div>
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#C5221F; font-weight:700;">segitiga (Rusak)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
+              <img src="assets/P01/orig_heksagon_polos.jpg" alt="heksagon_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#137333; font-weight:700;">heksagon (Valid)</span>
+            </div>
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
+              <img src="assets/P01/orig_heksagon_ramai.jpg" alt="heksagon_ramai_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
+              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#137333; font-weight:700;">ramai (Valid)</span>
+            </div>
+          </div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>40 / 54</span></div>
@@ -1810,6 +2036,19 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
               <li>Jika file gagal diperiksa, komputer langsung menandainya sebagai <em>rusak</em> lalu lanjut ke file berikutnya tanpa macet!</li>
             </ul>
           </div>
+          <div style="background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:10px; margin-top:auto; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#E8F0FE; border:1.5px solid #4285F4; border-radius:8px; padding:6px 8px;">
+              <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; color:#1A73E8;">1. verify()</span>
+              <span style="font-size:9.5px; color:#137333; font-weight:700;">Utuh ✓ / Rusak ✕</span>
+            </div>
+            <span style="font-weight:700; color:#5F6368;">&rarr;</span>
+            <div style="display:flex; align-items:center; gap:6px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:8px; padding:5px 8px;">
+              <img src="assets/P01/exif_puppy.jpg" alt="Miring" style="width:42px; height:42px; object-fit:cover; border-radius:5px; transform:rotate(-90deg); border:1px solid #EA4335;" />
+              <span style="font-size:12px; font-weight:700; color:#34A853;">&rarr;</span>
+              <img src="assets/P01/exif_puppy.jpg" alt="Tegak" style="width:42px; height:42px; object-fit:cover; border-radius:5px; border:1.5px solid #34A853;" />
+            </div>
+            <span style="background:#E6F4EA; color:#137333; font-size:10px; font-weight:700; padding:5px 8px; border-radius:8px; text-align:center;">2. Tegak<br />+ RGB</span>
+          </div>
         </div>
         <div class="card surface">
           <div class="card-top-bar bar-green"></div>
@@ -1843,6 +2082,24 @@ with Image.open(lokasi_foto) as img:
               <li>Jika kodenya sama persis, berarti fotonya 100% kembar walaupun nama file-nya diganti!</li>
             </ul>
           </div>
+          <div style="background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:10px; margin-top:auto; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:8px; padding:4px 8px; flex:1;">
+                <img src="assets/P01/exif_puppy.jpg" alt="foto_a.jpg" style="width:36px; height:36px; object-fit:cover; border-radius:4px;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; color:#202124;">foto_a.jpg</span>
+              </div>
+              <span style="font-size:12px; font-weight:700; color:#5F6368;">&rarr;</span>
+              <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; background:#FEF7E0; color:#8A5700; border:1px solid #FBBC04; padding:5px 8px; border-radius:8px;">SHA-256: a3f9c2...</span>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+              <div style="display:flex; align-items:center; gap:6px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:8px; padding:4px 8px; flex:1;">
+                <img src="assets/P01/exif_puppy.jpg" alt="copy_b.jpg" style="width:36px; height:36px; object-fit:cover; border-radius:4px;" />
+                <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; color:#202124;">copy_b.jpg</span>
+              </div>
+              <span style="font-size:12px; font-weight:700; color:#5F6368;">&rarr;</span>
+              <span style="font-family:'Roboto Mono',monospace; font-size:10px; font-weight:700; background:#FCE8E6; color:#C5221F; border:1px solid #EA4335; padding:5px 8px; border-radius:8px;">SHA-256: a3f9c2...</span>
+            </div>
+          </div>
         </div>
         <div class="card surface">
           <div class="card-top-bar bar-blue"></div>
@@ -1873,6 +2130,22 @@ def get_file_hash(lokasi_foto):
               <li><strong>Foto Polos:</strong> Brightness <code>{polos['mean_brightness']:.2f}</code>, edge density <code>{polos['mean_edge_density']:.4f}</code>.</li>
               <li><strong>Foto Ramai:</strong> Brightness <code>{ramai['mean_brightness']:.2f}</code>, edge density <code>{ramai['mean_edge_density']:.4f}</code> (~7× lebih padat!).</li>
             </ul>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:4px 0;">
+            <div style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border:1.5px solid #4285F4; border-radius:10px; padding:7px;">
+              <img src="assets/P01/sample_polos.jpg" alt="Sampel Polos" style="width:52px; height:52px; object-fit:cover; border-radius:6px;" />
+              <div style="font-size:10.5px; line-height:1.3;">
+                <strong style="color:#1A73E8;">Polos</strong><br />
+                <span style="color:#5F6368;">Terang &amp; bersih<br />Edge: 0.0121</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px; background:#FFFFFF; border:1.5px solid #EA4335; border-radius:10px; padding:7px;">
+              <img src="assets/P01/sample_ramai.jpg" alt="Sampel Ramai" style="width:52px; height:52px; object-fit:cover; border-radius:6px;" />
+              <div style="font-size:10.5px; line-height:1.3;">
+                <strong style="color:#C5221F;">Ramai</strong><br />
+                <span style="color:#5F6368;">Penuh corak<br />Edge: 0.0853</span>
+              </div>
+            </div>
           </div>
           <div class="callout yellow">Angka sudah di tangan. Sekarang saatnya berpendapat!</div>
         </div>
@@ -2000,20 +2273,25 @@ def get_file_hash(lokasi_foto):
               <text x="160" y="198" text-anchor="middle" font-size="11.5" font-weight="600" fill="#5F6368">Klik "Lihat Jawaban" untuk melihat kesimpulan</text>
             </g>
             <g class="vis-a">
-              <rect x="20" y="20" width="280" height="96" rx="14" fill="#E6F4EA" stroke="#34A853" stroke-width="2.5"/>
-              <text x="160" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#137333">DATA BERSIH (TANPA LEAKAGE)</text>
-              <rect x="42" y="64" width="102" height="36" rx="10" fill="#FFFFFF" stroke="#34A853" stroke-width="1.5"/>
-              <text x="93" y="87" text-anchor="middle" font-size="12" font-weight="700" fill="#202124">Train: Unik</text>
-              <rect x="176" y="64" width="102" height="36" rx="10" fill="#FFFFFF" stroke="#34A853" stroke-width="1.5"/>
-              <text x="227" y="87" text-anchor="middle" font-size="12" font-weight="700" fill="#202124">Test: Baru</text>
-              <text x="160" y="87" text-anchor="middle" font-size="14" font-weight="700" fill="#34A853">≠</text>
+              <rect x="16" y="14" width="288" height="114" rx="14" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.5"/>
+              <text x="160" y="38" text-anchor="middle" font-size="12.5" font-weight="700" fill="#C5221F">BAHAYA: DATA LEAKAGE!</text>
+              <rect x="28" y="50" width="112" height="44" rx="10" fill="#FFFFFF" stroke="#EA4335" stroke-width="1.5"/>
+              <text x="84" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#202124">Train Set</text>
+              <text x="84" y="86" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" fill="#1A73E8">foto1.jpg</text>
+              <text x="160" y="76" text-anchor="middle" font-size="16" font-weight="700" fill="#EA4335">=</text>
+              <rect x="180" y="50" width="112" height="44" rx="10" fill="#FFFFFF" stroke="#EA4335" stroke-width="1.5"/>
+              <text x="236" y="70" text-anchor="middle" font-size="11" font-weight="700" fill="#202124">Test Set</text>
+              <text x="236" y="86" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" fill="#C5221F">foto1.jpg (Sama!)</text>
+              <text x="160" y="116" text-anchor="middle" font-size="10" font-weight="700" fill="#C5221F">Soal ujian sama persis dengan latihan!</text>
 
-              <rect x="20" y="138" width="280" height="104" rx="14" fill="#202124"/>
-              <circle cx="72" cy="190" r="28" fill="#FBBC04"/>
-              <text x="72" y="196" text-anchor="middle" font-size="18" font-weight="700" fill="#202124">5/5</text>
-              <text x="192" y="178" text-anchor="middle" font-size="14" font-weight="700" fill="#FFFFFF">Checkpoint Fondasi</text>
-              <text x="192" y="202" text-anchor="middle" font-size="12" font-weight="600" fill="#81C995">Pixel · RGB · Aspect Ratio</text>
-              <text x="192" y="220" text-anchor="middle" font-size="12" font-weight="600" fill="#8AB4F8">EDA · Hash · Data Integrity</text>
+              <rect x="16" y="142" width="288" height="106" rx="14" fill="#202124"/>
+              <text x="160" y="166" text-anchor="middle" font-size="12" font-weight="700" fill="#FBBC04">Akibatnya: Inflated Accuracy</text>
+              <rect x="30" y="180" width="120" height="52" rx="10" fill="#292A2D" stroke="#FBBC04" stroke-width="1.5"/>
+              <text x="90" y="200" text-anchor="middle" font-size="10.5" font-weight="700" fill="#FFFFFF">Nilai Test Set</text>
+              <text x="90" y="220" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FBBC04">~100% (Palsu)</text>
+              <rect x="170" y="180" width="120" height="52" rx="10" fill="#292A2D" stroke="#EA4335" stroke-width="1.5"/>
+              <text x="230" y="200" text-anchor="middle" font-size="10.5" font-weight="700" fill="#FFFFFF">Foto Baru Asli</text>
+              <text x="230" y="220" text-anchor="middle" font-size="12.5" font-weight="700" fill="#F28B82">Anjlok / Gagal!</text>
             </g>
           </svg>
         </div>
@@ -2099,6 +2377,59 @@ def get_file_hash(lokasi_foto):
       <button class="ctrl-btn" onclick="toggleGrid()">Tutup (Esc)</button>
     </div>
     <div id="grid-cards" class="grid-cards"></div>
+  </div>
+
+  <div id="edge-modal" style="display:none; position:fixed; inset:0; z-index:200; background:rgba(32,33,36,0.76); backdrop-filter:blur(4px); align-items:center; justify-content:center; padding:20px;" onclick="if(event.target===this) closeEdgeModal()">
+    <div style="background:#FFFFFF; border-radius:20px; max-width:960px; width:100%; padding:22px 26px; box-shadow:0 20px 50px rgba(0,0,0,0.35); display:flex; flex-direction:column; gap:14px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+        <div>
+          <div style="font-family:'Roboto Mono',monospace; font-size:11px; color:#1A73E8; font-weight:700; text-transform:uppercase;">Eksplorasi Pixel Range Lebih Luas</div>
+          <h3 style="margin:2px 0 0; font-family:var(--font-title); font-size:20px; color:#202124;">Simulasi Kernel 3×3 Edge Detection</h3>
+        </div>
+        <button type="button" onclick="closeEdgeModal()" style="padding:6px 14px; border-radius:999px; border:1px solid #DADCE0; background:#F8F9FA; cursor:pointer; font-weight:700; color:#202124;">✕ Tutup</button>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; background:#F8F9FA; padding:10px 14px; border-radius:12px; border:1px solid #E8EAED;">
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:12px; font-weight:700; color:#5F6368;">Ukuran Grid:</span>
+          <button type="button" class="edge-sz-btn" data-sz="5" onclick="setEdgeModalSize(5)" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">5×5</button>
+          <button type="button" class="edge-sz-btn" data-sz="8" onclick="setEdgeModalSize(8)" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">8×8</button>
+          <button type="button" class="edge-sz-btn" data-sz="10" onclick="setEdgeModalSize(10)" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #1A73E8; background:#E8F0FE; color:#1A73E8; cursor:pointer; font-weight:700;">10×10</button>
+          <button type="button" class="edge-sz-btn" data-sz="12" onclick="setEdgeModalSize(12)" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">12×12</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span style="font-size:12px; font-weight:700; color:#5F6368;">Pola:</span>
+          <button type="button" class="edge-pat-btn" data-pat="vertical" onclick="setEdgeModalPreset('vertical')" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">Garis Tegak</button>
+          <button type="button" class="edge-pat-btn" data-pat="box" onclick="setEdgeModalPreset('box')" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #1A73E8; background:#E8F0FE; color:#1A73E8; cursor:pointer; font-weight:700;">Kotak</button>
+          <button type="button" class="edge-pat-btn" data-pat="diag" onclick="setEdgeModalPreset('diag')" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">Diagonal</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <button id="edge-m-play" type="button" onclick="toggleEdgeModalPlay()" style="font-size:12px; padding:4px 12px; border-radius:999px; border:none; background:#1A73E8; color:#FFF; cursor:pointer; font-weight:700;">Pause</button>
+          <button id="edge-m-spd" type="button" onclick="toggleEdgeModalSpeed()" style="font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid #DADCE0; background:#FFF; cursor:pointer; font-weight:600;">Speed: 2×</button>
+        </div>
+      </div>
+      <div style="display:flex; align-items:center; justify-content:space-around; gap:16px; flex-wrap:wrap;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <span id="edge-m-in-lbl" style="font-size:12.5px; font-weight:700; color:#202124;">Gambar Input (10×10) · <span style="color:#1A73E8; font-weight:500;">klik pixel untuk ubah</span></span>
+          <div id="edge-m-in" style="position:relative; display:grid; gap:2px; background:#E8EAED; padding:3px; border-radius:8px; user-select:none;">
+            <div id="edge-m-win" style="position:absolute; border:2.5px solid #4285F4; background:rgba(66,133,244,0.18); border-radius:5px; pointer-events:none; transition:left 0.14s ease, top 0.14s ease;"></div>
+          </div>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <span style="font-size:12.5px; font-weight:700; color:#202124;">Sobel Kernel (3×3)</span>
+          <div style="display:grid; grid-template-columns:repeat(3, 30px); gap:3px; background:#E8F0FE; padding:5px; border-radius:8px; border:1px solid #AECBFA; font-family:'Roboto Mono',monospace; font-size:11px; font-weight:700; text-align:center;">
+            <span style="background:#FFF; border-radius:4px; line-height:24px; color:#C5221F;">-1</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#137333;">+1</span>
+            <span style="background:#FFF; border-radius:4px; line-height:24px; color:#C5221F;">-2</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#137333;">+2</span>
+            <span style="background:#FFF; border-radius:4px; line-height:24px; color:#C5221F;">-1</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#5F6368;">0</span><span style="background:#FFF; border-radius:4px; line-height:24px; color:#137333;">+1</span>
+          </div>
+          <span style="font-size:11px; color:#5F6368; text-align:center;">Deteksi tepi<br />kiri–kanan &amp; atas–bawah</span>
+        </div>
+        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+          <span id="edge-m-out-lbl" style="font-size:12.5px; font-weight:700; color:#202124;">Peta Edge Output (8×8)</span>
+          <div id="edge-m-out" style="display:grid; gap:2px; background:#202124; padding:4px; border-radius:8px;"></div>
+        </div>
+      </div>
+      <div id="edge-m-status" style="font-family:'Roboto Mono',monospace; font-size:12px; color:#202124; background:#F8F9FA; border:1px solid #E8EAED; border-radius:8px; padding:8px 12px; text-align:center;">Posisi (0,0)</div>
+    </div>
   </div>
 
   <script>
@@ -2351,10 +2682,293 @@ def get_file_hash(lokasi_foto):
     // Interactive normalization calculator
     function updateNorm() {{
       const v = Number(document.getElementById('norm-sl').value);
+      const s01 = (v / 255).toFixed(3);
+      const s11 = (v / 127.5 - 1).toFixed(3);
       document.getElementById('n-u8').textContent = v;
-      document.getElementById('n-01').textContent = (v / 255).toFixed(3);
-      document.getElementById('n-11').textContent = (v / 127.5 - 1).toFixed(3);
+      document.getElementById('n-01').textContent = s01;
+      document.getElementById('n-11').textContent = s11;
+      document.getElementById('f-01').textContent = `${{v}} / 255 = ${{s01}}`;
+      document.getElementById('f-11').textContent = `(${{v}} / 127.5) − 1 = ${{s11}}`;
     }}
+
+    // Animated 3x3 Edge Detection Kernel on Slide 31
+    (function initEdgeAnim() {{
+      const inEl = document.getElementById('edge-in');
+      const outEl = document.getElementById('edge-out');
+      const winEl = document.getElementById('edge-win');
+      const statusEl = document.getElementById('edge-status');
+      if (!inEl || !outEl || !winEl) return;
+
+      const img = [
+        [10, 10, 240, 240, 240],
+        [10, 10, 240, 240, 240],
+        [10, 10, 240, 240, 240],
+        [10, 10, 240, 240, 240],
+        [10, 10, 240, 240, 240]
+      ];
+      const kernel = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+
+      for (let r = 0; r < 5; r++) {{
+        for (let c = 0; c < 5; c++) {{
+          const cell = document.createElement('div');
+          const v = img[r][c];
+          cell.textContent = v;
+          cell.style.cssText = `width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-family:'Roboto Mono',monospace;font-size:8.5px;font-weight:700;border-radius:3px;background:${{v < 100 ? '#3C4043' : '#FFFFFF'}};color:${{v < 100 ? '#E8EAED' : '#202124'}};`;
+          inEl.appendChild(cell);
+        }}
+      }}
+
+      const outCells = [];
+      for (let r = 0; r < 3; r++) {{
+        for (let c = 0; c < 3; c++) {{
+          const cell = document.createElement('div');
+          cell.style.cssText = 'width:24px;height:24px;border-radius:3px;background:#303134;border:1px solid #5F6368;transition:all 0.25s ease;display:flex;align-items:center;justify-content:center;font-family:"Roboto Mono",monospace;font-size:8px;font-weight:700;';
+          outEl.appendChild(cell);
+          outCells.push(cell);
+        }}
+      }}
+
+      let step = 0;
+      let playing = true;
+
+      function renderStep() {{
+        const r = Math.floor(step / 3);
+        const c = step % 3;
+        winEl.style.left = (1 + c * 24) + 'px';
+        winEl.style.top = (1 + r * 24) + 'px';
+
+        let sum = 0;
+        for (let kr = 0; kr < 3; kr++) {{
+          for (let kc = 0; kc < 3; kc++) {{
+            sum += img[r + kr][c + kc] * kernel[kr][kc];
+          }}
+        }}
+        const mag = Math.abs(sum);
+        const isEdge = mag > 100;
+
+        if (step === 0) {{
+          outCells.forEach((oc) => {{
+            oc.style.background = '#303134';
+            oc.style.borderColor = '#5F6368';
+            oc.textContent = '';
+          }});
+        }}
+        const cur = outCells[step];
+        cur.style.background = isEdge ? '#FFFFFF' : '#202124';
+        cur.style.borderColor = '#4285F4';
+        cur.style.color = isEdge ? '#202124' : '#9AA0A6';
+        cur.textContent = isEdge ? '1' : '0';
+
+        if (statusEl) {{
+          statusEl.innerHTML = isEdge
+            ? `Posisi (${{r}},${{c}}) &rarr; Skor=${{mag}} &rarr; <strong style="color:#137333;">EDGE TERDETEKSI (Putih)</strong>`
+            : `Posisi (${{r}},${{c}}) &rarr; Skor=${{mag}} &rarr; <span style="color:#5F6368;">Area rata (Hitam)</span>`;
+        }}
+      }}
+
+      renderStep();
+      setInterval(() => {{
+        if (!playing) return;
+        step = (step + 1) % 9;
+        renderStep();
+      }}, 850);
+
+      window.toggleEdgeAnim = function() {{
+        playing = !playing;
+        const btn = document.getElementById('edge-toggle');
+        if (btn) btn.textContent = playing ? 'Pause' : 'Play';
+      }};
+    }})();
+
+    // Expanded Edge Detection Modal (5x5 up to 12x12)
+    (function initEdgeModal() {{
+      let mSize = 10;
+      let mPat = 'box';
+      let mGrid = [];
+      let mStep = 0;
+      let mPlay = true;
+      let mFast = true;
+      let mTimer = null;
+      let outCells = [];
+
+      function buildPattern(N, pat) {{
+        const g = [];
+        for (let r = 0; r < N; r++) {{
+          const row = [];
+          for (let c = 0; c < N; c++) {{
+            if (pat === 'vertical') {{
+              row.push(c < Math.floor(N / 2) ? 10 : 240);
+            }} else if (pat === 'diag') {{
+              row.push(c >= r ? 240 : 10);
+            }} else {{
+              const pad = N <= 5 ? 1 : N <= 8 ? 2 : 3;
+              const inside = r >= pad && r < N - pad && c >= pad && c < N - pad;
+              row.push(inside ? 240 : 10);
+            }}
+          }}
+          g.push(row);
+        }}
+        return g;
+      }}
+
+      function rebuildModalDOM() {{
+        const inEl = document.getElementById('edge-m-in');
+        const outEl = document.getElementById('edge-m-out');
+        const winEl = document.getElementById('edge-m-win');
+        if (!inEl || !outEl || !winEl) return;
+
+        const cellPx = mSize <= 5 ? 42 : mSize <= 8 ? 32 : mSize <= 10 ? 27 : 23;
+        const gap = 2;
+        const stride = cellPx + gap;
+        const outN = mSize - 2;
+
+        document.getElementById('edge-m-in-lbl').innerHTML = `Gambar Input (${{mSize}}×${{mSize}}) · <span style="color:#1A73E8; font-weight:500;">klik pixel untuk ubah</span>`;
+        document.getElementById('edge-m-out-lbl').textContent = `Peta Edge Output (${{outN}}×${{outN}})`;
+
+        inEl.querySelectorAll('.em-cell').forEach((n) => n.remove());
+        outEl.innerHTML = '';
+        outCells = [];
+
+        inEl.style.gridTemplateColumns = `repeat(${{mSize}}, ${{cellPx}}px)`;
+        inEl.style.gridTemplateRows = `repeat(${{mSize}}, ${{cellPx}}px)`;
+        winEl.style.width = (cellPx * 3 + gap * 2 + 4) + 'px';
+        winEl.style.height = (cellPx * 3 + gap * 2 + 4) + 'px';
+
+        for (let r = 0; r < mSize; r++) {{
+          for (let c = 0; c < mSize; c++) {{
+            const cell = document.createElement('div');
+            cell.className = 'em-cell';
+            const v = mGrid[r][c];
+            cell.textContent = mSize <= 10 ? v : '';
+            cell.title = `(${{r}},${{c}}) = ${{v}} (klik untuk ubah)`;
+            cell.style.cssText = `width:${{cellPx}}px;height:${{cellPx}}px;display:flex;align-items:center;justify-content:center;font-family:'Roboto Mono',monospace;font-size:${{mSize <= 8 ? 10 : 8.5}}px;font-weight:700;border-radius:4px;cursor:pointer;background:${{v < 100 ? '#3C4043' : '#FFFFFF'}};color:${{v < 100 ? '#E8EAED' : '#202124'}};`;
+            cell.onclick = () => {{
+              mGrid[r][c] = mGrid[r][c] < 100 ? 240 : 10;
+              rebuildModalDOM();
+              renderModalStep();
+            }};
+            inEl.appendChild(cell);
+          }}
+        }}
+
+        const outPx = Math.min(34, Math.floor((cellPx * mSize) / outN));
+        outEl.style.gridTemplateColumns = `repeat(${{outN}}, ${{outPx}}px)`;
+        outEl.style.gridTemplateRows = `repeat(${{outN}}, ${{outPx}}px)`;
+        for (let r = 0; r < outN; r++) {{
+          for (let c = 0; c < outN; c++) {{
+            const oc = document.createElement('div');
+            oc.style.cssText = `width:${{outPx}}px;height:${{outPx}}px;border-radius:4px;background:#303134;border:1px solid #5F6368;display:flex;align-items:center;justify-content:center;font-family:'Roboto Mono',monospace;font-size:${{outN <= 6 ? 10 : 8.5}}px;font-weight:700;transition:all 0.15s ease;`;
+            outEl.appendChild(oc);
+            outCells.push(oc);
+          }}
+        }}
+        mStep = 0;
+        renderModalStep();
+      }}
+
+      function renderModalStep() {{
+        const winEl = document.getElementById('edge-m-win');
+        const statusEl = document.getElementById('edge-m-status');
+        if (!winEl || outCells.length === 0) return;
+
+        const outN = mSize - 2;
+        const cellPx = mSize <= 5 ? 42 : mSize <= 8 ? 32 : mSize <= 10 ? 27 : 23;
+        const stride = cellPx + 2;
+        const r = Math.floor(mStep / outN);
+        const c = mStep % outN;
+
+        winEl.style.left = (1 + c * stride) + 'px';
+        winEl.style.top = (1 + r * stride) + 'px';
+
+        const kx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]];
+        const ky = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
+        let gx = 0, gy = 0;
+        for (let kr = 0; kr < 3; kr++) {{
+          for (let kc = 0; kc < 3; kc++) {{
+            const val = mGrid[r + kr][c + kc];
+            gx += val * kx[kr][kc];
+            gy += val * ky[kr][kc];
+          }}
+        }}
+        const mag = Math.round(Math.hypot(gx, gy));
+        const isEdge = mag > 150;
+
+        if (mStep === 0) {{
+          outCells.forEach((oc) => {{
+            oc.style.background = '#303134';
+            oc.style.borderColor = '#5F6368';
+            oc.textContent = '';
+          }});
+        }}
+        const cur = outCells[mStep];
+        cur.style.background = isEdge ? '#FFFFFF' : '#202124';
+        cur.style.borderColor = '#4285F4';
+        cur.style.color = isEdge ? '#202124' : '#9AA0A6';
+        cur.textContent = isEdge ? '1' : '0';
+
+        if (statusEl) {{
+          statusEl.innerHTML = isEdge
+            ? `Posisi (${{r}},${{c}}) &rarr; |Gx|=${{Math.abs(gx)}}, |Gy|=${{Math.abs(gy)}} &rarr; Skor=${{mag}} &rarr; <strong style="color:#137333;">EDGE TERDETEKSI (Putih)</strong>`
+            : `Posisi (${{r}},${{c}}) &rarr; |Gx|=${{Math.abs(gx)}}, |Gy|=${{Math.abs(gy)}} &rarr; Skor=${{mag}} &rarr; <span style="color:#5F6368;">Area rata (Hitam)</span>`;
+        }}
+      }}
+
+      function startTimer() {{
+        if (mTimer) clearInterval(mTimer);
+        mTimer = setInterval(() => {{
+          const modal = document.getElementById('edge-modal');
+          if (!modal || modal.style.display === 'none' || !mPlay) return;
+          const total = (mSize - 2) * (mSize - 2);
+          mStep = (mStep + 1) % total;
+          renderModalStep();
+        }}, mFast ? 220 : 650);
+      }}
+
+      window.openEdgeModal = function() {{
+        const modal = document.getElementById('edge-modal');
+        if (!modal) return;
+        modal.style.display = 'flex';
+        mGrid = buildPattern(mSize, mPat);
+        rebuildModalDOM();
+        startTimer();
+      }};
+      window.closeEdgeModal = function() {{
+        const modal = document.getElementById('edge-modal');
+        if (modal) modal.style.display = 'none';
+        if (mTimer) {{ clearInterval(mTimer); mTimer = null; }}
+      }};
+      window.setEdgeModalSize = function(sz) {{
+        mSize = sz;
+        document.querySelectorAll('.edge-sz-btn').forEach((b) => {{
+          const active = Number(b.dataset.sz) === sz;
+          b.style.borderColor = active ? '#1A73E8' : '#DADCE0';
+          b.style.background = active ? '#E8F0FE' : '#FFF';
+          b.style.color = active ? '#1A73E8' : '#202124';
+        }});
+        mGrid = buildPattern(mSize, mPat);
+        rebuildModalDOM();
+      }};
+      window.setEdgeModalPreset = function(pat) {{
+        mPat = pat;
+        document.querySelectorAll('.edge-pat-btn').forEach((b) => {{
+          const active = b.dataset.pat === pat;
+          b.style.borderColor = active ? '#1A73E8' : '#DADCE0';
+          b.style.background = active ? '#E8F0FE' : '#FFF';
+          b.style.color = active ? '#1A73E8' : '#202124';
+        }});
+        mGrid = buildPattern(mSize, mPat);
+        rebuildModalDOM();
+      }};
+      window.toggleEdgeModalPlay = function() {{
+        mPlay = !mPlay;
+        document.getElementById('edge-m-play').textContent = mPlay ? 'Pause' : 'Play';
+      }};
+      window.toggleEdgeModalSpeed = function() {{
+        mFast = !mFast;
+        document.getElementById('edge-m-spd').textContent = mFast ? 'Speed: 2×' : 'Speed: 1×';
+        startTimer();
+      }};
+    }})();
 
     // Interactive Question -> Answer Reveal & Quiz toggles
     function syncVisualReveal(id, shown) {{

@@ -1,38 +1,56 @@
-const CACHE_NAME = 'p01-slides-pwa-v1';
-const ASSETS = [
+const CACHE_NAME = 'dl-course-pwa-v2';
+const PRECACHE_ASSETS = [
   './',
   './index.html',
+  './sessions.json',
   './manifest.webmanifest',
   './slides/P01_image_processing_eda.html',
   './slides/assets/P01/icon-192.png',
-  './slides/assets/P01/icon-512.png',
-  './slides/assets/P01/01_opening_character.png',
-  './slides/assets/P01/04_grayscale_vs_rgb.png',
-  './slides/assets/P01/05_rgb_channels.png',
-  './slides/assets/P01/06_resize_aspect_ratio.png',
-  './slides/assets/P01/07_histogram_brightness_contrast.png',
-  './slides/assets/P01/07b_brightness_contrast_box.png',
-  './slides/assets/P01/08_canny_edge_density.png',
-  './slides/assets/P01/09_exif_trap.png',
-  './slides/assets/P01/human_vision_realistic.jpg',
+  './slides/assets/P01/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(PRECACHE_ASSETS))
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
+    caches.keys()
+      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE_NAME).map((k) => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  const isDynamic = url.pathname.endsWith('.html') ||
+                    url.pathname.endsWith('.json') ||
+                    url.pathname === '/' ||
+                    /^\/p0?[1-8]$/i.test(url.pathname);
+
+  if (isDynamic) {
+    // Network-first for portal, session manifest, and slide HTML so new P02-P08 updates show immediately
+    event.respondWith(
+      fetch(event.request)
+        .then((resp) => {
+          if (resp && resp.status === 200 && resp.type === 'basic') {
+            const copy = resp.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          }
+          return resp;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // Stale-while-revalidate for static assets (images, icons, etc.)
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const fetched = fetch(event.request)

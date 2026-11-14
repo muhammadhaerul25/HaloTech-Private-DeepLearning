@@ -1,0 +1,44 @@
+{
+  "framework": null,
+  "buildCommand": "",
+  "outputDirectory": ".",
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/p1", "destination": "/slides/P01_image_processing_eda.html" },
+    { "source": "/p01", "destination": "/slides/P01_image_processing_eda.html" },
+    { "source": "/p2", "destination": "/index.html" },
+    { "source": "/p02", "destination": "/index.html" },
+    { "source": "/p3", "destination": "/index.html" },
+    { "source": "/p03", "destination": "/index.html" },
+    { "source": "/p4", "destination": "/index.html" },
+    { "source": "/p04", "destination": "/index.html" },
+    { "source": "/p5", "destination": "/index.html" },
+    { "source": "/p05", "destination": "/index.html" },
+    { "source": "/p6", "destination": "/index.html" },
+    { "source": "/p06", "destination": "/index.html" },
+    { "source": "/p7", "destination": "/index.html" },
+    { "source": "/p07", "destination": "/index.html" },
+    { "source": "/p8", "destination": "/index.html" },
+    { "source": "/p08", "destination": "/index.html" }
+  ],
+  "headers": [
+    {
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache, no-store, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/sessions.json",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-cache" }
+      ]
+    },
+    {
+      "source": "/slides/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    }
+  ]
+}

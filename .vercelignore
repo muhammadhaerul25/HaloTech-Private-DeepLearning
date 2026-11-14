@@ -1,0 +1,13 @@
+Referensi Slides/
+Materials/
+data/raw/
+tools/
+docs/
+results/
+.github/
+__pycache__/
+*.pyc
+requirements.txt
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db

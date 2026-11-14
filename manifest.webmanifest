@@ -1,11 +1,11 @@
 {
-  "name": "P01 - Understanding Images, Image Processing & EDA",
-  "short_name": "P1 Image Processing",
-  "description": "Slide interaktif Deep Learning Untuk Pemula — Memahami Gambar di Komputer, Image Processing & EDA oleh Muhammad Haerul.",
-  "start_url": "./slides/P01_image_processing_eda.html",
+  "name": "Deep Learning Course (P01–P08) — Muhammad Haerul",
+  "short_name": "DL Course",
+  "description": "Portal materi & slide interaktif Deep Learning Untuk Pemula (P01–P08) — Klasifikasi Karakter Disney oleh Muhammad Haerul.",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "any",
   "background_color": "#F8F9FA",
   "theme_color": "#202124",
   "icons": [
@@ -23,4 +23,3 @@
     }
   ]
 }
-

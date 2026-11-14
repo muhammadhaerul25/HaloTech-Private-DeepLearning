@@ -1,0 +1,109 @@
+{
+  "courseTitle": "Deep Learning Untuk Pemula",
+  "subtitle": "Project: Klasifikasi Karakter Disney dengan CNN & Transfer Learning (MobileNetV2)",
+  "instructor": "Muhammad Haerul",
+  "sessions": [
+    {
+      "id": "P01",
+      "slug": "/p1",
+      "phase": "Fondasi",
+      "color": "#4285F4",
+      "tint": "#E8F0FE",
+      "title": "Understanding Images, Image Processing & EDA",
+      "description": "Memahami gambar sebagai array angka (H×W×C), RGB vs Grayscale, normalisasi, koreksi EXIF, serta EDA dataset polos vs ramai.",
+      "duration": "120 menit",
+      "status": "available",
+      "links": {
+        "slidesHtml": "slides/P01_image_processing_eda.html",
+        "slidesPdf": "slides/P01_image_processing_eda.pdf",
+        "slidesPptx": "slides/P01_image_processing_eda.pptx",
+        "notebook": "notebooks/P01_image_processing_eda.ipynb",
+        "solution": "notebooks/solutions/P01_image_processing_eda.ipynb"
+      }
+    },
+    {
+      "id": "P02",
+      "slug": "/p2",
+      "phase": "Fondasi",
+      "color": "#EA4335",
+      "tint": "#FCE8E6",
+      "title": "Teori Neural Network (ANN)",
+      "description": "Cara kerja neuron, weight & bias, fungsi aktivasi (ReLU, Sigmoid, Softmax), loss function, dan gradient descent secara intuitif.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P03",
+      "slug": "/p3",
+      "phase": "Fondasi",
+      "color": "#FBBC04",
+      "tint": "#FEF7E0",
+      "title": "CNN Fundamentals & Tugas Computer Vision",
+      "description": "Konvolusi, kernel/filter, stride, padding, pooling, feature map, serta perbedaan classification, detection, dan segmentation.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P04",
+      "slug": "/p4",
+      "phase": "Fondasi",
+      "color": "#34A853",
+      "tint": "#E6F4EA",
+      "title": "Arsitektur CNN & Transfer Learning",
+      "description": "Evolusi arsitektur CNN, konsep transfer learning, feature extraction vs fine-tuning, dan pengenalan MobileNetV2.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P05",
+      "slug": "/p5",
+      "phase": "Eksperimen",
+      "color": "#4285F4",
+      "tint": "#E8F0FE",
+      "title": "Metodologi Data: Collection, Splitting & Desain Eksperimen",
+      "description": "Stratified & group split per sesi foto, deteksi duplikat via hash, pencegahan data leakage, serta skenario uji S1 & S2.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P06",
+      "slug": "/p6",
+      "phase": "Eksperimen",
+      "color": "#EA4335",
+      "tint": "#FCE8E6",
+      "title": "Data Pipeline, Augmentation & Model Baseline",
+      "description": "Membangun tf.data / Keras image pipeline, data augmentation hanya pada train, dan melatih model baseline MobileNetV2 beku.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P07",
+      "slug": "/p7",
+      "phase": "Eksperimen",
+      "color": "#FBBC04",
+      "tint": "#FEF7E0",
+      "title": "Training Lengkap & Fine-tuning",
+      "description": "Strategi fine-tuning dua tahap dengan learning rate kecil, callbacks (EarlyStopping, ReduceLROnPlateau, ModelCheckpoint).",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    },
+    {
+      "id": "P08",
+      "slug": "/p8",
+      "phase": "Analisis & Pelaporan",
+      "color": "#34A853",
+      "tint": "#E6F4EA",
+      "title": "Evaluasi Metrics, Analisis Error & Grad-CAM",
+      "description": "Evaluasi test set polos vs ramai, confusion matrix, analisis kesalahan prediksi, dan visualisasi Grad-CAM beserta batasannya.",
+      "duration": "120 menit",
+      "status": "coming_soon",
+      "links": {}
+    }
+  ]
+}
