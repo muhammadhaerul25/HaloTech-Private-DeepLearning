@@ -11,9 +11,10 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 ├── index.html                          # Entry redirect ke slide P1 + PWA manifest
 ├── manifest.webmanifest                # Konfigurasi Web App Manifest (PWA)
 ├── sw.js                               # Service Worker untuk caching offline (14 aset)
-├── requirements.txt                    # Dependensi Python untuk slide & notebook
-├── PLAN.md                             # Kurikulum utama
+├── requirements.txt                    # Dependensi Python untuk slide, PDF & notebook
 ├── docs/
+│   ├── PLAN.md                         # Kurikulum utama
+│   ├── PROMPT_MASTER.md                # Prompt master perancangan materi
 │   └── PROGRESS.md                     # Status implementasi & hasil validasi
 ├── Materials/                          # Paket materi siap pakai per pertemuan
 │   └── P01 - Understanding Images, Image Processing & EDA/
@@ -36,7 +37,8 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 ├── data/
 │   └── sample/                         # 120 foto sintetis (5 kelas × polos/ramai)
 ├── results/                            # Output CSV & grafik boxplot EDA
-└── tools/                              # Skrip generator & validator reproducible
+└── tools/                              # Skrip generator, ekspor & validator
+    ├── build_all.py                    # Jalankan seluruh pipeline P01 dalam 1 perintah
     ├── build_html_slides_P01.py
     ├── build_notebooks_P01.py
     ├── build_slides_P01.py
@@ -50,9 +52,5 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 ## Cara Menjalankan / Rebuild Lokal
 ```bash
 pip install -r requirements.txt
-python tools/make_sample_data.py
-python tools/build_html_slides_P01.py
-python tools/export_pdf_P01.py
-python tools/build_notebooks_P01.py
-python tools/sync_materials.py
+python tools/build_all.py
 ```

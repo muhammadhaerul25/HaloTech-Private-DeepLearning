@@ -1,6 +1,6 @@
-"""Build slides/P04_image_processing_eda.pptx from data/sample/ using slide_theme.py.
+"""Build slides/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
 
-Generates real data visualizations in slides/assets/P04/ and composes
+Generates real data visualizations in slides/assets/P01/ and composes
 exactly 22 Google I/O-inspired slides with Bahasa Indonesia speaker notes
 whose time allocations sum to 120 minutes.
 """
@@ -31,11 +31,11 @@ sys.path.insert(0, str(ROOT_DIR / "tools"))
 import slide_theme as st
 
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
-ASSETS_DIR = ROOT_DIR / "slides" / "assets" / "P04"
-OUT_PPTX = ROOT_DIR / "slides" / "P04_image_processing_eda.pptx"
+ASSETS_DIR = ROOT_DIR / "slides" / "assets" / "P01"
+OUT_PPTX = ROOT_DIR / "slides" / "P01_image_processing_eda.pptx"
 STATS_JSON = ASSETS_DIR / "sample_stats.json"
 
-SESSION_LABEL = "P04 · Image Processing & EDA Foto Sendiri"
+SESSION_LABEL = "P01 · Understanding Images, Image Processing & EDA"
 
 
 # ---------------------------------------------------------------------------
@@ -399,7 +399,7 @@ def build_deck(stats: dict, vis: dict[str, Path]) -> None:
     st.add_four_shape_cluster(s1, left=Inches(9.4), top=Inches(1.1), scale=1.05, on_dark=True)
     st.add_session_cover_badge(
         s1,
-        "Deep Learning Track · Session P04 · 120 menit",
+        "Deep Learning Track · Session P01 · 120 menit",
         left=st.MARGIN_X,
         top=Inches(1.35),
         bg_color=st.BLUE,
@@ -1485,7 +1485,7 @@ Mari kita tutup sesi hari ini dengan rangkuman dan preview sesi berikutnya.""",
         Inches(3.85),
         Inches(6.9),
         Inches(2.8),
-        headers=["Kriteria Berhasil P04", "Target"],
+        headers=["Kriteria Berhasil P01", "Target"],
         rows=[
             ["Pahami shape input", "Bisa jelaskan (224, 224, 3)"],
             ["Statistik dataset", "Tabel polos vs ramai terbaca"],

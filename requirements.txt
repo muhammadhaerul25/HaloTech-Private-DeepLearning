@@ -8,4 +8,5 @@ nbformat>=5.10.0
 nbconvert>=7.16.0
 ipykernel>=6.29.0
 pymupdf>=1.24.0
+playwright>=1.44.0
 
