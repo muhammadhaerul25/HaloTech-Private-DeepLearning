@@ -1,0 +1,5 @@
+,brightness,brightness,brightness,brightness,brightness,contrast,contrast,contrast,contrast,contrast,edge_density,edge_density,edge_density,edge_density,edge_density
+,count,mean,std,min,max,count,mean,std,min,max,count,mean,std,min,max
+condition,,,,,,,,,,,,,,,
+polos,59,228.1751,6.2199,216.4513,241.1975,59,44.7152,8.9094,26.8009,59.1663,59,0.0151,0.0025,0.0111,0.0198
+ramai,59,127.2092,10.8296,102.2422,152.1194,59,53.6672,4.8276,43.1334,63.4019,59,0.0688,0.0098,0.0512,0.0957
