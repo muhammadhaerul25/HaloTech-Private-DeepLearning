@@ -209,6 +209,23 @@ print("Cek Langkah 1 lolos!")
 """
             )
         )
+        cells.append(
+            md(
+                """
+<details>
+<summary><b>💡 Hint & Jawaban Langkah 1</b> (klik untuk membuka)</summary>
+
+**Hint:** `arr_raw.shape` mengembalikan tuple `(tinggi, lebar, channel)`. Untuk mengambil 1 titik pixel pada array 3D, gunakan indeks `[baris, kolom]`.
+
+**Jawaban:**
+```python
+img_h, img_w, img_c = arr_raw.shape
+center_rgb = arr_raw[img_h // 2, img_w // 2]
+```
+</details>
+"""
+            )
+        )
 
     # =========================================================================
     # LANGKAH 2: MEMISAHKAN RGB CHANNELS & KONVERSI GRAYSCALE
@@ -292,6 +309,25 @@ for ax, (img_data, cmap, title) in zip(axes, panels):
 plt.tight_layout()
 plt.show()
 print("Cek Langkah 2 lolos!")
+"""
+            )
+        )
+        cells.append(
+            md(
+                """
+<details>
+<summary><b>💡 Hint & Jawaban Langkah 2</b> (klik untuk membuka)</summary>
+
+**Hint:** Array RGB berdimensi `(Tinggi, Lebar, 3)`. Gunakan slicing `[:, :, indeks]` untuk mengambil tiap channel, dan fungsi `cv2.cvtColor(arr_raw, cv2.COLOR_RGB2GRAY)` untuk mengubah ke Grayscale.
+
+**Jawaban:**
+```python
+r_ch = arr_raw[:, :, 0]
+g_ch = arr_raw[:, :, 1]
+b_ch = arr_raw[:, :, 2]
+gray_arr = cv2.cvtColor(arr_raw, cv2.COLOR_RGB2GRAY)
+```
+</details>
 """
             )
         )
@@ -403,6 +439,28 @@ plt.show()
 print(f"Sebelum normalisasi: dtype={arr_u8.dtype}, min={arr_u8.min()}, max={arr_u8.max()}")
 print(f"Sesudah normalisasi: dtype={arr_norm.dtype}, min={arr_norm.min():.4f}, max={arr_norm.max():.4f}")
 print("Cek Langkah 3 lolos!")
+"""
+            )
+        )
+        cells.append(
+            md(
+                """
+<details>
+<summary><b>💡 Hint & Jawaban Langkah 3</b> (klik untuk membuka)</summary>
+
+**Hint:**
+- Untuk *Letterbox Padding*, sisi terpanjang (`max(w, h)`) harus pas menjadi `target_size`, sehingga faktor skalanya adalah `target_size / max(w, h)`.
+- Untuk *Normalization*, ubah tipe ke `np.float32` dengan `.astype(np.float32)` lalu bagi `255.0`.
+
+**Jawaban:**
+```python
+# 3A:
+scale = target_size / max(w, h)
+
+# 3B:
+arr_norm = arr_u8.astype(np.float32) / 255.0
+```
+</details>
 """
             )
         )
@@ -584,6 +642,32 @@ print("Cek Langkah 4 lolos!")
 """
             )
         )
+        cells.append(
+            md(
+                """
+<details>
+<summary><b>💡 Hint & Jawaban Langkah 4</b> (klik untuk membuka)</summary>
+
+**Hint:**
+- **4A (EXIF):** Gunakan fungsi `ImageOps.exif_transpose(im)`.
+- **4B (Corrupted):** Panggil `im.verify()` di dalam blok `try` agar file yang rusak melempar exception.
+- **4C (SHA-256):** Perbarui objek hash per potongan byte dengan `h.update(chunk)`.
+
+**Jawaban:**
+```python
+# 4A:
+im_fixed = ImageOps.exif_transpose(im)
+
+# 4B:
+im.verify()
+
+# 4C:
+h.update(chunk)
+```
+</details>
+"""
+            )
+        )
 
     # =========================================================================
     # LANGKAH 5: EDA KESEHATAN DATASET (CLASS BALANCE, BRIGHTNESS, CONTRAST, EDGE DENSITY)
@@ -674,6 +758,28 @@ assert (df_valid["contrast"] >= 0).all()
 assert df_valid["edge_density"].between(0, 1).all()
 print("Cek Langkah 5 lolos! Contoh 5 baris hasil metrik:")
 print(df_valid[["rel_path", "condition", "brightness", "contrast", "edge_density"]].head().to_string(index=False))
+"""
+            )
+        )
+        cells.append(
+            md(
+                """
+<details>
+<summary><b>💡 Hint & Jawaban Langkah 5</b> (klik untuk membuka)</summary>
+
+**Hint:**
+- `brightness` adalah rata-rata intensitas (`np.mean(gray)`).
+- `contrast` adalah simpangan baku intensitas (`np.std(gray)`).
+- `edge_density` adalah proporsi piksel tepi yang bernilai > 0 pada hasil `edges` (`np.mean(edges > 0)`).
+
+**Jawaban:**
+```python
+brightness = float(np.mean(gray))
+contrast = float(np.std(gray))
+edges = cv2.Canny(gray, 100, 200)
+edge_density = float(np.mean(edges > 0))
+```
+</details>
 """
             )
         )
