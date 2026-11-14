@@ -61,6 +61,14 @@ def sync_session(session: dict[str, str]) -> Path:
         sol_dir.mkdir(parents=True, exist_ok=True)
         shutil.copy2(sol_src, sol_dir / sol_src.name)
 
+    # 4. Data sampel agar notebook di Materials/ bisa langsung dijalankan standalone
+    data_src = ROOT / "data" / "sample"
+    if data_src.exists():
+        data_dst = target_dir / "data" / "sample"
+        if data_dst.exists():
+            shutil.rmtree(data_dst)
+        shutil.copytree(data_src, data_dst)
+
     return target_dir
 
 
@@ -78,3 +86,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+

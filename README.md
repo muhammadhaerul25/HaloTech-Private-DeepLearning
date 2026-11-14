@@ -22,6 +22,7 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 │       ├── P01_image_processing_eda.pptx
 │       ├── P01_image_processing_eda.ipynb
 │       ├── solutions/P01_image_processing_eda.ipynb
+│       ├── data/sample/
 │       └── assets/P01/
 ├── slides/
 │   ├── P01_image_processing_eda.html   # Dek interaktif 54 slide (HTML5)
