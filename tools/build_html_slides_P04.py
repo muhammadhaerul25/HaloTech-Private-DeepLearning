@@ -33,7 +33,7 @@ def build_html() -> str:
   <title>Memahami Gambar di Komputer &amp; Image Processing (54 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {{
       --blue: #4285F4;
@@ -344,56 +344,76 @@ def build_html() -> str:
   <div id="stage-wrap">
 
     <!-- 01: COVER -->
-    <section class="slide active" data-title="Cover — Memahami Gambar &amp; Image Processing" data-notes="Alokasi waktu: 1 menit. Selamat datang! Hari ini kita belajar dari paling dasar: bagaimana mata kita dan komputer melihat gambar, mengapa foto perlu dirapikan (Image Processing), dan bagaimana memeriksa kesehatan koleksi foto kita." style="background: radial-gradient(circle at 82% 50%, rgba(66,133,244,0.07) 0%, rgba(52,168,83,0.04) 28%, #F8F9FA 62%, #FFFFFF 100%); justify-content: space-between;">
-      <div>
-        <div style="font-size:11px; font-weight:700; letter-spacing:1.4px; color:#80868B; text-transform:uppercase;">COVER</div>
-        <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
-          <span style="display:inline-flex; gap:5px; align-items:center;">
-            <span style="width:8px; height:8px; border-radius:50%; background:#4285F4;"></span>
-            <span style="width:8px; height:8px; border-radius:50%; background:#EA4335;"></span>
-            <span style="width:8px; height:8px; border-radius:50%; background:#FBBC04;"></span>
-            <span style="width:8px; height:8px; border-radius:50%; background:#34A853;"></span>
+    <section class="slide active" data-title="Cover — Memahami Gambar &amp; Image Processing" data-notes="Alokasi waktu: 1 menit. Selamat datang! Hari ini kita belajar dari paling dasar: bagaimana mata kita dan komputer melihat gambar, mengapa foto perlu dirapikan (Image Processing), dan bagaimana memeriksa kesehatan koleksi foto kita." style="background: radial-gradient(circle at 82% 46%, rgba(251,188,4,0.14) 0%, rgba(66,133,244,0.10) 32%, rgba(234,67,53,0.05) 56%, #FFFFFF 100%); justify-content: space-between;">
+      <!-- Playful floating geometric accents -->
+      <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
+        <circle cx="885" cy="72" r="24" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2" opacity="0.85"/>
+        <rect x="640" y="54" width="22" height="22" rx="7" transform="rotate(18 651 65)" fill="#E8F0FE" stroke="#4285F4" stroke-width="2" opacity="0.8"/>
+        <polygon points="560,415 574,439 546,439" fill="#E6F4EA" stroke="#34A853" stroke-width="2" opacity="0.8"/>
+        <circle cx="912" cy="402" r="14" fill="#FCE8E6" stroke="#EA4335" stroke-width="2" opacity="0.8"/>
+      </svg>
+
+      <div style="position:relative; z-index:1;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="display:inline-flex; gap:5px; align-items:center; background:#FFFFFF; border:1px solid #E0E3E7; padding:5px 12px; border-radius:999px; box-shadow:0 2px 6px rgba(0,0,0,0.04);">
+            <span style="width:9px; height:9px; border-radius:50%; background:#4285F4;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#EA4335;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#FBBC04;"></span>
+            <span style="width:9px; height:9px; border-radius:50%; background:#34A853;"></span>
+            <span style="font-size:11.5px; font-weight:700; letter-spacing:1px; color:#202124; margin-left:4px;">DEEP LEARNING TRACK</span>
           </span>
-          <span style="font-size:13.5px; font-weight:500; color:#5F6368;">Deep Learning Untuk Pemula &nbsp;·&nbsp; 120 Menit &nbsp;·&nbsp; Minggu, 15 November 2026</span>
+          <span style="font-size:13.5px; font-weight:600; color:#5F6368;">120 Menit &nbsp;·&nbsp; Minggu, 15 November 2026</span>
         </div>
       </div>
 
-      <div style="display:grid; grid-template-columns: 1.55fr 0.75fr; align-items:center; gap:24px; margin:auto 0;">
+      <div style="position:relative; z-index:1; display:grid; grid-template-columns: 1.5fr 0.8fr; align-items:center; gap:24px; margin:auto 0;">
         <div>
-          <h1 style="font-size:clamp(34px,4.1vw,52px); line-height:1.12; color:#202124; margin:0; letter-spacing:-0.8px;">
-            Memahami Gambar di<br />Komputer &amp; Image Processing
+          <h1 style="font-family:'Fredoka', 'Poppins', sans-serif; font-size:clamp(36px,4.3vw,56px); font-weight:700; line-height:1.10; color:#202124; margin:0; letter-spacing:-0.4px;">
+            Memahami Gambar di<br />
+            <span style="display:inline-block; padding-top:2px; background:linear-gradient(90deg, #4285F4 0%, #8E24AA 55%, #EA4335 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Komputer &amp; Image Processing</span>
           </h1>
-          <div style="height:3px; width:100%; max-width:640px; border-radius:3px; margin:14px 0 16px; background:linear-gradient(90deg, #4285F4 0%, #34A853 100%);"></div>
-          <div style="font-size:clamp(18px,1.9vw,24px); font-weight:400; color:#5F6368; line-height:1.35;">
+          <div style="height:5px; width:100%; max-width:620px; border-radius:999px; margin:14px 0 16px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%);"></div>
+          <div style="font-size:clamp(18px,1.9vw,23px); font-weight:500; color:#5F6368; line-height:1.38;">
             Dari Cara Komputer Membaca Foto Hingga Audit Kesehatan Dataset
           </div>
-          <div style="margin-top:10px; font-size:15px; color:#5F6368;">
-            Presented by <strong style="color:#202124; font-weight:700;">Muhammad Haerul</strong>
+          <div style="margin-top:14px; display:inline-flex; align-items:center; gap:10px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:6px 16px 6px 8px; box-shadow:0 3px 10px rgba(66,133,244,0.08);">
+            <span style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:'Fredoka',sans-serif; font-size:12px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
+            <span style="font-size:14px; color:#5F6368;">Presented by <strong style="color:#202124; font-weight:700;">Muhammad Haerul</strong></span>
           </div>
         </div>
 
         <div style="display:flex; align-items:center; justify-content:center;">
-          <svg viewBox="0 0 240 240" style="width:210px; height:210px;">
+          <svg viewBox="0 0 260 260" style="width:240px; height:240px;">
             <defs>
               <filter id="coverGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#4285F4" flood-opacity="0.16"/>
+                <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#4285F4" flood-opacity="0.20"/>
               </filter>
             </defs>
-            <circle cx="120" cy="120" r="96" fill="none" stroke="#4285F4" stroke-width="1.2" stroke-dasharray="110 85 60 95" opacity="0.32"/>
-            <circle cx="120" cy="120" r="74" fill="none" stroke="#EA4335" stroke-width="1.2" stroke-dasharray="80 70 90 60" stroke-dashoffset="35" opacity="0.30"/>
-            <circle cx="120" cy="120" r="54" fill="none" stroke="#34A853" stroke-width="1.2" stroke-dasharray="65 55 45 65" stroke-dashoffset="15" opacity="0.35"/>
-            <circle cx="120" cy="120" r="34" fill="#FFFFFF" filter="url(#coverGlow)"/>
-            <!-- Crisp layered image/pixel icon in center -->
-            <g transform="translate(106,106)" fill="none" stroke="#4285F4" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
-              <polygon points="14,3 26,9.5 14,16 2,9.5"/>
-              <polyline points="2,14.5 14,21 26,14.5"/>
-              <polyline points="2,19.5 14,26 26,19.5"/>
-            </g>
+            <!-- Playful colorful orbital rings -->
+            <circle cx="130" cy="130" r="106" fill="none" stroke="#4285F4" stroke-width="2" stroke-dasharray="115 70 45 75" opacity="0.48"/>
+            <circle cx="130" cy="130" r="84" fill="none" stroke="#EA4335" stroke-width="2" stroke-dasharray="80 55 70 50" stroke-dashoffset="35" opacity="0.45"/>
+            <circle cx="130" cy="130" r="64" fill="none" stroke="#34A853" stroke-width="2" stroke-dasharray="60 45 50 45" stroke-dashoffset="15" opacity="0.52"/>
+            <!-- Orbiting playful shapes -->
+            <circle cx="234" cy="116" r="9" fill="#FBBC04" stroke="#FFFFFF" stroke-width="2"/>
+            <rect x="44" y="64" width="16" height="16" rx="5" fill="#4285F4" stroke="#FFFFFF" stroke-width="2"/>
+            <circle cx="192" cy="210" r="8" fill="#34A853" stroke="#FFFFFF" stroke-width="2"/>
+            <circle cx="48" cy="182" r="7" fill="#EA4335" stroke="#FFFFFF" stroke-width="2"/>
+            <!-- Center playful 3x3 pixel grid card -->
+            <rect x="86" y="86" width="88" height="88" rx="24" fill="#FFFFFF" filter="url(#coverGlow)" stroke="#E8EAED" stroke-width="1.5"/>
+            <rect x="103" y="103" width="15" height="15" rx="4" fill="#EA4335"/>
+            <rect x="122" y="103" width="15" height="15" rx="4" fill="#FBBC04"/>
+            <rect x="141" y="103" width="15" height="15" rx="4" fill="#34A853"/>
+            <rect x="103" y="122" width="15" height="15" rx="4" fill="#4285F4"/>
+            <rect x="122" y="122" width="15" height="15" rx="4" fill="#8E24AA"/>
+            <rect x="141" y="122" width="15" height="15" rx="4" fill="#4285F4"/>
+            <rect x="103" y="141" width="15" height="15" rx="4" fill="#34A853"/>
+            <rect x="122" y="141" width="15" height="15" rx="4" fill="#FBBC04"/>
+            <rect x="141" y="141" width="15" height="15" rx="4" fill="#EA4335"/>
           </svg>
         </div>
       </div>
 
-      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding-bottom:6px;">
+      <div style="position:relative; z-index:1; display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding-bottom:6px;">
         <span class="pill red" style="font-size:11.5px; padding:5px 12px;">Mata vs Komputer</span>
         <span class="pill green" style="font-size:11.5px; padding:5px 12px;">Pixel &amp; RGB</span>
         <span class="pill blue" style="font-size:11.5px; padding:5px 12px;">Aspect Ratio</span>
