@@ -367,10 +367,17 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
 
     # 9. EXIF Orientation=6 Trap Demo
     p9 = ASSETS_DIR / "09_exif_trap.png"
-    exif_fp = SAMPLE_DIR / "persegi" / "polos" / "persegi_polos_01.jpg"
-    with Image.open(exif_fp) as im:
-        raw_arr = np.array(im.convert("RGB"))
-        fixed_arr = np.array(ImageOps.exif_transpose(im).convert("RGB"))
+    puppy_fp = ASSETS_DIR / "exif_puppy.jpg"
+    if puppy_fp.exists():
+        with Image.open(puppy_fp) as im:
+            fixed_im = im.convert("RGB")
+            raw_arr = np.array(fixed_im.rotate(90, expand=True))
+            fixed_arr = np.array(fixed_im)
+    else:
+        exif_fp = SAMPLE_DIR / "persegi" / "polos" / "persegi_polos_01.jpg"
+        with Image.open(exif_fp) as im:
+            raw_arr = np.array(im.convert("RGB"))
+            fixed_arr = np.array(ImageOps.exif_transpose(im).convert("RGB"))
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.8, 3.3), dpi=180)
     ax1.imshow(raw_arr)
     ax1.set_title("Tanpa Koreksi EXIF\n(Terputar 90°)", fontsize=12, fontweight="bold", color="#EA4335")
