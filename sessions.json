@@ -11,6 +11,7 @@
       "tint": "#E8F0FE",
       "title": "Understanding Images, Image Processing & EDA",
       "description": "Memahami gambar sebagai array angka (H×W×C), RGB vs Grayscale, normalisasi, koreksi EXIF, serta EDA dataset polos vs ramai.",
+      "topics": ["Pixel & RGB", "Normalization", "EXIF & Hash", "EDA"],
       "duration": "120 menit",
       "status": "available",
       "links": {
@@ -29,6 +30,7 @@
       "tint": "#FCE8E6",
       "title": "Teori Neural Network (ANN)",
       "description": "Cara kerja neuron, weight & bias, fungsi aktivasi (ReLU, Sigmoid, Softmax), loss function, dan gradient descent secara intuitif.",
+      "topics": ["Neuron", "ReLU & Softmax", "Loss & GD"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -41,6 +43,7 @@
       "tint": "#FEF7E0",
       "title": "CNN Fundamentals & Tugas Computer Vision",
       "description": "Konvolusi, kernel/filter, stride, padding, pooling, feature map, serta perbedaan classification, detection, dan segmentation.",
+      "topics": ["Convolution", "Pooling", "Feature Map"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -53,6 +56,7 @@
       "tint": "#E6F4EA",
       "title": "Arsitektur CNN & Transfer Learning",
       "description": "Evolusi arsitektur CNN, konsep transfer learning, feature extraction vs fine-tuning, dan pengenalan MobileNetV2.",
+      "topics": ["Transfer Learning", "MobileNetV2", "Feature Extraction"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -65,6 +69,7 @@
       "tint": "#E8F0FE",
       "title": "Metodologi Data: Collection, Splitting & Desain Eksperimen",
       "description": "Stratified & group split per sesi foto, deteksi duplikat via hash, pencegahan data leakage, serta skenario uji S1 & S2.",
+      "topics": ["Group Split", "Anti-Leakage", "Skenario S1 & S2"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -77,6 +82,7 @@
       "tint": "#FCE8E6",
       "title": "Data Pipeline, Augmentation & Model Baseline",
       "description": "Membangun tf.data / Keras image pipeline, data augmentation hanya pada train, dan melatih model baseline MobileNetV2 beku.",
+      "topics": ["tf.data", "Augmentation", "Baseline Model"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -89,6 +95,7 @@
       "tint": "#FEF7E0",
       "title": "Training Lengkap & Fine-tuning",
       "description": "Strategi fine-tuning dua tahap dengan learning rate kecil, callbacks (EarlyStopping, ReduceLROnPlateau, ModelCheckpoint).",
+      "topics": ["Fine-Tuning", "Callbacks", "LR Schedule"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}
@@ -101,6 +108,7 @@
       "tint": "#E6F4EA",
       "title": "Evaluasi Metrics, Analisis Error & Grad-CAM",
       "description": "Evaluasi test set polos vs ramai, confusion matrix, analisis kesalahan prediksi, dan visualisasi Grad-CAM beserta batasannya.",
+      "topics": ["Confusion Matrix", "Error Analysis", "Grad-CAM"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}

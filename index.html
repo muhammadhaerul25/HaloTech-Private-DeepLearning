@@ -11,7 +11,7 @@
   <title>Deep Learning Course (P01–P08) — Muhammad Haerul</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto+Mono:wght@500&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=Roboto+Mono:wght@500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg-dark: #202124;
@@ -25,8 +25,8 @@
       --yellow: #FBBC04;
       --green: #34A853;
       --border: #E8EAED;
-      --shadow: 0 2px 10px rgba(32, 33, 36, 0.06);
-      --shadow-hover: 0 10px 28px rgba(32, 33, 36, 0.12);
+      --shadow: 0 2px 10px rgba(32, 33, 36, 0.05);
+      --shadow-hover: 0 12px 28px rgba(32, 33, 36, 0.11);
     }
 
     * { box-sizing: border-box; }
@@ -36,8 +36,14 @@
       font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       background: var(--bg-light);
       color: var(--text-main);
-      line-height: 1.55;
+      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
+    }
+
+    /* Top 4-color bar */
+    .top-spectrum {
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue) 0% 25%, var(--red) 25% 50%, var(--yellow) 50% 75%, var(--green) 75% 100%);
     }
 
     /* Hero Header */
@@ -45,48 +51,48 @@
       position: relative;
       background: var(--bg-dark);
       color: #FFFFFF;
-      padding: 56px 24px 48px;
+      padding: 20px 24px 30px;
       overflow: hidden;
     }
 
     .hero-shapes {
       position: absolute;
-      top: -24px;
-      right: -24px;
-      width: 340px;
-      height: 260px;
+      top: 12px;
+      right: -28px;
+      width: 320px;
+      height: 230px;
       pointer-events: none;
       opacity: 0.92;
     }
 
     .shape-circle {
       position: absolute;
-      width: 128px;
-      height: 128px;
+      width: 112px;
+      height: 112px;
       border-radius: 50%;
       background: var(--blue);
-      top: 22px;
-      right: 118px;
+      top: 18px;
+      right: 110px;
     }
 
     .shape-square {
       position: absolute;
-      width: 96px;
-      height: 96px;
-      border-radius: 24px;
+      width: 84px;
+      height: 84px;
+      border-radius: 22px;
       background: var(--red);
-      top: 118px;
-      right: 36px;
+      top: 102px;
+      right: 34px;
       transform: rotate(12deg);
     }
 
     .shape-pill {
       position: absolute;
-      width: 140px;
-      height: 44px;
+      width: 126px;
+      height: 38px;
       border-radius: 999px;
       background: var(--green);
-      top: 38px;
+      top: 32px;
       right: -12px;
       transform: rotate(-18deg);
     }
@@ -95,95 +101,193 @@
       position: absolute;
       width: 0;
       height: 0;
-      border-left: 44px solid transparent;
-      border-right: 44px solid transparent;
-      border-bottom: 76px solid var(--yellow);
-      top: 142px;
-      right: 175px;
+      border-left: 38px solid transparent;
+      border-right: 38px solid transparent;
+      border-bottom: 66px solid var(--yellow);
+      top: 124px;
+      right: 160px;
       transform: rotate(-10deg);
     }
 
     .container {
-      max-width: 1140px;
+      max-width: 1180px;
       margin: 0 auto;
       position: relative;
       z-index: 2;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #BDC1C6;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      color: #FFFFFF;
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-install {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(129, 201, 149, 0.45);
+      background: rgba(52, 168, 83, 0.18);
+      color: #81C995;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-install.show { display: inline-flex; }
+
+    .hero-grid {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero-main {
+      max-width: 720px;
+      flex: 1 1 500px;
     }
 
     .badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(255, 255, 255, 0.09);
+      border: 1px solid rgba(255, 255, 255, 0.16);
       border-radius: 999px;
-      padding: 6px 14px;
+      padding: 5px 12px;
       font-family: 'Roboto Mono', monospace;
-      font-size: 12px;
+      font-size: 11.5px;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: #E8F0FE;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
     }
 
     .badge-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
       background: var(--green);
+      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.25);
     }
 
     h1 {
       font-family: 'Poppins', sans-serif;
       font-weight: 700;
-      font-size: clamp(28px, 4vw, 44px);
-      line-height: 1.18;
-      margin: 0 0 12px;
-      max-width: 720px;
+      font-size: clamp(26px, 3.6vw, 38px);
+      line-height: 1.15;
+      margin: 0 0 8px;
+      letter-spacing: -0.01em;
     }
 
     .hero-sub {
-      font-size: 17px;
+      font-size: 15.5px;
       color: #BDC1C6;
-      max-width: 680px;
-      margin: 0 0 26px;
+      margin: 0 0 18px;
+      max-width: 640px;
     }
 
     .hero-meta {
       display: flex;
       flex-wrap: wrap;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
     .meta-pill {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
+      gap: 8px;
       background: rgba(255, 255, 255, 0.08);
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 13px;
+      padding: 7px 13px;
+      border-radius: 10px;
+      font-size: 12.5px;
       color: #E8EAED;
     }
 
-    .meta-pill strong {
+    .meta-pill strong { color: #FFFFFF; }
+
+    .progress-track {
+      width: 68px;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 12.5%;
+      background: var(--green);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--blue);
       color: #FFFFFF;
+      text-decoration: none;
       font-weight: 600;
+      font-size: 14px;
+      padding: 11px 18px;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(66, 133, 244, 0.35);
+      transition: background 0.16s ease, transform 0.16s ease;
+    }
+
+    .hero-cta:hover {
+      background: #3367D6;
+      transform: translateY(-1px);
     }
 
     /* Main Content */
     main {
-      padding: 32px 24px 64px;
+      padding: 24px 24px 56px;
     }
 
     .toolbar {
       display: flex;
       flex-wrap: wrap;
-      gap: 14px;
+      gap: 12px;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .filter-group {
@@ -196,12 +300,12 @@
       border: 1px solid var(--border);
       background: var(--card-bg);
       color: var(--text-muted);
-      padding: 8px 16px;
+      padding: 7px 15px;
       border-radius: 999px;
       font-size: 13px;
       font-weight: 500;
       cursor: pointer;
-      transition: all 0.16s ease;
+      transition: all 0.15s ease;
     }
 
     .filter-btn:hover {
@@ -217,54 +321,68 @@
 
     .search-box {
       position: relative;
-      min-width: 240px;
-      flex: 0 1 300px;
+      min-width: 250px;
+      flex: 0 1 320px;
     }
 
     .search-box input {
       width: 100%;
-      padding: 10px 14px 10px 38px;
+      padding: 9px 36px 9px 36px;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: var(--card-bg);
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--text-main);
       outline: none;
-      transition: border-color 0.16s ease;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
     .search-box input:focus {
       border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.14);
     }
 
     .search-icon {
       position: absolute;
-      left: 14px;
+      left: 13px;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
-      font-size: 14px;
+      display: flex;
       pointer-events: none;
     }
 
-    /* Notice banner for coming soon redirect */
+    .kbd-hint {
+      position: absolute;
+      right: 11px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 1px 6px;
+      pointer-events: none;
+    }
+
+    /* Notice banner */
     .toast {
       display: none;
-      margin-bottom: 22px;
-      padding: 14px 18px;
-      border-radius: 16px;
+      margin-bottom: 18px;
+      padding: 12px 16px;
+      border-radius: 14px;
       background: #FEF7E0;
       border: 1px solid #F9D875;
       color: var(--text-main);
-      font-size: 14px;
+      font-size: 13.5px;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
     }
 
-    .toast.show {
-      display: flex;
-    }
+    .toast.show { display: flex; }
 
     .toast button {
       background: transparent;
@@ -278,22 +396,30 @@
     /* Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 18px;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--border);
-      border-radius: 22px;
-      padding: 22px;
+      border-radius: 20px;
+      padding: 20px;
       box-shadow: var(--shadow);
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
       transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
       position: relative;
       overflow: hidden;
+    }
+
+    .card.is-available {
+      border-color: #D2E3FC;
+      box-shadow: 0 4px 16px rgba(26, 115, 232, 0.08);
+    }
+
+    .card.is-soon {
+      background: #FCFCFD;
     }
 
     .card:hover {
@@ -319,20 +445,44 @@
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card-badges {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .session-id {
       font-family: 'Roboto Mono', monospace;
-      font-weight: 500;
-      font-size: 13px;
+      font-weight: 600;
+      font-size: 12.5px;
       padding: 4px 10px;
       border-radius: 999px;
       color: var(--text-main);
     }
 
+    .slug-copy {
+      font-family: 'Roboto Mono', monospace;
+      font-size: 11.5px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--bg-light);
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.14s ease;
+    }
+
+    .slug-copy:hover {
+      border-color: var(--blue);
+      color: var(--blue-text);
+      background: #E8F0FE;
+    }
+
     .status-pill {
-      font-size: 12px;
+      font-size: 11.5px;
       font-weight: 600;
       padding: 4px 10px;
       border-radius: 999px;
@@ -354,28 +504,45 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       color: var(--text-muted);
-      margin-bottom: 6px;
+      margin-bottom: 4px;
     }
 
     .card h2 {
       font-family: 'Poppins', sans-serif;
       font-weight: 600;
-      font-size: 19px;
+      font-size: 18px;
       line-height: 1.3;
-      margin: 0 0 10px;
+      margin: 0 0 8px;
       color: var(--text-main);
     }
 
     .card p {
-      font-size: 14px;
+      font-size: 13.5px;
       color: var(--text-muted);
-      margin: 0 0 18px;
+      margin: 0 0 12px;
+    }
+
+    .topic-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .topic-tag {
+      font-size: 11.5px;
+      font-weight: 500;
+      padding: 3px 9px;
+      border-radius: 8px;
+      background: var(--bg-light);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
     }
 
     .card-actions {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 8px;
       margin-top: auto;
     }
 
@@ -388,9 +555,9 @@
       color: #FFFFFF;
       text-decoration: none;
       font-weight: 600;
-      font-size: 14px;
-      padding: 11px 16px;
-      border-radius: 12px;
+      font-size: 13.5px;
+      padding: 10px 14px;
+      border-radius: 11px;
       transition: background 0.16s ease;
     }
 
@@ -401,20 +568,20 @@
     .secondary-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
     }
 
     .btn-chip {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      padding: 6px 11px;
-      border-radius: 10px;
+      padding: 5px 10px;
+      border-radius: 9px;
       background: var(--bg-light);
       border: 1px solid var(--border);
       color: var(--text-main);
       text-decoration: none;
-      font-size: 12.5px;
+      font-size: 12px;
       font-weight: 500;
       transition: background 0.15s ease, border-color 0.15s ease;
     }
@@ -426,18 +593,18 @@
     }
 
     .soon-box {
-      padding: 11px 14px;
-      border-radius: 12px;
+      padding: 10px 12px;
+      border-radius: 11px;
       background: var(--bg-light);
       border: 1px dashed #DADCE0;
       color: var(--text-muted);
-      font-size: 13px;
+      font-size: 12.5px;
       text-align: center;
     }
 
     footer {
       border-top: 1px solid var(--border);
-      padding: 24px;
+      padding: 20px 24px;
       text-align: center;
       font-size: 13px;
       color: var(--text-muted);
@@ -452,14 +619,17 @@
       color: var(--text-main);
     }
 
-    @media (max-width: 640px) {
-      .hero { padding: 40px 18px 36px; }
-      .hero-shapes { opacity: 0.35; transform: scale(0.75); transform-origin: top right; }
-      main { padding: 24px 16px 48px; }
+    @media (max-width: 680px) {
+      .hero { padding: 18px 16px 24px; }
+      .hero-shapes { opacity: 0.28; transform: scale(0.7); transform-origin: top right; }
+      main { padding: 18px 16px 40px; }
+      .grid { grid-template-columns: 1fr; }
+      .kbd-hint { display: none; }
     }
   </style>
 </head>
 <body>
+  <div class="top-spectrum"></div>
   <header class="hero">
     <div class="hero-shapes" aria-hidden="true">
       <div class="shape-circle"></div>
@@ -468,19 +638,39 @@
       <div class="shape-triangle"></div>
     </div>
     <div class="container">
-      <div class="badge">
-        <span class="badge-dot"></span>
-        <span>Deep Learning Track · P01–P08 · 120 Menit/Sesi</span>
-      </div>
-      <h1>Deep Learning Untuk Pemula</h1>
-      <p class="hero-sub">
-        Portal materi interaktif, slide presentasi, PDF, dan notebook Google Colab untuk project
-        <strong>Klasifikasi Karakter Disney dengan CNN &amp; Transfer Learning (MobileNetV2)</strong>.
-      </p>
-      <div class="hero-meta">
-        <div class="meta-pill">Instruktur: <strong>Muhammad Haerul</strong></div>
-        <div class="meta-pill">Progres Materi: <strong id="progress-count">1 / 8 Sesi Tersedia</strong></div>
-        <div class="meta-pill">URL Cepat: <strong>/p1 &ndash; /p8</strong></div>
+      <nav class="topbar" aria-label="Navigasi atas">
+        <a class="nav-link" href="https://www.muhammadhaerul.tech" target="_blank" rel="noopener">&larr; Portfolio (muhammadhaerul.tech)</a>
+        <div class="topbar-right">
+          <button id="btn-install" class="btn-install" type="button">Install App (Offline)</button>
+          <a class="nav-link" href="https://github.com/muhammadhaerul25/HaloTech-Private-DeepLearning" target="_blank" rel="noopener">GitHub Repo</a>
+        </div>
+      </nav>
+
+      <div class="hero-grid">
+        <div class="hero-main">
+          <div class="badge">
+            <span class="badge-dot"></span>
+            <span>Deep Learning Track &middot; P01&ndash;P08 &middot; 120 Menit/Sesi</span>
+          </div>
+          <h1>Deep Learning Untuk Pemula</h1>
+          <p class="hero-sub">
+            Portal materi interaktif, slide presentasi, PDF, dan notebook Google Colab untuk project
+            <strong>Klasifikasi Karakter Disney dengan CNN &amp; Transfer Learning (MobileNetV2)</strong>.
+          </p>
+          <div class="hero-meta">
+            <div class="meta-pill">Instruktur: <strong>Muhammad Haerul</strong></div>
+            <div class="meta-pill">
+              <span>Progres: <strong id="progress-count">1 / 8 Sesi</strong></span>
+              <span class="progress-track"><span id="progress-fill" class="progress-fill"></span></span>
+            </div>
+            <div class="meta-pill">URL Cepat: <strong>/p1 &ndash; /p8</strong></div>
+          </div>
+        </div>
+
+        <a id="hero-latest-cta" class="hero-cta" href="slides/P01_image_processing_eda.html">
+          <span>Buka Materi Terbaru (P01)</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
     </div>
   </header>
@@ -500,8 +690,14 @@
           <button class="filter-btn" data-phase="Analisis & Pelaporan">Analisis &amp; Pelaporan</button>
         </div>
         <div class="search-box">
-          <span class="search-icon">&#128269;</span>
+          <span class="search-icon" aria-hidden="true">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </span>
           <input id="search-input" type="search" placeholder="Cari topik atau sesi (mis. EDA, CNN)..." aria-label="Cari materi" />
+          <span class="kbd-hint">/</span>
         </div>
       </div>
 
@@ -527,6 +723,7 @@
           tint: "#E8F0FE",
           title: "Understanding Images, Image Processing & EDA",
           description: "Memahami gambar sebagai array angka (H×W×C), RGB vs Grayscale, normalisasi, koreksi EXIF, serta EDA dataset polos vs ramai.",
+          topics: ["Pixel & RGB", "Normalization", "EXIF & Hash", "EDA"],
           duration: "120 menit",
           status: "available",
           links: {
@@ -544,6 +741,7 @@
     let activePhase = "ALL";
     let searchQuery = "";
     let highlightedId = null;
+    let deferredPrompt = null;
 
     function detectRequestedSession() {
       const match = window.location.pathname.match(/^\/p0?([1-8])$/i);
@@ -556,21 +754,46 @@
       }
     }
 
+    function copySlug(slug, btn) {
+      const fullUrl = window.location.origin + slug;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(fullUrl).then(() => {
+          const prev = btn.textContent;
+          btn.textContent = "Disalin!";
+          setTimeout(() => { btn.textContent = prev; }, 1300);
+        });
+      }
+    }
+
     function renderSessions() {
       const grid = document.getElementById("sessions-grid");
       const filtered = allSessions.filter((s) => {
         const matchPhase = activePhase === "ALL" || s.phase === activePhase;
         const q = searchQuery.trim().toLowerCase();
+        const topicsText = (s.topics || []).join(" ").toLowerCase();
         const matchQuery = !q ||
           s.id.toLowerCase().includes(q) ||
           s.title.toLowerCase().includes(q) ||
           s.description.toLowerCase().includes(q) ||
-          s.phase.toLowerCase().includes(q);
+          s.phase.toLowerCase().includes(q) ||
+          topicsText.includes(q);
         return matchPhase && matchQuery;
       });
 
-      const availableCount = allSessions.filter((s) => s.status === "available").length;
-      document.getElementById("progress-count").textContent = `${availableCount} / ${allSessions.length} Sesi Tersedia`;
+      const availableSessions = allSessions.filter((s) => s.status === "available");
+      const availableCount = availableSessions.length;
+      const pct = allSessions.length ? Math.round((availableCount / allSessions.length) * 100) : 0;
+      document.getElementById("progress-count").textContent = `${availableCount} / ${allSessions.length} Sesi`;
+      document.getElementById("progress-fill").style.width = `${pct}%`;
+
+      if (availableSessions.length > 0) {
+        const latest = availableSessions[availableSessions.length - 1];
+        const cta = document.getElementById("hero-latest-cta");
+        if (cta && latest.links && latest.links.slidesHtml) {
+          cta.href = latest.links.slidesHtml;
+          cta.querySelector("span").textContent = `Buka Materi Terbaru (${latest.id})`;
+        }
+      }
 
       if (filtered.length === 0) {
         grid.innerHTML = `<div class="soon-box" style="grid-column: 1/-1; padding: 32px;">Tidak ada sesi yang cocok dengan filter pencarian.</div>`;
@@ -581,6 +804,7 @@
         const isAvailable = s.status === "available";
         const isHighlighted = highlightedId === s.id;
         const links = s.links || {};
+        const topicsHtml = (s.topics || []).map((t) => `<span class="topic-tag">${t}</span>`).join("");
 
         const actionsHtml = isAvailable
           ? `
@@ -604,11 +828,14 @@
           `;
 
         return `
-          <article class="card ${isHighlighted ? "highlight" : ""}" id="${s.id}">
+          <article class="card ${isAvailable ? "is-available" : "is-soon"} ${isHighlighted ? "highlight" : ""}" id="${s.id}">
             <div class="card-accent" style="background: ${s.color};"></div>
             <div>
               <div class="card-top">
-                <span class="session-id" style="background: ${s.tint};">${s.id} &middot; ${s.duration}</span>
+                <div class="card-badges">
+                  <span class="session-id" style="background: ${s.tint};">${s.id} &middot; ${s.duration}</span>
+                  ${isAvailable && s.slug ? `<button type="button" class="slug-copy" title="Salin link ${s.slug}" onclick="copySlug('${s.slug}', this)">${s.slug}</button>` : ""}
+                </div>
                 <span class="status-pill ${isAvailable ? "status-available" : "status-soon"}">
                   ${isAvailable ? "Tersedia" : "Segera Hadir"}
                 </span>
@@ -616,6 +843,7 @@
               <div class="phase-kicker">Fase: ${s.phase}</div>
               <h2>${s.title}</h2>
               <p>${s.description}</p>
+              ${topicsHtml ? `<div class="topic-row">${topicsHtml}</div>` : ""}
             </div>
             ${actionsHtml}
           </article>
@@ -644,9 +872,33 @@
         });
       });
 
-      document.getElementById("search-input").addEventListener("input", (e) => {
+      const searchInput = document.getElementById("search-input");
+      searchInput.addEventListener("input", (e) => {
         searchQuery = e.target.value;
         renderSessions();
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && document.activeElement !== searchInput) {
+          e.preventDefault();
+          searchInput.focus();
+        }
+      });
+
+      window.addEventListener("beforeinstallprompt", (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const btn = document.getElementById("btn-install");
+        if (btn) {
+          btn.classList.add("show");
+          btn.onclick = async () => {
+            if (!deferredPrompt) return;
+            deferredPrompt.prompt();
+            await deferredPrompt.userChoice;
+            deferredPrompt = null;
+            btn.classList.remove("show");
+          };
+        }
       });
 
       if ("serviceWorker" in navigator) {
