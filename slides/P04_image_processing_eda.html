@@ -394,7 +394,7 @@
         <span class="pill green" style="font-size:10.5px; padding:4px 10px;">Pixel &amp; RGB</span>
         <span class="pill blue" style="font-size:10.5px; padding:4px 10px;">Aspect Ratio</span>
         <span class="pill blue" style="font-size:10.5px; padding:4px 10px;">Normalization</span>
-        <span class="pill yellow" style="font-size:10.5px; padding:4px 10px;">EDA Foto</span>
+        <span class="pill yellow" style="font-size:10.5px; padding:4px 10px;">EDA</span>
         <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:10.5px; padding:4px 10px;">Edge Density</span>
         <span class="pill" style="background:#F3E8FD; color:#7627BB; font-size:10.5px; padding:4px 10px;">EXIF &amp; Hash</span>
         <span class="pill solid-blue" style="font-size:10.5px; padding:4px 12px;">Python</span>
@@ -411,7 +411,7 @@
       <div class="step-list">
         <div class="step-item"><div class="step-num">01</div><div><div class="step-title">Bagaimana Kita &amp; Komputer Melihat Gambar</div><div class="step-desc">Perbedaan cara mata manusia vs komputer membaca foto, pixel, nilai 0–255, dan RGB channels.</div></div></div>
         <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Mengapa Kita Perlu Image Processing?</div><div class="step-desc">Menyamakan resolution, menjaga aspect ratio agar tidak distorted, dan melakukan normalization.</div></div></div>
-        <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Memeriksa Kesehatan Koleksi Foto (EDA)</div><div class="step-desc">Mengecek keseimbangan jumlah foto, grafik pencahayaan, serta membedakan latar polos vs ramai.</div></div></div>
+        <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Exploratory Data Analysis (EDA)</div><div class="step-desc">Mengecek keseimbangan jumlah foto, grafik pencahayaan, serta membedakan latar polos vs ramai.</div></div></div>
         <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Tiga Jebakan Tersembunyi Kamera HP</div><div class="step-desc">Mendeteksi EXIF orientation yang terputar, duplicate images, dan corrupted files.</div></div></div>
         <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Praktik Santai, Diskusi &amp; Kuis Interaktif</div><div class="step-desc">Melihat hasil nyata pada 120 foto sampel, diskusi tantangan latar polos vs ramai, kamus istilah, &amp; kuis.</div></div></div>
       </div>
@@ -1190,17 +1190,17 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 26: DIVIDER BAB 3 -->
-    <section class="slide bg-green" data-title="Bab 3: Memeriksa Kesehatan Koleksi Foto (EDA)" data-notes="Alokasi waktu: 0.5 menit. Sekarang kita masuk ke Bab 3: memeriksa kondisi dan kesehatan koleksi foto kita sebelum dipakai melatih AI.">
+    <section class="slide bg-green" data-title="Bab 3: Exploratory Data Analysis (EDA)" data-notes="Alokasi waktu: 0.5 menit. Sekarang kita masuk ke Bab 3: melakukan Exploratory Data Analysis (EDA) pada dataset foto sebelum dipakai melatih AI.">
       <div class="divider-center">
         <span class="pill dark">BAB 3 · EXPLORATORY DATA ANALYSIS (EDA)</span>
-        <h1>Memeriksa Kesehatan Koleksi Foto Kita</h1>
-        <p>Sebelum melatih AI, kita harus "mengenal" dulu isi folder foto kita: apakah jumlahnya adil, pencahayaannya baik, dan latarnya tidak menipu?</p>
+        <h1>Exploratory Data Analysis (EDA)</h1>
+        <p>Mengenal isi, distribusi, dan kualitas dataset foto sebelum melakukan <em>training</em> model AI.</p>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>26 / 54</span></div>
     </section>
 
     <!-- 27: APA ITU EDA -->
-    <section class="slide" data-title="Apa Itu Pemeriksaan Data (EDA)?" data-notes="Alokasi waktu: 1.5 menit. Jelaskan EDA dengan analogi dokter melakukan cek darah sebelum memberi resep obat.">
+    <section class="slide" data-title="Apa Itu Exploratory Data Analysis (EDA)?" data-notes="Alokasi waktu: 1.5 menit. Jelaskan Exploratory Data Analysis (EDA) sebagai langkah memeriksa kondisi dataset sebelum training model.">
       <div class="kicker">BAB 3 · MENGAPA PERLU EDA</div>
       <h2>Kualitas Model Bergantung pada <span class="hl-green">Kualitas Data</span></h2>
       <div class="grid-2">
@@ -1653,9 +1653,9 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 40: HASIL AUDIT 120 FILE SAMPEL -->
-    <section class="slide" data-title="Laporan Kesehatan Nyata: 120 File Sampel" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan angka nyata hasil audit 120 file di data sampel kita.">
-      <div class="kicker">BAB 4 · HASIL AUDIT NYATA</div>
-      <h2>Laporan Kesehatan <span class="hl-blue">120 File Sampel</span> Kita</h2>
+    <section class="slide" data-title="Hasil EDA: 120 File Sampel" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan angka nyata hasil EDA pada 120 file di data sampel kita.">
+      <div class="kicker">BAB 4 · HASIL EDA NYATA</div>
+      <h2>Hasil EDA <span class="hl-blue">120 File Sampel</span> Kita</h2>
       <p class="subtitle">Contoh data sampel: hasil pemeriksaan otomatis sebelum masuk tahap berikutnya.</p>
       <div class="grid-4" style="flex:0 0 auto;">
         <div class="card tint-blue"><div class="big-num hl-blue">120</div><div class="card-title">Total File</div><div class="card-body">5 jenis × 2 latar × 12 foto.</div></div>
@@ -1893,7 +1893,7 @@ def get_file_hash(lokasi_foto):
         <thead><tr><th style="width:26%;">Istilah</th><th>Penjelasan Bahasa Sehari-hari</th></tr></thead>
         <tbody>
           <tr><td><strong>Normalization</strong></td><td>Menyetarakan skala nilai <em>pixel</em> dari <code>0–255</code> menjadi angka kecil (<code>0–1</code> atau <code>−1–1</code>) agar AI lebih mudah menghitung.</td></tr>
-          <tr><td><strong>EDA</strong></td><td><em>Exploratory Data Analysis</em> — pemeriksaan kesehatan dan kebersihan koleksi foto sebelum dipakai untuk melatih AI.</td></tr>
+          <tr><td><strong>EDA</strong></td><td><em>Exploratory Data Analysis</em> — proses memeriksa kualitas, distribusi, dan kebersihan dataset foto sebelum <em>training</em> model AI.</td></tr>
           <tr><td><strong>Histogram</strong></td><td>Grafik sebaran intensitas <em>pixel</em> untuk melihat apakah foto terlalu gelap, pas, atau terlalu silau.</td></tr>
           <tr><td><strong>Edge Density</strong></td><td>Rasio jumlah pixel <em>edge</em> terhadap total pixel; makin tinggi nilainya, makin ramai isi foto tersebut.</td></tr>
           <tr><td><strong>EXIF &amp; Hash</strong></td><td><strong>EXIF:</strong> metadata orientasi rotasi dari kamera. <strong>Hash:</strong> kode unik (SHA-256) dari isi file untuk mendeteksi <em>duplicate</em>.</td></tr>
@@ -2015,7 +2015,7 @@ def get_file_hash(lokasi_foto):
         <div class="card" style="background:#292A2D; border-color:#3C4043;">
           <div class="card-top-bar bar-red"></div>
           <div class="big-num" style="color:var(--red);">03</div>
-          <div class="card-title" style="color:white;">Audit Kesehatan Data</div>
+          <div class="card-title" style="color:white;">Exploratory Data Analysis (EDA)</div>
           <div class="card-body" style="color:#BDC1C6;">Memeriksa cahaya, kerumitan latar polos vs ramai, foto EXIF orientation=6, file rusak, dan foto kembar menjaga agar AI belajar secara jujur.</div>
         </div>
       </div>
