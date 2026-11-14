@@ -36,7 +36,7 @@ def build_html() -> str:
   <title>Memahami Gambar di Komputer &amp; Image Processing (54 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <style>
     :root {{
       --blue: #4285F4;
@@ -371,7 +371,7 @@ def build_html() -> str:
 
       <div style="position:relative; z-index:1; display:grid; grid-template-columns: 1.5fr 0.8fr; align-items:center; gap:24px; margin:auto 0;">
         <div>
-          <h1 style="font-family:'Fredoka', 'Poppins', sans-serif; font-size:clamp(36px,4.3vw,56px); font-weight:700; line-height:1.10; color:#202124; margin:0; letter-spacing:-0.4px;">
+          <h1 style="font-family:var(--font-title); font-size:clamp(34px,4.1vw,52px); font-weight:700; line-height:1.12; color:#202124; margin:0; letter-spacing:-0.8px;">
             Memahami Gambar di<br />
             <span style="display:inline-block; padding-top:2px; background:linear-gradient(90deg, #4285F4 0%, #8E24AA 55%, #EA4335 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Komputer &amp; Image Processing</span>
           </h1>
@@ -380,7 +380,7 @@ def build_html() -> str:
             Dari Cara Komputer Membaca Foto Hingga Audit Kesehatan Dataset
           </div>
           <div style="margin-top:14px; display:inline-flex; align-items:center; gap:10px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:6px 16px 6px 8px; box-shadow:0 3px 10px rgba(66,133,244,0.08);">
-            <span style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:'Fredoka',sans-serif; font-size:12px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
+            <span style="width:26px; height:26px; border-radius:50%; background:linear-gradient(135deg, #4285F4, #34A853); color:#FFFFFF; font-family:var(--font-title); font-size:11.5px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
             <span style="font-size:14px; color:#5F6368;">Presented by <strong style="color:#202124; font-weight:700;">Muhammad Haerul</strong></span>
           </div>
         </div>
