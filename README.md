@@ -39,6 +39,7 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
     ├── build_html_slides_P01.py
     ├── build_notebooks_P01.py
     ├── build_slides_P01.py
+    ├── export_pdf_P01.py
     ├── make_sample_data.py
     ├── slide_theme.py
     ├── sync_materials.py
@@ -50,6 +51,7 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 pip install -r requirements.txt
 python tools/make_sample_data.py
 python tools/build_html_slides_P01.py
+python tools/export_pdf_P01.py
 python tools/build_notebooks_P01.py
 python tools/sync_materials.py
 ```
