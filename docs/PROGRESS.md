@@ -3,7 +3,7 @@
 ## P4 — Image Processing & EDA Foto Sendiri
 
 ### 1. Status Implementasi
-- **Status:** **FINAL & SIAP DIGUNAKAN** untuk P04 — mencakup dek slide interaktif HTML 54 slide + ekspor PDF vektor 54 halaman (`slides/P4_image_processing_eda_final.html` & `slides/P4_image_processing_eda_final.pdf`), notebook peserta & kunci jawaban (`notebooks/P04_image_processing_eda.ipynb` & `notebooks/solutions/P04_image_processing_eda.ipynb`), dataset sampel sintetis, dan validasi end-to-end.
+- **Status:** **FINAL & SIAP DIGUNAKAN** untuk P04 — mencakup dek slide interaktif HTML 54 slide + ekspor PDF vektor 54 halaman (`slides/P04_image_processing_eda.html` & `slides/P04_image_processing_eda.pdf`), notebook peserta & kunci jawaban (`notebooks/P04_image_processing_eda.ipynb` & `notebooks/solutions/P04_image_processing_eda.ipynb`), dataset sampel sintetis, dan validasi end-to-end.
 - **Tanggal:** 14 November 2026.
 
 ### 2. File yang Dibuat / Dimodifikasi
@@ -12,7 +12,7 @@
 - `tools/build_slides_P04.py` — skrip analisis data sampel, generator visualisasi Matplotlib/OpenCV (`slides/assets/P04/`), dan pembangun 22 slide PPTX.
 - `tools/build_html_slides_P04.py` — pembangun dek presentasi web interaktif 54 slide bergaya Google I/O conference (Bahasa Indonesia + istilah teknis Inggris natural, tanpa kode sesi/tugas rumah, simulator komputer membaca gambar 4×4 s/d 64×64, ilustrasi manusia melihat gambar realistis, Q&A dengan visual tersembunyi hingga diklik, persistensi halaman `#slide-N` + `localStorage`, dan `#page-jump`).
 - `tools/build_notebooks_P04.py` — generator notebook peserta (`# TODO`) dan notebook kunci jawaban P04.
-- `slides/P4_image_processing_eda_final.html` & `slides/P4_image_processing_eda_final.pdf` — salinan final slide P4 (54 slide HTML interaktif & 54 halaman PDF 16:9).
+- `slides/P04_image_processing_eda.html` & `slides/P04_image_processing_eda.pdf` — dek final P4 (54 slide HTML interaktif & 54 halaman PDF 16:9).
 - `notebooks/P04_image_processing_eda.ipynb` — notebook peserta (berjalan hingga sel `# TODO` pertama tanpa error).
 - `notebooks/solutions/P04_image_processing_eda.ipynb` — notebook kunci jawaban (lolos semua sel & `assert` dengan `SMOKE_TEST=1`).
 - `tools/validate_and_render_P04.py` — skrip validasi struktural PPTX, validasi dataset, dan rendering PNG/PDF alternatif.
