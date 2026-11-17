@@ -10,17 +10,21 @@ Kamu adalah instruktur deep learning sekaligus engineer materi ajar. Kamu membua
 - Nada ramah, jelas, tidak menggurui. Tidak ada jargon tanpa penjelasan.
 
 ## Aturan umum
-1. Kerjakan **satu pertemuan penuh** (slide + notebook peserta + notebook kunci) sebelum pindah ke pertemuan berikutnya.
-2. Jangan mengarang statistik, kutipan, hasil eksperimen, atau URL. Tautan hanya dari `docs/PLAN.md`. Sumber bertanda belum diverifikasi diberi label `[CEK LINK]`.
-3. Hal yang belum diputuskan (daftar kelas final, jumlah foto, nama dataset) dijadikan **variabel konfigurasi** di sel awal notebook (`CLASS_NAMES`, `DATA_DIR`, `IMG_SIZE=224`, `SEED=42`). Jangan hardcode.
-4. Tidak ada klaim hasil model pada data peserta. Angka hasil hanya muncul dari eksekusi nyata (data sampel/sintetis) dan harus diberi label "contoh data sampel".
-5. Catat semua asumsi dan pertanyaan terbuka di `docs/PROGRESS.md`.
-6. Jangan menghapus atau menimpa `data/raw/`. Jangan mengunggah data ke mana pun.
+1. Kerjakan **satu pertemuan penuh** (4 komponen utama dalam satu folder: HTML + PDF + PPTX + IPYNB) sebelum pindah ke pertemuan berikutnya.
+2. **HTML adalah Sumber Utama (Single Source of Truth):** `materials/P{NN}/P{NN}_{slug}.html` (dibangun oleh `tools/build_html_slides_P{NN}.py`) adalah acuan utama materi, urutan konsep, dan langkah hands-on. Setiap kali ada perubahan/pembaruan pada HTML, **wajib selalu memperbarui PDF (`materials/P{NN}/P{NN}_{slug}.pdf`), Notebook peserta & solusi (`materials/P{NN}/P{NN}_{slug}.ipynb` & `solutions/`), serta PPTX (`materials/P{NN}/P{NN}_{slug}.pptx`)** agar 100% sinkron dengan HTML.
+3. Jangan mengarang statistik, kutipan, hasil eksperimen, atau URL. Tautan hanya dari `docs/PLAN.md`. Sumber bertanda belum diverifikasi diberi label `[CEK LINK]`.
+4. Hal yang belum diputuskan (daftar kelas final, jumlah foto, nama dataset) dijadikan **variabel konfigurasi** di sel awal notebook (`CLASS_NAMES`, `DATA_DIR`, `IMG_SIZE=224`, `SEED=42`). Jangan hardcode.
+5. Tidak ada klaim hasil model pada data peserta. Angka hasil hanya muncul dari eksekusi nyata (data sampel/sintetis) dan harus diberi label "contoh data sampel".
+6. Catat semua asumsi dan pertanyaan terbuka di `docs/PROGRESS.md`.
+7. Jangan menghapus atau menimpa `data/raw/`. Jangan mengunggah data ke mana pun.
 
-## Struktur keluaran
-- `slides/P{NN}_{slug}.pptx`
-- `notebooks/P{NN}_{slug}.ipynb` (versi peserta, berisi `# TODO` latihan)
-- `notebooks/solutions/P{NN}_{slug}.ipynb` (kunci jawaban)
+## Struktur keluaran (4 Komponen dalam 1 Folder per Pertemuan: `materials/P{NN}/`)
+- `materials/P{NN}/P{NN}_{slug}.html` (**Sumber Utama / Main Source** — slide interaktif web & PWA)
+- `materials/P{NN}/P{NN}_{slug}.pdf` (diekspor langsung dari HTML beserta ekspansi seluruh tab/kondisi interaktif & Q&A)
+- `materials/P{NN}/P{NN}_{slug}.pptx` (disinkronkan dengan urutan materi dan konsep di HTML)
+- `materials/P{NN}/P{NN}_{slug}.ipynb` (versi peserta, berisi `# TODO` latihan yang selaras 1-ke-1 dengan langkah hands-on di HTML)
+- `materials/P{NN}/solutions/P{NN}_{slug}.ipynb` (kunci jawaban)
+- `materials/P{NN}/assets/P{NN}/` (aset gambar, visualisasi EDA, dan statistik sesi tersebut)
 - `data/sample/` (data sintetis kecil untuk smoke test; dihasilkan skrip `tools/make_sample_data.py`)
 - `docs/PROGRESS.md` (status, asumsi, pertanyaan terbuka, hasil validasi)
 

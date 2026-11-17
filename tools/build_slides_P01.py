@@ -31,8 +31,8 @@ sys.path.insert(0, str(ROOT_DIR / "tools"))
 import slide_theme as st
 
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
-ASSETS_DIR = ROOT_DIR / "slides" / "assets" / "P01"
-OUT_PPTX = ROOT_DIR / "slides" / "P01_image_processing_eda.pptx"
+ASSETS_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01"
+OUT_PPTX = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.pptx"
 STATS_JSON = ASSETS_DIR / "sample_stats.json"
 
 SESSION_LABEL = "P01 · Understanding Images, Image Processing & EDA"

@@ -20,9 +20,9 @@ from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-PPTX_PATH = ROOT_DIR / "slides" / "P01_image_processing_eda.pptx"
+PPTX_PATH = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.pptx"
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
-RENDER_DIR = ROOT_DIR / "slides" / "assets" / "P01" / "rendered"
+RENDER_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "rendered"
 
 # Render at 1280x720 (16:9)
 RENDER_W = 1280

@@ -4,6 +4,7 @@
 
 ### 1. Status Implementasi
 - **Status:** **FINAL & SIAP DIGUNAKAN** untuk **P01** (pertemuan pembuka berdurasi 120 menit).
+- **Aturan Sinkronisasi Utama (Single Source of Truth):** Ke-4 komponen utama per pertemuan berada dalam satu folder `materials/P01/`. File **HTML (`materials/P01/P01_image_processing_eda.html`) adalah sumber utama (main source)**. Setiap perubahan pada HTML wajib diikuti dengan pembaruan **PDF (`materials/P01/P01_image_processing_eda.pdf`)**, **Notebook (`materials/P01/P01_image_processing_eda.ipynb` & `solutions/`)**, dan **PPTX (`materials/P01/P01_image_processing_eda.pptx`)**.
 - **Kebijakan Tampilan Waktu:** Seluruh materi (cover slide, PPTX, HTML interaktif, PDF, notebook, dan halaman web portal) bersifat *timeless* — **tidak mencantumkan tanggal, hari, maupun jam sesi (`datetime`)**.
 
 ### 2. Struktur & File Utama
@@ -27,11 +28,11 @@
   - `ramai` (n=59): rata-rata brightness = `127.21`, rata-rata contrast (std) = `54.69`, rata-rata edge density (Canny) = `0.0853`.
 
 ### 4. Hasil Validasi Terakhir
-- **HTML Slides (`slides/P01_image_processing_eda.html`):** 57 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2), 44 elemen gambar valid, total speaker notes 120.0 menit, PWA cache `sw.js`.
-- **PDF (`slides/P01_image_processing_eda.pdf`):** 72 halaman (`16:9`, `11.99 MB`), mencakup seluruh 57 slide + ekspansi seluruh state interaktif AI Fundamental (Slide 19: 3 tab, Slide 20: 4 kondisi, Slide 21: 2 skenario) + 9 pasang halaman Q&A/kuis terpisah.
-- **PPTX (`slides/P01_image_processing_eda.pptx`):** 25 slide (termasuk 3 slide AI Fundamental, 6 langkah Hands-on selaras notebook, Glosarium terbarui, dan penutup tanpa preview sesi berikutnya), seluruhnya memiliki speaker notes (`25/25`, total `120.0 menit`).
-- **Notebook Kunci (`notebooks/solutions/P01_image_processing_eda.ipynb`):** 21 sel (termasuk penjelasan & demo kode AI Fundamental di Langkah 3), seluruh sel kode bebas error.
-- **Notebook Peserta (`notebooks/P01_image_processing_eda.ipynb`):** 26 sel, 5 `# TODO` + 5 `<details>` Hint & Jawaban, selaras penuh dengan slide HTML/PDF/PPTX.
+- **HTML Slides (`materials/P01/P01_image_processing_eda.html`):** 57 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2), 44 elemen gambar valid, total speaker notes 120.0 menit, PWA cache `sw.js`.
+- **PDF (`materials/P01/P01_image_processing_eda.pdf`):** 72 halaman (`16:9`, `11.99 MB`), mencakup seluruh 57 slide + ekspansi seluruh state interaktif AI Fundamental (Slide 19: 3 tab, Slide 20: 4 kondisi, Slide 21: 2 skenario) + 9 pasang halaman Q&A/kuis terpisah.
+- **PPTX (`materials/P01/P01_image_processing_eda.pptx`):** 25 slide (termasuk 3 slide AI Fundamental, 6 langkah Hands-on selaras notebook, Glosarium terbarui, dan penutup tanpa preview sesi berikutnya), seluruhnya memiliki speaker notes (`25/25`, total `120.0 menit`).
+- **Notebook Kunci (`materials/P01/solutions/P01_image_processing_eda.ipynb`):** 21 sel (termasuk penjelasan & demo kode AI Fundamental di Langkah 3), seluruh sel kode bebas error.
+- **Notebook Peserta (`materials/P01/P01_image_processing_eda.ipynb`):** 26 sel, 5 `# TODO` + 5 `<details>` Hint & Jawaban, selaras penuh dengan slide HTML/PDF/PPTX.
 
 ### 5. Catatan Font PPTX
 - Font PPTX: `Poppins` (judul), `Roboto` (isi), `Roboto Mono` (kode/tag). Pasang ketiga font tersebut di komputer penyaji agar rendering PowerPoint/LibreOffice sesuai desain (tanpa fallback ke `Arial`).

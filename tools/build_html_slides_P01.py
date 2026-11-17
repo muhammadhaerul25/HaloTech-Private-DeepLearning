@@ -17,8 +17,8 @@ import re
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-STATS_PATH = ROOT_DIR / "slides" / "assets" / "P01" / "sample_stats.json"
-OUT_HTML = ROOT_DIR / "slides" / "P01_image_processing_eda.html"
+STATS_PATH = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "sample_stats.json"
+OUT_HTML = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.html"
 
 
 def build_html() -> str:
@@ -32,7 +32,7 @@ def build_html() -> str:
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#202124" />
-  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="manifest" href="../../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/P01/icon-192.png" />
   <title>P01 - Understanding Images, Image Processing &amp; EDA (57 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -3406,7 +3406,7 @@ def get_file_hash(lokasi_foto):
 
     (function initSlide() {{
       if ('serviceWorker' in navigator && location.protocol !== 'file:') {{
-        navigator.serviceWorker.register('../sw.js', {{ scope: '../' }}).catch(() => {{}});
+        navigator.serviceWorker.register('../../sw.js', {{ scope: '../../' }}).catch(() => {{}});
       }}
       const m = window.location.hash.match(/^#slide-(\\d+)$/);
       if (m) {{
@@ -3469,7 +3469,7 @@ def verify_html(path_str: str) -> None:
 
     # Verify every image referenced exists
     imgs = re.findall(r'src="(assets/P01/[^"]+)"', text)
-    missing = [img for img in imgs if not (ROOT_DIR / "slides" / img).exists()]
+    missing = [img for img in imgs if not (ROOT_DIR / "materials" / "P01" / img).exists()]
     assert not missing, f"Missing image assets: {missing}"
 
     # Verify speaker notes time sum == 120.0 min

@@ -20,16 +20,16 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 │   ├── PROMPT_MASTER.md                # Prompt master perancangan materi
 │   ├── PROGRESS.md                     # Status implementasi & hasil validasi
 │   └── references/                     # Kumpulan PDF referensi desain slide
-├── slides/                             # Materi presentasi per pertemuan (HTML, PDF, PPTX)
-│   ├── P01_image_processing_eda.html   # Dek interaktif 57 slide (HTML5)
-│   ├── P01_image_processing_eda.pdf    # Ekspor PDF vektor 72 halaman (16:9)
-│   ├── P01_image_processing_eda.pptx   # Dek PowerPoint (25 slide, 120 menit)
-│   └── assets/
-│       └── P01/                        # Aset visualisasi, grafik EDA, ikon PWA & statistik
-├── notebooks/                          # Notebook hands-on Google Colab / Jupyter
-│   ├── P01_image_processing_eda.ipynb  # Notebook peserta (26 sel, 5 latihan # TODO)
-│   └── solutions/
-│       └── P01_image_processing_eda.ipynb  # Notebook kunci jawaban (21 sel tervalidasi)
+├── materials/                          # Folder materi per pertemuan (4 komponen dalam 1 folder)
+│   └── P01/
+│       ├── P01_image_processing_eda.html   # [1] Dek interaktif 57 slide (HTML5 — Main Source)
+│       ├── P01_image_processing_eda.pdf    # [2] Ekspor PDF vektor 72 halaman (16:9)
+│       ├── P01_image_processing_eda.pptx   # [3] Dek PowerPoint (25 slide, 120 menit)
+│       ├── P01_image_processing_eda.ipynb  # [4] Notebook hands-on peserta (26 sel, 5 # TODO)
+│       ├── solutions/
+│       │   └── P01_image_processing_eda.ipynb  # Notebook kunci jawaban (21 sel tervalidasi)
+│       └── assets/
+│           └── P01/                        # Aset visualisasi, grafik EDA, ikon PWA & statistik
 ├── data/
 │   └── sample/                         # Dataset sampel sintetis (120 foto + metadata.csv)
 ├── results/                            # Output CSV & grafik hasil eksekusi notebook

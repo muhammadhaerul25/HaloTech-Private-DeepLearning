@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#202124" />
-  <link rel="manifest" href="../manifest.webmanifest" />
+  <link rel="manifest" href="../../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/P01/icon-192.png" />
   <title>P01 - Understanding Images, Image Processing &amp; EDA (57 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -3378,7 +3378,7 @@ def get_file_hash(lokasi_foto):
 
     (function initSlide() {
       if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-        navigator.serviceWorker.register('../sw.js', { scope: '../' }).catch(() => {});
+        navigator.serviceWorker.register('../../sw.js', { scope: '../../' }).catch(() => {});
       }
       const m = window.location.hash.match(/^#slide-(\d+)$/);
       if (m) {

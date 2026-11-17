@@ -12,8 +12,8 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parent.parent
-NB_STUDENT = ROOT / "notebooks" / "P01_image_processing_eda.ipynb"
-NB_SOLUTION = ROOT / "notebooks" / "solutions" / "P01_image_processing_eda.ipynb"
+NB_STUDENT = ROOT / "materials" / "P01" / "P01_image_processing_eda.ipynb"
+NB_SOLUTION = ROOT / "materials" / "P01" / "solutions" / "P01_image_processing_eda.ipynb"
 
 
 def _to_source_lines(text: str) -> list[str]:
@@ -114,7 +114,7 @@ np.random.seed(SEED)
 IMG_SIZE = 224
 SMOKE_TEST = os.environ.get("SMOKE_TEST", "0") == "1"
 
-BASE_DIR = next((p for p in (Path("."), Path(".."), Path("../..")) if (p / "data").exists()), Path("."))
+BASE_DIR = next((p for p in (Path("."), Path(".."), Path("../.."), Path("../../..")) if (p / "data").exists()), Path("."))
 if not SMOKE_TEST and (BASE_DIR / "data" / "raw").exists() and any((BASE_DIR / "data" / "raw").iterdir()):
     DATA_DIR = BASE_DIR / "data" / "raw"
     CLASS_NAMES = sorted([p.name for p in DATA_DIR.iterdir() if p.is_dir()])

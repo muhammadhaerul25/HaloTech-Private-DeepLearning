@@ -1,11 +1,12 @@
 """Orkestrator build lengkap untuk HaloTech Private Deep Learning (P01).
 
-Menjalankan seluruh pipeline secara berurutan:
+HTML (slides/P01_image_processing_eda.html) adalah Sumber Utama (Main Source).
+Menjalankan seluruh pipeline secara berurutan agar semua format selalu sinkron:
 1. Generate dataset sampel sintetis (data/sample/)
-2. Generate visualisasi & dek PPTX (slides/P01_image_processing_eda.pptx)
-3. Generate dek interaktif HTML5 (slides/P01_image_processing_eda.html)
-4. Ekspor PDF berkualitas tinggi dengan split Q&A slides (slides/P01_image_processing_eda.pdf)
-5. Generate notebook peserta & solusi (notebooks/)
+2. Generate dek interaktif HTML5 — Main Source (slides/P01_image_processing_eda.html)
+3. Ekspor PDF berkualitas tinggi dari HTML (slides/P01_image_processing_eda.pdf)
+4. Generate notebook peserta & solusi selaras HTML (notebooks/)
+5. Generate visualisasi & dek PPTX selaras HTML (slides/P01_image_processing_eda.pptx)
 """
 
 from __future__ import annotations
@@ -19,10 +20,10 @@ TOOLS_DIR = ROOT / "tools"
 
 PIPELINE = [
     ("1/5 Generate sample dataset", "make_sample_data.py"),
-    ("2/5 Build PPTX & visual assets", "build_slides_P01.py"),
-    ("3/5 Build interactive HTML slides", "build_html_slides_P01.py"),
-    ("4/5 Export high-quality PDF (split Q&A)", "export_pdf_P01.py"),
-    ("5/5 Build hands-on notebooks", "build_notebooks_P01.py"),
+    ("2/5 Build interactive HTML slides (Main Source)", "build_html_slides_P01.py"),
+    ("3/5 Export high-quality PDF from HTML", "export_pdf_P01.py"),
+    ("4/5 Build hands-on notebooks synced with HTML", "build_notebooks_P01.py"),
+    ("5/5 Build PPTX & visual assets synced with HTML", "build_slides_P01.py"),
 ]
 
 

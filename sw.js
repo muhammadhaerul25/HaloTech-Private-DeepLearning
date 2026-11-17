@@ -1,12 +1,12 @@
-const CACHE_NAME = 'dl-course-pwa-v2';
+const CACHE_NAME = 'dl-course-pwa-v3';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './sessions.json',
   './manifest.webmanifest',
-  './slides/P01_image_processing_eda.html',
-  './slides/assets/P01/icon-192.png',
-  './slides/assets/P01/icon-512.png'
+  './materials/P01/P01_image_processing_eda.html',
+  './materials/P01/assets/P01/icon-192.png',
+  './materials/P01/assets/P01/icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
