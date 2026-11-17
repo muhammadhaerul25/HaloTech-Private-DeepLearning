@@ -3,7 +3,12 @@ Understanding Images & Image Processing (step-by-step sesuai slide P01).
 """
 
 from pathlib import Path
-import nbformat as nbf
+import json
+
+try:
+    import nbformat as nbf
+except ImportError:
+    nbf = None
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -11,12 +16,33 @@ NB_STUDENT = ROOT / "notebooks" / "P01_image_processing_eda.ipynb"
 NB_SOLUTION = ROOT / "notebooks" / "solutions" / "P01_image_processing_eda.ipynb"
 
 
+def _to_source_lines(text: str) -> list[str]:
+    lines = text.strip().splitlines(keepends=True)
+    return lines
+
+
 def md(text: str):
-    return nbf.v4.new_markdown_cell(text.strip())
+    if nbf is not None:
+        return nbf.v4.new_markdown_cell(text.strip())
+    return {
+        "cell_type": "markdown",
+        "id": f"md-{ abs(hash(text)) % 10**8 :08d}",
+        "metadata": {},
+        "source": _to_source_lines(text),
+    }
 
 
 def code(text: str):
-    return nbf.v4.new_code_cell(text.strip())
+    if nbf is not None:
+        return nbf.v4.new_code_cell(text.strip())
+    return {
+        "cell_type": "code",
+        "execution_count": None,
+        "id": f"code-{ abs(hash(text)) % 10**8 :08d}",
+        "metadata": {},
+        "outputs": [],
+        "source": _to_source_lines(text),
+    }
 
 
 def build_cells(is_solution: bool) -> list:
@@ -28,15 +54,15 @@ def build_cells(is_solution: bool) -> list:
     cells.append(
         md(
             """
-# Hands-on P1: Understanding Images, Image Processing & EDA
+# Hands-on P01: Understanding Images, Image Processing & EDA
 
-**Durasi Hands-on:** ±50 menit (6 langkah terpandu mengikuti alur slide presentasi)  
+**Durasi Hands-on:** ±50 menit (6 langkah terpandu mengikuti alur slide presentasi Bab 1–4)  
 **Tujuan Pembelajaran:**
-1. Membaca gambar digital sebagai *pixel matrix* `(tinggi, lebar, channel)` dan mengintip nilai intensitas `0–255`.
-2. Memisahkan **RGB channels** dan mengubah gambar ke **Grayscale**.
-3. Menerapkan **Image Processing** inti: *resize* dengan **Letterbox Padding** (menjaga *aspect ratio*) dan **Normalization** (`uint8` → `float32`).
-4. Mendeteksi **3 Jebakan Kamera HP**: *EXIF orientation*, *corrupted files*, dan *duplicate images* (`SHA-256`).
-5. Melakukan **Exploratory Data Analysis (EDA)** dataset: *Class Balance*, *Brightness*, *Contrast*, *Histogram*, dan *Edge Density* (**Polos vs Ramai**), lalu menyimpan laporan audit.
+1. Membaca gambar digital sebagai *pixel matrix* `(tinggi, lebar, channel)` dan mengintip nilai intensitas `0–255` (**Bab 1**).
+2. Memisahkan **RGB channels** dan mengubah gambar ke **Grayscale** (**Bab 1**).
+3. Memahami **AI Fundamental** (mengapa aturan manual `if-else` gagal saat objek bergeser/latar ramai) dan menerapkan **Image Processing** inti: *resize* dengan **Letterbox Padding** (`224×224`) serta **Normalization** (`uint8` → `float32` `0.0–1.0`) (**Bab 2**).
+4. Mendeteksi **3 Jebakan Kamera HP**: *EXIF orientation*, *corrupted files*, dan *duplicate images* (`SHA-256`) (**Bab 4**).
+5. Melakukan **Exploratory Data Analysis (EDA)** dataset: *Class Balance*, *Brightness*, *Contrast*, *Histogram*, dan *Edge Density* (**Polos vs Ramai**), lalu menyimpan laporan audit (**Bab 3 & 5**).
 
 > **Cara Kerja:** Jalankan sel secara berurutan dari atas ke bawah. Pada notebook peserta, lengkapi bagian bertanda `# TODO` sebelum menjalankan sel pengecekan (`assert`) di bawahnya.
 """
@@ -333,19 +359,35 @@ gray_arr = cv2.cvtColor(arr_raw, cv2.COLOR_RGB2GRAY)
         )
 
     # =========================================================================
-    # LANGKAH 3: IMAGE PROCESSING (RESIZE, LETTERBOX PADDING & NORMALIZATION)
+    # LANGKAH 3: AI FUNDAMENTAL & IMAGE PROCESSING (RESIZE, LETTERBOX & NORMALIZATION)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 3 (8 menit): *Image Processing* — *Resize*, *Aspect Ratio* & *Normalization*
+## Langkah 3 (8 menit): Jembatan *AI Fundamental* & *Image Processing* (*Resize*, *Aspect Ratio* & *Normalization*)
 
-Sebelum masuk ke model Deep Learning, foto mentah harus melewati 2 perapihan utama:
-1. **Menyamakan Ukuran Tanpa Gepeng (*Letterbox Padding*):**  
-   Model membutuhkan ukuran seragam (`224 × 224`). Jika foto persegi panjang langsung di-`resize((224, 224))`, objeknya menjadi **gepeng (*distorted*)**. Dengan *Letterbox Padding*, foto diperkecil proporsional lalu sisa ruangnya diisi *padding* abu-abu netral.
-2. **Normalization (`0–255` → `0.0–1.0`):**  
-   Angka `0–255` terlalu besar dan membuat proses belajar AI tidak stabil. Kita ubah tipenya ke `float32` lalu dibagi `255.0`.
+Sesuai **Bab 2 (AI Fundamental)** di slide presentasi:
+- **Mengapa Mengenali Foto Wajib Pakai AI (Bukan `If-Else`)?**  
+  Pada program aturan manual (`if-else`), jika kita hanya mengecek koordinat titik tertentu (misalnya `pixel[tengah]`), aturan tersebut langsung **gagal** begitu objek di dalam foto **bergeser sedikit**, **miring**, atau **latar belakangnya ramai**. Sebaliknya, **AI (Deep Learning)** mempelajari **pola bentuk & warna** dari contoh foto.
+- **Mengapa AI Butuh *Image Processing* (*Garbage In, Garbage Out*)?**  
+  Sebelum contoh foto disuapkan ke AI, foto mentah wajib melewati 2 perapihan utama:
+  1. **Menyamakan Ukuran Tanpa Gepeng (*Letterbox Padding* `224 × 224`):** Menjaga *aspect ratio* agar objek tidak penyok/lonjong (*distorted*).
+  2. **Normalization (`0–255` → `0.0–1.0`):** Mengubah tipe `uint8` ke `float32` lalu dibagi `255.0` agar perhitungan AI stabil.
+"""
+        )
+    )
+
+    cells.append(
+        code(
+            """
+# Demo Singkat AI Fundamental: Mengapa aturan manual (if-else) pada koordinat pixel gagal saat objek bergeser?
+arr_shifted = np.roll(arr_raw, shift=55, axis=1)  # simulasi objek bergeser 55 pixel ke kanan
+px_center_orig = arr_raw[img_h // 2, img_w // 2].tolist()
+px_center_shift = arr_shifted[img_h // 2, img_w // 2].tolist()
+
+print(f"RGB pixel[tengah] saat objek di tengah : {px_center_orig}")
+print(f"RGB pixel[tengah] saat objek bergeser  : {px_center_shift} -> Berubah drastis! Aturan if-else langsung gagal.")
 """
         )
     )
@@ -881,13 +923,13 @@ print(f"Tersimpan: {audit_csv.name}, {summary_csv.name}, {plot_path.name} di {RE
     cells.append(
         md(
             """
-### Mini-Challenge & 3 Temuan Utama
-Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil EDA Anda:
-1. Berapa jumlah total foto yang valid, berapa yang *corrupted*, dan apakah ada *duplicate images*?
-2. Bandingkan nilai rata-rata **Edge Density** pada latar **polos** vs **ramai** — mengapa latar ramai berisiko mengganggu model AI jika data latih hanya berisi foto polos?
-3. Setelah ukuran diseragamkan ke `224 × 224` dan dinormalisasi ke `[0.0, 1.0]`, langkah apa yang harus kita lakukan di pertemuan berikutnya sebelum melatih model?
+### Mini-Challenge: Diskusi Kasus Polos vs Ramai (Sesuai Slide 50)
+Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil nyata EDA di atas:
+1. Menurut Anda, kondisi mana yang akan lebih sulit ditebak oleh AI nantinya: **Polos** atau **Ramai**? Mengapa (kaitkan dengan angka *brightness* dan *edge density* di atas)?
+2. Jika AI hanya kita latih dengan foto **Polos**, kira-kira apa yang terjadi saat ia diuji melihat foto **Ramai**?
+3. Apa saran strategi penyiapan dataset agar AI bisa pintar mengenali objek di kedua kondisi sekaligus, serta bebas dari jebakan *corrupted files*, *EXIF orientation*, dan *duplicate data leakage*?
 
-*(Catatan metodologi: EDA pada sesi ini bersifat deskriptif; pembagian `Train / Val / Test` dan pencegahan data leakage secara penuh dilakukan pada sesi splitting dataset).*
+*(Catatan metodologi: EDA pada sesi ini bersifat deskriptif untuk memahami kesehatan koleksi foto sebelum digunakan melatih model AI).*
 """
         )
     )
@@ -896,18 +938,35 @@ Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil EDA Anda:
 
 
 def write_notebook(path: Path, is_solution: bool) -> None:
-    nb = nbf.v4.new_notebook()
-    nb.metadata["kernelspec"] = {
-        "display_name": "Python 3",
-        "language": "python",
-        "name": "python3",
-    }
-    nb.metadata["language_info"] = {"name": "python", "version": "3.11"}
-    nb.cells = build_cells(is_solution=is_solution)
+    cells = build_cells(is_solution=is_solution)
     path.parent.mkdir(parents=True, exist_ok=True)
-    with open(path, "w", encoding="utf-8") as f:
-        nbf.write(nb, f)
-    print(f"Written: {path} ({len(nb.cells)} cells)")
+    if nbf is not None:
+        nb = nbf.v4.new_notebook()
+        nb.metadata["kernelspec"] = {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3",
+        }
+        nb.metadata["language_info"] = {"name": "python", "version": "3.11"}
+        nb.cells = cells
+        with open(path, "w", encoding="utf-8") as f:
+            nbf.write(nb, f)
+    else:
+        nb_dict = {
+            "cells": cells,
+            "metadata": {
+                "kernelspec": {
+                    "display_name": "Python 3",
+                    "language": "python",
+                    "name": "python3",
+                },
+                "language_info": {"name": "python", "version": "3.11"},
+            },
+            "nbformat": 4,
+            "nbformat_minor": 5,
+        }
+        path.write_text(json.dumps(nb_dict, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+    print(f"Written: {path} ({len(cells)} cells)")
 
 
 def main() -> None:

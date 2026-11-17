@@ -1,7 +1,8 @@
-"""Generate 54-slide beginner-friendly interactive HTML5 presentation slides/P01_image_processing_eda.html.
+"""Generate 57-slide beginner-friendly interactive HTML5 presentation slides/P01_image_processing_eda.html.
 
 Designed for non-IT / non-technical learners:
-- Clear flow from how humans see images -> how computers read & display images ->
+- Clear flow from AI Fundamentals (what AI/ML/DL is, why we use AI here, how it works end-to-end) ->
+  how humans see images -> how computers read & display images ->
   why image processing matters -> core concepts -> dataset health check (EDA) ->
   hidden camera traps -> hands-on & mini-challenge -> interactive quiz.
 - No session numbering codes (no P4/P5/P7/P8 labels) in visible content or notes.
@@ -33,7 +34,7 @@ def build_html() -> str:
   <meta name="theme-color" content="#202124" />
   <link rel="manifest" href="../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/P01/icon-192.png" />
-  <title>P01 - Understanding Images, Image Processing &amp; EDA (54 Slides)</title>
+  <title>P01 - Understanding Images, Image Processing &amp; EDA (57 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -365,7 +366,7 @@ def build_html() -> str:
             <span style="width:9px; height:9px; border-radius:50%; background:#34A853;"></span>
             <span style="font-size:11.5px; font-weight:700; letter-spacing:1px; color:#202124; margin-left:4px;">DEEP LEARNING TRACK</span>
           </span>
-          <span style="font-size:13.5px; font-weight:600; color:#5F6368;">120 Menit &nbsp;·&nbsp; Minggu, 15 November 2026</span>
+          <span style="font-size:13.5px; font-weight:600; color:#5F6368;">Fase Fondasi &nbsp;·&nbsp; 120 Menit</span>
         </div>
       </div>
 
@@ -431,18 +432,18 @@ def build_html() -> str:
     </section>
 
     <!-- 02: PETA MATERI -->
-    <section class="slide" data-title="Peta Perjalanan Belajar (5 Bab)" data-notes="Alokasi waktu: 1 menit. Ini alur belajar kita hari ini: mulai dari dasar cara komputer melihat gambar, alasan belajar image processing, hingga praktik memeriksa kualitas foto.">
+    <section class="slide" data-title="Peta Perjalanan Belajar (5 Bab)" data-notes="Alokasi waktu: 1 menit. Ini alur belajar kita hari ini: mulai dari dasar cara komputer melihat gambar, peran AI & alasan belajar image processing, hingga praktik memeriksa kualitas foto.">
       <div class="kicker">PETA PERJALANAN BELAJAR</div>
       <h2>Dari Foto Biasa Menuju <span class="hl-blue">Data Siap AI</span></h2>
       <p class="subtitle">Disusun bertahap dengan analogi sehari-hari — tidak perlu latar belakang IT untuk memahaminya.</p>
       <div class="step-list">
         <div class="step-item"><div class="step-num">01</div><div><div class="step-title">Bagaimana Kita &amp; Komputer Melihat Gambar</div><div class="step-desc">Perbedaan cara mata manusia vs komputer membaca foto, pixel, nilai 0–255, dan RGB channels.</div></div></div>
-        <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Mengapa Kita Perlu Image Processing?</div><div class="step-desc">Menyamakan resolution, menjaga aspect ratio agar tidak distorted, dan melakukan normalization.</div></div></div>
+        <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Peran AI &amp; Mengapa Perlu Image Processing?</div><div class="step-desc">Kenapa foto butuh AI, apa itu AI, bagaimana cara kerjanya, serta kenapa foto mentah wajib dirapikan dulu.</div></div></div>
         <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Exploratory Data Analysis (EDA)</div><div class="step-desc">Mengecek keseimbangan jumlah foto, grafik pencahayaan, serta membedakan latar polos vs ramai.</div></div></div>
         <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Tiga Jebakan Tersembunyi Kamera HP</div><div class="step-desc">Mendeteksi EXIF orientation yang terputar, duplicate images, dan corrupted files.</div></div></div>
         <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Praktik Santai, Diskusi &amp; Kuis Interaktif</div><div class="step-desc">Melihat hasil nyata pada 120 foto sampel, diskusi tantangan latar polos vs ramai, kamus istilah, &amp; kuis.</div></div></div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>02 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>02 / 57</span></div>
     </section>
 
     <!-- 03: ALUR SESI 120 MENIT -->
@@ -452,13 +453,13 @@ def build_html() -> str:
       <p class="subtitle">Belajar pelan-pelan, penuh ilustrasi visual, dan tanya-jawab interaktif yang tuntas di kelas.</p>
       <div class="grid-3">
         <div class="card tint-blue"><div class="card-top-bar bar-blue"></div><div class="card-title">00–10 · Pemanasan</div><div class="card-body">Menyegarkan ingatan tentang data angka dan membayangkan bagaimana komputer "melihat" sebuah foto.</div></div>
-        <div class="card tint-red"><div class="card-top-bar bar-red"></div><div class="card-title">10–40 · Teori &amp; Ilustrasi</div><div class="card-body">Memahami pixel, RGB channels, alasan Image Processing, EDA dataset, serta 3 jebakan file foto.</div></div>
+        <div class="card tint-red"><div class="card-top-bar bar-red"></div><div class="card-title">10–40 · Teori &amp; Ilustrasi</div><div class="card-body">Memahami pixel &amp; RGB, peran AI pada foto, alasan Image Processing, EDA dataset, serta 3 jebakan file foto.</div></div>
         <div class="card tint-yellow"><div class="card-top-bar bar-yellow"></div><div class="card-title">40–45 · Istirahat Singkat</div><div class="card-body">Jeda 5 menit untuk minum air dan meregangkan mata sebelum melihat contoh praktik.</div></div>
         <div class="card tint-green"><div class="card-top-bar bar-green"></div><div class="card-title">45–95 · Praktik Terpandu</div><div class="card-body">Menjalankan 6 langkah pemeriksaan foto secara bertahap pada koleksi foto sampel.</div></div>
         <div class="card tint-blue"><div class="card-top-bar bar-blue"></div><div class="card-title">95–110 · Diskusi Kasus</div><div class="card-body">Menebak tantangan nyata: lebih mudah mana bagi AI, foto berlatar polos atau foto berlatar ramai?</div></div>
         <div class="card tint-red"><div class="card-top-bar bar-red"></div><div class="card-title">110–120 · Kuis &amp; Penutup</div><div class="card-body">Kuis interaktif 5 soal dengan pembahasan langsung serta rangkuman poin terpenting hari ini.</div></div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>03 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>03 / 57</span></div>
     </section>
 
     <!-- 04: TUJUAN BELAJAR -->
@@ -467,14 +468,14 @@ def build_html() -> str:
       <h2>Apa yang Akan Kita <span class="hl-blue">Kuasai</span>?</h2>
       <div class="grid-3">
         <div class="card"><div class="card-top-bar bar-blue"></div><span class="pill blue" style="margin-bottom:6px;">POIN 01</span><div class="card-title">Paham Bahasa Gambar Komputer</div><div class="card-body"><ul><li>Tahu bedanya cara mata kita vs komputer membaca foto.</li><li>Mengerti bahwa setiap foto sebenarnya adalah tabel berisi angka 0–255.</li><li>Mengerti konsep RGB channels (Red, Green, Blue).</li></ul></div><div class="callout"><strong>Hasil:</strong> Gambar digital tidak lagi terasa seperti <em>black box</em>.</div></div>
-        <div class="card"><div class="card-top-bar bar-green"></div><span class="pill green" style="margin-bottom:6px;">POIN 02</span><div class="card-title">Tahu Kenapa Foto Harus Dirapikan</div><div class="card-body"><ul><li>Mengerti bahaya <em>distorted aspect ratio</em> saat melakukan resize.</li><li>Paham alasan menyamakan skala angka (0–1).</li><li>Tahu cara mencegah foto terbalik dari kamera HP.</li></ul></div><div class="callout green"><strong>Hasil:</strong> Paham fungsi utama Image Processing sebelum AI dilatih.</div></div>
+        <div class="card"><div class="card-top-bar bar-green"></div><span class="pill green" style="margin-bottom:6px;">POIN 02</span><div class="card-title">Paham Peran AI &amp; Image Processing</div><div class="card-body"><ul><li>Mengerti kenapa kita butuh AI dan bagaimana cara AI belajar dari foto.</li><li>Mengerti kenapa foto wajib dirapikan (resize proporsional &amp; normalisasi 0–1) sebelum masuk ke AI.</li></ul></div><div class="callout green"><strong>Hasil:</strong> Paham hubungan erat antara bahan foto yang rapi dan kecerdasan AI.</div></div>
         <div class="card"><div class="card-top-bar bar-red"></div><span class="pill red" style="margin-bottom:6px;">POIN 03</span><div class="card-title">Bisa Mengaudit Koleksi Foto</div><div class="card-body"><ul><li>Mampu mengecek apakah jumlah foto sudah seimbang.</li><li>Bisa membedakan foto gelap, terang, polos, dan ramai.</li><li>Tahu cara menyaring foto rusak dan kembar.</li></ul></div><div class="callout red"><strong>Hasil:</strong> Koleksi foto bersih, sehat, dan jujur untuk AI.</div></div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>04 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>04 / 57</span></div>
     </section>
 
     <!-- 05: PEMANTIK -->
-    <section class="slide" data-title="Pemanasan: Dari Angka Biasa ke Foto" data-notes="Alokasi waktu: 2 menit. Sebelumnya kita mengenal data dalam bentuk tabel angka biasa. Sekarang, bayangkan kalau input yang masuk ke komputer adalah foto dari kamera HP.">
+    <section class="slide" data-title="Pemanasan: Dari Angka Biasa ke Foto" data-notes="Alokasi waktu: 1.5 menit. Sebelumnya kita mengenal data dalam bentuk tabel angka biasa. Sekarang, bayangkan kalau input yang masuk ke komputer adalah foto dari kamera HP.">
       <div class="kicker">PEMANASAN</div>
       <h2>Dari Data Tabel Biasa ke <span class="hl-blue">Sebuah Foto</span></h2>
       <div class="grid-2">
@@ -643,57 +644,7 @@ def build_html() -> str:
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>09 / 54</span></div>
     </section>
 
-    <!-- 10: QA REVEAL #1 -->
-    <section class="slide" data-title="Tanya-Jawab #1: Seberapa Banyak Angka dalam 1 Foto?" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta menebak dulu sebelum menekan tombol Lihat Jawaban.">
-      <div class="kicker">TANYA &amp; JAWAB INTERAKTIF · #1</div>
-      <h2>Coba Tebak: <span class="hl-blue">Berapa Banyak Angka</span> di 1 Foto?</h2>
-      <div class="split-60-40">
-        <div class="qa-box" style="margin:0; justify-content:center;">
-          <div class="qa-question">
-            Jika komputer membaca sebuah foto warna kecil berukuran <strong>224 × 224 pixels</strong>, dan setiap kotak punya <strong>3 angka</strong> (Merah, Hijau, Biru), kira-kira berapa total angka yang dibaca komputer untuk 1 foto saja?
-          </div>
-          <div class="qa-choices">
-            <div class="qa-choice"><strong>A.</strong> Sekitar 672 angka saja</div>
-            <div class="qa-choice"><strong>B.</strong> Sekitar 50.176 angka</div>
-            <div class="qa-choice"><strong>C.</strong> Lebih dari 150.000 angka!</div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa1', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa1" class="qa-answer">
-            <strong>Jawaban: C — Tepatnya 150.528 angka!</strong><br />
-            Hitungan sederhananya: <code>224 baris × 224 kolom × 3 warna = 150.528 angka</code>.<br />
-            Bayangkan jika kita punya 1.000 foto, berarti komputer harus membaca lebih dari <strong>150 juta angka</strong>! Itulah alasan mengapa data foto harus rapi dan ukurannya seragam agar komputer tidak kewalahan.
-          </div>
-        </div>
-        <div class="card surface" style="align-items:center; justify-content:center; padding:16px;">
-          <svg id="qa1-vis" viewBox="0 0 320 260" style="width:100%; height:100%; max-height:360px;">
-            <rect x="24" y="42" width="118" height="118" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.5"/>
-            <rect x="44" y="58" width="118" height="118" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.5" opacity="0.92"/>
-            <rect x="64" y="74" width="118" height="118" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2.5" opacity="0.92"/>
-            <rect x="84" y="90" width="118" height="118" rx="12" fill="#FFFFFF" stroke="#202124" stroke-width="2.5"/>
-            <text x="143" y="138" text-anchor="middle" font-size="18" font-weight="700" fill="#202124">224 × 224</text>
-            <text x="143" y="160" text-anchor="middle" font-size="13" font-weight="600" fill="#5F6368">pixels</text>
-            <text x="143" y="184" text-anchor="middle" font-size="12" font-weight="700" fill="#1A73E8">× 3 RGB Channels</text>
-            <rect x="224" y="64" width="76" height="34" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="1.5"/>
-            <text x="262" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#C5221F">R (0–255)</text>
-            <rect x="224" y="108" width="76" height="34" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="1.5"/>
-            <text x="262" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#137333">G (0–255)</text>
-            <rect x="224" y="152" width="76" height="34" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.5"/>
-            <text x="262" y="174" text-anchor="middle" font-size="13" font-weight="700" fill="#1A73E8">B (0–255)</text>
-            <g class="vis-q">
-              <rect x="50" y="220" width="220" height="30" rx="15" fill="#202124"/>
-              <text x="160" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#FBBC04">Total Angka = 224 × 224 × 3 = ?</text>
-            </g>
-            <g class="vis-a">
-              <rect x="34" y="220" width="252" height="30" rx="15" fill="#34A853"/>
-              <text x="160" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Total = 150.528 Angka / Foto!</text>
-            </g>
-          </svg>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>10 / 54</span></div>
-    </section>
-
-    <!-- 11: APA ITU PIKSEL -->
+    <!-- 10: APA ITU PIKSEL -->
     <section class="slide" data-title="Mengenal Piksel: Kertas Berpetak Digital" data-notes="Alokasi waktu: 1 menit. Gunakan analogi kertas berpetak atau mosaik keramik. Setiap kotak kecil disebut piksel.">
       <div class="kicker">BAB 1 · KONSEP PIXEL</div>
       <h2>Apa Itu <span class="hl-blue">Pixel</span>?</h2>
@@ -716,10 +667,10 @@ def build_html() -> str:
           <img src="assets/P01/01_opening_character.png" alt="Contoh gambar geometris sintetis" />
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>11 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>10 / 57</span></div>
     </section>
 
-    <!-- 12: INTERACTIVE 8x8 GRID -->
+    <!-- 11: INTERACTIVE 8x8 GRID -->
     <section class="slide" data-title="Eksperimen: Lihat Seperti Komputer (Grid 8×8)" data-notes="Alokasi waktu: 2 menit. Ajak peserta mencoba tombol 'Lihat Sebagai Angka Komputer' dan mengklik kotak untuk merasakan angka 0 (gelap) sampai 255 (putih terang).">
       <div class="kicker">BAB 1 · EKSPERIMEN INTERAKTIF</div>
       <h2>Coba Lihat <span class="hl-blue">Seperti Komputer</span> (8×8 Pixel Grid)</h2>
@@ -745,10 +696,10 @@ def build_html() -> str:
           <div class="callout green">Di sebelah kiri, bentuk persegi terlihat jelas oleh mata kita. Namun saat angka ditampilkan, komputer hanya melihat angka <strong>35</strong> (gelap) di tengah lautan angka <strong>245</strong> (terang).</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>12 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>11 / 57</span></div>
     </section>
 
-    <!-- 13: TIGA LAMPU WARNA RGB -->
+    <!-- 12: TIGA LAMPU WARNA RGB -->
     <section class="slide" data-title="Model Warna RGB: Tiga Sumber Cahaya" data-notes="Alokasi waktu: 1 menit. Jelaskan RGB tanpa rumus: tiga warna cahaya dasar Merah, Hijau, Biru yang digabungkan di titik yang sama.">
       <div class="kicker">BAB 1 · KONSEP WARNA RGB</div>
       <h2>Model Warna <span class="hl-red">R</span><span class="hl-green">G</span><span class="hl-blue">B</span>: Tiga Sumber Cahaya</h2>
@@ -788,10 +739,10 @@ def build_html() -> str:
           <strong>Percampuran Cahaya (Additive):</strong> Jika <strong>Red = 255</strong>, <strong>Green = 255</strong>, dan <strong>Blue = 0</strong>, cahaya merah + hijau bergabung menjadi <strong>Kuning</strong>. Jika ketiganya <code>255</code>, hasilnya <strong>Putih</strong>!
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>13 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>12 / 57</span></div>
     </section>
 
-    <!-- 14: INTERACTIVE RGB MIXER -->
+    <!-- 13: INTERACTIVE RGB MIXER -->
     <section class="slide" data-title="Eksperimen: Campur 3 Lampu Warna" data-notes="Alokasi waktu: 2 menit. Geser ketiga slider Merah, Hijau, Biru untuk melihat bagaimana angka berubah menjadi warna di layar.">
       <div class="kicker">BAB 1 · EKSPERIMEN INTERAKTIF</div>
       <h2>Coba Sendiri: <span class="hl-blue">3 Angka Jadi 1 Warna</span></h2>
@@ -826,7 +777,57 @@ def build_html() -> str:
           </div>
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>14 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>13 / 57</span></div>
+    </section>
+
+    <!-- 14: QA REVEAL #1 (SETELAH PAHAM PIXEL & 3 WARNA RGB) -->
+    <section class="slide" data-title="Tanya-Jawab #1: Seberapa Banyak Angka dalam 1 Foto?" data-notes="Alokasi waktu: 1.5 menit. Nah, setelah peserta paham apa itu Pixel dan bahwa 1 Pixel punya 3 angka RGB, ajak mereka menebak berapa total angka dalam 1 foto 224x224!">
+      <div class="kicker">TANYA &amp; JAWAB INTERAKTIF · #1</div>
+      <h2>Coba Tebak: <span class="hl-blue">Berapa Banyak Angka</span> di 1 Foto?</h2>
+      <div class="split-60-40">
+        <div class="qa-box" style="margin:0; justify-content:center;">
+          <div class="qa-question">
+            Tadi kita sudah lihat bahwa <strong>1 kotak pixel</strong> memiliki <strong>3 angka warna (R, G, B)</strong>. Jika komputer membaca sebuah foto berukuran <strong>224 × 224 pixels</strong>, kira-kira berapa total angka yang dibaca komputer untuk 1 foto saja?
+          </div>
+          <div class="qa-choices">
+            <div class="qa-choice"><strong>A.</strong> Sekitar 672 angka saja</div>
+            <div class="qa-choice"><strong>B.</strong> Sekitar 50.176 angka</div>
+            <div class="qa-choice"><strong>C.</strong> Lebih dari 150.000 angka!</div>
+          </div>
+          <button class="btn-ui" onclick="toggleQA('qa1', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
+          <div id="qa1" class="qa-answer">
+            <strong>Jawaban: C — Tepatnya 150.528 angka!</strong><br />
+            Hitungan sederhananya: <code>224 baris × 224 kolom × 3 warna (RGB) = 150.528 angka</code>.<br />
+            Bayangkan jika kita punya 1.000 foto, berarti komputer harus membaca lebih dari <strong>150 juta angka</strong>!
+          </div>
+        </div>
+        <div class="card surface" style="align-items:center; justify-content:center; padding:16px;">
+          <svg id="qa1-vis" viewBox="0 0 320 260" style="width:100%; height:100%; max-height:360px;">
+            <rect x="24" y="42" width="118" height="118" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.5"/>
+            <rect x="44" y="58" width="118" height="118" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.5" opacity="0.92"/>
+            <rect x="64" y="74" width="118" height="118" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2.5" opacity="0.92"/>
+            <rect x="84" y="90" width="118" height="118" rx="12" fill="#FFFFFF" stroke="#202124" stroke-width="2.5"/>
+            <text x="143" y="138" text-anchor="middle" font-size="18" font-weight="700" fill="#202124">224 × 224</text>
+            <text x="143" y="160" text-anchor="middle" font-size="13" font-weight="600" fill="#5F6368">pixels</text>
+            <text x="143" y="184" text-anchor="middle" font-size="12" font-weight="700" fill="#1A73E8">× 3 RGB Channels</text>
+            <rect x="224" y="64" width="76" height="34" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="1.5"/>
+            <text x="262" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#C5221F">R (0–255)</text>
+            <rect x="224" y="108" width="76" height="34" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="1.5"/>
+            <text x="262" y="130" text-anchor="middle" font-size="13" font-weight="700" fill="#137333">G (0–255)</text>
+            <rect x="224" y="152" width="76" height="34" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.5"/>
+            <text x="262" y="174" text-anchor="middle" font-size="13" font-weight="700" fill="#1A73E8">B (0–255)</text>
+            <g class="vis-q">
+              <rect x="50" y="220" width="220" height="30" rx="15" fill="#202124"/>
+              <text x="160" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#FBBC04">Total Angka = 224 × 224 × 3 = ?</text>
+            </g>
+            <g class="vis-a">
+              <rect x="34" y="220" width="252" height="30" rx="15" fill="#34A853"/>
+              <text x="160" y="240" text-anchor="middle" font-size="13" font-weight="700" fill="#FFFFFF">Total = 150.528 Angka / Foto!</text>
+            </g>
+          </svg>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>14 / 57</span></div>
     </section>
 
     <!-- 15: ABU-ABU VS WARNA -->
@@ -922,17 +923,306 @@ def build_html() -> str:
     </section>
 
     <!-- 18: DIVIDER BAB 2 -->
-    <section class="slide bg-red" data-title="Bab 2: Mengapa Kita Perlu Image Processing?" data-notes="Alokasi waktu: 0.5 menit. Sekarang kita sudah tahu foto = angka. Lalu kenapa tidak langsung kita masukkan saja ke AI? Ini jawabannya!">
+    <section class="slide bg-red" data-title="Bab 2: Peran AI &amp; Mengapa Perlu Image Processing?" data-notes="Alokasi waktu: 0.5 menit. Di Bab 1 kita sudah tahu foto = lautan angka 0-255. Sekarang kita masuk ke Bab 2: bagaimana AI belajar dari angka tersebut, dan mengapa foto mentah wajib dirapikan dulu.">
       <div class="divider-center">
-        <span class="pill dark">BAB 2 · KENAPA IMAGE PROCESSING PENTING</span>
-        <h1>Mengapa Kita Perlu Belajar Image Processing?</h1>
-        <p>Foto mentah dari kamera HP penuh ketidakteraturan. Tanpa dirapikan terlebih dahulu, AI akan kesulitan belajar dan mudah salah menebak.</p>
+        <span class="pill dark">BAB 2 · PERAN AI &amp; IMAGE PROCESSING</span>
+        <h1>Bagaimana AI Membaca Foto &amp; Mengapa Perlu Dirapikan?</h1>
+        <p>Menjembatani lautan angka pixel dari Bab 1 menuju cara kerja AI, alasan kita memakai AI, dan pentingnya merapikan foto mentah.</p>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>18 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>18 / 57</span></div>
     </section>
 
-    <!-- 19: MENGAPA IMAGE PROCESSING PENTING -->
-    <section class="slide" data-title="Mengapa Foto Mentah Perlu Preprocessing?" data-notes="Alokasi waktu: 1.5 menit. Jelaskan langsung alasan praktisnya tanpa analogi yang dipaksakan: kamera HP memotret untuk mata manusia, bukan untuk mesin.">
+    <!-- 19: AI FUNDAMENTAL 1/3 - APA ITU AI? (INTERACTIVE 3-LEVEL EXPLORER) -->
+    <section class="slide" data-title="AI Fundamental (1/3): Apa Itu AI di Project Ini?" data-notes="Alokasi waktu: 1.5 menit. Klik 3 tombol di atas ilustrasi untuk menunjukkan perbedaan Program Biasa, Machine Learning, dan Deep Learning secara visual.">
+      <div class="kicker">BAB 2 · AI FUNDAMENTAL 1/3 · SIMULATOR KONSEP</div>
+      <h2>Dari Angka Pixel ke Makna: <span class="hl-blue">Apa Itu AI</span>?</h2>
+      <p class="subtitle">Klik 3 tombol di bawah untuk melihat perbedaan cara kerja <strong>Program Biasa</strong>, <strong>Machine Learning</strong>, dan <strong>Deep Learning</strong>:</p>
+      <div class="split-60-40">
+        <div class="card surface" style="justify-content:space-between; gap:10px; padding:14px 18px;">
+          <div id="ai1-tabs" style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-ui outline" data-tab="rule" onclick="setAi1Tab('rule')">1. Program Biasa</button>
+            <button type="button" class="btn-ui outline" data-tab="ml" onclick="setAi1Tab('ml')">2. Machine Learning</button>
+            <button type="button" class="btn-ui" data-tab="dl" onclick="setAi1Tab('dl')">3. Deep Learning (Project Kita)</button>
+          </div>
+
+          <!-- Visual Panel 1: Program Biasa -->
+          <div id="ai1-panel-rule" style="display:none; flex-direction:column; gap:10px; flex:1; justify-content:center;">
+            <svg viewBox="0 0 500 185" style="width:100%; max-height:185px;">
+              <rect x="8" y="18" width="138" height="148" rx="14" fill="#FFFFFF" stroke="#DADCE0" stroke-width="2"/>
+              <text x="77" y="42" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" fill="#202124">Input: Manusia</text>
+              <rect x="22" y="54" width="110" height="44" rx="8" fill="#FCE8E6" stroke="#EA4335"/>
+              <text x="77" y="74" text-anchor="middle" font-size="10.5" font-weight="700" fill="#C5221F">Tulis Rumus Kaku</text>
+              <text x="77" y="89" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" fill="#202124">if (x,y) == kuning</text>
+              <rect x="22" y="108" width="110" height="44" rx="8" fill="#F8F9FA" stroke="#DADCE0"/>
+              <text x="77" y="128" text-anchor="middle" font-size="10.5" font-weight="700" fill="#3C4043">+ Data Foto</text>
+              <text x="77" y="143" text-anchor="middle" font-size="9.5" fill="#5F6368">150.528 angka</text>
+
+              <path d="M154 92 L188 92" stroke="#5F6368" stroke-width="3"/><polygon points="186,86 198,92 186,98" fill="#5F6368"/>
+
+              <rect x="204" y="34" width="136" height="116" rx="14" fill="#202124"/>
+              <text x="272" y="68" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12" font-weight="700" fill="#FBBC04">Komputer</text>
+              <text x="272" y="90" text-anchor="middle" font-size="11" fill="#E8EAED">Hanya mengecek</text>
+              <text x="272" y="107" text-anchor="middle" font-size="11" fill="#E8EAED">aturan manusia</text>
+              <text x="272" y="126" text-anchor="middle" font-size="10" fill="#9AA0A6">(Tidak bisa belajar)</text>
+
+              <path d="M348 92 L382 92" stroke="#5F6368" stroke-width="3"/><polygon points="380,86 392,92 380,98" fill="#5F6368"/>
+
+              <rect x="398" y="34" width="94" height="116" rx="14" fill="#F1F3F4" stroke="#DADCE0" stroke-width="2"/>
+              <text x="445" y="76" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" fill="#202124">Output</text>
+              <text x="445" y="98" text-anchor="middle" font-size="10.5" fill="#C5221F" font-weight="700">Kaku &amp; Mudah</text>
+              <text x="445" y="114" text-anchor="middle" font-size="10.5" fill="#C5221F" font-weight="700">Gagal di Foto</text>
+            </svg>
+            <div class="callout red" style="margin:0;"><strong>Program Biasa:</strong> Manusia harus memikirkan semua rumusnya sendiri. Cocok untuk hitungan kasir/pajak, tapi gagal untuk foto nyata.</div>
+          </div>
+
+          <!-- Visual Panel 2: Machine Learning -->
+          <div id="ai1-panel-ml" style="display:none; flex-direction:column; gap:10px; flex:1; justify-content:center;">
+            <svg viewBox="0 0 500 185" style="width:100%; max-height:185px;">
+              <rect x="8" y="14" width="154" height="156" rx="14" fill="#FFFFFF" stroke="#4285F4" stroke-width="2"/>
+              <text x="85" y="36" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11" font-weight="700" fill="#1A73E8">Input: Banyak Contoh</text>
+              <!-- Mini photo cards -->
+              <rect x="20" y="46" width="38" height="38" rx="6" fill="#E8F0FE" stroke="#4285F4"/><circle cx="39" cy="65" r="11" fill="#4285F4"/>
+              <rect x="66" y="46" width="38" height="38" rx="6" fill="#FCE8E6" stroke="#EA4335"/><rect x="75" y="55" width="20" height="20" fill="#EA4335"/>
+              <rect x="112" y="46" width="38" height="38" rx="6" fill="#FEF7E0" stroke="#FBBC04"/><polygon points="131,52 143,76 119,76" fill="#FBBC04"/>
+              <rect x="20" y="96" width="130" height="58" rx="8" fill="#E6F4EA" stroke="#34A853"/>
+              <text x="85" y="118" text-anchor="middle" font-size="10.5" font-weight="700" fill="#137333">+ Nama / Labelnya</text>
+              <text x="85" y="136" text-anchor="middle" font-size="9.5" fill="#202124">"Lingkaran", "Persegi",</text>
+              <text x="85" y="149" text-anchor="middle" font-size="9.5" fill="#202124">"Segitiga"</text>
+
+              <path d="M168 92 L198 92" stroke="#4285F4" stroke-width="3"/><polygon points="196,86 208,92 196,98" fill="#4285F4"/>
+
+              <rect x="214" y="26" width="136" height="132" rx="14" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.5"/>
+              <text x="282" y="56" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12" font-weight="700" fill="#1A73E8">Machine Learning</text>
+              <text x="282" y="78" text-anchor="middle" font-size="11" fill="#202124">Mencari pola sendiri</text>
+              <text x="282" y="95" text-anchor="middle" font-size="11" fill="#202124">dari ratusan contoh</text>
+              <rect x="232" y="112" width="100" height="28" rx="8" fill="#4285F4"/>
+              <text x="282" y="130" text-anchor="middle" font-size="10" font-weight="700" fill="#FFFFFF">Belajar Otomatis</text>
+
+              <path d="M356 92 L386 92" stroke="#34A853" stroke-width="3"/><polygon points="384,86 396,92 384,98" fill="#34A853"/>
+
+              <rect x="402" y="26" width="90" height="132" rx="14" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+              <text x="447" y="68" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" fill="#137333">Hasil</text>
+              <text x="447" y="92" text-anchor="middle" font-size="10.5" font-weight="700" fill="#202124">Model Pintar</text>
+              <text x="447" y="110" text-anchor="middle" font-size="9.5" fill="#137333">Bisa menebak</text>
+              <text x="447" y="124" text-anchor="middle" font-size="9.5" fill="#137333">data baru!</text>
+            </svg>
+            <div class="callout" style="margin:0;"><strong>Machine Learning:</strong> Kita tidak lagi menulis rumus, melainkan memberikan <strong>contoh data + label</strong> agar komputer menemukan polanya sendiri.</div>
+          </div>
+
+          <!-- Visual Panel 3: Deep Learning (Default visible) -->
+          <div id="ai1-panel-dl" style="display:flex; flex-direction:column; gap:10px; flex:1; justify-content:center;">
+            <svg viewBox="0 0 500 185" style="width:100%; max-height:185px;">
+              <!-- Step 0: Input Photo -->
+              <rect x="6" y="24" width="96" height="136" rx="12" fill="#FFFFFF" stroke="#DADCE0" stroke-width="2"/>
+              <text x="54" y="44" text-anchor="middle" font-family="Poppins, sans-serif" font-size="10.5" font-weight="700" fill="#202124">Foto Input</text>
+              <polygon points="54,58 63,78 85,78 67,91 74,112 54,99 34,112 41,91 23,78 45,78" fill="#FBBC04" stroke="#E37400" stroke-width="1.5"/>
+              <text x="54" y="138" text-anchor="middle" font-size="9.5" fill="#5F6368">Ribuan Pixel</text>
+
+              <path d="M106 92 L124 92" stroke="#4285F4" stroke-width="2.5"/><polygon points="122,87 130,92 122,97" fill="#4285F4"/>
+
+              <!-- Layer 1: Edges -->
+              <rect x="134" y="24" width="102" height="136" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+              <text x="185" y="44" text-anchor="middle" font-family="Poppins, sans-serif" font-size="10.5" font-weight="700" fill="#1A73E8">Lapisan 1</text>
+              <rect x="150" y="54" width="70" height="60" rx="8" fill="#202124"/>
+              <line x1="160" y1="102" x2="185" y2="62" stroke="#FFFFFF" stroke-width="2.5"/>
+              <line x1="185" y1="62" x2="210" y2="102" stroke="#FFFFFF" stroke-width="2.5"/>
+              <line x1="158" y1="84" x2="212" y2="84" stroke="#4285F4" stroke-width="2"/>
+              <text x="185" y="132" text-anchor="middle" font-size="10" font-weight="700" fill="#1A73E8">Kenali Garis</text>
+              <text x="185" y="146" text-anchor="middle" font-size="9" fill="#3C4043">&amp; Tepi (Edges)</text>
+
+              <path d="M240 92 L258 92" stroke="#FBBC04" stroke-width="2.5"/><polygon points="256,87 264,92 256,97" fill="#E37400"/>
+
+              <!-- Layer 2: Shapes & Parts -->
+              <rect x="268" y="24" width="102" height="136" rx="12" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
+              <text x="319" y="44" text-anchor="middle" font-family="Poppins, sans-serif" font-size="10.5" font-weight="700" fill="#B06000">Lapisan 2</text>
+              <rect x="284" y="54" width="70" height="60" rx="8" fill="#FFFFFF" stroke="#FBBC04" stroke-width="1.5"/>
+              <polygon points="319,60 328,80 309,80" fill="#FBBC04"/>
+              <polygon points="295,85 315,78 308,98" fill="#EA4335"/>
+              <polygon points="343,85 323,78 330,98" fill="#34A853"/>
+              <text x="319" y="132" text-anchor="middle" font-size="10" font-weight="700" fill="#B06000">Kenali Sudut</text>
+              <text x="319" y="146" text-anchor="middle" font-size="9" fill="#3C4043">&amp; Bagian Bentuk</text>
+
+              <path d="M374 92 L392 92" stroke="#34A853" stroke-width="2.5"/><polygon points="390,87 398,92 390,97" fill="#34A853"/>
+
+              <!-- Layer 3: Full Object -->
+              <rect x="402" y="24" width="92" height="136" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2.5"/>
+              <text x="448" y="44" text-anchor="middle" font-family="Poppins, sans-serif" font-size="10.5" font-weight="700" fill="#137333">Lapisan 3</text>
+              <circle cx="448" cy="84" r="24" fill="#34A853"/>
+              <text x="448" y="89" text-anchor="middle" font-size="11" font-weight="700" fill="#FFFFFF">98%</text>
+              <text x="448" y="130" text-anchor="middle" font-size="10.5" font-weight="700" fill="#137333">"Bintang!"</text>
+              <text x="448" y="146" text-anchor="middle" font-size="9" fill="#202124">Objek Utuh</text>
+            </svg>
+            <div class="callout green" style="margin:0;"><strong>Deep Learning (Mesin Project Kita):</strong> Meniru jaringan saraf otak manusia untuk mengenali gambar secara berlapis — dari <strong>garis tepi &rarr; bentuk bagian &rarr; objek utuh</strong>!</div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-top-bar bar-blue"></div>
+          <span class="pill blue">ANALOGI SEHARI-HARI</span>
+          <div class="card-title">Seperti Mengajari Anak Kecil</div>
+          <div class="card-body">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+              <div style="display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:6px 8px;">
+                <img src="assets/P01/sample_polos.jpg" alt="Contoh Foto 1" style="width:40px; height:40px; object-fit:cover; border-radius:6px;" />
+                <div style="font-size:10.5px; line-height:1.25;"><strong>Contoh 1</strong><br /><span style="color:var(--muted);">"Ini Bintang"</span></div>
+              </div>
+              <div style="display:flex; align-items:center; gap:8px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:6px 8px;">
+                <img src="assets/P01/sample_ramai.jpg" alt="Contoh Foto 2" style="width:40px; height:40px; object-fit:cover; border-radius:6px;" />
+                <div style="font-size:10.5px; line-height:1.25;"><strong>Contoh 2</strong><br /><span style="color:var(--muted);">"Ini Heksagon"</span></div>
+              </div>
+            </div>
+            <ul>
+              <li>Saat mengajari anak kecil mengenali karakter Disney, kita <strong>tidak pernah memberinya rumus matematika</strong> ukuran telinga atau tabel RGB.</li>
+              <li>Kita cukup <strong>menunjukkan banyak contoh foto</strong> sambil menyebutkan namanya.</li>
+              <li>Dari contoh-contoh itulah ia mengenali cirinya sendiri!</li>
+            </ul>
+          </div>
+          <div class="callout" style="margin-top:auto;"><strong>Kesimpulan:</strong> AI di project kita belajar langsung dari <strong>koleksi contoh foto</strong> yang kita siapkan.</div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>19 / 57</span></div>
+    </section>
+
+    <!-- 20: AI FUNDAMENTAL 2/3 - KENAPA KITA MENGGUNAKAN AI DI SINI? (INTERACTIVE SIMULATOR) -->
+    <section class="slide" data-title="AI Fundamental (2/3): Mengapa Kita Menggunakan AI?" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta mengklik 4 kondisi foto di kiri untuk melihat langsung mengapa aturan manual (if-else) langsung gagal saat foto bergeser, miring, atau latarnya ramai, sedangkan AI tetap berhasil!">
+      <div class="kicker">BAB 2 · AI FUNDAMENTAL 2/3 · SIMULATOR INTERAKTIF</div>
+      <h2>Mengapa Mengenali Foto <span class="hl-red">Wajib Pakai AI</span>? (Uji Langsung!)</h2>
+      <p class="subtitle">Coba klik 4 kondisi pemotretan di bawah untuk menguji <strong>Aturan Manual (<code>if-else</code>)</strong> vs <strong>Model AI</strong>:</p>
+      <div class="split-60-40">
+        <div class="card surface" style="align-items:center; justify-content:space-between; padding:12px 16px; gap:8px;">
+          <div id="ai2-btns" style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-ui outline" data-cond="center" onclick="setAi2Cond('center')">1. Posisi Tengah</button>
+            <button type="button" class="btn-ui" data-cond="shift" onclick="setAi2Cond('shift')">2. Geser ke Pojok</button>
+            <button type="button" class="btn-ui outline" data-cond="tilt" onclick="setAi2Cond('tilt')">3. Miring &amp; Kecil</button>
+            <button type="button" class="btn-ui outline" data-cond="busy" onclick="setAi2Cond('busy')">4. Latar Ramai</button>
+          </div>
+
+          <svg id="ai2-svg" viewBox="0 0 460 210" style="width:100%; max-height:205px; background:#FFFFFF; border:1.5px solid var(--border); border-radius:14px;">
+            <!-- Busy background clutter (hidden unless cond == busy) -->
+            <g id="ai2-bg-busy" style="display:none; opacity:0.85;">
+              <rect x="0" y="0" width="460" height="210" fill="#3C4043"/>
+              <circle cx="70" cy="50" r="28" fill="#EA4335" opacity="0.6"/>
+              <rect x="330" y="25" width="75" height="55" rx="8" fill="#4285F4" opacity="0.55"/>
+              <circle cx="230" cy="105" r="32" fill="#FBBC04" opacity="0.75"/>
+              <polygon points="90,180 140,120 185,185" fill="#34A853" opacity="0.55"/>
+              <rect x="290" y="130" width="90" height="60" rx="10" fill="#EA4335" opacity="0.5"/>
+              <circle cx="395" cy="115" r="22" fill="#FEF7E0" opacity="0.6"/>
+            </g>
+
+            <!-- Grid lines to remind of pixels -->
+            <g stroke="rgba(0,0,0,0.06)" stroke-width="1">
+              <line x1="115" y1="0" x2="115" y2="210"/><line x1="230" y1="0" x2="230" y2="210"/><line x1="345" y1="0" x2="345" y2="210"/>
+              <line x1="0" y1="70" x2="460" y2="70"/><line x1="0" y1="140" x2="460" y2="140"/>
+            </g>
+
+            <!-- Target Star Object + AI Pattern Box -->
+            <g id="ai2-star-group" transform="translate(345, 138)">
+              <rect x="-46" y="-46" width="92" height="92" rx="12" fill="rgba(52,168,83,0.12)" stroke="#34A853" stroke-width="2.5" stroke-dasharray="6 4"/>
+              <polygon points="0,-36 10,-11 37,-11 15,5 23,32 0,16 -23,32 -15,5 -37,-11 -10,-11" fill="#FBBC04" stroke="#B06000" stroke-width="2"/>
+              <rect x="-44" y="-64" width="88" height="18" rx="6" fill="#34A853"/>
+              <text x="0" y="-51" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="700" fill="#FFFFFF">AI: Pola Bintang</text>
+            </g>
+
+            <!-- Fixed Manual Rule Sensor at Center (230, 105) -->
+            <g id="ai2-manual-sensor">
+              <rect x="202" y="77" width="56" height="56" rx="8" fill="rgba(234,67,53,0.10)" stroke="#EA4335" stroke-width="2.5"/>
+              <line x1="230" y1="70" x2="230" y2="140" stroke="#EA4335" stroke-width="1.5"/>
+              <line x1="195" y1="105" x2="265" y2="105" stroke="#EA4335" stroke-width="1.5"/>
+              <rect x="148" y="138" width="164" height="20" rx="6" fill="#202124"/>
+              <text x="230" y="152" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="600" fill="#FBBC04">Cek if-else: pixel[tengah]</text>
+            </g>
+          </svg>
+
+          <div id="ai2-caption" style="font-size:12.5px; color:#3C4043; text-align:center; background:#FFFFFF; border:1px solid var(--border); border-radius:10px; padding:6px 12px; width:100%;">
+            <strong>Kondisi 2 (Geser ke Pojok):</strong> Objek bintang bergeser ke kanan bawah. Titik tengah menjadi kosong (putih), sehingga aturan manual <code>if-else</code> langsung gagal!
+          </div>
+        </div>
+
+        <div style="display:flex; flex-direction:column; gap:12px; justify-content:space-between;">
+          <div id="ai2-card-rule" class="card tint-red" style="flex:1; padding:14px 18px;">
+            <div class="card-top-bar bar-red"></div>
+            <span class="pill red">PROGRAM BIASA (ATURAN IF-ELSE)</span>
+            <div id="ai2-rule-status" class="card-title" style="color:#C5221F;">❌ GAGAL MENEBak!</div>
+            <div id="ai2-rule-desc" class="card-body" style="font-size:13.5px;">
+              Aturan manual hanya mengecek koordinat <code>pixel[tengah]</code>. Karena bintang bergeser, titik tengah berisi warna putih (<code>255,255,255</code>) dan program mengira tidak ada bintang!
+            </div>
+          </div>
+
+          <div id="ai2-card-ai" class="card tint-green" style="flex:1; padding:14px 18px;">
+            <div class="card-top-bar bar-green"></div>
+            <span class="pill green">MODEL AI (DEEP LEARNING)</span>
+            <div id="ai2-ai-status" class="card-title" style="color:#137333;">✅ BERHASIL (Keyakinan: 98%)</div>
+            <div id="ai2-ai-desc" class="card-body" style="font-size:13.5px;">
+              AI tidak menghafal koordinat titik mati, melainkan memindai <strong>pola 5 sudut lancip &amp; warna kuning</strong> di seluruh area foto sehingga tetap akurat!
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>20 / 57</span></div>
+    </section>
+
+    <!-- 21: AI FUNDAMENTAL 3/3 - BAGAIMANA PENGGUNAANNYA & SIMULASI GARBAGE IN GARBAGE OUT -->
+    <section class="slide" data-title="AI Fundamental (3/3): Bagaimana Penggunaan AI di Project Ini?" data-notes="Alokasi waktu: 1.5 menit. Klik tombol saklar di atas untuk membandingkan apa yang terjadi pada AI jika foto mentah langsung dimasukkan (Tanpa P01) vs jika foto dirapikan dulu dengan Image Processing & EDA (Pakai P01).">
+      <div class="kicker">BAB 2 · AI FUNDAMENTAL 3/3 · SIMULASI ALUR PROJECT</div>
+      <h2>Bagaimana <span class="hl-green">Cara Penggunaan AI</span> di Project Kita?</h2>
+      <p class="subtitle">Uji 2 skenario di bawah untuk melihat mengapa <strong>Tahap 1 (Image Processing &amp; EDA)</strong> menjadi penentu utama:</p>
+      <div style="display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap;">
+        <button id="ai3-btn-good" type="button" class="btn-ui green" onclick="setAi3Mode('good')">✅ Skenario A: Foto Dirapikan Dulu (Pakai Image Processing &amp; EDA)</button>
+        <button id="ai3-btn-bad" type="button" class="btn-ui outline" onclick="setAi3Mode('bad')">❌ Skenario B: Foto Mentah HP Langsung Masuk AI (Tanpa P01)</button>
+      </div>
+
+      <!-- 3-Stage Interactive Pipeline -->
+      <div class="grid-3" style="flex:1; min-height:0;">
+        <!-- Stage 1 -->
+        <div id="ai3-st1" class="card tint-yellow" style="border-width:2px;">
+          <div class="card-top-bar bar-yellow"></div>
+          <span id="ai3-st1-pill" class="pill yellow">TAHAP 1 · FOKUS HARI INI (P01)</span>
+          <div id="ai3-st1-title" class="card-title">1. Siapkan &amp; Rapikan Foto</div>
+          <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:12px; padding:8px; display:flex; align-items:center; justify-content:center; height:128px; overflow:hidden;">
+            <img id="ai3-st1-img" src="assets/P01/06_resize_aspect_ratio.png" alt="Ilustrasi Tahap 1" style="max-width:100%; max-height:100%; object-fit:contain;" />
+          </div>
+          <div id="ai3-st1-body" class="card-body" style="font-size:13px;">
+            Foto di-resize proporsional <code>224×224</code> tanpa gepeng, skala angkanya disederhanakan ke <code>0–1</code>, posisinya tegak, dan bebas file rusak/kembar.
+          </div>
+        </div>
+
+        <!-- Stage 2 -->
+        <div id="ai3-st2" class="card tint-blue">
+          <div class="card-top-bar bar-blue"></div>
+          <span id="ai3-st2-pill" class="pill blue">TAHAP 2 · PROSES BELAJAR</span>
+          <div id="ai3-st2-title" class="card-title">2. Latih Model AI (Training)</div>
+          <div style="background:#FFFFFF; border:1px solid var(--border); border-radius:12px; padding:8px; display:flex; align-items:center; justify-content:center; height:128px; overflow:hidden;">
+            <img id="ai3-st2-img" src="assets/P01/03_synthetic_examples.png" alt="Ilustrasi Tahap 2" style="max-width:100%; max-height:100%; object-fit:contain;" />
+          </div>
+          <div id="ai3-st2-body" class="card-body" style="font-size:13px;">
+            AI mempelajari pola bentuk &amp; warna dari ratusan contoh foto yang <strong>seragam dan seimbang</strong> (kondisi <strong>polos &amp; ramai</strong>).
+          </div>
+        </div>
+
+        <!-- Stage 3 -->
+        <div id="ai3-st3" class="card tint-green">
+          <div class="card-top-bar bar-green"></div>
+          <span id="ai3-st3-pill" class="pill green">TAHAP 3 · SIAP DIGUNAKAN</span>
+          <div id="ai3-st3-title" class="card-title">3. Tebak Foto Baru (Prediction)</div>
+          <div id="ai3-st3-box" style="background:#202124; color:#FFFFFF; border-radius:12px; padding:12px; display:flex; flex-direction:column; align-items:center; justify-content:center; height:128px; gap:6px; text-align:center;">
+            <div style="font-family:var(--font-code); font-size:11px; color:#81C995;">INPUT: Foto Baru dari HP</div>
+            <div style="font-family:var(--font-title); font-size:20px; font-weight:700; color:#FBBC04;">Prediksi: Bintang ⭐</div>
+            <div style="background:#34A853; color:#FFFFFF; font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:999px;">Keyakinan AI: 98% (Akurat!)</div>
+          </div>
+          <div id="ai3-st3-body" class="card-body" style="font-size:13px;">
+            Saat diberi foto baru, AI mampu menebak nama karakternya dengan <strong>akurat &amp; konsisten</strong>!
+          </div>
+        </div>
+      </div>
+
+      <div id="ai3-banner" class="callout green" style="margin-top:10px;">
+        <strong>Analogi Dapur &amp; Koki Pintar:</strong> Sepintar apa pun kokinya (<strong>AI</strong>), masakannya hanya enak jika bahan bakunya (<strong>foto</strong>) dicuci bersih dan dipotong seragam terlebih dahulu. Mari lihat 3 masalah foto mentah di slide berikutnya!
+      </div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>21 / 57</span></div>
+    </section>
+
+    <!-- 22: MENGAPA IMAGE PROCESSING PENTING -->
+    <section class="slide" data-title="Mengapa Foto Mentah Perlu Preprocessing?" data-notes="Alokasi waktu: 1.5 menit. Nah, setelah paham bahwa AI butuh bahan foto yang rapi, sekarang kita lihat 3 masalah utama pada foto mentah dari kamera HP yang harus kita bereskan.">
       <div class="kicker">BAB 2 · ALASAN UTAMA</div>
       <h2>Mengapa Foto Mentah Perlu <span class="hl-blue">Preprocessing</span>?</h2>
       <p class="subtitle">Kamera HP menghasilkan foto untuk dilihat mata manusia, bukan untuk dihitung mesin. Agar AI belajar akurat, inputnya harus seragam.</p>
@@ -968,10 +1258,10 @@ def build_html() -> str:
           <div class="card-top-bar bar-blue"></div>
           <span class="pill blue">MASALAH FOTO MENTAH</span>
           <div class="card-title">3. Kejutan Tersembunyi</div>
-          <div class="card-body">Ada foto yang miring (<em>EXIF</em>), terlalu gelap, berlatar ramai, atau <em>corrupted file</em>. Semua ini harus diaudit dan dibersihkan dulu!</div>
+          <div class="card-body">Ada foto yang miring/terbalik dari kamera HP, terlalu gelap, berlatar ramai, atau filenya rusak. Semua ini wajib diaudit dulu!</div>
           <svg viewBox="0 0 220 75" style="width:100%; max-height:74px; margin-top:auto;">
             <rect x="16" y="16" width="52" height="42" rx="6" fill="#FFFFFF" stroke="#4285F4" stroke-width="2" transform="rotate(-8 42 37)"/>
-            <text x="42" y="41" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1A73E8">EXIF</text>
+            <text x="42" y="41" text-anchor="middle" font-size="9.5" font-weight="700" fill="#1A73E8">Miring</text>
             <rect x="84" y="16" width="52" height="42" rx="6" fill="#202124"/>
             <text x="110" y="41" text-anchor="middle" font-size="9.5" font-weight="700" fill="#FBBC04">Gelap</text>
             <rect x="152" y="16" width="52" height="42" rx="6" fill="#FFFFFF" stroke="#EA4335" stroke-width="2"/>
@@ -2007,18 +2297,18 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 44: 6 LANGKAH PRAKTIK (50 MENIT) -->
-    <section class="slide" data-title="6 Langkah Praktik Terpandu (50 Menit)" data-notes="Alokasi waktu: 42.5 menit (selama sesi praktik). Jelaskan urutan 6 langkah dari awal hingga menyimpan laporan kesehatan data.">
-      <div class="kicker">HANDS-ON · 50 MENIT</div>
-      <h2>6 Langkah <span class="hl-blue">Memeriksa Koleksi Foto</span></h2>
+    <section class="slide" data-title="6 Langkah Praktik Terpandu (50 Menit)" data-notes="Alokasi waktu: 38.5 menit (selama sesi praktik). Keenam langkah ini sama persis dengan urutan sel di Notebook Hands-on P01, merangkum Bab 1 sampai Bab 4 secara berurutan.">
+      <div class="kicker">HANDS-ON · 50 MENIT · SINKRON DENGAN NOTEBOOK</div>
+      <h2>6 Langkah <span class="hl-blue">Praktik di Notebook</span> (Sesuai Bab 1–4)</h2>
       <div class="step-list">
-        <div class="step-item"><div class="step-num">01</div><div><div class="step-title">Siapkan Folder &amp; Uji Buka 1 Foto</div><div class="step-desc">Pastikan foto terbaca sebagai warna RGB, ukurannya terlihat, dan posisi tegaknya sudah sesuai catatan EXIF.</div></div></div>
-        <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Saring Corrupted File &amp; Hitung Keseimbangan</div><div class="step-desc">Periksa semua file di folder, sisihkan file yang gagal dibuka, dan cek apakah jumlah foto tiap jenis seimbang.</div></div></div>
-        <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Deteksi Duplicate Images</div><div class="step-desc">Hitung <em>file hash</em> (SHA-256) untuk tiap <em>valid image</em> dan tandai jika ada <em>duplicates</em>.</div></div></div>
-        <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Ukur Brightness, Contrast &amp; Edge Density</div><div class="step-desc">Hitung rata-rata <em>brightness</em>, <em>contrast</em>, dan <em>edge density</em> pada setiap <em>valid image</em>.</div></div></div>
-        <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Bandingkan Kondisi Polos vs Ramai</div><div class="step-desc">Buat grafik perbandingan agar terlihat jelas perbedaan <em>brightness</em> dan <em>background complexity</em>-nya.</div></div></div>
-        <div class="step-item"><div class="step-num red">06</div><div><div class="step-title">Simpan Ringkasan Audit Data</div><div class="step-desc">Simpan tabel hasil pemeriksaan dan gambar grafik ke folder hasil agar bisa dijadikan pegangan langkah selanjutnya.</div></div></div>
+        <div class="step-item"><div class="step-num">01</div><div><div class="step-title">Membaca Gambar &amp; Mengintip Matriks Pixel (Bab 1)</div><div class="step-desc">Membuka 1 foto sampel, melihat dimensi <code>(Tinggi, Lebar, 3)</code>, dan melakukan zoom-in <code>8×8</code> pixel untuk melihat angka <code>0–255</code>.</div></div></div>
+        <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Memisahkan RGB Channels &amp; Mengubah ke Grayscale (Bab 1)</div><div class="step-desc">Memisahkan 3 lapisan warna (Red, Green, Blue) dan mengubahnya menjadi 1 channel <em>Grayscale</em>.</div></div></div>
+        <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Image Processing: Resize Letterbox &amp; Normalization (Bab 2)</div><div class="step-desc">Menyeragamkan ukuran ke <code>224×224</code> tanpa gepeng (<em>letterbox padding</em>) dan mengubah skala <code>uint8 (0–255)</code> ke <code>float32 (0.0–1.0)</code>.</div></div></div>
+        <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Mengatasi 3 Jebakan Kamera HP (Bab 4)</div><div class="step-desc">Memutar foto otomatis sesuai catatan <em>EXIF</em>, menyaring <em>corrupted file</em> dengan <code>verify()</code>, dan mendeteksi <em>duplicate</em> dengan <code>SHA-256</code>.</div></div></div>
+        <div class="step-item"><div class="step-num">05</div><div><div class="step-title">EDA Kesehatan Dataset: Polos vs Ramai (Bab 3)</div><div class="step-desc">Menghitung keseimbangan jumlah foto (<em>class balance</em>), rata-rata <em>brightness</em>, <em>contrast</em>, <em>histogram</em>, serta <em>edge density</em> (Canny).</div></div></div>
+        <div class="step-item"><div class="step-num red">06</div><div><div class="step-title">Menyimpan Ringkasan Audit Data &amp; Grafik</div><div class="step-desc">Menyimpan tabel hasil audit (CSV) dan grafik perbandingan kondisi <strong>polos vs ramai</strong> ke folder <code>results/</code>.</div></div></div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>44 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>47 / 57</span></div>
     </section>
 
     <!-- 45: INTIP DI BALIK LAYAR - EXIF & RUSAK -->
@@ -2171,18 +2461,18 @@ def get_file_hash(lokasi_foto):
     <!-- 48: GLOSARIUM SANTAI 1 -->
     <section class="slide" data-title="Kamus Istilah Santai (Bagian 1)" data-notes="Alokasi waktu: 1 menit. Rangkuman 5 istilah dasar yang sering muncul agar peserta tetap akrab saat mendengarnya lagi.">
       <div class="kicker">GLOSARIUM · 1/2</div>
-      <h2>5 Istilah Dasar yang <span class="hl-blue">Sudah Kita Pahami</span></h2>
+      <h2>5 Istilah Dasar <span class="hl-blue">Gambar &amp; AI</span></h2>
       <table class="io-table" style="margin-top:8px;">
         <thead><tr><th style="width:26%;">Istilah</th><th>Penjelasan Bahasa Sehari-hari</th></tr></thead>
         <tbody>
-          <tr><td><strong>Pixel</strong></td><td>Elemen terkecil penyusun gambar digital; setiap <em>pixel</em> hanya berisi satu warna polos.</td></tr>
-          <tr><td><strong>RGB Channels</strong></td><td>Tiga channel warna dasar (Red, Green, Blue) yang dicampur untuk membentuk jutaan warna di layar.</td></tr>
-          <tr><td><strong>Grayscale</strong></td><td>Citra 1 channel yang hanya mengukur 1 <em>channel</em> (mengukur gelap-terang saja).</td></tr>
-          <tr><td><strong>Resolution</strong></td><td>Jumlah total <em>pixel</em> lebar × tinggi yang membentuk sebuah foto (misal <code>224 × 224</code>).</td></tr>
-          <tr><td><strong>Aspect Ratio</strong></td><td>Perbandingan lebar dan tinggi foto agar bentuk objeknya tetap proporsional dan tidak mengalami distorsi (<em>stretched/squashed</em>).</td></tr>
+          <tr><td><strong>Pixel</strong></td><td>Elemen kotak terkecil penyusun gambar digital; setiap <em>pixel</em> berisi nilai intensitas <code>0–255</code>.</td></tr>
+          <tr><td><strong>RGB &amp; Grayscale</strong></td><td><strong>RGB:</strong> 3 channel warna dasar (Red, Green, Blue). <strong>Grayscale:</strong> 1 channel yang hanya mengukur gelap-terang.</td></tr>
+          <tr><td><strong>Deep Learning (AI)</strong></td><td>Cabang AI yang belajar mengenali pola gambar (garis tepi &rarr; bentuk &rarr; objek) langsung dari banyak contoh foto.</td></tr>
+          <tr><td><strong>Resolution</strong></td><td>Jumlah total <em>pixel</em> lebar × tinggi yang membentuk sebuah foto (misal diseragamkan ke <code>224 × 224</code>).</td></tr>
+          <tr><td><strong>Aspect Ratio</strong></td><td>Perbandingan lebar dan tinggi foto yang harus dijaga agar objek tidak gepeng/terdistorsi saat di-<em>resize</em>.</td></tr>
         </tbody>
       </table>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>48 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>51 / 57</span></div>
     </section>
 
     <!-- 49: GLOSARIUM SANTAI 2 -->
@@ -2309,26 +2599,26 @@ def get_file_hash(lokasi_foto):
           <div class="card-top-bar bar-blue"></div>
           <div class="big-num" style="color:var(--blue);">01</div>
           <div class="card-title" style="color:white;">Image = Pixel Matrix</div>
-          <div class="card-body" style="color:#BDC1C6;">Mata kita melihat bentuk, sedangkan komputer hanya membaca matriks pixel berisi nilai 0–255 dan 3 RGB channels.</div>
+          <div class="card-body" style="color:#BDC1C6;">Mata kita melihat bentuk, sedangkan komputer hanya membaca matriks pixel berisi nilai <code>0–255</code> dan 3 <em>RGB channels</em>.</div>
         </div>
         <div class="card" style="background:#292A2D; border-color:#3C4043;">
           <div class="card-top-bar bar-green"></div>
           <div class="big-num" style="color:var(--green);">02</div>
-          <div class="card-title" style="color:white;">Merapikan Bahan Mentah</div>
-          <div class="card-body" style="color:#BDC1C6;">Image Processing memastikan resolution seragam tanpa distorsi dan nilai pixel ternormalisasi (0–1) agar AI belajar dengan stabil.</div>
+          <div class="card-title" style="color:white;">AI Butuh Bahan yang Rapi</div>
+          <div class="card-body" style="color:#BDC1C6;">AI belajar mengenali pola dari contoh foto. <em>Image Processing</em> memastikan ukuran foto seragam (<code>224×224</code>) tanpa gepeng dan skalanya stabil (<code>0–1</code>).</div>
         </div>
         <div class="card" style="background:#292A2D; border-color:#3C4043;">
           <div class="card-top-bar bar-red"></div>
           <div class="big-num" style="color:var(--red);">03</div>
           <div class="card-title" style="color:white;">Exploratory Data Analysis (EDA)</div>
-          <div class="card-body" style="color:#BDC1C6;">Memeriksa cahaya, <em>background complexity</em> (polos vs ramai), EXIF orientation=6, <em>corrupted files</em>, dan <em>duplicate images</em> menjaga agar AI belajar secara jujur.</div>
+          <div class="card-body" style="color:#BDC1C6;">Mengaudit keseimbangan kelas, pencahayaan, kondisi <strong>polos vs ramai</strong>, serta menyaring jebakan EXIF, <em>corrupted files</em>, dan <em>duplicates</em>.</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>53 / 54</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>56 / 57</span></div>
     </section>
 
     <!-- 54: PENUTUP -->
-    <section class="slide" data-title="Closing &amp; Key Quote" data-notes="Alokasi waktu: 1 menit. Tutup sesi dengan kutipan penutup, apresiasi, dan ajak peserta bersiap ke pertemuan berikutnya tentang bagaimana AI mengekstrak pola visual dari angka-angka pixel." style="background: repeating-linear-gradient(-35deg, rgba(66,133,244,0.025) 0px, rgba(66,133,244,0.025) 1px, transparent 1px, transparent 28px), #FFFFFF; justify-content: space-between;">
+    <section class="slide" data-title="Closing &amp; Key Quote" data-notes="Alokasi waktu: 1 menit. Tutup sesi dengan kutipan penutup dan apresiasi atas antusiasme peserta hari ini." style="background: repeating-linear-gradient(-35deg, rgba(66,133,244,0.025) 0px, rgba(66,133,244,0.025) 1px, transparent 1px, transparent 28px), #FFFFFF; justify-content: space-between;">
       <div style="display:flex; align-items:center; justify-content:space-between;">
         <span style="font-family:var(--font-title); font-size:12px; font-weight:700; letter-spacing:1.8px; color:#80868B;">CLOSING</span>
         <div style="display:flex; gap:6px;">
@@ -2344,12 +2634,9 @@ def get_file_hash(lokasi_foto):
         <h1 style="font-family:var(--font-title); font-size:clamp(24px,2.55vw,33px); font-weight:700; line-height:1.38; color:#202124; max-width:860px; margin:0;">
           <span style="color:#EA4335;">Data yang bersih</span> melahirkan model yang cerdas, sedangkan <span style="color:#1A73E8;">Image Processing &amp; EDA</span> memastikan AI belajar dari pola yang benar.
         </h1>
-        <p style="font-size:14.5px; color:#5F6368; max-width:700px; margin:0; line-height:1.5;">
-          <strong>Langkah Berikutnya:</strong> Setelah dataset bersih dan lolos audit kualitas, di pertemuan selanjutnya kita akan mempelajari bagaimana model AI mengekstrak pola visual dari matriks <em>pixel</em>.
-        </p>
       </div>
 
-      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>54 / 54</span></div>
+      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>57 / 57</span></div>
     </section>
 
   </div>
@@ -2357,8 +2644,8 @@ def get_file_hash(lokasi_foto):
   <div id="controls">
     <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
     <span id="counter" style="display:inline-flex; align-items:center; gap:5px;">
-      <input id="page-jump" type="number" min="1" max="54" value="1" title="Ketik nomor slide (1-54) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
-      <span>/ 54</span>
+      <input id="page-jump" type="number" min="1" max="57" value="1" title="Ketik nomor slide (1-57) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
+      <span>/ 57</span>
     </span>
     <button class="ctrl-btn" onclick="nextSlide()">Next →</button>
     <button class="ctrl-btn" onclick="toggleNotes()">Notes (N)</button>
@@ -2373,7 +2660,7 @@ def get_file_hash(lokasi_foto):
 
   <div id="grid-modal">
     <div style="max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; color:white;">
-      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (54 Slides)</h3>
+      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (57 Slides)</h3>
       <button class="ctrl-btn" onclick="toggleGrid()">Tutup (Esc)</button>
     </div>
     <div id="grid-cards" class="grid-cards"></div>
@@ -2990,6 +3277,133 @@ def get_file_hash(lokasi_foto):
       if (btn) btn.textContent = shown ? 'Sembunyikan Jawaban' : 'Lihat Jawaban';
     }}
 
+    // Slide 19: AI Fundamental 1/3 Interactive Tabs
+    function setAi1Tab(tab) {{
+      document.querySelectorAll('#ai1-tabs button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.tab !== tab);
+      }});
+      ['rule', 'ml', 'dl'].forEach((k) => {{
+        const p = document.getElementById('ai1-panel-' + k);
+        if (p) p.style.display = k === tab ? 'flex' : 'none';
+      }});
+    }}
+
+    // Slide 20: AI Fundamental 2/3 Interactive Condition Simulator
+    function setAi2Cond(cond) {{
+      document.querySelectorAll('#ai2-btns button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.cond !== cond);
+      }});
+      const star = document.getElementById('ai2-star-group');
+      const busyBg = document.getElementById('ai2-bg-busy');
+      const cap = document.getElementById('ai2-caption');
+      const rCard = document.getElementById('ai2-card-rule');
+      const rStat = document.getElementById('ai2-rule-status');
+      const rDesc = document.getElementById('ai2-rule-desc');
+      const aStat = document.getElementById('ai2-ai-status');
+      const aDesc = document.getElementById('ai2-ai-desc');
+      if (!star) return;
+
+      busyBg.style.display = cond === 'busy' ? 'block' : 'none';
+
+      if (cond === 'center') {{
+        star.setAttribute('transform', 'translate(230, 105) rotate(0) scale(1)');
+        cap.innerHTML = '<strong>Kondisi 1 (Posisi Tengah Ideal):</strong> Objek bintang tepat berada di koordinat tengah dan latar belakang bersih.';
+        rCard.className = 'card tint-yellow';
+        rStat.style.color = '#B06000';
+        rStat.textContent = '⚠️ Kebetulan Berhasil (Sangat Rapuh)';
+        rDesc.innerHTML = 'Karena bintang kebetulan pas di <code>pixel[tengah]</code>, aturan <code>if-else</code> tampak berhasil. Tapi coba klik tombol kondisi lainnya!';
+        aStat.textContent = '✅ BERHASIL (Keyakinan: 99%)';
+        aDesc.innerHTML = 'AI mengenali <strong>pola bentuk 5 sudut bintang &amp; warna kuning</strong> secara utuh.';
+      }} else if (cond === 'shift') {{
+        star.setAttribute('transform', 'translate(345, 138) rotate(0) scale(1)');
+        cap.innerHTML = '<strong>Kondisi 2 (Geser ke Pojok):</strong> Objek bintang bergeser ke kanan bawah. Titik tengah menjadi kosong (putih), sehingga aturan <code>if-else</code> langsung gagal!';
+        rCard.className = 'card tint-red';
+        rStat.style.color = '#C5221F';
+        rStat.textContent = '❌ GAGAL MENEBAK!';
+        rDesc.innerHTML = 'Aturan manual hanya mengecek koordinat <code>pixel[tengah]</code>. Karena bintang bergeser, titik tengah berisi warna putih (<code>255,255,255</code>) dan program mengira tidak ada bintang!';
+        aStat.textContent = '✅ TETAP BERHASIL (Keyakinan: 98%)';
+        aDesc.innerHTML = 'AI memindai <strong>pola bentuk &amp; warna</strong> di seluruh area foto sehingga tetap menemukan bintang walaupun posisinya bergeser!';
+      }} else if (cond === 'tilt') {{
+        star.setAttribute('transform', 'translate(135, 95) rotate(-28) scale(0.68)');
+        cap.innerHTML = '<strong>Kondisi 3 (Miring &amp; Lebih Kecil):</strong> Foto diambil agak jauh dan miring 28°. Posisi dan ukuran pixel berubah drastis.';
+        rCard.className = 'card tint-red';
+        rStat.style.color = '#C5221F';
+        rStat.textContent = '❌ GAGAL MENEBAK!';
+        rDesc.innerHTML = 'Saat ukuran mengecil dan sudutnya miring, koordinat pixel tidak lagi cocok dengan rumus kaku buatan manusia.';
+        aStat.textContent = '✅ TETAP BERHASIL (Keyakinan: 96%)';
+        aDesc.innerHTML = 'AI mengenali <strong>proporsi sudut lancip bintang</strong> meskipun ukurannya lebih kecil dan posisinya miring!';
+      }} else if (cond === 'busy') {{
+        star.setAttribute('transform', 'translate(130, 110) rotate(12) scale(0.9)');
+        cap.innerHTML = '<strong>Kondisi 4 (Latar Belakang Ramai):</strong> Banyak benda warna-warni di latar belakang yang mengecoh pembacaan pixel sederhana.';
+        rCard.className = 'card tint-red';
+        rStat.style.color = '#C5221F';
+        rStat.textContent = '❌ GAGAL / TERKECOH LATAR!';
+        rDesc.innerHTML = 'Titik tengah kebetulan terkena bercak warna kuning dari latar belakang ramai, sehingga program biasa salah mengira latar sebagai objek!';
+        aStat.textContent = '✅ TETAP BERHASIL (Keyakinan: 94%)';
+        aDesc.innerHTML = 'Karena dilatih dengan contoh foto <strong>polos &amp; ramai</strong>, AI mampu membedakan pola bentuk bintang dari gangguan latar belakang!';
+      }}
+    }}
+
+    // Slide 21: AI Fundamental 3/3 Interactive Pipeline Simulator
+    function setAi3Mode(mode) {{
+      const bGood = document.getElementById('ai3-btn-good');
+      const bBad = document.getElementById('ai3-btn-bad');
+      const st1 = document.getElementById('ai3-st1');
+      const st1Pill = document.getElementById('ai3-st1-pill');
+      const st1Title = document.getElementById('ai3-st1-title');
+      const st1Img = document.getElementById('ai3-st1-img');
+      const st1Body = document.getElementById('ai3-st1-body');
+      const st2Body = document.getElementById('ai3-st2-body');
+      const st3 = document.getElementById('ai3-st3');
+      const st3Pill = document.getElementById('ai3-st3-pill');
+      const st3Box = document.getElementById('ai3-st3-box');
+      const st3Body = document.getElementById('ai3-st3-body');
+      const banner = document.getElementById('ai3-banner');
+      if (!st1) return;
+
+      if (mode === 'good') {{
+        bGood.className = 'btn-ui green';
+        bBad.className = 'btn-ui outline';
+        bBad.style.background = '';
+        bBad.style.color = '';
+        bBad.style.borderColor = '';
+        st1.className = 'card tint-yellow';
+        st1Pill.className = 'pill yellow';
+        st1Pill.textContent = 'TAHAP 1 · FOKUS HARI INI (P01)';
+        st1Title.textContent = '1. Siapkan & Rapikan Foto';
+        st1Img.src = 'assets/P01/06_resize_aspect_ratio.png';
+        st1Body.innerHTML = 'Foto di-resize proporsional <code>224×224</code> tanpa gepeng, skala angkanya disederhanakan ke <code>0–1</code>, posisinya tegak, dan bebas file rusak/kembar.';
+        st2Body.innerHTML = 'AI mempelajari pola bentuk &amp; warna dari ratusan contoh foto yang <strong>seragam, bersih, dan seimbang</strong> (polos &amp; ramai).';
+        st3.className = 'card tint-green';
+        st3Pill.className = 'pill green';
+        st3Pill.textContent = 'TAHAP 3 · HASIL AKHIR';
+        st3Box.innerHTML = '<div style="font-family:var(--font-code); font-size:11px; color:#81C995;">INPUT: Foto Baru dari HP</div><div style="font-family:var(--font-title); font-size:20px; font-weight:700; color:#FBBC04;">Prediksi: Bintang ⭐</div><div style="background:#34A853; color:#FFFFFF; font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:999px;">Keyakinan AI: 98% (Akurat!)</div>';
+        st3Body.innerHTML = 'Saat diberi foto baru, AI mampu menebak nama karakternya dengan <strong>akurat &amp; konsisten</strong>!';
+        banner.className = 'callout green';
+        banner.innerHTML = '<strong>Analogi Dapur &amp; Koki Pintar:</strong> Sepintar apa pun kokinya (<strong>AI</strong>), masakannya hanya enak jika bahan bakunya (<strong>foto</strong>) dicuci bersih dan dipotong seragam terlebih dahulu!';
+      }} else {{
+        bGood.className = 'btn-ui outline';
+        bBad.className = 'btn-ui';
+        bBad.style.background = '#EA4335';
+        bBad.style.color = '#FFFFFF';
+        bBad.style.borderColor = '#EA4335';
+        st1.className = 'card tint-red';
+        st1Pill.className = 'pill red';
+        st1Pill.textContent = 'TAHAP 1 DILEWATI · BAHAN BERANTAKAN!';
+        st1Title.textContent = '1. Foto Mentah Langsung Masuk';
+        st1Img.src = 'assets/P01/09_exif_trap.png';
+        st1Body.innerHTML = 'Foto masuk dalam kondisi <strong>miring 90° dari kamera HP</strong>, ukuran acak/gepeng, angka terlalu besar (<code>0–255</code>), serta ada file rusak &amp; duplikat!';
+        st2Body.innerHTML = '<strong>Garbage In:</strong> AI kebingungan saat belajar karena bentuk objek gepeng/terbalik dan proses hitungannya tidak stabil.';
+        st3.className = 'card tint-red';
+        st3Pill.className = 'pill red';
+        st3Pill.textContent = 'TAHAP 3 · GARBAGE OUT!';
+        st3Box.innerHTML = '<div style="font-family:var(--font-code); font-size:11px; color:#F28B82;">INPUT: Foto Baru dari HP</div><div style="font-family:var(--font-title); font-size:19px; font-weight:700; color:#EA4335;">Salah Tebak / Error! ❌</div><div style="background:#EA4335; color:#FFFFFF; font-size:11.5px; font-weight:700; padding:3px 12px; border-radius:999px;">Akurasi Anjlok (Garbage Out)</div>';
+        st3Body.innerHTML = 'Karena dilatih dengan data yang kotor dan tidak seragam, tebakan AI menjadi <strong>kacau di dunia nyata</strong>!';
+        banner.className = 'callout red';
+        banner.innerHTML = '<strong>Prinsip "Garbage In, Garbage Out":</strong> Tanpa <strong>Image Processing &amp; EDA (P01)</strong>, model AI secanggih apa pun akan gagal. Mari lihat 3 masalah foto mentah di slide berikutnya!';
+      }}
+    }}
+
     (function initSlide() {{
       if ('serviceWorker' in navigator && location.protocol !== 'file:') {{
         navigator.serviceWorker.register('../sw.js', {{ scope: '../' }}).catch(() => {{}});
@@ -3012,6 +3426,20 @@ def get_file_hash(lokasi_foto):
 </body>
 </html>
 """
+    # Auto-number slide footers (02 / 57 .. 57 / 57) based on actual <section class="slide"> order
+    parts = re.split(r'(<section class="slide\b[^>]*>[\s\S]*?</section>)', html)
+    total_slides = sum(1 for p in parts if p.startswith('<section class="slide'))
+    slide_idx = 0
+    for i, part in enumerate(parts):
+        if part.startswith('<section class="slide'):
+            slide_idx += 1
+            parts[i] = re.sub(
+                r'(<div class="slide-footer"><span>[^<]+</span><span>)\d+\s*/\s*\d+(</span></div>)',
+                rf'\g<1>{slide_idx:02d} / {total_slides}\2',
+                part,
+            )
+    html = "".join(parts)
+
     OUT_HTML.write_text(html, encoding="utf-8")
     return str(OUT_HTML)
 
@@ -3019,7 +3447,7 @@ def get_file_hash(lokasi_foto):
 def verify_html(path_str: str) -> None:
     text = Path(path_str).read_text(encoding="utf-8")
     slide_count = len(re.findall(r'<section class="slide', text))
-    assert slide_count == 54, f"Expected 54 slides, got {slide_count}"
+    assert slide_count == 57, f"Expected 57 slides, got {slide_count}"
 
     # Verify no P3/P4/P5/P7/P8/P04/P13 labels in visible slide sections
     body_part = text.split('<div id="stage-wrap">', 1)[1].split('<div id="controls">', 1)[0]
@@ -3031,6 +3459,14 @@ def verify_html(path_str: str) -> None:
     ]
     assert not non_asset_codes, f"Found unwanted session codes in slides: {non_asset_codes}"
 
+    # Verify no datetime / calendar date / clock time strings in slides
+    dt_matches = re.findall(
+        r'\b(?:Minggu|Senin|Selasa|Rabu|Kamis|Jumat|Sabtu|Januari|Februari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Desember|202[4-9]|WIB|WITA|WIT)\b|13:00|15:00|19:30|21:30',
+        body_part,
+        flags=re.IGNORECASE,
+    )
+    assert not dt_matches, f"Found unwanted datetime strings in slides: {dt_matches}"
+
     # Verify every image referenced exists
     imgs = re.findall(r'src="(assets/P01/[^"]+)"', text)
     missing = [img for img in imgs if not (ROOT_DIR / "slides" / img).exists()]
@@ -3038,7 +3474,7 @@ def verify_html(path_str: str) -> None:
 
     # Verify speaker notes time sum == 120.0 min
     notes = re.findall(r'data-notes="([^"]+)"', text)
-    assert len(notes) == 54, f"Expected 54 speaker notes, got {len(notes)}"
+    assert len(notes) == 57, f"Expected 57 speaker notes, got {len(notes)}"
     total_min = 0.0
     for n in notes:
         m = re.search(r'Alokasi waktu:\s*([0-9.]+)\s*menit', n)
@@ -3047,7 +3483,7 @@ def verify_html(path_str: str) -> None:
     assert abs(total_min - 120.0) < 1e-6, f"Speaker notes sum to {total_min} min instead of 120.0"
 
     print(f"HTML interaktif {slide_count} slide berhasil dibuat: {path_str}")
-    print(f"Verifikasi lolos: 54 slide, 0 kode P4/P5/P7/P8, {len(imgs)} gambar valid, total waktu notes = {total_min:.1f} menit.")
+    print(f"Verifikasi lolos: 57 slide, 0 kode P4/P5/P7/P8, {len(imgs)} gambar valid, total waktu notes = {total_min:.1f} menit.")
 
 
 if __name__ == "__main__":

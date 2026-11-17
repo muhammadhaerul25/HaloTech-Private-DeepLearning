@@ -38,7 +38,7 @@ Nuansa: cerah, ramah, playful tapi rapi; bentuk geometris besar berwarna; kartu 
 - **Font:** judul Poppins SemiBold (alternatif geometris yang dekat dengan Google Sans), isi Roboto, kode Roboto Mono. Fallback: Arial. python-pptx tidak menyematkan font, jadi tuliskan di `docs/PROGRESS.md` daftar font yang perlu dipasang di komputer penyaji.
 - **Motif khas:** (1) kluster 4 bentuk berwarna (lingkaran, kotak membulat, segitiga, pil) sebagai dekorasi sudut; (2) label "kicker" huruf kapital kecil di atas judul (mis. `SESSION 04 · IMAGE PROCESSING`); (3) kartu putih/tint dengan sudut sangat membulat dan bayangan tipis; (4) angka besar untuk poin penting; (5) tag berbentuk pil untuk istilah baru (mis. `UINT8`).
 - **Struktur gaya konferensi:**
-  - Slide 1 (cover): latar gelap, judul besar, kluster bentuk berwarna, badge sesi: `Deep Learning Track · Session P{NN} · 120 menit`, tanggal dan jam sesi.
+  - Slide 1 (cover): latar gelap, judul besar, kluster bentuk berwarna, badge sesi: `Deep Learning Track · Session P{NN} · 120 menit` (tanpa tanggal, hari, atau jam/datetime, baik di cover maupun di web/materi lainnya).
   - Slide 2 (agenda): kartu "session schedule" berisi blok waktu 0–10 / 10–40 / 45–95 / 95–110 / 110–120.
   - Pembatas bagian (Teori, Hands-on, Mini-challenge): latar penuh satu warna Google bergantian, judul besar, tanpa isi lain.
   - Slide konsep: latar terang, kicker + judul + 1 visual atau 3 kartu.

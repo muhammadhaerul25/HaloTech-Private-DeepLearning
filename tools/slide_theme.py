@@ -402,7 +402,7 @@ def add_section_divider(
     subtitle: str = "",
     bg_color: RGBColor = BLUE,
     slide_number: int | None = None,
-    session_label: str = "P04 · Image Processing & EDA",
+    session_label: str = "P01 · Understanding Images, Image Processing & EDA",
 ):
     """Create a full-color section divider slide."""
     slide = add_blank_slide(prs, bg_color)
@@ -496,7 +496,7 @@ def add_keynote_slide(
     subtext: str = "",
     bg_color: RGBColor = DARK_BG,
     slide_number: int | None = None,
-    session_label: str = "P04 · Image Processing & EDA",
+    session_label: str = "P01 · Understanding Images, Image Processing & EDA",
 ):
     """Create a high-impact keynote moment slide with one dominant statement."""
     slide = add_blank_slide(prs, bg_color)
@@ -699,7 +699,7 @@ def add_slide_header_rich(
 def add_footer(
     slide,
     slide_number: int,
-    session_label: str = "P04 · Image Processing & EDA",
+    session_label: str = "P01 · Understanding Images, Image Processing & EDA",
     on_dark: bool = False,
     fg_color: RGBColor | None = None,
 ) -> None:

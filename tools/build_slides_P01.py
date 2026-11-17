@@ -1,7 +1,7 @@
 """Build slides/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
 
 Generates real data visualizations in slides/assets/P01/ and composes
-exactly 22 Google I/O-inspired slides with Bahasa Indonesia speaker notes
+exactly 25 Google I/O-inspired slides with Bahasa Indonesia speaker notes
 whose time allocations sum to 120 minutes.
 """
 
@@ -431,7 +431,7 @@ def build_deck(stats: dict, vis: dict[str, Path]) -> None:
         Inches(4.55),
         Inches(8.5),
         Inches(0.9),
-        "Minggu, 15 November 2026  ·  13:00–15:00 WIB\nFondasi sebelum masuk ke Neural Network & CNN",
+        "Fase Fondasi  ·  Mengubah Foto Mentah Menjadi Data Siap Latih\nFondasi sebelum masuk ke Neural Network & CNN",
         font_name=st.FONT_BODY,
         size=st.SIZE_BODY,
         color=RGBColor(0xBD, 0xC1, 0xC6),
@@ -443,7 +443,7 @@ def build_deck(stats: dict, vis: dict[str, Path]) -> None:
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
-Selamat siang! Selamat datang di Sesi P04: Image Processing dan Exploratory Data Analysis (EDA) Foto Sendiri. Hari ini kita masuk ke fase Fondasi untuk project klasifikasi karakter Disney kita nanti.
+Selamat datang di Sesi P01: Understanding Images, Image Processing, dan Exploratory Data Analysis (EDA). Hari ini kita masuk ke fase Fondasi untuk project klasifikasi karakter Disney kita nanti.
 
 Penjelasan konsep:
 Sebelum model deep learning bisa mengenali gambar, kita harus paham dulu bagaimana komputer melihat sebuah foto dan bagaimana cara memeriksa kualitas dataset foto kita sendiri.
@@ -493,7 +493,7 @@ Naskah ajar:
 Sesi 120 menit kita dibagi menjadi 6 blok. Kita mulai dengan 10 menit recap dan pemantik, lalu 30 menit teori inti, istirahat 5 menit, kemudian 50 menit hands-on notebook, 15 menit mini-challenge, dan ditutup 10 menit quiz serta rangkuman.
 
 Penjelasan konsep:
-Format ini akan konsisten di seluruh pertemuan P4 sampai P13 agar ritme belajar terasa terstruktur.
+Format ini akan konsisten di seluruh pertemuan P01 sampai P08 agar ritme belajar terasa terstruktur.
 
 Transisi:
 Sekarang mari kita cek 3 hal utama yang akan kita kuasai hari ini.""",
@@ -566,7 +566,7 @@ Sekarang mari kita cek 3 hal utama yang akan kita kuasai hari ini.""",
     st.add_footer(s3, 3, SESSION_LABEL)
     st.set_speaker_notes(
         s3,
-        """Alokasi waktu: 3 menit
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 Ada tiga target utama hari ini. Pertama, kita membongkar cara komputer membaca gambar sebagai tabel angka. Kedua, kita belajar menyiapkan foto agar siap masuk ke model neural network nanti. Ketiga, kita melakukan Exploratory Data Analysis atau EDA untuk mengenali karakter foto polos vs ramai.
@@ -617,7 +617,7 @@ Untuk memulai, mari kita jawab satu pertanyaan mendasar.""",
     st.add_footer(s4, 4, SESSION_LABEL)
     st.set_speaker_notes(
         s4,
-        """Alokasi waktu: 3 menit
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 Coba bayangkan saat kita memotret karakter Mickey. Mata kita langsung mengenali bentuk kepala dan ekspresinya. Tapi bagi komputer, tidak ada konsep 'Mickey' atau 'lucu'. Yang diterima komputer hanyalah sekumpulan angka di dalam memori.
@@ -636,7 +636,7 @@ Mari kita masuk ke blok TEORI untuk membedah angka-angka tersebut.""",
         prs,
         "BAGIAN 01 · MENIT 10–40",
         "TEORI",
-        "Piksel, Shape, Channel, Preprocessing & EDA",
+        "Piksel, AI Fundamental, Preprocessing & EDA",
         bg_color=st.BLUE,
         slide_number=5,
         session_label=SESSION_LABEL,
@@ -711,16 +711,108 @@ Penjelasan konsep:
 Setiap kotak disebut piksel (picture element). Pada gambar grayscale standar, angka 0 berarti hitam pekat dan 255 berarti putih terang. Referensi video 3Blue1Brown menunjukkan konsep grid piksel ini dengan sangat jelas.
 
 Transisi:
-Kalau satu foto ukurannya bukan 8×8, melainkan ukuran standar model CNN, berapa total angkanya?""",
+Mengapa ada foto yang hanya hitam-putih (1 lapis) dan ada yang berwarna (3 lapis)? Mari kita bandingkan.""",
     )
 
     # =======================================================================
-    # SLIDE 07 — IMAGE SHAPE
+    # SLIDE 07 — GRAYSCALE VS RGB
     # =======================================================================
     s7 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s7, "TEORI · DIMENSI ARRAY", "Setiap Foto Punya Shape")
+    st.add_slide_header(s7, "TEORI · CHANNEL", "Satu Channel atau Tiga Channel?")
+    s7.shapes.add_picture(str(vis["grayscale_vs_rgb"]), Inches(0.75), Inches(1.65), width=Inches(7.75))
     st.add_card(
         s7,
+        Inches(8.75),
+        Inches(1.65),
+        Inches(3.83),
+        Inches(1.65),
+        title="Grayscale: (H, W)",
+        body="1 lapis angka terang-gelap.",
+        bg_color=st.SURFACE_BG,
+        accent_color=st.TEXT_MUTED,
+        title_size=Pt(22),
+        body_size=Pt(20),
+    )
+    st.add_card(
+        s7,
+        Inches(8.75),
+        Inches(3.48),
+        Inches(3.83),
+        Inches(1.75),
+        title="RGB: (H, W, 3)",
+        body="3 lapis: Merah, Hijau, Biru.",
+        bg_color=st.TINT_BLUE,
+        accent_color=st.BLUE,
+        title_size=Pt(22),
+        body_size=Pt(20),
+        border_color=None,
+    )
+    st.add_callout_box(
+        s7,
+        Inches(8.75),
+        Inches(5.42),
+        Inches(3.83),
+        Inches(1.20),
+        "Selalu pakai .convert('RGB') agar foto karakter Disney tetap punya warna!",
+        accent_color=st.GREEN,
+        bg_color=st.TINT_GREEN,
+        font_size=Pt(18),
+        bold=True,
+    )
+    st.add_footer(s7, 7, SESSION_LABEL)
+    st.set_speaker_notes(
+        s7,
+        """Alokasi waktu: 2 menit
+
+Naskah ajar:
+Foto grayscale hanya punya satu lapisan angka sehingga shape-nya dua dimensi: (H, W). Sementara foto berwarna RGB punya tiga lapisan yang ditumpuk: (H, W, 3).
+
+Penjelasan konsep:
+Untuk membedakan karakter Disney seperti Mickey, Minnie, Donald, atau Stitch, informasi warna sangat penting! Karena itu kita selalu memastikan foto dimuat dalam format RGB 3 channel.
+
+Transisi:
+Mari kita lihat isi masing-masing dari 3 channel RGB tersebut.""",
+    )
+
+    # =======================================================================
+    # SLIDE 08 — RGB CHANNELS
+    # =======================================================================
+    s8 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s8, "TEORI · RGB", "RGB: Tiga Channel, Tiga Informasi")
+    s8.shapes.add_picture(str(vis["rgb_channels"]), Inches(0.75), Inches(1.75), width=Inches(11.83))
+    st.add_card(
+        s8,
+        st.MARGIN_X,
+        Inches(5.35),
+        st.CONTENT_WIDTH,
+        Inches(1.35),
+        body="Setiap piksel RGB adalah kombinasi 3 angka: (Red, Green, Blue). Objek merah menyala terang di channel R, tapi gelap di G dan B.",
+        bg_color=st.SURFACE_BG,
+        accent_color=st.RED,
+        body_size=Pt(24),
+    )
+    st.add_footer(s8, 8, SESSION_LABEL)
+    st.set_speaker_notes(
+        s8,
+        """Alokasi waktu: 2 menit
+
+Naskah ajar:
+Perhatikan contoh data sampel persegi merah ini. Ketika kita pisah menjadi 3 channel terpisah, di channel Red (R) kotak perseginya terlihat putih terang (nilainya tinggi), sedangkan di channel Green (G) dan Blue (B) kotaknya gelap (nilainya rendah).
+
+Penjelasan konsep:
+Inilah cara CNN nanti membaca warna: setiap filter konvolusi melihat kombinasi nilai dari ketiga channel ini secara bersamaan.
+
+Transisi:
+Sekarang setelah paham piksel dan 3 channel RGB, berapa total angka dalam satu foto standar?""",
+    )
+
+    # =======================================================================
+    # SLIDE 09 — IMAGE SHAPE (Reordered after Pixel & RGB)
+    # =======================================================================
+    s9 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s9, "TEORI · DIMENSI ARRAY", "Setiap Foto Punya Shape")
+    st.add_card(
+        s9,
         st.MARGIN_X,
         Inches(1.75),
         Inches(7.3),
@@ -733,9 +825,8 @@ Kalau satu foto ukurannya bukan 8×8, melainkan ukuran standar model CNN, berapa
         body_size=Pt(24),
         border_color=None,
     )
-    # Code snippet card (Roboto Mono)
     st.add_card(
-        s7,
+        s9,
         st.MARGIN_X,
         Inches(4.35),
         Inches(7.3),
@@ -747,7 +838,7 @@ Kalau satu foto ukurannya bukan 8×8, melainkan ukuran standar model CNN, berapa
         border_color=None,
     )
     st.add_text_box(
-        s7,
+        s9,
         st.MARGIN_X + Inches(0.28),
         Inches(5.32),
         Inches(6.74),
@@ -764,7 +855,7 @@ Kalau satu foto ukurannya bukan 8×8, melainkan ukuran standar model CNN, berapa
     ]
     for i, (ltr, desc, col) in enumerate(dims):
         st.add_card(
-            s7,
+            s9,
             Inches(8.35),
             Inches(1.75) + i * Inches(1.62),
             Inches(4.23),
@@ -774,9 +865,9 @@ Kalau satu foto ukurannya bukan 8×8, melainkan ukuran standar model CNN, berapa
             accent_color=col,
             title_size=Pt(24),
         )
-    st.add_footer(s7, 7, SESSION_LABEL)
+    st.add_footer(s9, 9, SESSION_LABEL)
     st.set_speaker_notes(
-        s7,
+        s9,
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
@@ -786,109 +877,230 @@ Penjelasan konsep:
 Urutan di Python/NumPy adalah (Height, Width, Channels): tinggi dulu (baris), baru lebar (kolom), lalu jumlah channel warna. Kita cukup memanggil `img.shape` untuk memeriksanya.
 
 Transisi:
-Mengapa ada yang 1 channel dan ada yang 3 channel? Mari kita bandingkan.""",
+Bagaimana cara komputer mengenali karakter dari 150.528 angka ini? Mari kita pahami peran AI terlebih dahulu.""",
     )
 
     # =======================================================================
-    # SLIDE 08 — GRAYSCALE VS RGB
+    # SLIDE 10 — AI FUNDAMENTAL (1/3): APA ITU AI, ML & DEEP LEARNING?
     # =======================================================================
-    s8 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s8, "TEORI · CHANNEL", "Satu Channel atau Tiga Channel?")
-    s8.shapes.add_picture(str(vis["grayscale_vs_rgb"]), Inches(0.75), Inches(1.65), width=Inches(7.75))
-    st.add_card(
-        s8,
-        Inches(8.75),
-        Inches(1.65),
-        Inches(3.83),
-        Inches(1.65),
-        title="Grayscale: (H, W)",
-        body="1 lapis angka terang-gelap.",
-        bg_color=st.SURFACE_BG,
-        accent_color=st.TEXT_MUTED,
-        title_size=Pt(22),
-        body_size=Pt(20),
-    )
-    st.add_card(
-        s8,
-        Inches(8.75),
-        Inches(3.48),
-        Inches(3.83),
-        Inches(1.75),
-        title="RGB: (H, W, 3)",
-        body="3 lapis: Merah, Hijau, Biru.",
-        bg_color=st.TINT_BLUE,
-        accent_color=st.BLUE,
-        title_size=Pt(22),
-        body_size=Pt(20),
-        border_color=None,
-    )
+    s10 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s10, "TEORI · AI FUNDAMENTAL (1/3)", "Apa Itu AI di Project Ini?")
+    ai_cards = [
+        (
+            "1",
+            "Program Biasa (Rule-Based)",
+            "Manusia menulis aturan if-else manual. Mudah untuk rumus pasti, tapi mustahil untuk 150.528 piksel foto.",
+            st.RED,
+            st.TINT_RED,
+        ),
+        (
+            "2",
+            "Machine Learning (ML)",
+            "Komputer mencari pola sendiri dari contoh data dan label tanpa perlu didikte rumus if-else satu per satu.",
+            st.BLUE,
+            st.TINT_BLUE,
+        ),
+        (
+            "3",
+            "Deep Learning (CNN)",
+            "Cabang ML berlapis yang otomatis mengekstrak tepi, bentuk telinga, hingga karakter utuh langsung dari piksel.",
+            st.GREEN,
+            st.TINT_GREEN,
+        ),
+    ]
+    for idx, (num, ttl, desc, acc, tint) in enumerate(ai_cards):
+        st.add_card(
+            s10,
+            st.MARGIN_X + idx * Inches(4.02),
+            Inches(1.75),
+            Inches(3.78),
+            Inches(3.55),
+            title=ttl,
+            body=desc,
+            bg_color=tint,
+            accent_color=acc,
+            badge_text=num,
+            title_size=Pt(23),
+            body_size=Pt(20),
+            border_color=None,
+        )
     st.add_callout_box(
-        s8,
-        Inches(8.75),
-        Inches(5.42),
-        Inches(3.83),
-        Inches(1.20),
-        "Selalu pakai .convert('RGB') agar foto karakter Disney tetap punya warna!",
-        accent_color=st.GREEN,
-        bg_color=st.TINT_GREEN,
-        font_size=Pt(18),
+        s10,
+        st.MARGIN_X,
+        Inches(5.50),
+        st.CONTENT_WIDTH,
+        Inches(1.22),
+        "Hirarki: Artificial Intelligence (AI)  ⊃  Machine Learning (ML)  ⊃  Deep Learning (CNN — fokus project kita).",
+        accent_color=st.BLUE,
+        bg_color=st.TINT_BLUE,
+        font_size=Pt(20),
         bold=True,
     )
-    st.add_footer(s8, 8, SESSION_LABEL)
+    st.add_footer(s10, 10, SESSION_LABEL)
     st.set_speaker_notes(
-        s8,
+        s10,
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
-Foto grayscale hanya punya satu lapisan angka sehingga shape-nya dua dimensi: (H, W). Sementara foto berwarna RGB punya tiga lapisan yang ditumpuk: (H, W, 3).
+Sekarang kita sudah tahu bahwa satu foto hanyalah 150.528 angka piksel. Pertanyaannya: bagaimana komputer tahu itu foto Mickey atau Donald? Di sinilah bedanya Program Biasa dengan AI. Pada program biasa, programmer menulis aturan if-else. Pada Machine Learning dan khususnya Deep Learning (CNN), komputer belajar mencari pola sendiri dari contoh foto yang kita berikan.
 
 Penjelasan konsep:
-Untuk membedakan karakter Disney seperti Mickey, Minnie, Donald, atau Stitch, informasi warna sangat penting! Karena itu kita selalu memastikan foto dimuat dalam format RGB 3 channel.
+Deep Learning adalah cabang Machine Learning yang menggunakan jaringan saraf tiruan berlapis untuk mengenali pola visual bertingkat langsung dari piksel mentah.
 
 Transisi:
-Mari kita lihat isi masing-masing dari 3 channel RGB tersebut.""",
+Mengapa kita tidak bisa memakai aturan if-else biasa saja untuk mengenali foto? Mari kita buktikan di slide berikutnya.""",
     )
 
     # =======================================================================
-    # SLIDE 09 — RGB CHANNELS
+    # SLIDE 11 — AI FUNDAMENTAL (2/3): MENGAPA WAJIB PAKAI AI?
     # =======================================================================
-    s9 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s9, "TEORI · RGB", "RGB: Tiga Channel, Tiga Informasi")
-    s9.shapes.add_picture(str(vis["rgb_channels"]), Inches(0.75), Inches(1.75), width=Inches(11.83))
-    st.add_card(
-        s9,
+    s11 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s11, "TEORI · AI FUNDAMENTAL (2/3)", "Mengapa Mengenali Foto Wajib Pakai AI?")
+    why_cards = [
+        (
+            "1",
+            "Posisi & Sudut Berubah",
+            "Objek digeser sedikit saja ke pojok atau miring 15°, koordinat angka pikselnya berubah total.",
+            st.RED,
+            st.TINT_RED,
+        ),
+        (
+            "2",
+            "Cahaya & Latar Ramai",
+            "Foto di tempat redup atau berlatar ramai mengubah ratusan ribu nilai RGB sekaligus.",
+            st.YELLOW,
+            st.TINT_YELLOW,
+        ),
+        (
+            "3",
+            "Solusi Deep Learning",
+            "Filter CNN memindai seluruh area gambar sehingga tetap mengenali bentuk objek di mana pun posisinya.",
+            st.GREEN,
+            st.TINT_GREEN,
+        ),
+    ]
+    for idx, (num, ttl, desc, acc, tint) in enumerate(why_cards):
+        st.add_card(
+            s11,
+            st.MARGIN_X + idx * Inches(4.02),
+            Inches(1.75),
+            Inches(3.78),
+            Inches(3.55),
+            title=ttl,
+            body=desc,
+            bg_color=tint,
+            accent_color=acc,
+            badge_text=num,
+            title_size=Pt(23),
+            body_size=Pt(20),
+            border_color=None,
+        )
+    st.add_callout_box(
+        s11,
         st.MARGIN_X,
-        Inches(5.35),
+        Inches(5.50),
         st.CONTENT_WIDTH,
-        Inches(1.35),
-        body="Setiap piksel RGB adalah kombinasi 3 angka: (Red, Green, Blue). Objek merah menyala terang di channel R, tapi gelap di G dan B.",
-        bg_color=st.SURFACE_BG,
+        Inches(1.22),
+        "Aturan if-else kaku pada koordinat piksel pasti gagal saat objek bergeser; AI belajar pola bentuk & tekstur yang fleksibel.",
         accent_color=st.RED,
-        body_size=Pt(24),
+        bg_color=st.TINT_RED,
+        font_size=Pt(20),
+        bold=True,
     )
-    st.add_footer(s9, 9, SESSION_LABEL)
+    st.add_footer(s11, 11, SESSION_LABEL)
     st.set_speaker_notes(
-        s9,
-        """Alokasi waktu: 3 menit
+        s11,
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
-Perhatikan contoh data sampel persegi merah ini. Ketika kita pisah menjadi 3 channel terpisah, di channel Red (R) kotak perseginya terlihat putih terang (nilainya tinggi), sedangkan di channel Green (G) dan Blue (B) kotaknya gelap (nilainya rendah).
+Bayangkan kita membuat aturan manual: 'Jika piksel tengah (112, 112) berwarna hitam, maka itu Mickey'. Begitu boneka Mickey digeser sedikit ke kanan, dipotret miring, atau berada di latar belakang yang ramai, aturan if-else tadi langsung gagal total!
 
 Penjelasan konsep:
-Inilah cara CNN nanti membaca warna: setiap filter konvolusi melihat kombinasi nilai dari ketiga channel ini secara bersamaan.
+Di notebook nanti kita akan membuktikan lewat kode bagaimana menggeser gambar mengubah nilai piksel di koordinat tetap, dan mengapa kita membutuhkan AI yang memindai pola bentuk di seluruh gambar.
 
 Transisi:
-Angka-angka 0–255 ini disimpan dalam tipe data tertentu. Apa bedanya uint8 dan float32?""",
+Lalu bagaimana alur kerja penggunaan AI di project kita dari awal sampai akhir, dan di mana posisi sesi P01 ini?""",
     )
 
     # =======================================================================
-    # SLIDE 10 — DATA TYPES
+    # SLIDE 12 — AI FUNDAMENTAL (3/3): ALUR KERJA AI DI PROJECT KITA
     # =======================================================================
-    s10 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s10, "TEORI · TIPE DATA", "Kenali Tipe Data Gambar")
-    st.add_pill_tag(s10, "uint8  →  0–255", st.MARGIN_X, Inches(1.68), bg_color=st.TINT_BLUE, text_color=st.BLUE_TEXT, width=Inches(3.4), height=Inches(0.52), size=Pt(21))
+    s12 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s12, "TEORI · AI FUNDAMENTAL (3/3)", "Alur Kerja AI & Peran Krusial P01")
+    workflow_cards = [
+        (
+            "1",
+            "Tahap 1: Siapkan Data (P01)",
+            "Cek kualitas dataset (EDA), bersihkan duplikat/rusak, seragamkan ukuran 224×224, & normalisasi skala angka.",
+            st.BLUE,
+            st.TINT_BLUE,
+        ),
+        (
+            "2",
+            "Tahap 2: Latih Model AI (P02–P06)",
+            "Model Neural Network / CNN belajar mengenali pola dari ribuan contoh foto yang sudah rapi dan bersih.",
+            st.YELLOW,
+            st.TINT_YELLOW,
+        ),
+        (
+            "3",
+            "Tahap 3: Evaluasi & Uji (P07–P08)",
+            "Uji akurasi model pada foto baru (polos vs ramai) dan visualisasikan fokus model dengan Grad-CAM.",
+            st.GREEN,
+            st.TINT_GREEN,
+        ),
+    ]
+    for idx, (num, ttl, desc, acc, tint) in enumerate(workflow_cards):
+        st.add_card(
+            s12,
+            st.MARGIN_X + idx * Inches(4.02),
+            Inches(1.75),
+            Inches(3.78),
+            Inches(3.55),
+            title=ttl,
+            body=desc,
+            bg_color=tint,
+            accent_color=acc,
+            badge_text=num,
+            title_size=Pt(23),
+            body_size=Pt(20),
+            border_color=None,
+        )
+    st.add_callout_box(
+        s12,
+        st.MARGIN_X,
+        Inches(5.50),
+        st.CONTENT_WIDTH,
+        Inches(1.22),
+        "Prinsip Garbage In, Garbage Out: AI secanggih apa pun akan gagal jika dilatih dengan foto mentah yang rusak, gepeng, atau bocor!",
+        accent_color=st.GREEN,
+        bg_color=st.TINT_GREEN,
+        font_size=Pt(20),
+        bold=True,
+    )
+    st.add_footer(s12, 12, SESSION_LABEL)
+    st.set_speaker_notes(
+        s12,
+        """Alokasi waktu: 2 menit
+
+Naskah ajar:
+Menggunakan AI itu ibarat memasak di dapur profesional. Model AI (CNN) adalah kompor canggihnya, sedangkan foto adalah bahan makanannya. Sesi P01 hari ini adalah tahap menyiapkan dan memeriksa bahan: membersihkan data yang rusak, menyeragamkan ukuran, dan menormalisasi angka.
+
+Penjelasan konsep:
+Prinsip utamanya adalah Garbage In, Garbage Out. Jika data yang masuk berantakan, hasil prediksi AI juga pasti berantakan.
+
+Transisi:
+Sekarang kita tahu mengapa data harus disiapkan untuk AI. Mari kita bahas langkah teknis pertamanya: tipe data uint8 vs float32!""",
+    )
+
+    # =======================================================================
+    # SLIDE 13 — DATA TYPES
+    # =======================================================================
+    s13 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s13, "TEORI · TIPE DATA", "Kenali Tipe Data Gambar")
+    st.add_pill_tag(s13, "uint8  →  0–255", st.MARGIN_X, Inches(1.68), bg_color=st.TINT_BLUE, text_color=st.BLUE_TEXT, width=Inches(3.4), height=Inches(0.52), size=Pt(21))
     st.add_card(
-        s10,
+        s13,
         st.MARGIN_X,
         Inches(2.35),
         Inches(5.7),
@@ -900,9 +1112,9 @@ Angka-angka 0–255 ini disimpan dalam tipe data tertentu. Apa bedanya uint8 dan
         title_size=Pt(24),
         body_size=Pt(22),
     )
-    st.add_pill_tag(s10, "float32  →  0.0–1.0", Inches(6.88), Inches(1.68), bg_color=st.TINT_GREEN, text_color=st.TEXT_DARK, width=Inches(3.8), height=Inches(0.52), size=Pt(21))
+    st.add_pill_tag(s13, "float32  →  0.0–1.0", Inches(6.88), Inches(1.68), bg_color=st.TINT_GREEN, text_color=st.TEXT_DARK, width=Inches(3.8), height=Inches(0.52), size=Pt(21))
     st.add_card(
-        s10,
+        s13,
         Inches(6.88),
         Inches(2.35),
         Inches(5.7),
@@ -916,7 +1128,7 @@ Angka-angka 0–255 ini disimpan dalam tipe data tertentu. Apa bedanya uint8 dan
         border_color=None,
     )
     st.add_card(
-        s10,
+        s13,
         st.MARGIN_X,
         Inches(5.60),
         st.CONTENT_WIDTH,
@@ -925,7 +1137,7 @@ Angka-angka 0–255 ini disimpan dalam tipe data tertentu. Apa bedanya uint8 dan
         border_color=None,
     )
     st.add_text_box(
-        s10,
+        s13,
         st.MARGIN_X + Inches(0.28),
         Inches(5.76),
         st.CONTENT_WIDTH - Inches(0.56),
@@ -935,9 +1147,9 @@ Angka-angka 0–255 ini disimpan dalam tipe data tertentu. Apa bedanya uint8 dan
         size=Pt(20),
         color=st.TEXT_LIGHT,
     )
-    st.add_footer(s10, 10, SESSION_LABEL)
+    st.add_footer(s13, 13, SESSION_LABEL)
     st.set_speaker_notes(
-        s10,
+        s13,
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
@@ -951,13 +1163,13 @@ Selain tipe data, ukuran foto dari kamera HP juga berbeda-beda. Bagaimana cara m
     )
 
     # =======================================================================
-    # SLIDE 11 — RESIZE & ASPECT RATIO
+    # SLIDE 14 — RESIZE & ASPECT RATIO
     # =======================================================================
-    s11 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s11, "TEORI · UKURAN INPUT", "Resize Tanpa Merusak Proporsi")
-    s11.shapes.add_picture(str(vis["resize"]), Inches(1.55), Inches(1.62), height=Inches(3.62))
+    s14 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s14, "TEORI · UKURAN INPUT", "Resize Tanpa Merusak Proporsi")
+    s14.shapes.add_picture(str(vis["resize"]), Inches(1.55), Inches(1.62), height=Inches(3.62))
     st.add_card(
-        s11,
+        s14,
         st.MARGIN_X,
         Inches(5.45),
         st.CONTENT_WIDTH,
@@ -968,10 +1180,10 @@ Selain tipe data, ukuran foto dari kamera HP juga berbeda-beda. Bagaimana cara m
         body_size=Pt(24),
         border_color=None,
     )
-    st.add_footer(s11, 11, SESSION_LABEL)
+    st.add_footer(s14, 14, SESSION_LABEL)
     st.set_speaker_notes(
-        s11,
-        """Alokasi waktu: 3 menit
+        s14,
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 Foto dari HP biasanya punya rasio 4:3 atau 16:9, sedangkan MobileNetV2 membutuhkan input bujur sangkar 224 kali 224. Jika langsung di-resize paksa, lingkaran menjadi lonjong! Solusinya adalah menjaga aspect ratio dengan padding (letterbox) atau center crop yang aman.
@@ -984,12 +1196,12 @@ Ukuran sudah seragam 224×224. Bagaimana dengan skala angkanya?""",
     )
 
     # =======================================================================
-    # SLIDE 12 — NORMALIZATION
+    # SLIDE 15 — NORMALIZATION
     # =======================================================================
-    s12 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s12, "TEORI · PREPROCESSING (PREVIEW P7)", "Skala Angka Harus Konsisten")
+    s15 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s15, "TEORI · PREPROCESSING (PREVIEW P7)", "Skala Angka Harus Konsisten")
     st.add_card(
-        s12,
+        s15,
         st.MARGIN_X,
         Inches(1.68),
         Inches(5.7),
@@ -1002,7 +1214,7 @@ Ukuran sudah seragam 224×224. Bagaimana dengan skala angkanya?""",
         body_size=Pt(23),
     )
     st.add_card(
-        s12,
+        s15,
         Inches(6.88),
         Inches(1.68),
         Inches(5.7),
@@ -1015,9 +1227,9 @@ Ukuran sudah seragam 224×224. Bagaimana dengan skala angkanya?""",
         body_size=Pt(23),
         border_color=None,
     )
-    st.add_pill_tag(s12, "PREVIEW P7", st.MARGIN_X, Inches(5.05), bg_color=st.TINT_YELLOW, text_color=st.TEXT_DARK, width=Inches(1.85), height=Inches(0.5), size=Pt(18))
+    st.add_pill_tag(s15, "PREVIEW P7", st.MARGIN_X, Inches(5.05), bg_color=st.TINT_YELLOW, text_color=st.TEXT_DARK, width=Inches(1.85), height=Inches(0.5), size=Pt(18))
     st.add_card(
-        s12,
+        s15,
         st.MARGIN_X + Inches(2.05),
         Inches(5.02),
         st.CONTENT_WIDTH - Inches(2.05),
@@ -1026,7 +1238,7 @@ Ukuran sudah seragam 224×224. Bagaimana dengan skala angkanya?""",
         border_color=None,
     )
     st.add_text_box(
-        s12,
+        s15,
         st.MARGIN_X + Inches(2.3),
         Inches(5.2),
         st.CONTENT_WIDTH - Inches(2.5),
@@ -1037,10 +1249,10 @@ Ukuran sudah seragam 224×224. Bagaimana dengan skala angkanya?""",
         color=st.TEXT_LIGHT,
         line_spacing=1.25,
     )
-    st.add_footer(s12, 12, SESSION_LABEL)
+    st.add_footer(s15, 15, SESSION_LABEL)
     st.set_speaker_notes(
-        s12,
-        """Alokasi waktu: 3 menit
+        s15,
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 Angka 0–255 terlalu besar untuk pelatihan neural network yang stabil, jadi kita lakukan normalisasi. Ada dua skala yang sering dipakai: 0 sampai 1, atau −1 sampai 1. Khusus untuk MobileNetV2 yang akan kita pakai di P7 nanti, fungsi `preprocess_input` mengubah skala piksel menjadi kira-kira −1 sampai 1.
@@ -1053,19 +1265,19 @@ Ada satu aturan emas tentang preprocessing ini yang wajib diingat selamanya.""",
     )
 
     # =======================================================================
-    # SLIDE 13 — KEYNOTE MOMENT
+    # SLIDE 16 — KEYNOTE MOMENT
     # =======================================================================
-    s13 = st.add_keynote_slide(
+    s16 = st.add_keynote_slide(
         prs,
         "ATURAN EMAS PREPROCESSING",
         "Preprocessing saat training =\npreprocessing saat prediksi.",
         "Salah skala antara training dan inferensi akan membuat akurasi model anjlok.",
         bg_color=st.DARK_BG,
-        slide_number=13,
+        slide_number=16,
         session_label=SESSION_LABEL,
     )
     st.set_speaker_notes(
-        s13,
+        s16,
         """Alokasi waktu: 1 menit
 
 Naskah ajar:
@@ -1079,13 +1291,13 @@ Sekarang kita beralih dari menyiapkan satu foto ke memahami keseluruhan dataset 
     )
 
     # =======================================================================
-    # SLIDE 14 — HISTOGRAM
+    # SLIDE 17 — HISTOGRAM
     # =======================================================================
-    s14 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s14, "TEORI · STATISTIK CITRA", "Histogram: Membaca Karakter Foto")
-    s14.shapes.add_picture(str(vis["histogram"]), Inches(2.1), Inches(1.60), height=Inches(3.65))
+    s17 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s17, "TEORI · STATISTIK CITRA", "Histogram: Membaca Karakter Foto")
+    s17.shapes.add_picture(str(vis["histogram"]), Inches(2.1), Inches(1.60), height=Inches(3.65))
     st.add_card(
-        s14,
+        s17,
         st.MARGIN_X,
         Inches(5.45),
         st.CONTENT_WIDTH,
@@ -1095,10 +1307,10 @@ Sekarang kita beralih dari menyiapkan satu foto ke memahami keseluruhan dataset 
         accent_color=st.BLUE,
         body_size=Pt(24),
     )
-    st.add_footer(s14, 14, SESSION_LABEL)
+    st.add_footer(s17, 17, SESSION_LABEL)
     st.set_speaker_notes(
-        s14,
-        """Alokasi waktu: 3 menit
+        s17,
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 Histogram menunjukkan seberapa banyak piksel pada setiap tingkat kecerahan 0 sampai 255. Pada contoh data sampel kita: gambar polos punya puncak sempit di area terang (background seragam), sedangkan gambar ramai sebarannya jauh lebih melebar karena banyak objek dan warna latar.
@@ -1111,12 +1323,12 @@ Selain histogram, apa saja yang perlu kita cek saat melakukan EDA dataset?""",
     )
 
     # =======================================================================
-    # SLIDE 15 — EXPLORATORY DATA ANALYSIS (3-column table + imbalance callout)
+    # SLIDE 18 — EXPLORATORY DATA ANALYSIS (3-column table + imbalance callout)
     # =======================================================================
-    s15 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s15, "TEORI · EDA DESKRIPTIF", "Kenali Data Sebelum Modeling")
+    s18 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s18, "TEORI · EDA DESKRIPTIF", "Kenali Data Sebelum Modeling")
     st.add_styled_table(
-        s15,
+        s18,
         st.MARGIN_X,
         Inches(1.58),
         st.CONTENT_WIDTH,
@@ -1134,7 +1346,7 @@ Selain histogram, apa saja yang perlu kita cek saat melakukan EDA dataset?""",
         header_size=Pt(22),
     )
     st.add_callout_box(
-        s15,
+        s18,
         st.MARGIN_X,
         Inches(5.58),
         st.CONTENT_WIDTH,
@@ -1144,10 +1356,10 @@ Selain histogram, apa saja yang perlu kita cek saat melakukan EDA dataset?""",
         bg_color=st.TINT_RED,
         font_size=Pt(19),
     )
-    st.add_footer(s15, 15, SESSION_LABEL)
+    st.add_footer(s18, 18, SESSION_LABEL)
     st.set_speaker_notes(
-        s15,
-        """Alokasi waktu: 3 menit
+        s18,
+        """Alokasi waktu: 2 menit
 
 Naskah ajar:
 EDA itu ibarat memeriksa bahan masakan sebelum mulai memasak. Ada 4 hal utama yang kita periksa: distribusi jumlah foto (untuk mendeteksi class imbalance), resolusi gambar, karakteristik pencahayaan (brightness & contrast), dan kompleksitas latar belakang (edge density).
@@ -1160,15 +1372,15 @@ Mari kita lihat lebih dekat ukuran keempat: bagaimana cara mengukur 'keramaian' 
     )
 
     # =======================================================================
-    # SLIDE 16 — EDGE DENSITY
+    # SLIDE 19 — EDGE DENSITY
     # =======================================================================
-    s16 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s16, "TEORI · KOMPLEKSITAS VISUAL", "Seberapa Ramai Background-nya?")
-    s16.shapes.add_picture(str(vis["edge_density"]), Inches(0.85), Inches(1.58), width=Inches(11.6))
+    s19 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s19, "TEORI · KOMPLEKSITAS VISUAL", "Seberapa Ramai Background-nya?")
+    s19.shapes.add_picture(str(vis["edge_density"]), Inches(0.85), Inches(1.58), width=Inches(11.6))
     polos_ed = stats["by_condition"]["polos"]["mean_edge_density"]
     ramai_ed = stats["by_condition"]["ramai"]["mean_edge_density"]
     st.add_callout_box(
-        s16,
+        s19,
         st.MARGIN_X,
         Inches(5.38),
         st.CONTENT_WIDTH,
@@ -1178,9 +1390,9 @@ Mari kita lihat lebih dekat ukuran keempat: bagaimana cara mengukur 'keramaian' 
         bg_color=st.TINT_RED,
         font_size=Pt(19),
     )
-    st.add_footer(s16, 16, SESSION_LABEL)
+    st.add_footer(s19, 19, SESSION_LABEL)
     st.set_speaker_notes(
-        s16,
+        s19,
         f"""Alokasi waktu: 2 menit
 
 Naskah ajar:
@@ -1194,10 +1406,10 @@ Terakhir di bagian teori, mari waspadai 3 jebakan klasik saat mengumpulkan datas
     )
 
     # =======================================================================
-    # SLIDE 17 — THREE COMMON DATA TRAPS
+    # SLIDE 20 — THREE COMMON DATA TRAPS
     # =======================================================================
-    s17 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s17, "TEORI · KUALITAS DATA", "Tiga Jebakan dalam Dataset")
+    s20 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s20, "TEORI · KUALITAS DATA", "Tiga Jebakan dalam Dataset")
     traps = [
         ("1", "Orientasi EXIF", "Foto HP sering tersimpan miring meski tampak tegak di galeri.", st.YELLOW, st.TINT_YELLOW),
         ("2", "Foto kembar / burst", "Foto identik atau nyaris sama bisa bocor ke train & test.", st.RED, st.TINT_RED),
@@ -1205,7 +1417,7 @@ Terakhir di bagian teori, mari waspadai 3 jebakan klasik saat mengumpulkan datas
     ]
     for idx, (num, ttl, desc, acc, tint) in enumerate(traps):
         st.add_card(
-            s17,
+            s20,
             st.MARGIN_X + idx * Inches(4.02),
             Inches(1.75),
             Inches(3.78),
@@ -1219,9 +1431,9 @@ Terakhir di bagian teori, mari waspadai 3 jebakan klasik saat mengumpulkan datas
             body_size=Pt(22),
             border_color=None,
         )
-    s17.shapes.add_picture(str(vis["exif"]), Inches(0.75), Inches(5.45), height=Inches(1.48))
+    s20.shapes.add_picture(str(vis["exif"]), Inches(0.75), Inches(5.45), height=Inches(1.48))
     st.add_text_box(
-        s17,
+        s20,
         Inches(3.9),
         Inches(5.65),
         Inches(8.6),
@@ -1231,9 +1443,9 @@ Terakhir di bagian teori, mari waspadai 3 jebakan klasik saat mengumpulkan datas
         size=Pt(22),
         color=st.TEXT_DARK,
     )
-    st.add_footer(s17, 17, SESSION_LABEL)
+    st.add_footer(s20, 20, SESSION_LABEL)
     st.set_speaker_notes(
-        s17,
+        s20,
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
@@ -1247,26 +1459,26 @@ Sampai ketemu 5 menit lagi untuk praktik langsung di notebook!""",
     )
 
     # =======================================================================
-    # SLIDE 18 — HANDS-ON SECTION DIVIDER (6 steps from PLAN.md P4)
+    # SLIDE 21 — HANDS-ON SECTION DIVIDER (6 steps aligned with Notebook)
     # =======================================================================
-    s18 = st.add_blank_slide(prs, st.LIGHT_BG)
+    s21 = st.add_blank_slide(prs, st.LIGHT_BG)
     st.add_slide_header_rich(
-        s18,
+        s21,
         "BAGIAN 02 · ISTIRAHAT 5 MENIT + HANDS-ON 50 MENIT (MENIT 40–95)",
         [("HANDS-ON: ", st.GREEN), ("Praktik EDA Notebook", st.TEXT_DARK)],
         kicker_color=st.GREEN,
     )
     steps_detail = [
-        ("01", "Load foto & baca nilai arraynya", "Buka gambar ke RGB & periksa shape serta tipe data uint8.", st.BLUE),
-        ("02", "Koreksi orientasi EXIF", "Gunakan ImageOps.exif_transpose() agar foto HP tegak.", st.RED),
-        ("03", "Inventaris dataset", "Hitung jumlah foto per kelas × kondisi, resolusi, dan ukuran file.", st.YELLOW),
-        ("04", "Deteksi file rusak & duplikat", "Verifikasi Pillow dan bandingkan hash SHA-256 tiap file.", st.GREEN),
-        ("05", "Hitung statistik citra", "Brightness (mean), kontras (std), dan edge density (Canny).", st.BLUE),
-        ("06", "Visualisasi boxplot polos vs ramai", "Bandingkan sebaran kedua kondisi secara visual.", st.RED),
+        ("01", "Load foto, cek EXIF & array piksel", "Gunakan exif_transpose(), konversi RGB, cek shape & patch 8×8.", st.BLUE),
+        ("02", "Pisahkan channel RGB & grayscale", "Visualisasikan channel R, G, B serta matriks 2D grayscale.", st.RED),
+        ("03", "Resize proporsional & normalisasi", "Letterbox 224×224, konversi float32 (0–1) & preprocess_input.", st.YELLOW),
+        ("04", "Inventaris dataset, rusak & duplikat", "Verifikasi Pillow, hash SHA-256, dan tabel kelas × kondisi.", st.GREEN),
+        ("05", "Hitung statistik citra (119 foto valid)", "Ekstrak brightness (mean), kontras (std), dan edge density (Canny).", st.BLUE),
+        ("06", "Visualisasi histogram & boxplot", "Bandingkan distribusi polos vs ramai & simpan ke folder results/.", st.RED),
     ]
-    st.add_numbered_steps(s18, st.MARGIN_X, Inches(1.65), Inches(7.25), steps_detail, row_height=0.86)
+    st.add_numbered_steps(s21, st.MARGIN_X, Inches(1.65), Inches(7.25), steps_detail, row_height=0.86)
     st.add_card(
-        s18,
+        s21,
         Inches(8.35),
         Inches(1.65),
         Inches(4.23),
@@ -1280,7 +1492,7 @@ Sampai ketemu 5 menit lagi untuk praktik langsung di notebook!""",
         border_color=None,
     )
     st.add_callout_box(
-        s18,
+        s21,
         Inches(8.35),
         Inches(5.45),
         Inches(4.23),
@@ -1291,13 +1503,13 @@ Sampai ketemu 5 menit lagi untuk praktik langsung di notebook!""",
         font_size=Pt(18),
         bold=True,
     )
-    st.add_footer(s18, 18, SESSION_LABEL)
+    st.add_footer(s21, 21, SESSION_LABEL)
     st.set_speaker_notes(
-        s18,
+        s21,
         """Alokasi waktu: 55 menit (5 menit istirahat + 50 menit hands-on notebook)
 
 Naskah ajar:
-Selamat datang kembali! Selama 50 menit ke depan kita akan mengerjakan notebook P04. Ada 6 langkah utama sesuai rencana belajar: mulai dari membaca array gambar, memperbaiki orientasi EXIF, menginventaris jumlah foto per kelas dan kondisi, mendeteksi file rusak dan duplikat dengan hash, menghitung brightness/kontras/edge density, hingga membuat boxplot perbandingan polos vs ramai.
+Selamat datang kembali! Selama 50 menit ke depan kita akan mengerjakan notebook P01. Ada 6 langkah berurutan yang sama persis dengan struktur sel di notebook: mulai dari membaca array gambar & koreksi EXIF, memisahkan channel RGB, melakukan resize proporsional & normalisasi + bukti eksperimen AI, menginventaris file rusak dan duplikat dengan hash SHA-256, menghitung brightness/kontras/edge density, hingga membuat boxplot perbandingan polos vs ramai.
 
 Penjelasan konsep:
 Pandu peserta mengisi bagian `# TODO` secara bertahap dan memastikan semua sel `assert` berjalan dengan benar pada data sampel.
@@ -1307,11 +1519,11 @@ Setelah statistik dan boxplot selesai dibuat, mari kita masuk ke Mini-challenge!
     )
 
     # =======================================================================
-    # SLIDE 19 — MINI-CHALLENGE DIVIDER
+    # SLIDE 22 — MINI-CHALLENGE DIVIDER
     # =======================================================================
-    s19 = st.add_blank_slide(prs, st.YELLOW)
+    s22 = st.add_blank_slide(prs, st.YELLOW)
     st.add_text_box(
-        s19,
+        s22,
         st.MARGIN_X,
         Inches(1.35),
         st.CONTENT_WIDTH,
@@ -1323,7 +1535,7 @@ Setelah statistik dan boxplot selesai dibuat, mari kita masuk ke Mini-challenge!
         bold=True,
     )
     st.add_text_box(
-        s19,
+        s22,
         st.MARGIN_X,
         Inches(1.85),
         st.CONTENT_WIDTH,
@@ -1335,7 +1547,7 @@ Setelah statistik dan boxplot selesai dibuat, mari kita masuk ke Mini-challenge!
         bold=True,
     )
     st.add_card(
-        s19,
+        s22,
         st.MARGIN_X,
         Inches(3.2),
         st.CONTENT_WIDTH,
@@ -1348,70 +1560,70 @@ Setelah statistik dan boxplot selesai dibuat, mari kita masuk ke Mini-challenge!
         body_size=Pt(26),
         border_color=None,
     )
-    st.add_footer(s19, 19, SESSION_LABEL, on_dark=False, fg_color=st.TEXT_DARK)
+    st.add_footer(s22, 22, SESSION_LABEL, on_dark=False, fg_color=st.TEXT_DARK)
     st.set_speaker_notes(
-        s19,
+        s22,
         """Alokasi waktu: 15 menit
 
 Naskah ajar:
 Sekarang coba lihat kembali tabel statistik dan boxplot yang baru saja kita hasilkan. Hanya dari statistik (brightness, kontras, edge density), menurutmu kondisi mana yang lebih sulit bagi model nanti: polos atau ramai? Dan mengapa?
 
 Instruksi interaksi:
-Minta peserta menuliskan alasannya secara lisan atau di catatan sebagai hipotesis awal. Jangan langsung memberi jawaban final—hipotesis ini akan diuji nanti di P11 saat evaluasi model!
+Minta peserta menuliskan alasannya secara lisan atau di catatan sebagai hipotesis awal. Jangan langsung memberi jawaban final—hipotesis ini akan diuji nanti saat evaluasi model!
 
 Transisi:
 Mari kita rangkum istilah-istilah baru yang kita pelajari hari ini di Glosarium.""",
     )
 
     # =======================================================================
-    # SLIDE 20 — GLOSSARY
+    # SLIDE 23 — GLOSSARY
     # =======================================================================
-    s20 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s20, "REFERENSI CEPAT", "Glosarium Singkat")
+    s23 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s23, "REFERENSI CEPAT", "Glosarium Singkat")
     glossary_items = [
-        ("Piksel", "Unit titik terkecil penyusun gambar digital."),
-        ("Channel", "Lapisan warna pada gambar (mis. R, G, B)."),
+        ("Piksel & Channel", "Titik terkecil gambar & lapisan warna (R, G, B)."),
         ("Shape", "Dimensi array gambar: (tinggi, lebar, channel)."),
-        ("uint8", "Tipe data bilangan bulat 0–255 untuk file gambar."),
-        ("float32", "Tipe data desimal untuk komputasi neural network."),
+        ("Deep Learning (AI)", "Model berlapis yang belajar pola visual dari contoh data."),
+        ("uint8 & float32", "Bilangan bulat 0–255 (file) vs desimal (komputasi AI)."),
         ("Normalisasi", "Mengubah rentang nilai piksel ke skala konsisten."),
         ("EDA", "Eksplorasi awal untuk mengenali pola & kualitas data."),
         ("Edge density", "Rasio piksel tepi terhadap total piksel gambar."),
         ("Class imbalance", "Ketimpangan jumlah foto antar kelas."),
+        ("Data leakage", "Kebocoran informasi test set ke proses training/keputusan."),
     ]
     st.add_styled_table(
-        s20,
+        s23,
         st.MARGIN_X,
         Inches(1.58),
         st.CONTENT_WIDTH,
         Inches(5.2),
         headers=["Istilah", "Definisi Singkat"],
         rows=[[k, v] for k, v in glossary_items],
-        col_widths=[Inches(3.1), Inches(8.73)],
+        col_widths=[Inches(3.2), Inches(8.63)],
         header_color=st.BLUE,
         font_size=Pt(20),
         header_size=Pt(22),
     )
-    st.add_footer(s20, 20, SESSION_LABEL)
+    st.add_footer(s23, 23, SESSION_LABEL)
     st.set_speaker_notes(
-        s20,
+        s23,
         """Alokasi waktu: 2 menit
 
 Naskah ajar:
-Ini adalah 9 istilah kunci dari sesi P04 sebagai pegangan cepat. Pastikan tidak ada istilah yang masih terasa asing sebelum kita masuk ke quiz.
+Ini adalah istilah-istilah kunci dari sesi P01 sebagai pegangan cepat, mulai dari Piksel, Shape, Deep Learning (AI), hingga Edge Density dan Data Leakage. Pastikan tidak ada istilah yang masih terasa asing sebelum kita masuk ke quiz.
 
 Penjelasan konsep:
-Tanyakan apakah ada dari 9 istilah ini yang masih perlu diulang contohnya secara singkat.
+Tanyakan apakah ada dari istilah ini yang masih perlu diulang contohnya secara singkat.
 
 Transisi:
 Sekarang saatnya menguji pemahaman dengan 5 soal quiz singkat!""",
     )
 
     # =======================================================================
-    # SLIDE 21 — QUIZ (5 questions, no answers on slide)
+    # SLIDE 24 — QUIZ (5 questions, no answers on slide)
     # =======================================================================
-    s21 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s21, "EVALUASI SINGKAT", "Sudah Paham? Uji Dirimu!")
+    s24 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s24, "EVALUASI SINGKAT", "Sudah Paham? Uji Dirimu!")
     questions = [
         ("1", "Apa perbedaan uint8 dan float32?", st.BLUE, st.TINT_BLUE),
         ("2", "Apa shape foto RGB berukuran 224 × 224?", st.RED, st.TINT_RED),
@@ -1422,7 +1634,7 @@ Sekarang saatnya menguji pemahaman dengan 5 soal quiz singkat!""",
     for idx, (num, q_txt, acc, tint) in enumerate(questions):
         top_y = Inches(1.58) + idx * Inches(1.04)
         st.add_card(
-            s21,
+            s24,
             st.MARGIN_X,
             top_y,
             st.CONTENT_WIDTH,
@@ -1431,9 +1643,9 @@ Sekarang saatnya menguji pemahaman dengan 5 soal quiz singkat!""",
             border_color=None,
             shadow=False,
         )
-        st.add_pill_tag(s21, num, st.MARGIN_X + Inches(0.22), top_y + Inches(0.20), bg_color=acc, text_color=st.TEXT_DARK if acc in (st.YELLOW, st.GREEN) else st.TEXT_LIGHT, width=Inches(0.54), height=Inches(0.48), font_name=st.FONT_TITLE, size=Pt(20))
+        st.add_pill_tag(s24, num, st.MARGIN_X + Inches(0.22), top_y + Inches(0.20), bg_color=acc, text_color=st.TEXT_DARK if acc in (st.YELLOW, st.GREEN) else st.TEXT_LIGHT, width=Inches(0.54), height=Inches(0.48), font_name=st.FONT_TITLE, size=Pt(20))
         st.add_text_box(
-            s21,
+            s24,
             st.MARGIN_X + Inches(0.95),
             top_y + Inches(0.20),
             st.CONTENT_WIDTH - Inches(1.2),
@@ -1443,9 +1655,9 @@ Sekarang saatnya menguji pemahaman dengan 5 soal quiz singkat!""",
             size=Pt(24),
             color=st.TEXT_DARK,
         )
-    st.add_footer(s21, 21, SESSION_LABEL)
+    st.add_footer(s24, 24, SESSION_LABEL)
     st.set_speaker_notes(
-        s21,
+        s24,
         """Alokasi waktu: 5 menit
 
 Naskah ajar:
@@ -1459,14 +1671,14 @@ Kunci jawaban & penjelasan:
 5. Karena akan menyebabkan data leakage; EDA harus deskriptif dan keputusan modeling tidak boleh mengintip test set.
 
 Transisi:
-Mari kita tutup sesi hari ini dengan rangkuman dan preview sesi berikutnya.""",
+Mari kita tutup sesi hari ini dengan rangkuman dan checklist kriteria berhasil.""",
     )
 
     # =======================================================================
-    # SLIDE 22 — CLOSING & NEXT SESSION (no homework)
+    # SLIDE 25 — CLOSING & CHECKLIST (no homework, no next-session card)
     # =======================================================================
-    s22 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s22, "RANGKUMAN & PENUTUP", "Takeaways & Next Step")
+    s25 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s25, "RANGKUMAN & PENUTUP", "Key Takeaways & Kriteria Berhasil P01")
     takeaways = [
         ("1", "Gambar adalah representasi angka", st.BLUE, st.TINT_BLUE),
         ("2", "Preprocessing harus konsisten", st.GREEN, st.TINT_GREEN),
@@ -1474,7 +1686,7 @@ Mari kita tutup sesi hari ini dengan rangkuman dan preview sesi berikutnya.""",
     ]
     for idx, (num, ttl, acc, tint) in enumerate(takeaways):
         st.add_card(
-            s22,
+            s25,
             st.MARGIN_X + idx * Inches(4.02),
             Inches(1.62),
             Inches(3.78),
@@ -1487,49 +1699,35 @@ Mari kita tutup sesi hari ini dengan rangkuman dan preview sesi berikutnya.""",
             border_color=None,
         )
     st.add_styled_table(
-        s22,
+        s25,
         st.MARGIN_X,
         Inches(3.85),
-        Inches(6.9),
+        st.CONTENT_WIDTH,
         Inches(2.8),
-        headers=["Kriteria Berhasil P01", "Target"],
+        headers=["Kriteria Berhasil P01", "Target Capaian Hari Ini"],
         rows=[
-            ["Pahami shape input", "Bisa jelaskan (224, 224, 3)"],
-            ["Statistik dataset", "Tabel polos vs ramai terbaca"],
-            ["Kebersihan data", "Bebas file rusak & duplikat"],
+            ["Pahami struktur & peran AI", "Bisa jelaskan shape (224, 224, 3), uint8 vs float32, & alasan pakai AI"],
+            ["Statistik dataset lengkap", "Tabel kelas × kondisi serta perbandingan polos vs ramai terbaca"],
+            ["Kebersihan data terjamin", "Berhasil mendeteksi file rusak, duplikat SHA-256, & orientasi EXIF"],
         ],
-        col_widths=[Inches(3.2), Inches(3.7)],
+        col_widths=[Inches(4.3), Inches(7.53)],
         header_color=st.DARK_BG,
-        font_size=Pt(22),
+        font_size=Pt(21),
         header_size=Pt(22),
     )
-    st.add_card(
-        s22,
-        Inches(8.05),
-        Inches(3.85),
-        Inches(4.53),
-        Inches(2.8),
-        title="Sesi Berikutnya",
-        body="P5 — Teori Neural Network\nRabu, 18 November 2026\n19:30–21:30 WIB",
-        bg_color=st.TINT_YELLOW,
-        accent_color=st.YELLOW,
-        title_size=Pt(26),
-        body_size=Pt(23),
-        border_color=None,
-    )
-    st.add_footer(s22, 22, SESSION_LABEL)
+    st.add_footer(s25, 25, SESSION_LABEL)
     st.set_speaker_notes(
-        s22,
-        """Alokasi waktu: 3 menit
+        s25,
+        """Alokasi waktu: 4 menit
 
 Naskah ajar:
-Tiga hal utama yang kita bawa pulang hari ini: gambar adalah angka, preprocessing harus konsisten antara training dan prediksi, dan EDA membantu kita memahami kualitas data sebelum melatih model. Pastikan ketiga kriteria berhasil P04 sudah tercapai di akhir sesi ini tanpa perlu tugas rumah tambahan.
+Tiga hal utama yang kita bawa pulang hari ini: gambar adalah matriks angka, preprocessing harus konsisten antara training dan prediksi untuk model AI, dan EDA membantu kita memahami kualitas data sebelum melatih model. Pastikan ketiga kriteria berhasil P01 sudah tercapai di akhir sesi ini tanpa perlu tugas rumah tambahan.
 
 Penjelasan konsep:
-Di pertemuan berikutnya (P5, Rabu 18 November 2026), kita akan masuk ke Teori Neural Network: bagaimana angka-angka piksel tadi diproses oleh neuron, fungsi aktivasi, dan softmax.
+Dengan fondasi gambar dan EDA yang kuat dari P01 ini, seluruh pipeline pemrosesan foto untuk model deep learning kita sudah siap.
 
 Transisi:
-Terima kasih sudah mengikuti Sesi P04 dengan antusias. Sampai jumpa hari Rabu!""",
+Terima kasih sudah mengikuti Sesi P01 dengan antusias!""",
     )
 
     OUT_PPTX.parent.mkdir(parents=True, exist_ok=True)

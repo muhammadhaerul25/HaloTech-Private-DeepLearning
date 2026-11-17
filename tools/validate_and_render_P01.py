@@ -20,9 +20,9 @@ from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-PPTX_PATH = ROOT_DIR / "slides" / "P04_image_processing_eda.pptx"
+PPTX_PATH = ROOT_DIR / "slides" / "P01_image_processing_eda.pptx"
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
-RENDER_DIR = ROOT_DIR / "slides" / "assets" / "P04" / "rendered"
+RENDER_DIR = ROOT_DIR / "slides" / "assets" / "P01" / "rendered"
 
 # Render at 1280x720 (16:9)
 RENDER_W = 1280
@@ -199,7 +199,7 @@ def render_pptx_to_png_and_pdf(prs: Presentation) -> list[Path]:
         png_paths.append(out_png)
 
     # Combine into PDF using PyMuPDF
-    pdf_path = RENDER_DIR / "P04_preview.pdf"
+    pdf_path = RENDER_DIR / "P01_preview.pdf"
     doc = fitz.open()
     for p in png_paths:
         img_doc = fitz.open(p)
@@ -238,6 +238,20 @@ def validate_all() -> dict:
 
     assert not notes_missing, f"Slides missing notes: {notes_missing}"
     assert total_minutes == 120, f"Total minutes = {total_minutes}, expected 120"
+
+    # Ensure no datetime / date / day / clock time strings appear in slides or speaker notes
+    dt_pattern = re.compile(
+        r"\b(?:Minggu|Senin|Selasa|Rabu|Kamis|Jumat|Sabtu|Januari|Februari|Maret|April|Mei|Juni|Juli|Agustus|September|Oktober|November|Desember|202[4-9]|WIB|WITA|WIT)\b|13:00|15:00|19:30|21:30",
+        flags=re.IGNORECASE,
+    )
+    for i, slide in enumerate(prs.slides, start=1):
+        for shape in slide.shapes:
+            if shape.has_text_frame:
+                m_dt = dt_pattern.findall(shape.text_frame.text)
+                assert not m_dt, f"Slide {i} text contains datetime token(s): {m_dt}"
+        if slide.has_notes_slide:
+            m_notes_dt = dt_pattern.findall(slide.notes_slide.notes_text_frame.text)
+            assert not m_notes_dt, f"Slide {i} notes contain datetime token(s): {m_notes_dt}"
 
     # Dataset validation
     meta = pd.read_csv(SAMPLE_DIR / "metadata.csv")
@@ -282,7 +296,7 @@ def validate_all() -> dict:
         "dataset_duplicates": dup_files,
         "dataset_exif6": exif6,
         "rendered_png_count": len(pngs),
-        "rendered_pdf": str(RENDER_DIR / "P04_preview.pdf"),
+        "rendered_pdf": str(RENDER_DIR / "P01_preview.pdf"),
     }
 
 
