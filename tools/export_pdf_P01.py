@@ -1,9 +1,6 @@
 """Ekspor slides/P01_image_processing_eda.html menjadi PDF berkualitas tinggi
-dengan slide Question & Answer Reveal dipisah menjadi 2 halaman berurutan:
-- Halaman N: Pertanyaan (jawaban masih tersembunyi)
-- Halaman N+1: Pertanyaan + Jawaban terbuka (muncul saat Next di PDF)
-
-Setelah PDF selesai dibuat, otomatis disinkronkan ke folder Materials/.
+dengan slide interaktif AI Fundamental & Question/Answer Reveal dipisah menjadi
+halaman-halaman berurutan.
 """
 
 from __future__ import annotations
@@ -11,8 +8,6 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 import pikepdf
-
-from sync_materials import main as sync_materials
 
 ROOT = Path(__file__).resolve().parent.parent
 HTML_PATH = ROOT / "slides" / "P01_image_processing_eda.html"
@@ -195,8 +190,6 @@ def export_pdf() -> None:
         f"PDF berhasil dibuat: {PDF_PATH}\n"
         f"  Total halaman PDF: {page_count} | Ukuran: {size_mb:.2f} MB"
     )
-
-    sync_materials()
 
 
 if __name__ == "__main__":

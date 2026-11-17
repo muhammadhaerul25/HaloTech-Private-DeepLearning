@@ -6,6 +6,4 @@ notebooks/solutions/results/
 *.tmp
 .DS_Store
 Thumbs.db
-.vercel
-
-.vercel
+.vercel/

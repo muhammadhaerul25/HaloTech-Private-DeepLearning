@@ -8,45 +8,40 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 
 ## Struktur Folder
 ```text
-├── index.html                          # Entry redirect ke slide P1 + PWA manifest
+├── index.html                          # Portal Kurikulum Web (P01–P08) + PWA entry
+├── sessions.json                       # Konfigurasi sesi & tautan materi portal web
 ├── manifest.webmanifest                # Konfigurasi Web App Manifest (PWA)
-├── sw.js                               # Service Worker untuk caching offline (14 aset)
+├── sw.js                               # Service Worker untuk caching offline
+├── vercel.json                         # Konfigurasi routing & header untuk Vercel
 ├── requirements.txt                    # Dependensi Python untuk slide, PDF & notebook
-├── docs/
-│   ├── PLAN.md                         # Kurikulum utama
+├── AGENTS.md                           # Panduan & aturan standar pengembangan materi
+├── docs/                               # Dokumentasi kurikulum & referensi
+│   ├── PLAN.md                         # Kurikulum utama (10/8 pertemuan)
 │   ├── PROMPT_MASTER.md                # Prompt master perancangan materi
-│   └── PROGRESS.md                     # Status implementasi & hasil validasi
-├── Materials/                          # Paket materi siap pakai per pertemuan
-│   └── P01 - Understanding Images, Image Processing & EDA/
-│       ├── P01 - Understanding Images, Image Processing & EDA.html
-│       ├── P01 - Understanding Images, Image Processing & EDA.pdf
-│       ├── P01 - Understanding Images, Image Processing & EDA.pptx
-│       ├── P01 - Understanding Images, Image Processing & EDA.ipynb
-│       ├── solutions/P01 - Understanding Images, Image Processing & EDA.ipynb
-│       ├── data/sample/
-│       └── assets/P01/
-├── slides/
+│   ├── PROGRESS.md                     # Status implementasi & hasil validasi
+│   └── references/                     # Kumpulan PDF referensi desain slide
+├── slides/                             # Materi presentasi per pertemuan (HTML, PDF, PPTX)
 │   ├── P01_image_processing_eda.html   # Dek interaktif 57 slide (HTML5)
-│   ├── P01_image_processing_eda.pdf    # Ekspor PDF vektor 72 halaman (57 slide + tab AI & 9 Q&A split, 16:9)
-│   ├── P01_image_processing_eda.pptx   # Dek PPTX (25 slide, 120 menit)
-│   └── assets/P01/                     # Aset gambar, grafik EDA, ikon PWA & statistik
-├── notebooks/
-│   ├── P01_image_processing_eda.ipynb  # Notebook hands-on peserta (# TODO)
+│   ├── P01_image_processing_eda.pdf    # Ekspor PDF vektor 72 halaman (16:9)
+│   ├── P01_image_processing_eda.pptx   # Dek PowerPoint (25 slide, 120 menit)
+│   └── assets/
+│       └── P01/                        # Aset visualisasi, grafik EDA, ikon PWA & statistik
+├── notebooks/                          # Notebook hands-on Google Colab / Jupyter
+│   ├── P01_image_processing_eda.ipynb  # Notebook peserta (26 sel, 5 latihan # TODO)
 │   └── solutions/
-│       └── P01_image_processing_eda.ipynb  # Notebook kunci jawaban (tervalidasi)
+│       └── P01_image_processing_eda.ipynb  # Notebook kunci jawaban (21 sel tervalidasi)
 ├── data/
-│   └── sample/                         # 120 foto sintetis (5 kelas × polos/ramai)
-├── results/                            # Output CSV & grafik boxplot EDA
-└── tools/                              # Skrip generator, ekspor & validator
-    ├── build_all.py                    # Jalankan seluruh pipeline P01 dalam 1 perintah
-    ├── build_html_slides_P01.py
-    ├── build_notebooks_P01.py
-    ├── build_slides_P01.py
-    ├── export_pdf_P01.py
-    ├── make_sample_data.py
-    ├── slide_theme.py
-    ├── sync_materials.py
-    └── validate_and_render_P01.py
+│   └── sample/                         # Dataset sampel sintetis (120 foto + metadata.csv)
+├── results/                            # Output CSV & grafik hasil eksekusi notebook
+└── tools/                              # Skrip generator, ekspor & validator otomatis
+    ├── build_all.py                    # Orkestrator 1 perintah untuk seluruh pipeline
+    ├── build_html_slides_P01.py        # Generator slide HTML interaktif & PWA
+    ├── build_notebooks_P01.py          # Generator notebook peserta & kunci jawaban
+    ├── build_slides_P01.py             # Generator visualisasi & dek PPTX
+    ├── export_pdf_P01.py               # Ekspor HTML ke PDF via Chrome Headless
+    ├── make_sample_data.py             # Generator dataset sintetis deterministik
+    ├── slide_theme.py                  # Komponen & palet tema Google I/O-style
+    └── validate_and_render_P01.py      # Validator kualitas slide & dataset
 ```
 
 ## Cara Menjalankan / Rebuild Lokal
