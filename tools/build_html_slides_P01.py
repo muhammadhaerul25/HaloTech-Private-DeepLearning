@@ -289,6 +289,61 @@ def build_html() -> str:
     .quiz-ans {{ display: none; background: var(--tint-green); border-left: 4px solid var(--green); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.45; }}
     .quiz-ans.shown {{ display: block; }}
 
+    .ref-list {{ display: flex; flex-direction: column; gap: 8px; flex: 1; }}
+    .ref-item {{
+      display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start;
+      padding: 9px 12px; border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border);
+      text-decoration: none; color: inherit; user-select: text;
+      transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }}
+    .ref-item:hover {{
+      border-color: var(--blue); background: var(--tint-blue);
+      transform: translateY(-1.5px); box-shadow: 0 4px 12px rgba(26,115,232,0.12);
+    }}
+    .ref-item.featured {{
+      background: #FFFDF5; border: 1.5px solid var(--yellow);
+    }}
+    .ref-item.featured:hover {{
+      background: var(--tint-yellow); border-color: #E37400;
+    }}
+    .ref-num {{
+      width: 26px; height: 26px; border-radius: 8px; margin-top: 1px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-title); font-size: 12px; font-weight: 700;
+      color: var(--white); background: var(--blue); flex-shrink: 0;
+    }}
+    .ref-num.yellow {{ background: var(--yellow); color: var(--dark); }}
+    .ref-num.green {{ background: var(--green); }}
+    .ref-num.red {{ background: var(--red); }}
+    .ref-content {{ display: flex; flex-direction: column; gap: 3px; min-width: 0; }}
+    .ref-head {{ display: flex; align-items: center; justify-content: space-between; gap: 6px; }}
+    .ref-title {{ font-family: var(--font-title); font-size: 12.6px; font-weight: 700; color: var(--dark); line-height: 1.28; }}
+    .ref-tag {{
+      font-family: var(--font-code); font-size: 9.8px; font-weight: 700;
+      padding: 2px 7px; border-radius: 999px; background: var(--tint-red); color: #C5221F;
+      white-space: nowrap; flex-shrink: 0;
+    }}
+    .ref-tag.doc {{ background: var(--tint-blue); color: var(--blue-text); }}
+    .ref-tag.code {{ background: var(--tint-green); color: #137333; }}
+    .ref-tag.must {{ background: var(--yellow); color: var(--dark); }}
+    .ref-desc {{ font-size: 11.4px; color: #3C4043; line-height: 1.38; }}
+    .ref-url {{ font-family: var(--font-code); font-size: 9.8px; color: var(--blue-text); opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }}
+    .ref-sub {{ font-size: 10.6px; color: var(--muted); background: var(--white); border: 1px dashed var(--border); border-radius: 9px; padding: 7px 10px; line-height: 1.4; }}
+    .marathon-bar {{
+      display: grid; grid-template-columns: auto repeat(5, 1fr); gap: 8px; align-items: center;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 13px;
+      padding: 8px 12px; margin-top: 8px;
+    }}
+    .marathon-step {{
+      display: flex; align-items: center; gap: 6px;
+      background: var(--white); border: 1px solid var(--border); border-radius: 9px;
+      padding: 5px 8px; font-size: 10.8px; font-weight: 600; color: var(--dark);
+      text-decoration: none; transition: border-color 0.15s ease;
+    }}
+    .marathon-step:hover {{ border-color: var(--blue); color: var(--blue-text); }}
+    .marathon-dot {{ width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-title); font-size: 10px; font-weight: 700; color: #FFF; flex-shrink: 0; }}
+
     /* Controls bar */
     #controls {{
       flex-shrink: 0; display: flex; align-items: center; gap: 10px; z-index: 20;
@@ -2636,7 +2691,227 @@ def get_file_hash(lokasi_foto):
         </h1>
       </div>
 
-      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>57 / 57</span></div>
+      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>57 / 59</span></div>
+    </section>
+
+    <!-- 58: REFERENSI BELAJAR BAGIAN 1/2 -->
+    <section class="slide" data-title="Referensi Belajar (1/2): Piksel, AI &amp; Image Processing" data-notes="Alokasi waktu: 0 menit. Slide referensi belajar mandiri (Bagian 1/2) berisi video YouTube berurutan untuk tahap Piksel/NumPy, AI Fundamental, serta Pillow/OpenCV." style="padding: 26px 44px 40px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="kicker" style="margin-bottom:0;">REFERENSI BELAJAR MANDIRI (1/2) · BERURUTAN</div>
+        <span class="pill blue" style="font-size:10.5px; padding:3px 10px;">Klik Kartu untuk Membuka Tautan ↗</span>
+      </div>
+      <h2 style="margin-top:4px; margin-bottom:3px;">Video &amp; Sumber Belajar: <span class="hl-blue">Piksel, AI &amp; Image Processing</span></h2>
+      <p class="subtitle" style="margin-bottom:10px; font-size:13.5px;">Ikuti urutan langkah <strong>1 → 8</strong> di bawah ini sebelum atau sesudah sesi untuk membangun fondasi pemrosesan citra.</p>
+      <div class="grid-3" style="gap:13px;">
+        <div class="card" style="padding:14px 15px; gap:8px;">
+          <div class="card-top-bar bar-blue"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="pill blue" style="font-size:11px; padding:4px 10px;">TAHAP 1 · PIKSEL &amp; NUMPY</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:600;">Bab 1</span>
+          </div>
+          <div class="ref-list">
+            <a class="ref-item featured" href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">
+              <div class="ref-num">1</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">3Blue1Brown — Neural Networks Ch. 1</span><span class="ref-tag must">Wajib ↗</span></div>
+                <div class="ref-desc">Tonton <strong>00:00–05:30</strong>: visualisasi foto dipecah menjadi grid angka piksel sebelum diproses model.</div>
+                <div class="ref-url">youtube.com/watch?v=aircAruvnKk</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=GB9ByFAIAH4" target="_blank" rel="noopener">
+              <div class="ref-num">2</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Keith Galli — Complete NumPy Tutorial</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Manipulasi matriks piksel: <code>.shape</code>, slicing <code>arr[y, x]</code>, dan konversi <code>astype('float32')</code>.</div>
+                <div class="ref-url">youtube.com/watch?v=GB9ByFAIAH4</div>
+              </div>
+            </a>
+            <div class="ref-sub">
+              <strong>Bekal Utama Tahap 1:</strong><br/>
+              &bull; Foto berwarna = tensor 3D <code>(H, W, 3)</code><br/>
+              &bull; Rentang nilai file <code>0–255</code> (<code>uint8</code>)
+            </div>
+          </div>
+          <div class="callout" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>Pixel Grid, RGB &amp; Image Shape</em>.</div>
+        </div>
+
+        <div class="card" style="padding:14px 15px; gap:8px;">
+          <div class="card-top-bar bar-yellow"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="pill yellow" style="font-size:11px; padding:4px 10px;">TAHAP 2 · AI FUNDAMENTAL</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:600;">Bab 2</span>
+          </div>
+          <div class="ref-list">
+            <a class="ref-item featured" href="https://www.youtube.com/watch?v=qYNweeDHiyU" target="_blank" rel="noopener">
+              <div class="ref-num yellow">3</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">IBM — AI, ML, DL &amp; GenAI Explained</span><span class="ref-tag must">Inti ↗</span></div>
+                <div class="ref-desc">Hierarki AI &sup; ML &sup; Deep Learning serta kapan visi komputer butuh jaringan saraf berlapis.</div>
+                <div class="ref-url">youtube.com/watch?v=qYNweeDHiyU</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=6M5VXKLf4D4" target="_blank" rel="noopener">
+              <div class="ref-num yellow">4</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Simplilearn — Deep Learning in 5 Min</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Ringkasan cepat cara Deep Learning mencari pola dari contoh foto tanpa aturan kaku.</div>
+                <div class="ref-url">youtube.com/watch?v=6M5VXKLf4D4</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=ad79nYk2keg" target="_blank" rel="noopener">
+              <div class="ref-num yellow">5</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Simplilearn — What is AI? (5 Min)</span><span class="ref-tag">Opsional ↗</span></div>
+                <div class="ref-desc">Pengantar singkat konsep kecerdasan buatan bagi peserta baru.</div>
+                <div class="ref-url">youtube.com/watch?v=ad79nYk2keg</div>
+              </div>
+            </a>
+          </div>
+          <div class="callout yellow" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>Mengapa Foto Butuh AI (Bukan if-else)</em>.</div>
+        </div>
+
+        <div class="card" style="padding:14px 15px; gap:8px;">
+          <div class="card-top-bar bar-green"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="pill green" style="font-size:11px; padding:4px 10px;">TAHAP 3 · PILLOW &amp; OPENCV</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:600;">Bab 2 &amp; Praktik</span>
+          </div>
+          <div class="ref-list">
+            <a class="ref-item featured" href="https://www.youtube.com/watch?v=6Qs3w1uYujo" target="_blank" rel="noopener">
+              <div class="ref-num green">6</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Corey Schafer — Python Pillow</span><span class="ref-tag must">Wajib ↗</span></div>
+                <div class="ref-desc">Buka, putar, resize &amp; konversi mode warna gambar memakai <code>PIL / Pillow</code>.</div>
+                <div class="ref-url">youtube.com/watch?v=6Qs3w1uYujo</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=oXlwWbU8l2o" target="_blank" rel="noopener">
+              <div class="ref-num green">7</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">freeCodeCamp — OpenCV Full Course</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Resize, BGR vs RGB, split channels, histogram, &amp; edge (<code>github.com/jasmcaus/opencv-course</code>).</div>
+                <div class="ref-url">youtube.com/watch?v=oXlwWbU8l2o</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=WQeoO7MI0Bs" target="_blank" rel="noopener">
+              <div class="ref-num green">8</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Murtaza — Learn OpenCV in 3 Hours</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Alternatif cepat: baca citra, crop, resize &amp; deteksi bentuk dasar.</div>
+                <div class="ref-url">youtube.com/watch?v=WQeoO7MI0Bs</div>
+              </div>
+            </a>
+          </div>
+          <div class="callout green" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>Letterbox Resize 224×224 &amp; Normalisasi</em>.</div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>58 / 59</span></div>
+    </section>
+
+    <!-- 59: REFERENSI BELAJAR BAGIAN 2/2 -->
+    <section class="slide" data-title="Referensi Belajar (2/2): EDA, Edge Density &amp; Kualitas Data" data-notes="Alokasi waktu: 0 menit. Slide referensi belajar mandiri (Bagian 2/2) berisi video YouTube Computerphile tentang filter/Sobel/Canny serta modul kualitas data, class imbalance, dan anti-data leakage." style="padding: 26px 44px 40px;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div class="kicker" style="margin-bottom:0;">REFERENSI BELAJAR MANDIRI (2/2) · LANJUTAN</div>
+        <span class="pill red" style="font-size:10.5px; padding:3px 10px;">EDA Citra &amp; Kebersihan Dataset</span>
+      </div>
+      <h2 style="margin-top:4px; margin-bottom:3px;">Video &amp; Sumber Belajar: <span class="hl-red">EDA, Edge Density &amp; Anti-Leakage</span></h2>
+      <p class="subtitle" style="margin-bottom:10px; font-size:13.5px;">Urutan langkah <strong>9 → 16</strong> untuk memahami algoritma deteksi tepi (<code>Canny</code>) pada foto polos vs ramai serta menjaga integritas data.</p>
+      <div class="grid-2" style="gap:15px; flex:1; min-height:0;">
+        <div class="card" style="padding:14px 16px; gap:8px;">
+          <div class="card-top-bar bar-red"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="pill red" style="font-size:11px; padding:4px 10px;">TAHAP 4 · EDA CITRA, FILTER &amp; EDGE DENSITY</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:600;">Bab 3</span>
+          </div>
+          <div class="ref-list">
+            <a class="ref-item" href="https://www.youtube.com/watch?v=C_zFhWdM4ic" target="_blank" rel="noopener">
+              <div class="ref-num red">9</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Computerphile — How Blurs &amp; Filters Work</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Prasyarat visual cara kerja kernel/matriks filter di atas array piksel gambar.</div>
+                <div class="ref-url">youtube.com/watch?v=C_zFhWdM4ic</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.youtube.com/watch?v=uihBwtPIBxM" target="_blank" rel="noopener">
+              <div class="ref-num red">10</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Computerphile — Finding the Edges (Sobel)</span><span class="ref-tag">YouTube ↗</span></div>
+                <div class="ref-desc">Menghitung perubahan gradien terang–gelap untuk menemukan tepi objek.</div>
+                <div class="ref-url">youtube.com/watch?v=uihBwtPIBxM</div>
+              </div>
+            </a>
+            <a class="ref-item featured" href="https://www.youtube.com/watch?v=sRF9t8LqXW4" target="_blank" rel="noopener">
+              <div class="ref-num red">11</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Computerphile — Canny Edge Detector</span><span class="ref-tag must">Wajib ↗</span></div>
+                <div class="ref-desc">Bedah algoritma di balik <code>cv2.Canny()</code> untuk menghitung <em>edge density</em> polos vs ramai.</div>
+                <div class="ref-url">youtube.com/watch?v=sRF9t8LqXW4</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://github.com/bnsreenu/python_for_microscopists" target="_blank" rel="noopener">
+              <div class="ref-num red">12</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">DigitalSreeni — Python for Microscopists</span><span class="ref-tag code">GitHub ↗</span></div>
+                <div class="ref-desc">Skrip siap pakai baca citra (<code>Pillow</code>/<code>OpenCV</code>) &amp; plot histogram intensitas.</div>
+                <div class="ref-url">github.com/bnsreenu/python_for_microscopists</div>
+              </div>
+            </a>
+          </div>
+          <div class="callout red" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>Histogram Brightness/Contrast &amp; Canny Edge Density</em>.</div>
+        </div>
+
+        <div class="card" style="padding:14px 16px; gap:8px;">
+          <div class="card-top-bar bar-blue"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between;">
+            <span class="pill blue" style="font-size:11px; padding:4px 10px;">TAHAP 5 · KUALITAS DATA &amp; ANTI-LEAKAGE</span>
+            <span style="font-size:11px; color:var(--muted); font-weight:600;">Bab 4</span>
+          </div>
+          <div class="ref-list">
+            <a class="ref-item" href="https://www.coursera.org/learn/convolutional-neural-networks" target="_blank" rel="noopener">
+              <div class="ref-num">13</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Coursera (DeepLearning.AI) — CNN Week 1</span><span class="ref-tag doc">Course ↗</span></div>
+                <div class="ref-desc">Jembatan konsep <em>edge detection</em> menuju arsitektur lapisan pertama CNN.</div>
+                <div class="ref-url">coursera.org/learn/convolutional-neural-networks</div>
+              </div>
+            </a>
+            <a class="ref-item featured" href="https://www.kaggle.com/code/alexisbcook/data-leakage" target="_blank" rel="noopener">
+              <div class="ref-num">14</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Kaggle Learn — Data Leakage (Interaktif)</span><span class="ref-tag must">Wajib ↗</span></div>
+                <div class="ref-desc">Mencegah <em>train-test contamination</em> agar EDA deskriptif tidak membocorkan <em>test set</em>.</div>
+                <div class="ref-url">kaggle.com/code/alexisbcook/data-leakage</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://www.ibm.com/topics/data-leakage" target="_blank" rel="noopener">
+              <div class="ref-num">15</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">IBM — What is Data Leakage in ML?</span><span class="ref-tag doc">Artikel ↗</span></div>
+                <div class="ref-desc">Ringkasan dampak kebocoran data pada akurasi evaluasi &amp; mitigasi praktisnya.</div>
+                <div class="ref-url">ibm.com/topics/data-leakage</div>
+              </div>
+            </a>
+            <a class="ref-item" href="https://github.com/jasmcaus/opencv-course" target="_blank" rel="noopener">
+              <div class="ref-num">16</div>
+              <div class="ref-content">
+                <div class="ref-head"><span class="ref-title">Kode Latihan OpenCV Course (Pendamping #7)</span><span class="ref-tag code">GitHub ↗</span></div>
+                <div class="ref-desc">Repositori skrip latihan untuk video <em>freeCodeCamp OpenCV Full Course</em>.</div>
+                <div class="ref-url">github.com/jasmcaus/opencv-course</div>
+              </div>
+            </a>
+          </div>
+          <div class="callout" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>EXIF, Corrupted/Duplicate Audit &amp; EDA Deskriptif</em>.</div>
+        </div>
+      </div>
+      <div class="marathon-bar">
+        <span style="font-family:var(--font-title); font-size:11.5px; font-weight:700; color:var(--dark); white-space:nowrap;">Rute Maraton (±3 Jam):</span>
+        <a class="marathon-step" href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--blue);">1</span><span>3Blue1Brown</span></a>
+        <a class="marathon-step" href="https://www.youtube.com/watch?v=qYNweeDHiyU" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--yellow); color:var(--dark);">2</span><span>IBM AI/ML/DL</span></a>
+        <a class="marathon-step" href="https://www.youtube.com/watch?v=6Qs3w1uYujo" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--green);">3</span><span>Pillow &amp; OpenCV</span></a>
+        <a class="marathon-step" href="https://www.youtube.com/watch?v=sRF9t8LqXW4" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--red);">4</span><span>Canny Edge</span></a>
+        <a class="marathon-step" href="https://www.kaggle.com/code/alexisbcook/data-leakage" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--dark);">5</span><span>Anti-Leakage</span></a>
+      </div>
+      <div class="slide-footer"><span>P01 - Understanding Images, Image Processing &amp; EDA</span><span>59 / 59</span></div>
     </section>
 
   </div>
@@ -2644,8 +2919,8 @@ def get_file_hash(lokasi_foto):
   <div id="controls">
     <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
     <span id="counter" style="display:inline-flex; align-items:center; gap:5px;">
-      <input id="page-jump" type="number" min="1" max="57" value="1" title="Ketik nomor slide (1-57) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
-      <span>/ 57</span>
+      <input id="page-jump" type="number" min="1" max="59" value="1" title="Ketik nomor slide (1-59) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
+      <span>/ 59</span>
     </span>
     <button class="ctrl-btn" onclick="nextSlide()">Next →</button>
     <button class="ctrl-btn" onclick="toggleNotes()">Notes (N)</button>
@@ -2660,7 +2935,7 @@ def get_file_hash(lokasi_foto):
 
   <div id="grid-modal">
     <div style="max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; color:white;">
-      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (57 Slides)</h3>
+      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (59 Slides)</h3>
       <button class="ctrl-btn" onclick="toggleGrid()">Tutup (Esc)</button>
     </div>
     <div id="grid-cards" class="grid-cards"></div>
@@ -3447,7 +3722,7 @@ def get_file_hash(lokasi_foto):
 def verify_html(path_str: str) -> None:
     text = Path(path_str).read_text(encoding="utf-8")
     slide_count = len(re.findall(r'<section class="slide', text))
-    assert slide_count == 57, f"Expected 57 slides, got {slide_count}"
+    assert slide_count == 59, f"Expected 59 slides, got {slide_count}"
 
     # Verify no P3/P4/P5/P7/P8/P04/P13 labels in visible slide sections
     body_part = text.split('<div id="stage-wrap">', 1)[1].split('<div id="controls">', 1)[0]
@@ -3474,7 +3749,7 @@ def verify_html(path_str: str) -> None:
 
     # Verify speaker notes time sum == 120.0 min
     notes = re.findall(r'data-notes="([^"]+)"', text)
-    assert len(notes) == 57, f"Expected 57 speaker notes, got {len(notes)}"
+    assert len(notes) == 59, f"Expected 59 speaker notes, got {len(notes)}"
     total_min = 0.0
     for n in notes:
         m = re.search(r'Alokasi waktu:\s*([0-9.]+)\s*menit', n)
@@ -3483,7 +3758,7 @@ def verify_html(path_str: str) -> None:
     assert abs(total_min - 120.0) < 1e-6, f"Speaker notes sum to {total_min} min instead of 120.0"
 
     print(f"HTML interaktif {slide_count} slide berhasil dibuat: {path_str}")
-    print(f"Verifikasi lolos: 57 slide, 0 kode P4/P5/P7/P8, {len(imgs)} gambar valid, total waktu notes = {total_min:.1f} menit.")
+    print(f"Verifikasi lolos: {slide_count} slide, 0 kode P4/P5/P7/P8, {len(imgs)} gambar valid, total waktu notes = {total_min:.1f} menit.")
 
 
 if __name__ == "__main__":

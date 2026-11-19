@@ -1,8 +1,8 @@
-"""Build slides/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
+"""Build materials/P01/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
 
-Generates real data visualizations in slides/assets/P01/ and composes
-exactly 25 Google I/O-inspired slides with Bahasa Indonesia speaker notes
-whose time allocations sum to 120 minutes.
+Generates real data visualizations in materials/P01/assets/P01/ and composes
+27 Google I/O-inspired slides (25 materi inti + 2 slide referensi belajar)
+with Bahasa Indonesia speaker notes whose time allocations sum to 120 minutes.
 """
 
 from __future__ import annotations
@@ -1727,7 +1727,90 @@ Penjelasan konsep:
 Dengan fondasi gambar dan EDA yang kuat dari P01 ini, seluruh pipeline pemrosesan foto untuk model deep learning kita sudah siap.
 
 Transisi:
-Terima kasih sudah mengikuti Sesi P01 dengan antusias!""",
+Terima kasih sudah mengikuti Sesi P01 dengan antusias! Di dua slide setelah ini tersedia daftar video YouTube & sumber belajar mandiri berurutan untuk memperdalam materi.""",
+    )
+
+    # =======================================================================
+    # SLIDE 26 — REFERENSI BELAJAR MANDIRI (1/2)
+    # =======================================================================
+    s26 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s26, "REFERENSI BELAJAR MANDIRI (1/2)", "Video YouTube: Piksel, AI & Image Processing")
+    st.add_styled_table(
+        s26,
+        st.MARGIN_X,
+        Inches(1.58),
+        st.CONTENT_WIDTH,
+        Inches(5.15),
+        headers=["Tahap & Materi", "Rekomendasi Video YouTube", "Tautan"],
+        rows=[
+            ["1. Piksel & Array", "3Blue1Brown — Neural Networks Ch. 1 (00:00–05:30)", "youtube.com/watch?v=aircAruvnKk"],
+            ["1. Array NumPy", "Keith Galli — Complete Python NumPy Tutorial", "youtube.com/watch?v=GB9ByFAIAH4"],
+            ["2. AI vs ML vs DL", "IBM Technology — AI, ML, DL & GenAI Explained", "youtube.com/watch?v=qYNweeDHiyU"],
+            ["2. Deep Learning", "Simplilearn — Deep Learning In 5 Minutes", "youtube.com/watch?v=6M5VXKLf4D4"],
+            ["2. Pengantar AI", "Simplilearn — What is AI? (5 Minutes · Opsional)", "youtube.com/watch?v=ad79nYk2keg"],
+            ["3. Pillow (PIL)", "Corey Schafer — Image Manipulation with Pillow", "youtube.com/watch?v=6Qs3w1uYujo"],
+            ["3. OpenCV Full", "freeCodeCamp — OpenCV Course Full Tutorial", "youtube.com/watch?v=oXlwWbU8l2o"],
+            ["3. OpenCV Praktis", "Murtaza's Workshop — Learn OpenCV in 3 Hours", "youtube.com/watch?v=WQeoO7MI0Bs"],
+        ],
+        col_widths=[Inches(2.5), Inches(5.33), Inches(4.0)],
+        header_color=st.BLUE,
+        font_size=Pt(16),
+        header_size=Pt(18),
+    )
+    st.add_footer(s26, 26, SESSION_LABEL)
+    st.set_speaker_notes(
+        s26,
+        """Alokasi waktu: 0 menit
+
+Naskah ajar:
+Slide referensi belajar mandiri bagian 1/2 (untuk dipelajari di luar jam sesi). Urutan video disesuaikan mulai dari pemahaman Piksel & NumPy, AI Fundamental, hingga praktik Pillow dan OpenCV.""",
+    )
+
+    # =======================================================================
+    # SLIDE 27 — REFERENSI BELAJAR MANDIRI (2/2)
+    # =======================================================================
+    s27 = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s27, "REFERENSI BELAJAR MANDIRI (2/2)", "Video & Modul: EDA, Canny Edge & Anti-Leakage")
+    st.add_styled_table(
+        s27,
+        st.MARGIN_X,
+        Inches(1.58),
+        st.CONTENT_WIDTH,
+        Inches(4.35),
+        headers=["Tahap & Materi", "Rekomendasi Video / Sumber Belajar", "Tautan"],
+        rows=[
+            ["4. Filter & Kernel", "Computerphile — How Blurs & Filters Work", "youtube.com/watch?v=C_zFhWdM4ic"],
+            ["4. Gradien Sobel", "Computerphile — Finding the Edges (Sobel)", "youtube.com/watch?v=uihBwtPIBxM"],
+            ["4. Canny Edge", "Computerphile — Canny Edge Detector (Wajib)", "youtube.com/watch?v=sRF9t8LqXW4"],
+            ["4. Kode Citra", "DigitalSreeni — Python for Microscopists", "github.com/bnsreenu/python_for_microscopists"],
+            ["5. CNN Week 1", "Coursera DeepLearning.AI — CNN Course", "coursera.org/learn/convolutional-neural-networks"],
+            ["5. Anti-Leakage", "Kaggle Learn — Data Leakage (Interaktif)", "kaggle.com/code/alexisbcook/data-leakage"],
+            ["5. Data Leakage", "IBM — What is Data Leakage in ML?", "ibm.com/topics/data-leakage"],
+        ],
+        col_widths=[Inches(2.5), Inches(5.13), Inches(4.2)],
+        header_color=st.RED,
+        font_size=Pt(16),
+        header_size=Pt(18),
+    )
+    st.add_callout_box(
+        s27,
+        st.MARGIN_X,
+        Inches(6.08),
+        st.CONTENT_WIDTH,
+        Inches(0.78),
+        "Rute Maraton (±2,5–3 Jam): 3Blue1Brown → IBM Technology → Corey Schafer & freeCodeCamp OpenCV → Computerphile (Canny) → Kaggle Data Leakage.",
+        accent_color=st.GREEN,
+        bg_color=st.TINT_GREEN,
+        font_size=Pt(16),
+        bold=True,
+    )
+    st.add_footer(s27, 27, SESSION_LABEL)
+    st.set_speaker_notes(
+        s27,
+        """Alokasi waktu: 0 menit
+
+Naskah ajar:
+Slide referensi belajar mandiri bagian 2/2: pendalaman deteksi tepi (Blur/Filter, Sobel, Canny) untuk memahami metrik edge density polos vs ramai, serta sumber belajar anti-data leakage dan class imbalance.""",
     )
 
     OUT_PPTX.parent.mkdir(parents=True, exist_ok=True)

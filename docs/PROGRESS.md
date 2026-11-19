@@ -11,10 +11,10 @@
 - `docs/PLAN.md`, `docs/PROMPT_MASTER.md`, `docs/PROGRESS.md`, `docs/references/` — kurikulum, prompt master, catatan progres, dan referensi slide.
 - `tools/slide_theme.py` — tema presentasi terinspirasi gaya konferensi Google I/O.
 - `tools/make_sample_data.py` — generator dataset sintetis deterministik (`SEED=42`) di `data/sample/` (120 foto + `metadata.csv`).
-- `tools/build_slides_P01.py` — generator visualisasi Matplotlib/OpenCV (`slides/assets/P01/`) dan dek PPTX 25 slide (termasuk 3 slide AI Fundamental).
-- `tools/build_html_slides_P01.py` — generator dek presentasi web interaktif 57 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2) + PWA (`index.html`, `manifest.webmanifest`, `sw.js`).
-- `tools/export_pdf_P01.py` — ekspor PDF vektor & gambar resolusi penuh via Chrome Headless (`72` halaman: `57` slide + ekspansi seluruh tab/kondisi interaktif AI Fundamental Slide 19–21 + `9` pasang Q&A/kuis yang dipisah antara pertanyaan & jawaban).
-- `tools/build_notebooks_P01.py` — generator notebook peserta (`26` sel, 5 `# TODO` + 5 sel `<details>` Hint & Jawaban + pembuktian kode AI Fundamental) dan notebook kunci jawaban (`21` sel).
+- `tools/build_slides_P01.py` — generator visualisasi Matplotlib/OpenCV (`materials/P01/assets/P01/`) dan dek PPTX 27 slide (termasuk 3 slide AI Fundamental & 2 slide Referensi Belajar Mandiri).
+- `tools/build_html_slides_P01.py` — generator dek presentasi web interaktif 59 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2 & 2 slide Referensi Video/Sumber Belajar setelah penutup) + PWA (`index.html`, `manifest.webmanifest`, `sw.js`).
+- `tools/export_pdf_P01.py` — ekspor PDF vektor & gambar resolusi penuh via Chrome Headless (`74` halaman: `59` slide + ekspansi seluruh tab/kondisi interaktif AI Fundamental Slide 19–21 + `9` pasang Q&A/kuis yang dipisah antara pertanyaan & jawaban).
+- `tools/build_notebooks_P01.py` — generator notebook peserta (`27` sel, 5 `# TODO` + 5 sel `<details>` Hint & Jawaban + pembuktian kode AI Fundamental + daftar referensi belajar) dan notebook kunci jawaban (`22` sel).
 - `tools/build_all.py` — orkestrator 1 perintah untuk menjalankan seluruh pipeline build P01.
 
 ### 3. Hasil Generasi Dataset Sampel (`data/sample/`)
@@ -28,11 +28,11 @@
   - `ramai` (n=59): rata-rata brightness = `127.21`, rata-rata contrast (std) = `54.69`, rata-rata edge density (Canny) = `0.0853`.
 
 ### 4. Hasil Validasi Terakhir
-- **HTML Slides (`materials/P01/P01_image_processing_eda.html`):** 57 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2), 44 elemen gambar valid, total speaker notes 120.0 menit, PWA cache `sw.js`.
-- **PDF (`materials/P01/P01_image_processing_eda.pdf`):** 72 halaman (`16:9`, `11.99 MB`), mencakup seluruh 57 slide + ekspansi seluruh state interaktif AI Fundamental (Slide 19: 3 tab, Slide 20: 4 kondisi, Slide 21: 2 skenario) + 9 pasang halaman Q&A/kuis terpisah.
-- **PPTX (`materials/P01/P01_image_processing_eda.pptx`):** 25 slide (termasuk 3 slide AI Fundamental, 6 langkah Hands-on selaras notebook, Glosarium terbarui, dan penutup tanpa preview sesi berikutnya), seluruhnya memiliki speaker notes (`25/25`, total `120.0 menit`).
-- **Notebook Kunci (`materials/P01/solutions/P01_image_processing_eda.ipynb`):** 21 sel (termasuk penjelasan & demo kode AI Fundamental di Langkah 3), seluruh sel kode bebas error.
-- **Notebook Peserta (`materials/P01/P01_image_processing_eda.ipynb`):** 26 sel, 5 `# TODO` + 5 `<details>` Hint & Jawaban, selaras penuh dengan slide HTML/PDF/PPTX.
+- **HTML Slides (`materials/P01/P01_image_processing_eda.html`):** 59 slide (termasuk 3 slide interaktif AI Fundamental di Bab 2 & 2 slide Referensi Belajar Mandiri setelah penutup), 44 elemen gambar valid, total speaker notes 120.0 menit, PWA cache `sw.js`.
+- **PDF (`materials/P01/P01_image_processing_eda.pdf`):** 74 halaman (`16:9`, `12.46 MB`), mencakup seluruh 59 slide (termasuk 2 slide referensi belajar dengan tautan aktif) + ekspansi seluruh state interaktif AI Fundamental (Slide 19: 3 tab, Slide 20: 4 kondisi, Slide 21: 2 skenario) + 9 pasang halaman Q&A/kuis terpisah.
+- **PPTX (`materials/P01/P01_image_processing_eda.pptx`):** 27 slide (termasuk 3 slide AI Fundamental, 6 langkah Hands-on selaras notebook, Glosarium terbarui, penutup tanpa preview sesi berikutnya, serta 2 slide Referensi Belajar bertautan aktif), seluruhnya memiliki speaker notes (`27/27`, total `120.0 menit`).
+- **Notebook Kunci (`materials/P01/solutions/P01_image_processing_eda.ipynb`):** 22 sel (termasuk penjelasan & demo kode AI Fundamental di Langkah 3 serta daftar referensi video/modul berurutan), seluruh sel kode bebas error.
+- **Notebook Peserta (`materials/P01/P01_image_processing_eda.ipynb`):** 27 sel, 5 `# TODO` + 5 `<details>` Hint & Jawaban, selaras penuh dengan slide HTML/PDF/PPTX.
 
 ### 5. Catatan Font PPTX
 - Font PPTX: `Poppins` (judul), `Roboto` (isi), `Roboto Mono` (kode/tag). Pasang ketiga font tersebut di komputer penyaji agar rendering PowerPoint/LibreOffice sesuai desain (tanpa fallback ke `Arial`).

@@ -934,6 +934,41 @@ Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil nyata EDA di atas:
         )
     )
 
+    cells.append(
+        md(
+            """
+## Referensi Belajar Mandiri (Video YouTube & Modul Berurutan · Slide 58–59)
+
+Gunakan daftar referensi berikut secara berurutan untuk memperdalam konsep P01:
+
+### Tahap 1 — Piksel, Array & NumPy
+1. [3Blue1Brown — *But what is a neural network? (Ch. 1)*](https://www.youtube.com/watch?v=aircAruvnKk) *(menit 00:00–05:30: gambar sebagai grid angka piksel)*
+2. [Keith Galli — *Complete Python NumPy Tutorial*](https://www.youtube.com/watch?v=GB9ByFAIAH4) *(indexing, `.shape`, `dtype`, `float32`)*
+
+### Tahap 2 — AI Fundamental
+3. [IBM Technology — *AI, Machine Learning, Deep Learning & GenAI Explained*](https://www.youtube.com/watch?v=qYNweeDHiyU)
+4. [Simplilearn — *Deep Learning In 5 Minutes*](https://www.youtube.com/watch?v=6M5VXKLf4D4)
+5. [Simplilearn — *What is Artificial Intelligence? (5 Minutes)*](https://www.youtube.com/watch?v=ad79nYk2keg) *(opsional)*
+
+### Tahap 3 — Image Processing Praktis (`Pillow` & `OpenCV`)
+6. [Corey Schafer — *Python Tutorial: Image Manipulation with Pillow*](https://www.youtube.com/watch?v=6Qs3w1uYujo)
+7. [freeCodeCamp.org — *OpenCV Course - Full Tutorial with Python*](https://www.youtube.com/watch?v=oXlwWbU8l2o) · [Kode GitHub](https://github.com/jasmcaus/opencv-course)
+8. [Murtaza's Workshop — *Learn OpenCV in 3 Hours with Python*](https://www.youtube.com/watch?v=WQeoO7MI0Bs)
+
+### Tahap 4 — EDA Citra, Filter & Deteksi Tepi (`Canny`)
+9. [Computerphile — *How Blurs & Filters Work*](https://www.youtube.com/watch?v=C_zFhWdM4ic)
+10. [Computerphile — *Finding the Edges (Sobel Operator)*](https://www.youtube.com/watch?v=uihBwtPIBxM)
+11. [Computerphile — *Canny Edge Detector*](https://www.youtube.com/watch?v=sRF9t8LqXW4) *(algoritma di balik `edge_density` polos vs ramai)*
+12. [DigitalSreeni — *Python for Microscopists* (GitHub)](https://github.com/bnsreenu/python_for_microscopists)
+
+### Tahap 5 — Kualitas Data, Class Imbalance & Anti-Data Leakage
+13. [Coursera (DeepLearning.AI) — *Convolutional Neural Networks (Week 1)*](https://www.coursera.org/learn/convolutional-neural-networks)
+14. [Kaggle Learn — *Data Leakage (Tutorial Interaktif)*](https://www.kaggle.com/code/alexisbcook/data-leakage)
+15. [IBM — *What is Data Leakage in Machine Learning?*](https://www.ibm.com/topics/data-leakage)
+"""
+        )
+    )
+
     return cells
 
 
