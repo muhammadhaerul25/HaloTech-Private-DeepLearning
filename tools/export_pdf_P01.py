@@ -41,12 +41,12 @@ EXPAND_QA_JS = """
     }
   }
 
-  // 2. Expand Slide 20 (AI Fundamental 2/3: 4 conditions -> center, shift, tilt, busy)
+  // 2. Expand AI Fundamental 2/3: 5 conditions -> center, shift, tilt, busy, mnist
   const ai2Btns = document.getElementById('ai2-btns');
   if (ai2Btns && typeof setAi2Cond === 'function') {
     const slide20 = ai2Btns.closest('section.slide');
     if (slide20) {
-      const conds = ['center', 'shift', 'tilt', 'busy'];
+      const conds = ['center', 'shift', 'tilt', 'busy', 'mnist'];
       const clones = conds.map((cond) => {
         setAi2Cond(cond);
         const c = slide20.cloneNode(true);

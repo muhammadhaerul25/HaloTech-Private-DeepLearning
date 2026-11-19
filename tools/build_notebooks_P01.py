@@ -58,7 +58,7 @@ def build_cells(is_solution: bool) -> list:
 
 **Durasi Hands-on:** ±50 menit (6 langkah terpandu mengikuti alur slide presentasi Bab 1–4)  
 **Tujuan Pembelajaran:**
-1. Membaca gambar digital sebagai *pixel matrix* `(tinggi, lebar, channel)` dan mengintip nilai intensitas `0–255` (**Bab 1**).
+1. Membaca gambar digital sebagai *pixel matrix* `(tinggi, lebar, channel)`, mengintip nilai intensitas `0–255` pada **dataset asli MNIST (`28×28`)** maupun foto RGB (`224×224×3`) (**Bab 1**).
 2. Memisahkan **RGB channels** dan mengubah gambar ke **Grayscale** (**Bab 1**).
 3. Memahami **AI Fundamental** (mengapa aturan manual `if-else` gagal saat objek bergeser/latar ramai) dan menerapkan **Image Processing** inti: *resize* dengan **Letterbox Padding** (`224×224`) serta **Normalization** (`uint8` → `float32` `0.0–1.0`) (**Bab 2**).
 4. Mendeteksi **3 Jebakan Kamera HP**: *EXIF orientation*, *corrupted files*, dan *duplicate images* (`SHA-256`) (**Bab 4**).
@@ -252,6 +252,68 @@ center_rgb = arr_raw[img_h // 2, img_w // 2]
 """
             )
         )
+
+    # =========================================================================
+    # LANGKAH 1B (PEMANASAN KLASIK): DATASET ASLI MNIST (28x28 GRAYSCALE)
+    # =========================================================================
+    cells.append(
+        md(
+            """
+### Pemanasan Klasik (Sesuai Slide 12): Mengintip Dataset Asli MNIST (`28×28` Grayscale)
+
+Selain foto dari `data/sample/`, mari kita intip contoh dataset tulisan tangan **MNIST** yang paling original dan dipakai di video **3Blue1Brown**.
+- Setiap angka berukuran `28 × 28 × 1 = 784` angka (*Grayscale*), jauh lebih kecil dibanding foto berwarna `224 × 224 × 3 = 150.528` angka.
+- Perhatikan juga bagaimana dua tulisan angka `'7'` yang berbeda dari orang yang berbeda memiliki nilai pixel yang bertolak belakang di posisi `(14, 14)`!
+"""
+        )
+    )
+
+    cells.append(
+        code(
+            """
+import json as _json
+
+mnist_json_path = BASE_DIR / "materials" / "P01" / "assets" / "P01" / "mnist_samples.json"
+if mnist_json_path.exists():
+    mnist_data = _json.loads(mnist_json_path.read_text(encoding="utf-8"))
+    digit_7 = np.array(mnist_data["digits"]["7"], dtype=np.uint8)
+    var_7a = np.array(mnist_data["variants"]["7_a"]["pixels"], dtype=np.uint8)
+    var_7b = np.array(mnist_data["variants"]["7_b"]["pixels"], dtype=np.uint8)
+else:
+    # Fallback jika dijalankan terpisah di Google Colab dengan TensorFlow terpasang
+    from tensorflow.keras.datasets import mnist as _tf_mnist
+    (_mx_tr, _my_tr), _ = _tf_mnist.load_data()
+    idx7 = np.where(_my_tr == 7)[0]
+    digit_7, var_7a, var_7b = _mx_tr[idx7[1]], _mx_tr[idx7[0]], _mx_tr[idx7[2]]
+
+print(f"MNIST 1 gambar -> shape: {digit_7.shape} ({digit_7.size} angka), dtype: {digit_7.dtype}, min/max: {digit_7.min()}/{digit_7.max()}")
+print(f"Perbandingan 2 tulisan '7' berbeda -> var_7a[14,14]={var_7a[14,14]} vs var_7b[14,14]={var_7b[14,14]}")
+
+fig, axes = plt.subplots(1, 3, figsize=(11, 3.4))
+axes[0].imshow(digit_7, cmap="gray", vmin=0, vmax=255)
+axes[0].set_title("MNIST Asli '7' (28×28)")
+axes[0].axis("off")
+
+crop_7 = digit_7[7:21, 7:21]
+axes[1].imshow(crop_7, cmap="gray", vmin=0, vmax=255)
+for rr in range(14):
+    for cc in range(14):
+        v = int(crop_7[rr, cc])
+        axes[1].text(cc, rr, str(v), ha="center", va="center", color="white" if v < 128 else "black", fontsize=5.8)
+axes[1].set_title("Area Tengah 14×14 (Angka 0–255)")
+axes[1].set_xticks([]); axes[1].set_yticks([])
+
+# Gabungkan dua contoh '7' bersebelahan untuk membandingkan gaya tulisan
+pair_7 = np.hstack([var_7a, np.full((28, 4), 180, dtype=np.uint8), var_7b])
+axes[2].imshow(pair_7, cmap="gray", vmin=0, vmax=255)
+axes[2].set_title(f"Dua Penulis '7': [14,14]={var_7a[14,14]} vs {var_7b[14,14]}")
+axes[2].axis("off")
+
+plt.tight_layout()
+plt.show()
+"""
+        )
+    )
 
     # =========================================================================
     # LANGKAH 2: MEMISAHKAN RGB CHANNELS & KONVERSI GRAYSCALE

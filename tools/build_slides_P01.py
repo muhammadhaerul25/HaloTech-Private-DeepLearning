@@ -1,8 +1,8 @@
 """Build materials/P01/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
 
 Generates real data visualizations in materials/P01/assets/P01/ and composes
-27 Google I/O-inspired slides (25 materi inti + 2 slide referensi belajar)
-with Bahasa Indonesia speaker notes whose time allocations sum to 120 minutes.
+28 Google I/O-inspired slides (including MNIST 28x28 case study, 3 AI Fundamental
+slides, & 2 Reference slides) with Bahasa Indonesia speaker notes summing to 120 minutes.
 """
 
 from __future__ import annotations
@@ -390,6 +390,10 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
     plt.close(fig)
     paths["exif"] = p9
 
+    mnist_png = ASSETS_DIR / "mnist_grid_demo.png"
+    if mnist_png.exists():
+        paths["mnist"] = mnist_png
+
     return paths
 
 
@@ -702,16 +706,49 @@ Kita mulai dari unit terkecil sebuah gambar: piksel.""",
     st.add_footer(s6, 6, SESSION_LABEL)
     st.set_speaker_notes(
         s6,
-        """Alokasi waktu: 3 menit
+        """Alokasi waktu: 1 menit
 
 Naskah ajar:
-Ini adalah contoh nyata dari data sampel kita yang diperkecil menjadi grid 8 kali 8 piksel. Di sebelah kiri terlihat kotak-kotak gambar, dan di sebelah kanan adalah angka sebenarnya di balik setiap kotak.
+Ini adalah contoh grid 8 kali 8 piksel. Di sebelah kiri terlihat kotak-kotak gambar, dan di sebelah kanan adalah angka sebenarnya di balik setiap kotak.
 
 Penjelasan konsep:
-Setiap kotak disebut piksel (picture element). Pada gambar grayscale standar, angka 0 berarti hitam pekat dan 255 berarti putih terang. Referensi video 3Blue1Brown menunjukkan konsep grid piksel ini dengan sangat jelas.
+Setiap kotak disebut piksel (picture element). Pada gambar grayscale standar, angka 0 berarti hitam pekat dan 255 berarti putih terang.
 
 Transisi:
-Mengapa ada foto yang hanya hitam-putih (1 lapis) dan ada yang berwarna (3 lapis)? Mari kita bandingkan.""",
+Mari kita lihat langsung contoh dataset nyata paling legendaris yang dipakai di video 3Blue1Brown: MNIST!""",
+    )
+
+    # =======================================================================
+    # SLIDE 07 — STUDI KASUS KLASIK: DATASET ASLI MNIST (28x28)
+    # =======================================================================
+    s_mnist = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(s_mnist, "TEORI · STUDI KASUS KLASIK", "Dataset Asli MNIST (28×28 Grayscale)")
+    if "mnist" in vis:
+        s_mnist.shapes.add_picture(str(vis["mnist"]), Inches(0.75), Inches(1.58), width=Inches(11.83))
+    st.add_card(
+        s_mnist,
+        st.MARGIN_X,
+        Inches(5.35),
+        st.CONTENT_WIDTH,
+        Inches(1.35),
+        body="Dataset MNIST (tulisan tangan 0–9) berukuran 28 × 28 × 1 = 784 angka grayscale. Bandingkan dengan foto RGB proyek kita (224 × 224 × 3 = 150.528 angka — 192× lebih besar!).",
+        bg_color=st.SURFACE_BG,
+        accent_color=st.BLUE,
+        body_size=Pt(22),
+    )
+    st.add_footer(s_mnist, 7, SESSION_LABEL)
+    st.set_speaker_notes(
+        s_mnist,
+        """Alokasi waktu: 2 menit
+
+Naskah ajar:
+Dataset MNIST ini adalah contoh paling original bagi pemula Deep Learning, dan sama persis dengan yang dibahas di video 3Blue1Brown. Perhatikan angka '7' asli di sebelah kanan: di tepian goresan pena terdapat gradasi angka abu-abu alami seperti 37, 91, hingga 254.
+
+Penjelasan konsep:
+Satu gambar MNIST berukuran 28×28×1 (784 angka). Foto berwarna proyek kita berukuran 224×224×3 (150.528 angka), namun prinsipnya sama persis: matriks angka!
+
+Transisi:
+Mengapa ada foto yang 1 channel (seperti MNIST) dan ada yang 3 channel berwarna? Mari kita bandingkan.""",
     )
 
     # =======================================================================

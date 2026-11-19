@@ -18,11 +18,33 @@ from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 STATS_PATH = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "sample_stats.json"
+MNIST_PATH = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "mnist_samples.json"
 OUT_HTML = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.html"
+
+
+def _mnist_svg_rects(pixels: list[list[int]], ox: float, oy: float, cell: float = 4.2) -> str:
+    """Render non-background MNIST 28x28 pixels as crisp SVG rects for inline SVG."""
+    out = [f'<rect x="{ox}" y="{oy}" width="{28*cell:.1f}" height="{28*cell:.1f}" rx="8" fill="#111317" stroke="#3C4043" stroke-width="1.5"/>']
+    for r in range(28):
+        for c in range(28):
+            v = pixels[r][c]
+            if v > 15:
+                out.append(
+                    f'<rect x="{ox + c*cell:.1f}" y="{oy + r*cell:.1f}" width="{cell:.1f}" height="{cell:.1f}" fill="rgb({v},{v},{v})"/>'
+                )
+    return "".join(out)
 
 
 def build_html() -> str:
     stats = json.loads(STATS_PATH.read_text(encoding="utf-8"))
+    mnist_raw_str = MNIST_PATH.read_text(encoding="utf-8")
+    mnist_data = json.loads(mnist_raw_str)
+    m7a = mnist_data["variants"]["7_a"]["pixels"]
+    m7b = mnist_data["variants"]["7_b"]["pixels"]
+    m7a_center = m7a[14][14]
+    m7b_center = m7b[14][14]
+    mnist_svg_7a = _mnist_svg_rects(m7a, 54, 42, cell=4.3)
+    mnist_svg_7b = _mnist_svg_rects(m7b, 286, 42, cell=4.3)
     polos = stats["by_condition"]["polos"]
     ramai = stats["by_condition"]["ramai"]
 
@@ -34,7 +56,7 @@ def build_html() -> str:
   <meta name="theme-color" content="#202124" />
   <link rel="manifest" href="../../manifest.webmanifest" />
   <link rel="apple-touch-icon" href="assets/P01/icon-192.png" />
-  <title>P01 - Understanding Images, Image Processing &amp; EDA (57 Slides)</title>
+  <title>P01 - Understanding Images, Image Processing &amp; EDA (60 Slides)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -608,7 +630,7 @@ def build_html() -> str:
     </section>
 
     <!-- 08: ILUSTRASI 2 INTERAKTIF - CARA KOMPUTER MEMBACA GAMBAR -->
-    <section class="slide" data-title="Simulator: Cara Komputer Membaca Gambar" data-notes="Alokasi waktu: 2 menit. Fitur interaktif! Ajak peserta mengganti mode dari Mata Manusia -> Grid Pixel -> Angka Komputer, memilih objek (Apel/Bintang/Rumah), dan mengklik pixel untuk melihat angka RGB aslinya.">
+    <section class="slide" data-title="Simulator: Cara Komputer Membaca Gambar" data-notes="Alokasi waktu: 1.5 menit. Fitur interaktif! Ajak peserta mengganti mode dari Mata Manusia -> Grid Pixel -> Angka Komputer, memilih objek (Apel/Bintang/Rumah), dan mengklik pixel untuk melihat angka RGB aslinya.">
       <div class="kicker">BAB 1 · SIMULATOR INTERAKTIF</div>
       <h2>Cara <span class="hl-red">Komputer Membaca</span> Gambar (Coba Langsung!)</h2>
       <div class="split-60-40">
@@ -726,7 +748,7 @@ def build_html() -> str:
     </section>
 
     <!-- 11: INTERACTIVE 8x8 GRID -->
-    <section class="slide" data-title="Eksperimen: Lihat Seperti Komputer (Grid 8×8)" data-notes="Alokasi waktu: 2 menit. Ajak peserta mencoba tombol 'Lihat Sebagai Angka Komputer' dan mengklik kotak untuk merasakan angka 0 (gelap) sampai 255 (putih terang).">
+    <section class="slide" data-title="Eksperimen: Lihat Seperti Komputer (Grid 8×8)" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta mencoba tombol 'Lihat Sebagai Angka Komputer' dan mengklik kotak untuk merasakan angka 0 (gelap) sampai 255 (putih terang).">
       <div class="kicker">BAB 1 · EKSPERIMEN INTERAKTIF</div>
       <h2>Coba Lihat <span class="hl-blue">Seperti Komputer</span> (8×8 Pixel Grid)</h2>
       <div class="split-40-60">
@@ -751,7 +773,53 @@ def build_html() -> str:
           <div class="callout green">Di sebelah kiri, bentuk persegi terlihat jelas oleh mata kita. Namun saat angka ditampilkan, komputer hanya melihat angka <strong>35</strong> (gelap) di tengah lautan angka <strong>245</strong> (terang).</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>11 / 57</span></div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>11 / 60</span></div>
+    </section>
+
+    <!-- 12: STUDI KASUS KLASIK - DATASET ASLI MNIST (28x28) INTERAKTIF -->
+    <section class="slide" data-title="Studi Kasus Asli: Dataset Angka MNIST (28×28)" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta mencoba memilih angka 0-9 dari dataset asli MNIST (dipakai juga di video 3Blue1Brown!). Soroti gradasi abu-abu alami 0-255 dan perbandingan ukuran MNIST (28x28x1 = 784 angka) vs foto RGB proyek kita (224x224x3 = 150.528 angka).">
+      <div class="kicker">BAB 1 · STUDI KASUS KLASIK DEEP LEARNING</div>
+      <h2>Contoh Nyata Paling Original: <span class="hl-blue">Dataset MNIST (28×28)</span></h2>
+      <div class="split-60-40">
+        <div class="card surface" style="align-items:center; justify-content:space-between; gap:8px; padding:12px 16px;">
+          <div id="mnist-digit-btns" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-ui outline" data-d="0" onclick="setMnistDigit('0')" style="padding:5px 10px;">0</button>
+            <button type="button" class="btn-ui outline" data-d="1" onclick="setMnistDigit('1')" style="padding:5px 10px;">1</button>
+            <button type="button" class="btn-ui outline" data-d="2" onclick="setMnistDigit('2')" style="padding:5px 10px;">2</button>
+            <button type="button" class="btn-ui outline" data-d="3" onclick="setMnistDigit('3')" style="padding:5px 10px;">3</button>
+            <button type="button" class="btn-ui outline" data-d="4" onclick="setMnistDigit('4')" style="padding:5px 10px;">4</button>
+            <button type="button" class="btn-ui outline" data-d="5" onclick="setMnistDigit('5')" style="padding:5px 10px;">5</button>
+            <button type="button" class="btn-ui outline" data-d="6" onclick="setMnistDigit('6')" style="padding:5px 10px;">6</button>
+            <button type="button" class="btn-ui" data-d="7" onclick="setMnistDigit('7')" style="padding:5px 10px;">7</button>
+            <button type="button" class="btn-ui outline" data-d="8" onclick="setMnistDigit('8')" style="padding:5px 10px;">8</button>
+            <button type="button" class="btn-ui outline" data-d="9" onclick="setMnistDigit('9')" style="padding:5px 10px;">9</button>
+          </div>
+          <canvas id="mnist-canvas" width="280" height="280" style="border-radius:12px; border:2px solid var(--blue); background:#111317; cursor:crosshair; max-height:248px; aspect-ratio:1;"></canvas>
+          <div id="mnist-mode-btns" style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-ui outline" data-mode="visual" onclick="setMnistMode('visual')" style="font-size:12px; padding:6px 12px;">1. Gambar Tulisan</button>
+            <button type="button" class="btn-ui green" data-mode="u8" onclick="setMnistMode('u8')" style="font-size:12px; padding:6px 12px;">2. Angka 0–255 (uint8)</button>
+            <button type="button" class="btn-ui outline" data-mode="norm" onclick="setMnistMode('norm')" style="font-size:12px; padding:6px 12px;">3. Skala 0.0–1.0 (float)</button>
+          </div>
+          <div id="mnist-readout" style="font-family:var(--font-code); font-size:11.8px; color:var(--dark); background:#FFFFFF; border:1px solid var(--border); border-radius:9px; padding:5px 10px; width:100%; text-align:center;">
+            Arahkan / klik pixel pada angka '7' di atas untuk melihat nilainya!
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-top-bar bar-blue"></div>
+          <span class="pill blue">MNIST HANDWRITTEN DIGITS (GRAYSCALE)</span>
+          <div class="card-title">Bukan Kotak Buatan — Ini Data Nyata!</div>
+          <div class="card-body">
+            <ul>
+              <li><strong>MNIST</strong> adalah dataset tulisan tangan angka <code>0–9</code> paling legendaris (dipakai di video <strong>3Blue1Brown</strong>!).</li>
+              <li>Tepian goresan penanya punya gradasi abu-abu alami (<code>37</code>, <code>125</code>, <code>254</code>) — tidak hanya <code>0</code> atau <code>255</code>.</li>
+              <li><strong>Ukuran 1 gambar MNIST:</strong> <code>28 × 28 × 1 = 784 angka</code> (<em>Grayscale</em>).</li>
+              <li><strong>Foto berwarna proyek kita:</strong> <code>224 × 224 × 3 = 150.528 angka</code> (<strong>192× lebih besar!</strong>).</li>
+            </ul>
+          </div>
+          <div class="callout">Dari <strong>784 angka</strong> tulisan tangan ke <strong>150.528 angka</strong> foto nyata, cara komputer membacanya sama persis: matriks angka!</div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>12 / 60</span></div>
     </section>
 
     <!-- 12: TIGA LAMPU WARNA RGB -->
@@ -797,8 +865,8 @@ def build_html() -> str:
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>12 / 57</span></div>
     </section>
 
-    <!-- 13: INTERACTIVE RGB MIXER -->
-    <section class="slide" data-title="Eksperimen: Campur 3 Lampu Warna" data-notes="Alokasi waktu: 2 menit. Geser ketiga slider Merah, Hijau, Biru untuk melihat bagaimana angka berubah menjadi warna di layar.">
+    <!-- 14: INTERACTIVE RGB MIXER -->
+    <section class="slide" data-title="Eksperimen: Campur 3 Lampu Warna" data-notes="Alokasi waktu: 1.5 menit. Geser ketiga slider Merah, Hijau, Biru untuk melihat bagaimana angka berubah menjadi warna di layar.">
       <div class="kicker">BAB 1 · EKSPERIMEN INTERAKTIF</div>
       <h2>Coba Sendiri: <span class="hl-blue">3 Angka Jadi 1 Warna</span></h2>
       <div class="grid-2">
@@ -1138,18 +1206,19 @@ def build_html() -> str:
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>19 / 57</span></div>
     </section>
 
-    <!-- 20: AI FUNDAMENTAL 2/3 - KENAPA KITA MENGGUNAKAN AI DI SINI? (INTERACTIVE SIMULATOR) -->
-    <section class="slide" data-title="AI Fundamental (2/3): Mengapa Kita Menggunakan AI?" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta mengklik 4 kondisi foto di kiri untuk melihat langsung mengapa aturan manual (if-else) langsung gagal saat foto bergeser, miring, atau latarnya ramai, sedangkan AI tetap berhasil!">
+    <!-- 21: AI FUNDAMENTAL 2/3 - KENAPA KITA MENGGUNAKAN AI DI SINI? (INTERACTIVE SIMULATOR) -->
+    <section class="slide" data-title="AI Fundamental (2/3): Mengapa Kita Menggunakan AI?" data-notes="Alokasi waktu: 1.5 menit. Ajak peserta mengklik 5 kondisi foto (termasuk bukti nyata 2 tulisan tangan MNIST angka '7' yang berbeda!) untuk melihat langsung mengapa aturan manual (if-else) langsung gagal, sedangkan AI tetap berhasil!">
       <div class="kicker">BAB 2 · AI FUNDAMENTAL 2/3 · SIMULATOR INTERAKTIF</div>
       <h2>Mengapa Mengenali Foto <span class="hl-red">Wajib Pakai AI</span>? (Uji Langsung!)</h2>
-      <p class="subtitle">Coba klik 4 kondisi pemotretan di bawah untuk menguji <strong>Aturan Manual (<code>if-else</code>)</strong> vs <strong>Model AI</strong>:</p>
+      <p class="subtitle">Coba klik 5 skenario di bawah (termasuk <strong>variasi tulisan tangan MNIST asli</strong>) untuk menguji <strong><code>if-else</code></strong> vs <strong>AI</strong>:</p>
       <div class="split-60-40">
         <div class="card surface" style="align-items:center; justify-content:space-between; padding:12px 16px; gap:8px;">
-          <div id="ai2-btns" style="display:flex; gap:6px; flex-wrap:wrap; justify-content:center;">
-            <button type="button" class="btn-ui outline" data-cond="center" onclick="setAi2Cond('center')">1. Posisi Tengah</button>
-            <button type="button" class="btn-ui" data-cond="shift" onclick="setAi2Cond('shift')">2. Geser ke Pojok</button>
-            <button type="button" class="btn-ui outline" data-cond="tilt" onclick="setAi2Cond('tilt')">3. Miring &amp; Kecil</button>
-            <button type="button" class="btn-ui outline" data-cond="busy" onclick="setAi2Cond('busy')">4. Latar Ramai</button>
+          <div id="ai2-btns" style="display:flex; gap:5px; flex-wrap:wrap; justify-content:center;">
+            <button type="button" class="btn-ui outline" data-cond="center" onclick="setAi2Cond('center')" style="font-size:12px; padding:6px 10px;">1. Tengah</button>
+            <button type="button" class="btn-ui" data-cond="shift" onclick="setAi2Cond('shift')" style="font-size:12px; padding:6px 10px;">2. Geser</button>
+            <button type="button" class="btn-ui outline" data-cond="tilt" onclick="setAi2Cond('tilt')" style="font-size:12px; padding:6px 10px;">3. Miring</button>
+            <button type="button" class="btn-ui outline" data-cond="busy" onclick="setAi2Cond('busy')" style="font-size:12px; padding:6px 10px;">4. Latar Ramai</button>
+            <button type="button" class="btn-ui outline" data-cond="mnist" onclick="setAi2Cond('mnist')" style="font-size:12px; padding:6px 10px;">5. MNIST Nyata ('7')</button>
           </div>
 
           <svg id="ai2-svg" viewBox="0 0 460 210" style="width:100%; max-height:205px; background:#FFFFFF; border:1.5px solid var(--border); border-radius:14px;">
@@ -1165,7 +1234,7 @@ def build_html() -> str:
             </g>
 
             <!-- Grid lines to remind of pixels -->
-            <g stroke="rgba(0,0,0,0.06)" stroke-width="1">
+            <g id="ai2-grid-lines" stroke="rgba(0,0,0,0.06)" stroke-width="1">
               <line x1="115" y1="0" x2="115" y2="210"/><line x1="230" y1="0" x2="230" y2="210"/><line x1="345" y1="0" x2="345" y2="210"/>
               <line x1="0" y1="70" x2="460" y2="70"/><line x1="0" y1="140" x2="460" y2="140"/>
             </g>
@@ -1186,6 +1255,23 @@ def build_html() -> str:
               <rect x="148" y="138" width="164" height="20" rx="6" fill="#202124"/>
               <text x="230" y="152" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="600" fill="#FBBC04">Cek if-else: pixel[tengah]</text>
             </g>
+
+            <!-- Real MNIST '7' Variant Comparison (hidden unless cond == mnist) -->
+            <g id="ai2-mnist-group" style="display:none;">
+              <text x="114" y="27" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" fill="#1A73E8">Penulis A (Angka '7' Asli)</text>
+              {mnist_svg_7a}
+              <rect x="112" y="100" width="8" height="8" fill="none" stroke="#EA4335" stroke-width="1.8"/>
+              <rect x="44" y="170" width="140" height="24" rx="6" fill="#E8F0FE" stroke="#4285F4"/>
+              <text x="114" y="186" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="700" fill="#1A73E8">pixel[14,14] = {m7a_center}</text>
+
+              <text x="230" y="108" text-anchor="middle" font-family="Poppins, sans-serif" font-size="16" font-weight="700" fill="#5F6368">vs</text>
+
+              <text x="346" y="27" text-anchor="middle" font-family="Poppins, sans-serif" font-size="11.5" font-weight="700" fill="#C5221F">Penulis B (Angka '7' Asli)</text>
+              {mnist_svg_7b}
+              <rect x="344" y="100" width="8" height="8" fill="none" stroke="#EA4335" stroke-width="1.8"/>
+              <rect x="276" y="170" width="140" height="24" rx="6" fill="#FCE8E6" stroke="#EA4335"/>
+              <text x="346" y="186" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.5" font-weight="700" fill="#C5221F">pixel[14,14] = {m7b_center}</text>
+            </g>
           </svg>
 
           <div id="ai2-caption" style="font-size:12.5px; color:#3C4043; text-align:center; background:#FFFFFF; border:1px solid var(--border); border-radius:10px; padding:6px 12px; width:100%;">
@@ -1197,7 +1283,7 @@ def build_html() -> str:
           <div id="ai2-card-rule" class="card tint-red" style="flex:1; padding:14px 18px;">
             <div class="card-top-bar bar-red"></div>
             <span class="pill red">PROGRAM BIASA (ATURAN IF-ELSE)</span>
-            <div id="ai2-rule-status" class="card-title" style="color:#C5221F;">❌ GAGAL MENEBak!</div>
+            <div id="ai2-rule-status" class="card-title" style="color:#C5221F;">❌ GAGAL MENEBAK!</div>
             <div id="ai2-rule-desc" class="card-body" style="font-size:13.5px;">
               Aturan manual hanya mengecek koordinat <code>pixel[tengah]</code>. Karena bintang bergeser, titik tengah berisi warna putih (<code>255,255,255</code>) dan program mengira tidak ada bintang!
             </div>
@@ -2919,8 +3005,8 @@ def get_file_hash(lokasi_foto):
   <div id="controls">
     <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
     <span id="counter" style="display:inline-flex; align-items:center; gap:5px;">
-      <input id="page-jump" type="number" min="1" max="59" value="1" title="Ketik nomor slide (1-59) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
-      <span>/ 59</span>
+      <input id="page-jump" type="number" min="1" max="60" value="1" title="Ketik nomor slide (1-60) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){{jumpToSlide(this.value); this.blur();}}" />
+      <span>/ 60</span>
     </span>
     <button class="ctrl-btn" onclick="nextSlide()">Next →</button>
     <button class="ctrl-btn" onclick="toggleNotes()">Notes (N)</button>
@@ -2935,7 +3021,7 @@ def get_file_hash(lokasi_foto):
 
   <div id="grid-modal">
     <div style="max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; color:white;">
-      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (59 Slides)</h3>
+      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (60 Slides)</h3>
       <button class="ctrl-btn" onclick="toggleGrid()">Tutup (Esc)</button>
     </div>
     <div id="grid-cards" class="grid-cards"></div>
@@ -3563,12 +3649,105 @@ def get_file_hash(lokasi_foto):
       }});
     }}
 
+    // Slide 12: Interactive MNIST Handwritten Digit Explorer (28x28)
+    const MNIST_DATA = {mnist_raw_str};
+    let mnistDigit = '7';
+    let mnistMode = 'u8';
+
+    function renderMnistCanvas() {{
+      const canvas = document.getElementById('mnist-canvas');
+      if (!canvas || !MNIST_DATA || !MNIST_DATA.digits) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const mat = MNIST_DATA.digits[mnistDigit] || MNIST_DATA.digits['7'];
+      ctx.clearRect(0, 0, W, W);
+
+      if (mnistMode === 'visual') {{
+        const cell = W / 28;
+        for (let r = 0; r < 28; r++) {{
+          for (let c = 0; c < 28; c++) {{
+            const v = mat[r][c];
+            ctx.fillStyle = `rgb(${{v}},${{v}},${{v}})`;
+            ctx.fillRect(c * cell, r * cell, cell, cell);
+            ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(c * cell, r * cell, cell, cell);
+          }}
+        }}
+      }} else {{
+        // Zoom into central 14x14 region (rows 7..20, cols 7..20) so numbers are sharp and legible
+        const span = 14;
+        const cell = W / span;
+        for (let rr = 0; rr < span; rr++) {{
+          for (let cc = 0; cc < span; cc++) {{
+            const r = 7 + rr;
+            const c = 7 + cc;
+            const v = mat[r][c];
+            ctx.fillStyle = `rgb(${{v}},${{v}},${{v}})`;
+            ctx.fillRect(cc * cell, rr * cell, cell, cell);
+            ctx.strokeStyle = 'rgba(66,133,244,0.22)';
+            ctx.lineWidth = 0.7;
+            ctx.strokeRect(cc * cell, rr * cell, cell, cell);
+            ctx.fillStyle = v < 128 ? '#E8EAED' : '#202124';
+            ctx.font = '600 8px Roboto Mono, monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            const lbl = mnistMode === 'u8' ? String(v) : (v / 255).toFixed(1).replace(/^0\\./, '.');
+            ctx.fillText(lbl, cc * cell + cell / 2, rr * cell + cell / 2);
+          }}
+        }}
+      }}
+    }}
+
+    function setMnistDigit(d) {{
+      mnistDigit = String(d);
+      document.querySelectorAll('#mnist-digit-btns button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.d !== mnistDigit);
+      }});
+      const ro = document.getElementById('mnist-readout');
+      if (ro) ro.textContent = `Menampilkan MNIST asli angka '${{mnistDigit}}' (28×28 grayscale). Klik pixel untuk lihat nilainya!`;
+      renderMnistCanvas();
+    }}
+
+    function setMnistMode(m) {{
+      mnistMode = m;
+      document.querySelectorAll('#mnist-mode-btns button').forEach((b) => {{
+        const active = b.dataset.mode === m;
+        b.classList.toggle('outline', !active);
+        if (b.dataset.mode === 'u8') b.classList.toggle('green', active);
+      }});
+      renderMnistCanvas();
+    }}
+
+    const mnistCanvasEl = document.getElementById('mnist-canvas');
+    if (mnistCanvasEl) {{
+      const inspectMnist = (e) => {{
+        const rect = mnistCanvasEl.getBoundingClientRect();
+        const fx = (e.clientX - rect.left) / rect.width;
+        const fy = (e.clientY - rect.top) / rect.height;
+        const r = mnistMode === 'visual' ? Math.floor(fy * 28) : 7 + Math.floor(fy * 14);
+        const c = mnistMode === 'visual' ? Math.floor(fx * 28) : 7 + Math.floor(fx * 14);
+        if (r < 0 || c < 0 || r >= 28 || c >= 28) return;
+        const mat = MNIST_DATA.digits[mnistDigit];
+        const v = mat[r][c];
+        const norm = (v / 255).toFixed(3);
+        document.getElementById('mnist-readout').innerHTML =
+          `Angka '<strong>${{mnistDigit}}</strong>' · Posisi (${{r}}, ${{c}}) &rarr; <code>uint8 = ${{v}}</code> · <code>float32 = ${{norm}}</code>`;
+      }};
+      mnistCanvasEl.addEventListener('mousemove', inspectMnist);
+      mnistCanvasEl.addEventListener('click', inspectMnist);
+      renderMnistCanvas();
+    }}
+
     // Slide 20: AI Fundamental 2/3 Interactive Condition Simulator
     function setAi2Cond(cond) {{
       document.querySelectorAll('#ai2-btns button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.cond !== cond);
       }});
       const star = document.getElementById('ai2-star-group');
+      const sensor = document.getElementById('ai2-manual-sensor');
+      const gridLines = document.getElementById('ai2-grid-lines');
+      const mnistGrp = document.getElementById('ai2-mnist-group');
       const busyBg = document.getElementById('ai2-bg-busy');
       const cap = document.getElementById('ai2-caption');
       const rCard = document.getElementById('ai2-card-rule');
@@ -3578,7 +3757,12 @@ def get_file_hash(lokasi_foto):
       const aDesc = document.getElementById('ai2-ai-desc');
       if (!star) return;
 
+      const isMnist = cond === 'mnist';
       busyBg.style.display = cond === 'busy' ? 'block' : 'none';
+      star.style.display = isMnist ? 'none' : 'inline';
+      if (sensor) sensor.style.display = isMnist ? 'none' : 'inline';
+      if (gridLines) gridLines.style.display = isMnist ? 'none' : 'inline';
+      if (mnistGrp) mnistGrp.style.display = isMnist ? 'inline' : 'none';
 
       if (cond === 'center') {{
         star.setAttribute('transform', 'translate(230, 105) rotate(0) scale(1)');
@@ -3616,6 +3800,14 @@ def get_file_hash(lokasi_foto):
         rDesc.innerHTML = 'Titik tengah kebetulan terkena bercak warna kuning dari latar belakang ramai, sehingga program biasa salah mengira latar sebagai objek!';
         aStat.textContent = '✅ TETAP BERHASIL (Keyakinan: 94%)';
         aDesc.innerHTML = 'Karena dilatih dengan contoh foto <strong>polos &amp; ramai</strong>, AI mampu membedakan pola bentuk bintang dari gangguan latar belakang!';
+      }} else if (cond === 'mnist') {{
+        cap.innerHTML = '<strong>Kondisi 5 (Dataset Asli MNIST):</strong> Dua orang berbeda sama-sama menulis angka <strong>&ldquo;7&rdquo;</strong>, tapi nilai <code>pixel[14,14]</code>-nya bertolak belakang (<code>{m7a_center}</code> vs <code>{m7b_center}</code>)!';
+        rCard.className = 'card tint-red';
+        rStat.style.color = '#C5221F';
+        rStat.textContent = '❌ GAGAL TOTAL PADA DATA NYATA!';
+        rDesc.innerHTML = 'Meskipun sama-sama angka <strong>7</strong> di grid kecil <code>28×28</code>, kemiringan dan gaya goresan membuat koordinat pikselnya berbeda jauh. Mustahil menulis <code>if-else</code> untuk semua tulisan manusia!';
+        aStat.textContent = '✅ TETAP KENAL ANGKA 7 (Akurat!)';
+        aDesc.innerHTML = 'AI belajar <strong>hubungan garis horizontal atas + garis miring ke bawah</strong> di mana pun posisinya, sama seperti mengenali telinga &amp; mata karakter di proyek kita!';
       }}
     }}
 
@@ -3722,7 +3914,7 @@ def get_file_hash(lokasi_foto):
 def verify_html(path_str: str) -> None:
     text = Path(path_str).read_text(encoding="utf-8")
     slide_count = len(re.findall(r'<section class="slide', text))
-    assert slide_count == 59, f"Expected 59 slides, got {slide_count}"
+    assert slide_count == 60, f"Expected 60 slides, got {slide_count}"
 
     # Verify no P3/P4/P5/P7/P8/P04/P13 labels in visible slide sections
     body_part = text.split('<div id="stage-wrap">', 1)[1].split('<div id="controls">', 1)[0]
@@ -3749,7 +3941,7 @@ def verify_html(path_str: str) -> None:
 
     # Verify speaker notes time sum == 120.0 min
     notes = re.findall(r'data-notes="([^"]+)"', text)
-    assert len(notes) == 59, f"Expected 59 speaker notes, got {len(notes)}"
+    assert len(notes) == 60, f"Expected 60 speaker notes, got {len(notes)}"
     total_min = 0.0
     for n in notes:
         m = re.search(r'Alokasi waktu:\s*([0-9.]+)\s*menit', n)
