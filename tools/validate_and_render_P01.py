@@ -1,4 +1,4 @@
-"""Validate and render slides/P04_image_processing_eda.pptx and data/sample/.
+"""Validate and render materials/P01/P01_understanding_images_processing_eda.pptx and data/sample/.
 
 Since LibreOffice is not installed in this environment, renders each slide
 directly from the PPTX shapes, text, tables, and embedded images into PNGs
@@ -20,7 +20,7 @@ from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-PPTX_PATH = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.pptx"
+PPTX_PATH = ROOT_DIR / "materials" / "P01" / "P01_understanding_images_processing_eda.pptx"
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
 RENDER_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "rendered"
 

@@ -22,12 +22,12 @@ Materi pembelajaran **1-on-1 Deep Learning (120 menit)** oleh **Muhammad Haerul*
 │   └── references/                     # Kumpulan PDF referensi desain slide
 ├── materials/                          # Folder materi per pertemuan (4 komponen dalam 1 folder)
 │   └── P01/
-│       ├── P01_image_processing_eda.html   # [1] Dek interaktif 60 slide (HTML5 — Main Source)
-│       ├── P01_image_processing_eda.pdf    # [2] Ekspor PDF vektor 76 halaman (16:9)
-│       ├── P01_image_processing_eda.pptx   # [3] Dek PowerPoint (28 slide, 120 menit)
-│       ├── P01_image_processing_eda.ipynb  # [4] Notebook hands-on peserta (29 sel, 5 # TODO)
+│       ├── P01_understanding_images_processing_eda.html   # [1] Dek interaktif 60 slide (HTML5 — Main Source)
+│       ├── P01_understanding_images_processing_eda.pdf    # [2] Ekspor PDF vektor 76 halaman (16:9)
+│       ├── P01_understanding_images_processing_eda.pptx   # [3] Dek PowerPoint (29 slide, 120 menit)
+│       ├── P01_understanding_images_processing_eda.ipynb  # [4] Notebook hands-on peserta (29 sel, 5 # TODO)
 │       ├── solutions/
-│       │   └── P01_image_processing_eda.ipynb  # Notebook kunci jawaban (24 sel tervalidasi)
+│       │   └── P01_understanding_images_processing_eda.ipynb  # Notebook kunci jawaban (24 sel tervalidasi)
 │       └── assets/
 │           └── P01/                        # Aset visualisasi, grafik EDA, ikon PWA & statistik
 ├── data/

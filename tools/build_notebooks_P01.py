@@ -12,8 +12,8 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parent.parent
-NB_STUDENT = ROOT / "materials" / "P01" / "P01_image_processing_eda.ipynb"
-NB_SOLUTION = ROOT / "materials" / "P01" / "solutions" / "P01_image_processing_eda.ipynb"
+NB_STUDENT = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.ipynb"
+NB_SOLUTION = ROOT / "materials" / "P01" / "solutions" / "P01_understanding_images_processing_eda.ipynb"
 
 
 def _to_source_lines(text: str) -> list[str]:
@@ -143,11 +143,11 @@ print(f"Versi      : numpy={np.__version__}, cv2={cv2.__version__}, pandas={pd._
         md(
             """
 ---
-## Langkah 1 (6 menit): Membaca Gambar & Mengintip Matriks Pixel
+## Langkah 1 (6 menit): Membaca Gambar & Mengintip Matriks Pixel (Sesuai Slide 08–13)
 
-Mata manusia langsung mengenali bentuk benda, tetapi **komputer hanya melihat deretan angka** di dalam grid kotak-kotak kecil (*pixel*):
-- Setiap gambar warna punya dimensi `(Tinggi, Lebar, 3)` → `3` berarti 3 lapisan warna (**Red, Green, Blue**).
-- Setiap nilai bertipe `uint8` dengan rentang **`0`** (gelap total) sampai **`255`** (terang maksimal).
+Mata manusia langsung mengenali bentuk benda (seperti **Apel Merah** pada **Slide 08**), tetapi **komputer hanya melihat deretan angka** di dalam grid kotak-kotak kecil (*pixel*, **Slide 10**). Sebaliknya, saat menampilkan gambar ke layar (**Slide 09**), komputer menyalakan 3 lampu mikro **Red, Green, Blue** di tiap titik sesuai angka-angka ini:
+- Menurut **Color Channel** (**Slide 11**), gambar bisa punya **1 channel** (*Grayscale* 0–255 seperti **MNIST**), **3 channels** (**RGB** paling umum, selain palet lain seperti *HSV*/*YCbCr*), **4 channels** (*RGBA* transparan / *CMYK* cetak), hingga **5+ channels** (*multispectral* satelit).
+- Foto warna proyek kita memakai format **RGB** berdimensi `(Tinggi, Lebar, 3)` bertipe `uint8` (`0` = gelap/mati s.d. `255` = terang penuh).
 
 Mari kita buka 1 foto sampel, periksa dimensinya, lalu zoom-in ke area `8 × 8` pixel untuk melihat angka aslinya!
 """
@@ -259,7 +259,7 @@ center_rgb = arr_raw[img_h // 2, img_w // 2]
     cells.append(
         md(
             """
-### Pemanasan Klasik (Sesuai Slide 12): Mengintip Dataset Asli MNIST (`28×28` Grayscale)
+### Pemanasan Klasik (Sesuai Slide 13): Mengintip Dataset Asli MNIST (`28×28` Grayscale)
 
 Selain foto dari `data/sample/`, mari kita intip contoh dataset tulisan tangan **MNIST** yang paling original dan dipakai di video **3Blue1Brown**.
 - Setiap angka berukuran `28 × 28 × 1 = 784` angka (*Grayscale*), jauh lebih kecil dibanding foto berwarna `224 × 224 × 3 = 150.528` angka.
@@ -429,10 +429,12 @@ gray_arr = cv2.cvtColor(arr_raw, cv2.COLOR_RGB2GRAY)
 ---
 ## Langkah 3 (8 menit): Jembatan *AI Fundamental* & *Image Processing* (*Resize*, *Aspect Ratio* & *Normalization*)
 
-Sesuai **Bab 2 (AI Fundamental)** di slide presentasi:
-- **Mengapa Mengenali Foto Wajib Pakai AI (Bukan `If-Else`)?**  
-  Pada program aturan manual (`if-else`), jika kita hanya mengecek koordinat titik tertentu (misalnya `pixel[tengah]`), aturan tersebut langsung **gagal** begitu objek di dalam foto **bergeser sedikit**, **miring**, atau **latar belakangnya ramai**. Sebaliknya, **AI (Deep Learning)** mempelajari **pola bentuk & warna** dari contoh foto.
-- **Mengapa AI Butuh *Image Processing* (*Garbage In, Garbage Out*)?**  
+Sesuai **Bab 2 (AI Fundamental · Slide 20–22)** di slide presentasi:
+- **Kunci Beda *Machine Learning* vs *Deep Learning* (Slide 20):**  
+  Pada *Machine Learning* klasik, manusia masih harus mengekstrak ciri-ciri foto secara manual (misalnya mengukur warna, sudut, ukuran) sebelum dipelajari mesin. Pada **Deep Learning**, foto mentah langsung masuk dan jaringan saraf berlapis otomatis mencari ciri sendiri (*garis → bentuk → objek*) sekaligus menebak hasilnya!
+- **Mengapa Mengenali Foto Wajib Pakai AI (Bukan `If-Else`, Slide 21)?**  
+  Pada program aturan manual (`if-else`), jika kita hanya mengecek koordinat titik tertentu (misalnya `pixel[tengah]`), aturan tersebut langsung **gagal** begitu objek di dalam foto **bergeser sedikit**, **miring**, atau **latar belakangnya ramai**.
+- **Alur 3 Tahap & Mengapa AI Butuh *Image Processing* (*Garbage In, Garbage Out*, Slide 22):**  
   Sebelum contoh foto disuapkan ke AI, foto mentah wajib melewati 2 perapihan utama:
   1. **Menyamakan Ukuran Tanpa Gepeng (*Letterbox Padding* `224 × 224`):** Menjaga *aspect ratio* agar objek tidak penyok/lonjong (*distorted*).
   2. **Normalization (`0–255` → `0.0–1.0`):** Mengubah tipe `uint8` ke `float32` lalu dibagi `255.0` agar perhitungan AI stabil.
@@ -782,11 +784,10 @@ h.update(chunk)
 ---
 ## Langkah 5 (12 menit): EDA Kesehatan Dataset (*Class Balance*, *Brightness*, *Contrast* & *Edge Density*)
 
-Sekarang kita periksa **kesehatan dataset** secara deskriptif seperti di slide:
-1. ***Class Balance*:** Apakah jumlah foto per kelas seimbang? Jika timpang, AI cenderung menebak kelas yang paling banyak.
-2. ***Brightness* (`np.mean`):** Rata-rata kecerahan piksel (`0–255`).
-3. ***Contrast* (`np.std`):** Simpangan baku kecerahan — seberapa kontras terang vs gelapnya.
-4. ***Edge Density* (`cv2.Canny`):** Persentase piksel garis tepi. Latar **polos** memiliki *edge density* rendah; latar **ramai** penuh tekstur memiliki *edge density* jauh lebih tinggi.
+Sekarang kita periksa **kesehatan dataset** secara deskriptif sesuai **Bab 3 EDA (Slide 31–39)** dalam 3 nomor fokus:
+- **Issue #1 — *Class Imbalance*:** Apakah jumlah foto per kelas seimbang? Jika timpang, AI cenderung menebak kelas yang paling banyak.
+- **Issue #2 — Pencahayaan (*Brightness* `np.mean` & *Contrast* `np.std`):** Cek rata-rata terang (`0–255`) dan simpangan baku agar ketahuan jika koleksi foto terlalu gelap, silau, atau timpang antar kondisi.
+- **Issue #3 — Latar Belakang Ramai (*Edge Density* `cv2.Canny`):** Persentase piksel garis tepi. Latar **polos** memiliki *edge density* rendah; latar **ramai** penuh tekstur memiliki *edge density* jauh lebih tinggi.
 """
         )
     )
@@ -985,7 +986,7 @@ print(f"Tersimpan: {audit_csv.name}, {summary_csv.name}, {plot_path.name} di {RE
     cells.append(
         md(
             """
-### Mini-Challenge: Diskusi Kasus Polos vs Ramai (Sesuai Slide 50)
+### Mini-Challenge: Diskusi Kasus Polos vs Ramai (Sesuai Slide 51)
 Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil nyata EDA di atas:
 1. Menurut Anda, kondisi mana yang akan lebih sulit ditebak oleh AI nantinya: **Polos** atau **Ramai**? Mengapa (kaitkan dengan angka *brightness* dan *edge density* di atas)?
 2. Jika AI hanya kita latih dengan foto **Polos**, kira-kira apa yang terjadi saat ia diuji melihat foto **Ramai**?
@@ -999,7 +1000,7 @@ Diskusikan dan jawab 3 pertanyaan berikut berdasarkan hasil nyata EDA di atas:
     cells.append(
         md(
             """
-## Referensi Belajar Mandiri (Video YouTube & Modul Berurutan · Slide 58–59)
+## Referensi Belajar Mandiri (Video YouTube & Modul Berurutan · Slide 59–60)
 
 Gunakan daftar referensi berikut secara berurutan untuk memperdalam konsep P01:
 

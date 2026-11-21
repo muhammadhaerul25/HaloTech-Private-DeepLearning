@@ -1,8 +1,9 @@
-"""Build materials/P01/P01_image_processing_eda.pptx from data/sample/ using slide_theme.py.
+"""Build materials/P01/P01_understanding_images_processing_eda.pptx from data/sample/ using slide_theme.py.
 
 Generates real data visualizations in materials/P01/assets/P01/ and composes
-28 Google I/O-inspired slides (including MNIST 28x28 case study, 3 AI Fundamental
-slides, & 2 Reference slides) with Bahasa Indonesia speaker notes summing to 120 minutes.
+29 Google I/O-inspired slides (including MNIST 28x28 case study, RGB sub-pixel
+screen display, 3 AI Fundamental slides, & 2 Reference slides) synced with HTML
+and Bahasa Indonesia speaker notes summing to 120 minutes.
 """
 
 from __future__ import annotations
@@ -32,7 +33,7 @@ import slide_theme as st
 
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
 ASSETS_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01"
-OUT_PPTX = ROOT_DIR / "materials" / "P01" / "P01_image_processing_eda.pptx"
+OUT_PPTX = ROOT_DIR / "materials" / "P01" / "P01_understanding_images_processing_eda.pptx"
 STATS_JSON = ASSETS_DIR / "sample_stats.json"
 
 SESSION_LABEL = "P01 · Understanding Images, Image Processing & EDA"
@@ -389,6 +390,172 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
     fig.savefig(p9, dpi=180, facecolor="#FFFFFF")
     plt.close(fig)
     paths["exif"] = p9
+
+    # 11. RGB Screen Display (Synced with HTML Slide 09)
+    p11 = ASSETS_DIR / "11_rgb_screen_display.png"
+    fig, ax = plt.subplots(figsize=(11.6, 3.85), dpi=200)
+    ax.set_xlim(0, 11.6)
+    ax.set_ylim(0, 3.85)
+    ax.axis("off")
+    fig.patch.set_facecolor("#FFFFFF")
+
+    # Stage 1 Box: Data Angka
+    ax.add_patch(patches.FancyBboxPatch((0.15, 0.2), 3.25, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#E8F0FE", edgecolor="#C6DAFC", linewidth=2))
+    ax.text(1.77, 3.35, "1. Angka di Memori (1 Pixel)", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#1A73E8")
+    ax.add_patch(patches.FancyBboxPatch((0.35, 1.05), 2.85, 1.95, boxstyle="round,pad=0.05,rounding_size=0.18", facecolor="#202124", edgecolor="#3C4043", linewidth=1.5))
+    ax.text(1.77, 2.75, "Pixel(112, 88) · Apel Merah", ha="center", va="center", fontsize=9.8, family="monospace", color="#9AA0A6")
+    for yy, lbl, val, pct, col in [
+        (2.30, "R (Merah)", 234, 0.92, "#EA4335"),
+        (1.80, "G (Hijau)", 67, 0.26, "#34A853"),
+        (1.30, "B (Biru)", 53, 0.21, "#4285F4"),
+    ]:
+        ax.text(0.48, yy, lbl, ha="left", va="center", fontsize=9.5, fontweight="bold", color=col, family="monospace")
+        ax.add_patch(patches.FancyBboxPatch((1.36, yy - 0.08), 1.32, 0.16, boxstyle="round,pad=0.0,rounding_size=0.06", facecolor="#3C4043", edgecolor="none"))
+        ax.add_patch(patches.FancyBboxPatch((1.36, yy - 0.08), 1.32 * pct, 0.16, boxstyle="round,pad=0.0,rounding_size=0.06", facecolor=col, edgecolor="none"))
+        ax.text(3.08, yy, str(val), ha="right", va="center", fontsize=10, fontweight="bold", color="#FFFFFF", family="monospace")
+    ax.text(1.77, 0.56, "Data angka 0 (mati) s.d. 255 (terang)", ha="center", va="center", fontsize=10, color="#3C4043")
+
+    # Arrow 1
+    ax.annotate("", xy=(3.95, 1.95), xytext=(3.48, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.28,head_length=0.25", lw=3, color="#34A853"))
+    ax.text(3.71, 2.24, "Kirim", ha="center", va="center", fontsize=9.5, fontweight="bold", color="#137333")
+
+    # Stage 2 Box: 3 Lampu Sub-pixel
+    ax.add_patch(patches.FancyBboxPatch((4.02, 0.2), 3.45, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FFFFFF", edgecolor="#DADCE0", linewidth=2))
+    ax.text(5.74, 3.35, "2. 3 Lampu di Layar (Zoom 1000×)", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#202124")
+    ax.add_patch(patches.FancyBboxPatch((4.30, 1.18), 2.88, 1.82, boxstyle="round,pad=0.04,rounding_size=0.18", facecolor="#111317", edgecolor="#3C4043", linewidth=2))
+    for xx, lbl, pct, col in [
+        (4.78, "R 92%", 0.92, "#EA4335"),
+        (5.74, "G 26%", 0.26, "#34A853"),
+        (6.70, "B 21%", 0.21, "#4285F4"),
+    ]:
+        ax.add_patch(patches.FancyBboxPatch((xx - 0.25, 1.56), 0.50, 1.24, boxstyle="round,pad=0.02,rounding_size=0.10", facecolor="#23262D", edgecolor="#3C4043", linewidth=1.2))
+        ax.add_patch(patches.FancyBboxPatch((xx - 0.21, 1.60), 0.42, 1.16 * pct, boxstyle="round,pad=0.0,rounding_size=0.08", facecolor=col, edgecolor="none"))
+        ax.text(xx, 1.35, lbl, ha="center", va="center", fontsize=9.5, fontweight="bold", color=col, family="monospace")
+    ax.add_patch(patches.FancyBboxPatch((4.24, 0.42), 3.00, 0.54, boxstyle="round,pad=0.02,rounding_size=0.12", facecolor="#F8F9FA", edgecolor="#DADCE0", linewidth=1.2))
+    ax.add_patch(patches.FancyBboxPatch((4.35, 0.52), 0.32, 0.32, boxstyle="round,pad=0.0,rounding_size=0.08", facecolor="#EA4335", edgecolor="#C5221F", linewidth=1))
+    ax.text(4.80, 0.68, "Lampu R terang -> titik Merah", ha="left", va="center", fontsize=9.3, fontweight="bold", color="#202124")
+
+    # Arrow 2
+    ax.annotate("", xy=(8.02, 1.95), xytext=(7.55, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.28,head_length=0.25", lw=3, color="#FBBC04"))
+    ax.text(7.78, 2.24, "Gabung", ha="center", va="center", fontsize=9.5, fontweight="bold", color="#B06000")
+
+    # Stage 3 Box: Gambar Utuh di Layar HP
+    ax.add_patch(patches.FancyBboxPatch((8.08, 0.2), 3.36, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FEF7E0", edgecolor="#FDE293", linewidth=2))
+    ax.text(9.76, 3.35, "3. Gambar Utuh di Layar HP", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#B06000")
+    # Phone frame
+    ax.add_patch(patches.FancyBboxPatch((8.45, 1.02), 2.62, 1.96, boxstyle="round,pad=0.03,rounding_size=0.22", facecolor="#202124", edgecolor="#3C4043", linewidth=2))
+    ax.add_patch(patches.FancyBboxPatch((8.56, 1.13), 2.40, 1.74, boxstyle="round,pad=0.0,rounding_size=0.14", facecolor="#5E97F6", edgecolor="none"))
+    # Ground & clouds
+    ax.add_patch(patches.Rectangle((8.56, 1.13), 2.40, 0.34, facecolor="#81C995", edgecolor="none"))
+    ax.add_patch(patches.Ellipse((9.00, 2.52), 0.45, 0.22, facecolor="#FFFFFF", alpha=0.9))
+    ax.add_patch(patches.Ellipse((9.18, 2.55), 0.34, 0.20, facecolor="#FFFFFF", alpha=0.9))
+    # Apple + leaf
+    ax.add_patch(patches.Circle((9.42, 1.86), 0.38, facecolor="#EA4335", edgecolor="none"))
+    ax.add_patch(patches.Rectangle((9.39, 2.22), 0.07, 0.19, facecolor="#795548", edgecolor="none"))
+    ax.add_patch(patches.Ellipse((9.60, 2.34), 0.32, 0.16, angle=22, facecolor="#34A853", edgecolor="none"))
+    # Star
+    star_pts = []
+    for ii in range(10):
+        ang = np.pi / 2 + ii * np.pi / 5
+        rr = 0.28 if ii % 2 == 0 else 0.12
+        star_pts.append((10.45 + rr * np.cos(ang), 2.32 + rr * np.sin(ang)))
+    ax.add_patch(patches.Polygon(star_pts, facecolor="#FBBC04", edgecolor="#F9AB00", linewidth=1))
+    # Reticle
+    ax.add_patch(patches.Circle((9.42, 1.86), 0.16, facecolor="none", edgecolor="#FFFFFF", linewidth=2, linestyle="--"))
+    ax.add_patch(patches.Circle((9.42, 1.86), 0.05, facecolor="#202124", edgecolor="#FFFFFF", linewidth=1.2))
+    ax.add_patch(patches.FancyBboxPatch((9.64, 1.72), 0.80, 0.27, boxstyle="round,pad=0.02,rounding_size=0.12", facecolor="#202124", edgecolor="none"))
+    ax.text(10.04, 1.855, "Titik ini!", ha="center", va="center", fontsize=8.5, fontweight="bold", color="#FFFFFF")
+    ax.text(9.76, 0.56, "Jutaan titik rapat -> foto tampak utuh", ha="center", va="center", fontsize=10, color="#3C4043")
+
+    fig.tight_layout(pad=0.25)
+    fig.savefig(p11, dpi=200, facecolor="#FFFFFF")
+    plt.close(fig)
+    paths["screen_display"] = p11
+
+    # 12. Color Channels Overview 2x2 (1 Ch, 3 Ch, 4 Ch, 5+ Ch)
+    p12 = ASSETS_DIR / "12_color_channels_overview.png"
+    fig, axes = plt.subplots(2, 2, figsize=(9.4, 5.8))
+    fig.patch.set_facecolor("#FFFFFF")
+    panels = [
+        ("1 CHANNEL · GRAYSCALE", "Hitam-Putih & Abu-Abu (MNIST, Rontgen)", "#F8F9FA", "#5F6368"),
+        ("3 CHANNELS · RGB (FOKUS!)", "Foto Penuh Warna (+ HSV, LAB, YCbCr)", "#E8F0FE", "#1A73E8"),
+        ("4 CHANNELS · RGBA & CMYK", "Transparan (PNG) & Cetak Printer", "#FEF7E0", "#8A5700"),
+        ("5+ CHANNELS · MULTISPECTRAL", "Satelit, Drone (RGB + NIR + Thermal)", "#E6F4EA", "#137333"),
+    ]
+    for idx, (ax, (badge, sub, bg, accent)) in enumerate(zip(axes.flat, panels)):
+        ax.set_xlim(0, 10)
+        ax.set_ylim(0, 6.2)
+        ax.axis("off")
+        ax.add_patch(patches.FancyBboxPatch((0.15, 0.15), 9.7, 5.9, boxstyle="round,pad=0.05,rounding_size=0.35", facecolor=bg, edgecolor=accent, linewidth=2 if idx == 1 else 1.4))
+        ax.text(0.55, 5.45, badge, fontsize=11, fontweight="bold", color=accent, family="monospace")
+        ax.text(0.55, 4.82, sub, fontsize=10.5, fontweight="bold", color="#202124")
+        if idx == 0:
+            ax.add_patch(patches.FancyBboxPatch((0.6, 0.7), 3.6, 3.6, boxstyle="round,pad=0.04,rounding_size=0.25", facecolor="#181A1F", edgecolor="#5F6368", linewidth=1.2))
+            ax.plot([1.4, 3.3, 2.0], [3.5, 3.5, 1.4], color="#EAECEF", lw=6, solid_capstyle="round")
+            ax.text(2.4, 0.36, "Contoh: Angka MNIST / X-Ray", ha="center", fontsize=8.8, color="#3C4043", fontweight="bold")
+            ax.add_patch(patches.FancyBboxPatch((4.8, 1.4), 4.4, 2.3, boxstyle="round,pad=0.04,rounding_size=0.2", facecolor="#FFFFFF", edgecolor="#9AA0A6", linewidth=1.4))
+            ax.text(7.0, 2.85, "[142]", ha="center", va="center", fontsize=14, fontweight="bold", family="monospace", color="#202124")
+            ax.text(7.0, 1.95, "1 angka / pixel (0-255)", ha="center", va="center", fontsize=9.5, color="#5F6368")
+        elif idx == 1:
+            for j, (dx, dy, lbl, fcol, ecol) in enumerate([
+                (0.7, 2.0, "R", "#FCE8E6", "#EA4335"),
+                (1.5, 1.4, "G", "#E6F4EA", "#34A853"),
+                (2.3, 0.8, "B", "#E8F0FE", "#4285F4"),
+            ]):
+                ax.add_patch(patches.FancyBboxPatch((dx, dy), 2.3, 2.0, boxstyle="round,pad=0.03,rounding_size=0.2", facecolor=fcol, edgecolor=ecol, linewidth=1.6))
+                ax.text(dx + 0.4, dy + 1.5, lbl, fontsize=12, fontweight="bold", family="monospace", color=ecol)
+            ax.annotate("", xy=(5.65, 2.4), xytext=(4.85, 2.4), arrowprops=dict(arrowstyle="-|>,head_width=0.22,head_length=0.2", lw=2.5, color="#1A73E8"))
+            ax.add_patch(patches.FancyBboxPatch((5.85, 0.75), 3.4, 3.5, boxstyle="round,pad=0.03,rounding_size=0.25", facecolor="#FFFFFF", edgecolor="#4285F4", linewidth=1.4))
+            ax.add_patch(patches.Rectangle((6.05, 0.9), 3.0, 0.9, facecolor="#34A853", edgecolor="none"))
+            ax.add_patch(patches.Circle((7.55, 2.65), 0.85, facecolor="#EA4335", edgecolor="none"))
+            ax.add_patch(patches.Ellipse((7.95, 3.55), 0.7, 0.35, angle=20, facecolor="#34A853", edgecolor="none"))
+            ax.text(7.55, 0.36, "Foto Penuh Warna", ha="center", fontsize=8.8, color="#1A73E8", fontweight="bold")
+        elif idx == 2:
+            # Checkerboard RGBA
+            cx0, cy0, cell = 0.65, 0.95, 0.55
+            for r in range(6):
+                for c in range(7):
+                    col = "#E8EAED" if (r + c) % 2 == 0 else "#FFFFFF"
+                    ax.add_patch(patches.Rectangle((cx0 + c * cell, cy0 + r * cell), cell, cell, facecolor=col, edgecolor="none"))
+            ax.add_patch(patches.Rectangle((cx0, cy0), 7 * cell, 6 * cell, facecolor="none", edgecolor="#8A5700", linewidth=1.2))
+            pts = []
+            for ii in range(10):
+                ang = np.pi / 2 + ii * np.pi / 5
+                rr = 1.05 if ii % 2 == 0 else 0.46
+                pts.append((cx0 + 3.5 * cell + rr * np.cos(ang), cy0 + 3.0 * cell + rr * np.sin(ang)))
+            ax.add_patch(patches.Polygon(pts, facecolor="#FBBC04", edgecolor="#B06000", linewidth=1.5))
+            ax.text(2.55, 0.40, "RGBA (PNG Transparan)", ha="center", fontsize=8.6, fontweight="bold", color="#8A5700")
+            # CMYK printer ink circles
+            ax.add_patch(patches.FancyBboxPatch((5.0, 0.95), 4.3, 3.3, boxstyle="round,pad=0.03,rounding_size=0.22", facecolor="#FFFFFF", edgecolor="#FDE293", linewidth=1.4))
+            for cx, cy, lbl, col, tcol in [
+                (6.2, 3.15, "C", "#00B8D4", "#FFFFFF"),
+                (8.1, 3.15, "M", "#E91E63", "#FFFFFF"),
+                (6.2, 1.80, "Y", "#FDD835", "#202124"),
+                (8.1, 1.80, "K", "#202124", "#FFFFFF"),
+            ]:
+                ax.add_patch(patches.Circle((cx, cy), 0.56, facecolor=col, edgecolor="none"))
+                ax.text(cx, cy, lbl, ha="center", va="center", fontsize=12, fontweight="bold", family="monospace", color=tcol)
+            ax.text(7.15, 0.40, "CMYK (Tinta Cetak)", ha="center", fontsize=8.6, fontweight="bold", color="#8A5700")
+        else:
+            for k, (lbl, fcol, ecol, y0) in enumerate([
+                ("Red", "#FCE8E6", "#EA4335", 3.55),
+                ("Green", "#E6F4EA", "#34A853", 2.85),
+                ("Blue", "#E8F0FE", "#4285F4", 2.15),
+                ("NIR (Inframerah)", "#F3E8FD", "#9334E6", 1.45),
+                ("Thermal (Suhu)", "#FEF7E0", "#E37400", 0.75),
+            ]):
+                ax.add_patch(patches.FancyBboxPatch((0.6 + k * 0.14, y0), 3.4, 0.55, boxstyle="round,pad=0.02,rounding_size=0.14", facecolor=fcol, edgecolor=ecol, linewidth=1.3))
+                ax.text(2.3 + k * 0.14, y0 + 0.27, lbl, ha="center", va="center", fontsize=8.2, fontweight="bold", family="monospace", color=ecol)
+            ax.add_patch(patches.FancyBboxPatch((5.15, 0.75), 4.2, 3.55, boxstyle="round,pad=0.03,rounding_size=0.25", facecolor="#1B3A4B", edgecolor="#34A853", linewidth=1.4))
+            ax.add_patch(patches.Polygon([(5.2, 0.8), (9.3, 0.8), (9.3, 2.3), (7.5, 2.6), (5.2, 2.0)], facecolor="#34A853", alpha=0.85))
+            ax.plot([5.2, 6.8, 8.2, 9.3], [2.9, 3.2, 2.7, 3.4], color="#8AB4F8", lw=3)
+            ax.add_patch(patches.Circle((8.1, 3.55), 0.42, facecolor="#FBBC04", alpha=0.85))
+            ax.add_patch(patches.Circle((8.1, 3.55), 0.20, facecolor="#EA4335", alpha=0.95))
+            ax.text(7.25, 0.36, "Peta Vegetasi & Suhu", ha="center", fontsize=8.8, fontweight="bold", color="#137333")
+    fig.tight_layout(pad=0.4)
+    fig.savefig(p12, dpi=200, facecolor="#FFFFFF")
+    plt.close(fig)
+    paths["channels_overview"] = p12
 
     mnist_png = ASSETS_DIR / "mnist_grid_demo.png"
     if mnist_png.exists():
@@ -752,63 +919,50 @@ Mengapa ada foto yang 1 channel (seperti MNIST) dan ada yang 3 channel berwarna?
     )
 
     # =======================================================================
-    # SLIDE 07 — GRAYSCALE VS RGB
+    # SLIDE 07 — PENGANTAR COLOR CHANNELS (1, 3, 4, 5+)
     # =======================================================================
     s7 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s7, "TEORI · CHANNEL", "Satu Channel atau Tiga Channel?")
-    s7.shapes.add_picture(str(vis["grayscale_vs_rgb"]), Inches(0.75), Inches(1.65), width=Inches(7.75))
+    st.add_slide_header(s7, "TEORI · COLOR CHANNELS", "Jenis Gambar: Color Channels (1, 3, 4, 5+)")
+    s7.shapes.add_picture(str(vis["channels_overview"]), Inches(0.65), Inches(1.58), width=Inches(8.15))
     st.add_card(
         s7,
-        Inches(8.75),
-        Inches(1.65),
-        Inches(3.83),
-        Inches(1.65),
-        title="Grayscale: (H, W)",
-        body="1 lapis angka terang-gelap.",
-        bg_color=st.SURFACE_BG,
-        accent_color=st.TEXT_MUTED,
-        title_size=Pt(22),
-        body_size=Pt(20),
-    )
-    st.add_card(
-        s7,
-        Inches(8.75),
-        Inches(3.48),
-        Inches(3.83),
-        Inches(1.75),
-        title="RGB: (H, W, 3)",
-        body="3 lapis: Merah, Hijau, Biru.",
+        Inches(8.98),
+        Inches(1.58),
+        Inches(3.70),
+        Inches(2.45),
+        title="Fokus Kita: 3 Ch (RGB)",
+        body="Foto HP & model AI fokus ke RGB (3 angka/pixel). Selain RGB ada HSV, LAB, & YCbCr.",
         bg_color=st.TINT_BLUE,
         accent_color=st.BLUE,
-        title_size=Pt(22),
-        body_size=Pt(20),
+        title_size=Pt(21),
+        body_size=Pt(18),
         border_color=None,
     )
     st.add_callout_box(
         s7,
-        Inches(8.75),
-        Inches(5.42),
-        Inches(3.83),
-        Inches(1.20),
-        "Selalu pakai .convert('RGB') agar foto karakter Disney tetap punya warna!",
+        Inches(8.98),
+        Inches(4.22),
+        Inches(3.70),
+        Inches(2.25),
+        "1 Ch (Grayscale) = MNIST & X-ray.\n4 Ch = PNG & cetak.\n5+ Ch = Citra satelit.",
         accent_color=st.GREEN,
         bg_color=st.TINT_GREEN,
-        font_size=Pt(18),
+        font_size=Pt(17),
         bold=True,
     )
     st.add_footer(s7, 7, SESSION_LABEL)
     st.set_speaker_notes(
         s7,
-        """Alokasi waktu: 2 menit
+        """Alokasi waktu: 1 menit
 
 Naskah ajar:
-Foto grayscale hanya punya satu lapisan angka sehingga shape-nya dua dimensi: (H, W). Sementara foto berwarna RGB punya tiga lapisan yang ditumpuk: (H, W, 3).
+Berdasarkan color channel-nya, gambar dibagi menjadi: 1 channel (Grayscale, seperti MNIST atau foto rontgen), 3 channels (RGB yang paling umum untuk foto — selain palet warna 3-channel lain seperti HSV atau YCbCr), 4 channels (RGBA transparan PNG & CMYK untuk cetak), hingga 5+ channels (citra satelit multispectral/inframerah).
 
 Penjelasan konsep:
-Untuk membedakan karakter Disney seperti Mickey, Minnie, Donald, atau Stitch, informasi warna sangat penting! Karena itu kita selalu memastikan foto dimuat dalam format RGB 3 channel.
+Di antara semuanya, gambar foto sehari-hari dan model AI pengenalan objek paling banyak berfokus pada format 3 channels RGB agar informasi warna objek tidak hilang.
 
 Transisi:
-Mari kita lihat isi masing-masing dari 3 channel RGB tersebut.""",
+Mari kita bedah lebih dalam cara kerja 3 channel RGB tersebut.""",
     )
 
     # =======================================================================
@@ -840,11 +994,49 @@ Penjelasan konsep:
 Inilah cara CNN nanti membaca warna: setiap filter konvolusi melihat kombinasi nilai dari ketiga channel ini secara bersamaan.
 
 Transisi:
-Sekarang setelah paham piksel dan 3 channel RGB, berapa total angka dalam satu foto standar?""",
+Bagaimana komputer mengubah kembali angka RGB menjadi cahaya di layar HP? Mari kita lihat!""",
     )
 
     # =======================================================================
-    # SLIDE 09 — IMAGE SHAPE (Reordered after Pixel & RGB)
+    # SLIDE 10 — CARA KOMPUTER MENAMPILKAN GAMBAR KE LAYAR (SYNCED HTML SLIDE 09)
+    # =======================================================================
+    s_disp = st.add_blank_slide(prs, st.LIGHT_BG)
+    st.add_slide_header(
+        s_disp,
+        "TEORI · LAYAR & SUB-PIXEL",
+        "Cara Komputer Menampilkan Gambar ke Layar",
+    )
+    if "screen_display" in vis:
+        s_disp.shapes.add_picture(str(vis["screen_display"]), st.MARGIN_X, Inches(1.58), width=st.CONTENT_WIDTH)
+    st.add_callout_box(
+        s_disp,
+        st.MARGIN_X,
+        Inches(5.65),
+        st.CONTENT_WIDTH,
+        Inches(1.05),
+        "Intinya: Setiap 1 pixel di layar HP hanyalah 3 lampu mikro Red, Green, Blue yang kecerahannya diatur oleh angka 0–255.",
+        accent_color=st.GREEN,
+        bg_color=st.TINT_GREEN,
+        font_size=Pt(20),
+        bold=True,
+    )
+    st.add_footer(s_disp, 10, SESSION_LABEL)
+    st.set_speaker_notes(
+        s_disp,
+        """Alokasi waktu: 2 menit
+
+Naskah ajar:
+Proses kebalikan dari membaca gambar: untuk menampilkan apel merah di layar HP, komputer membaca paket angka [234, 67, 53] dari memori, lalu menyalakan 3 lampu kecil sub-pixel (Red 92%, Green 26%, Blue 21%).
+
+Penjelasan konsep:
+Karena jutaan kotak lampu RGB ini tersusun sangat rapat, mata kita memadukan titik-titik cahaya tersebut dan langsung melihat foto apel utuh yang halus.
+
+Transisi:
+Sekarang setelah paham piksel, 3 channel RGB, dan cara layar menampilkannya, berapa total angka dalam satu foto standar 224×224?""",
+    )
+
+    # =======================================================================
+    # SLIDE 11 — IMAGE SHAPE (Reordered after Pixel & RGB)
     # =======================================================================
     s9 = st.add_blank_slide(prs, st.LIGHT_BG)
     st.add_slide_header(s9, "TEORI · DIMENSI ARRAY", "Setiap Foto Punya Shape")
@@ -933,14 +1125,14 @@ Bagaimana cara komputer mengenali karakter dari 150.528 angka ini? Mari kita pah
         (
             "2",
             "Machine Learning (ML)",
-            "Komputer mencari pola sendiri dari contoh data dan label tanpa perlu didikte rumus if-else satu per satu.",
+            "Manusia memilihkan ciri/fitur foto secara manual (sudut, warna, ukuran), lalu mesin belajar dari tabel fitur itu.",
             st.BLUE,
             st.TINT_BLUE,
         ),
         (
             "3",
             "Deep Learning (CNN)",
-            "Cabang ML berlapis yang otomatis mengekstrak tepi, bentuk telinga, hingga karakter utuh langsung dari piksel.",
+            "Foto mentah langsung masuk tanpa pilih ciri manual! Lapisan saraf otomatis mencari tepi, bentuk, hingga objek utuh.",
             st.GREEN,
             st.TINT_GREEN,
         ),
@@ -1067,22 +1259,22 @@ Lalu bagaimana alur kerja penggunaan AI di project kita dari awal sampai akhir, 
     workflow_cards = [
         (
             "1",
-            "Tahap 1: Siapkan Data (P01)",
-            "Cek kualitas dataset (EDA), bersihkan duplikat/rusak, seragamkan ukuran 224×224, & normalisasi skala angka.",
+            "Tahap 1: Siapkan Foto (P01)",
+            "Seragamkan ukuran, tegakkan posisi, dan saring file rusak agar bahan foto siap latih.",
             st.BLUE,
             st.TINT_BLUE,
         ),
         (
             "2",
-            "Tahap 2: Latih Model AI (P02–P06)",
-            "Model Neural Network / CNN belajar mengenali pola dari ribuan contoh foto yang sudah rapi dan bersih.",
+            "Tahap 2: Latih Model AI",
+            "Model AI mempelajari pola bentuk & warna dengan tenang dari koleksi foto bersih dan seimbang.",
             st.YELLOW,
             st.TINT_YELLOW,
         ),
         (
             "3",
-            "Tahap 3: Evaluasi & Uji (P07–P08)",
-            "Uji akurasi model pada foto baru (polos vs ramai) dan visualisasikan fokus model dengan Grad-CAM.",
+            "Tahap 3: Tebak Foto Baru",
+            "Saat diberi foto baru dari HP, AI mampu menebak karakternya dengan tepat & konsisten!",
             st.GREEN,
             st.TINT_GREEN,
         ),
@@ -1187,7 +1379,7 @@ Sekarang kita tahu mengapa data harus disiapkan untuk AI. Mari kita bahas langka
     st.add_footer(s13, 13, SESSION_LABEL)
     st.set_speaker_notes(
         s13,
-        """Alokasi waktu: 2 menit
+        """Alokasi waktu: 1 menit
 
 Naskah ajar:
 Saat foto dibuka dari disk, tipenya adalah `uint8` (unsigned integer 8-bit) dengan rentang 0 sampai 255. Tapi sebelum masuk ke neural network, kita ubah menjadi `float32` karena perhitungan bobot dan gradien membutuhkan angka desimal.
@@ -1331,7 +1523,7 @@ Sekarang kita beralih dari menyiapkan satu foto ke memahami keseluruhan dataset 
     # SLIDE 17 — HISTOGRAM
     # =======================================================================
     s17 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s17, "TEORI · STATISTIK CITRA", "Histogram: Membaca Karakter Foto")
+    st.add_slide_header(s17, "TEORI · EDA ISSUE #2 (PENCAHAYAAN)", "Issue #2 EDA: Histogram & Kontras Foto")
     s17.shapes.add_picture(str(vis["histogram"]), Inches(2.1), Inches(1.60), height=Inches(3.65))
     st.add_card(
         s17,
@@ -1363,19 +1555,19 @@ Selain histogram, apa saja yang perlu kita cek saat melakukan EDA dataset?""",
     # SLIDE 18 — EXPLORATORY DATA ANALYSIS (3-column table + imbalance callout)
     # =======================================================================
     s18 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s18, "TEORI · EDA DESKRIPTIF", "Kenali Data Sebelum Modeling")
+    st.add_slide_header(s18, "TEORI · EDA DESKRIPTIF (ISSUE #1–#3)", "Kenali 3 Issue Utama Sebelum Modeling")
     st.add_styled_table(
         s18,
         st.MARGIN_X,
         Inches(1.58),
         st.CONTENT_WIDTH,
         Inches(3.8),
-        headers=["Ukuran", "Yang Dilihat", "Mengapa Penting"],
+        headers=["Issue EDA", "Yang Dilihat", "Mengapa Penting"],
         rows=[
-            ["Distribusi", "Jumlah per kelas × kondisi", "Deteksi class imbalance"],
-            ["Resolusi & ukuran", "Dimensi (W×H) & MB file", "Konsistensi input model"],
-            ["Brightness & contrast", "Rata-rata & simpangan baku", "Karakteristik pencahayaan"],
-            ["Edge density & entropy", "Rasio tepi & keragaman piksel", "Kompleksitas background"],
+            ["Issue #1 · Imbalance", "Jumlah foto per kelas × kondisi", "Cegah model bias ke kelas terbanyak"],
+            ["Issue #2 · Pencahayaan", "Histogram, Brightness & Contrast", "Cek foto terlalu gelap / silau"],
+            ["Issue #3 · Latar Ramai", "Edge density & latar polos vs ramai", "Cegah AI menghafal latar belakang"],
+            ["Cek Tambahan · Bab 4", "Resolusi, file rusak, EXIF & duplikat", "Pastikan input bersih & valid"],
         ],
         col_widths=[Inches(3.3), Inches(4.4), Inches(4.13)],
         header_color=st.BLUE,
@@ -1412,7 +1604,7 @@ Mari kita lihat lebih dekat ukuran keempat: bagaimana cara mengukur 'keramaian' 
     # SLIDE 19 — EDGE DENSITY
     # =======================================================================
     s19 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s19, "TEORI · KOMPLEKSITAS VISUAL", "Seberapa Ramai Background-nya?")
+    st.add_slide_header(s19, "TEORI · EDA ISSUE #3 (LATAR RAMAI)", "Issue #3 EDA: Seberapa Ramai Background-nya?")
     s19.shapes.add_picture(str(vis["edge_density"]), Inches(0.85), Inches(1.58), width=Inches(11.6))
     polos_ed = stats["by_condition"]["polos"]["mean_edge_density"]
     ramai_ed = stats["by_condition"]["ramai"]["mean_edge_density"]
@@ -1849,6 +2041,21 @@ Slide referensi belajar mandiri bagian 1/2 (untuk dipelajari di luar jam sesi). 
 Naskah ajar:
 Slide referensi belajar mandiri bagian 2/2: pendalaman deteksi tepi (Blur/Filter, Sobel, Canny) untuk memahami metrik edge density polos vs ramai, serta sumber belajar anti-data leakage dan class imbalance.""",
     )
+
+    # Auto-sync sequential slide footer numbers & verify 120-min speaker notes sum
+    import re as _re
+    total_notes_min = 0
+    for idx_s, sld in enumerate(prs.slides, start=1):
+        for shp in sld.shapes:
+            if shp.has_text_frame and shp.left == Inches(11.5) and shp.top == Inches(7.02):
+                for p in shp.text_frame.paragraphs:
+                    for r in p.runs:
+                        r.text = f"{idx_s:02d}"
+        if sld.has_notes_slide:
+            m_min = _re.search(r"Alokasi waktu:\s*(\d+)\s*menit", sld.notes_slide.notes_text_frame.text)
+            if m_min:
+                total_notes_min += int(m_min.group(1))
+    assert total_notes_min == 120, f"Expected 120 min notes in PPTX, got {total_notes_min}"
 
     OUT_PPTX.parent.mkdir(parents=True, exist_ok=True)
     prs.save(OUT_PPTX)

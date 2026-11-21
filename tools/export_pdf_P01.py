@@ -1,4 +1,4 @@
-"""Ekspor slides/P01_image_processing_eda.html menjadi PDF berkualitas tinggi
+"""Ekspor materials/P01/P01_understanding_images_processing_eda.html menjadi PDF berkualitas tinggi
 dengan slide interaktif AI Fundamental & Question/Answer Reveal dipisah menjadi
 halaman-halaman berurutan.
 """
@@ -10,8 +10,8 @@ from pathlib import Path
 import pikepdf
 
 ROOT = Path(__file__).resolve().parent.parent
-HTML_PATH = ROOT / "materials" / "P01" / "P01_image_processing_eda.html"
-PDF_PATH = ROOT / "materials" / "P01" / "P01_image_processing_eda.pdf"
+HTML_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
+PDF_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.pdf"
 TMP_HTML_PATH = ROOT / "materials" / "P01" / "_tmp_print_P01.html"
 
 CHROME_CANDIDATES = [

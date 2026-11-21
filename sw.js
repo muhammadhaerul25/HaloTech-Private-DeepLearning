@@ -1,10 +1,10 @@
-const CACHE_NAME = 'dl-course-pwa-v3';
+const CACHE_NAME = 'dl-course-pwa-v4';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
   './sessions.json',
   './manifest.webmanifest',
-  './materials/P01/P01_image_processing_eda.html',
+  './materials/P01/P01_understanding_images_processing_eda.html',
   './materials/P01/assets/P01/icon-192.png',
   './materials/P01/assets/P01/icon-512.png'
 ];

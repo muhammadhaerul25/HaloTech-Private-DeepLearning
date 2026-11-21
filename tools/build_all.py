@@ -1,12 +1,12 @@
 """Orkestrator build lengkap untuk HaloTech Private Deep Learning (P01).
 
-HTML (slides/P01_image_processing_eda.html) adalah Sumber Utama (Main Source).
+HTML (materials/P01/P01_understanding_images_processing_eda.html) adalah Sumber Utama (Main Source).
 Menjalankan seluruh pipeline secara berurutan agar semua format selalu sinkron:
 1. Generate dataset sampel sintetis (data/sample/)
-2. Generate dek interaktif HTML5 — Main Source (slides/P01_image_processing_eda.html)
-3. Ekspor PDF berkualitas tinggi dari HTML (slides/P01_image_processing_eda.pdf)
-4. Generate notebook peserta & solusi selaras HTML (notebooks/)
-5. Generate visualisasi & dek PPTX selaras HTML (slides/P01_image_processing_eda.pptx)
+2. Generate dek interaktif HTML5 — Main Source (materials/P01/P01_understanding_images_processing_eda.html)
+3. Ekspor PDF berkualitas tinggi dari HTML (materials/P01/P01_understanding_images_processing_eda.pdf)
+4. Generate notebook peserta & solusi selaras HTML (materials/P01/)
+5. Generate visualisasi & dek PPTX selaras HTML (materials/P01/P01_understanding_images_processing_eda.pptx)
 """
 
 from __future__ import annotations
