@@ -1,22 +1,31 @@
-"""Generate deterministic synthetic sample dataset in data/sample/.
+"""Generate deterministic synthetic sample dataset in data/sample/ and MNIST dataset in data/mnist/.
 
 Dataset specification:
-- 5 geometric classes: lingkaran, persegi, segitiga, bintang, heksagon
-- 2 conditions per class: polos, ramai
-- 12 images per (kelas, kondisi) = 120 image files total (256x256)
-- Special cases embedded in the 120 files:
-  * 2 exact duplicate images (same SHA-256 bytes)
-  * 1 corrupted image file (invalid JPEG bytes)
-  * 2 images with EXIF Orientation tag = 6
-- Metadata saved to data/sample/metadata.csv with columns:
-  file, kelas, kondisi, id_sesi, catatan
+1. data/sample/:
+   - 5 geometric classes: lingkaran, persegi, segitiga, bintang, heksagon
+   - 2 conditions per class: polos, ramai
+   - 12 images per (kelas, kondisi) = 120 image files total (256x256)
+   - Special cases embedded in the 120 files:
+     * 2 exact duplicate images (same SHA-256 bytes)
+     * 1 corrupted image file (invalid JPEG bytes)
+     * 2 images with EXIF Orientation tag = 6
+   - Metadata saved to data/sample/metadata.csv
+2. data/mnist/:
+   - Full archive data/mnist/mnist.npz (when available) + data/mnist/mnist_samples.json
+   - 10 digit folders (data/mnist/0/ .. data/mnist/9/) with real 28x28 grayscale PNG images
+   - data/mnist/variants/ with pairs of different handwriting styles (7_a, 7_b, 5_a, 5_b)
+   - Metadata saved to data/mnist/metadata.csv
 """
 
 from __future__ import annotations
 
+import ast
 import csv
+import json
 import math
 import shutil
+import struct
+import zipfile
 from pathlib import Path
 
 import numpy as np
@@ -30,6 +39,8 @@ IMAGES_PER_COMBO = 12
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
+MNIST_DIR = ROOT_DIR / "data" / "mnist"
+ASSETS_MNIST_JSON = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "mnist_samples.json"
 
 # Google I/O-inspired vibrant colors for foreground shapes
 CLASS_COLORS = {
@@ -224,7 +235,126 @@ def build_sample_dataset() -> dict:
     }
 
 
+def _read_npy_slice(raw_file, max_items: int):
+    magic = raw_file.read(6)
+    assert magic[:6] == b"\x93NUMPY"
+    major, _ = struct.unpack("<BB", raw_file.read(2))
+    hlen = struct.unpack("<H" if major == 1 else "<I", raw_file.read(2 if major == 1 else 4))[0]
+    meta = ast.literal_eval(raw_file.read(hlen).decode("latin1"))
+    shape = meta["shape"]
+    if len(shape) == 1:
+        return list(raw_file.read(max_items))
+    h, w = shape[1], shape[2]
+    data = raw_file.read(max_items * h * w)
+    imgs = []
+    for idx in range(max_items):
+        start = idx * h * w
+        imgs.append(np.frombuffer(data[start : start + h * w], dtype=np.uint8).reshape(h, w))
+    return imgs
+
+
+def build_mnist_dataset() -> dict:
+    """Create data/mnist/ with organized 28x28 PNG images (0-9), variants, mnist_samples.json, and metadata.csv."""
+    MNIST_DIR.mkdir(parents=True, exist_ok=True)
+    npz_path = MNIST_DIR / "mnist.npz"
+
+    # Copy mnist_samples.json to data/mnist/ if available in assets
+    if ASSETS_MNIST_JSON.exists():
+        shutil.copyfile(ASSETS_MNIST_JSON, MNIST_DIR / "mnist_samples.json")
+
+    rows: list[dict[str, str | int]] = []
+    per_digit_target = 10
+
+    if npz_path.exists():
+        with zipfile.ZipFile(npz_path, "r") as zf:
+            with zf.open("y_train.npy") as fy:
+                y_sub = _read_npy_slice(fy, 500)
+            with zf.open("x_train.npy") as fx:
+                x_sub = _read_npy_slice(fx, 500)
+
+        counts = {d: 0 for d in range(10)}
+        # Ensure index 1 of each digit (the iconic sample in mnist_samples.json) is saved as _01.png
+        by_digit: dict[int, list[tuple[int, np.ndarray]]] = {d: [] for d in range(10)}
+        for idx, (lbl, arr) in enumerate(zip(y_sub, x_sub)):
+            by_digit[int(lbl)].append((idx, arr))
+
+        for d in range(10):
+            d_dir = MNIST_DIR / str(d)
+            d_dir.mkdir(parents=True, exist_ok=True)
+            candidates = by_digit[d]
+            # Put the 2nd sample first so mnist_{d}_01.png matches the iconic digit in mnist_samples.json
+            if len(candidates) > 1:
+                ordered = [candidates[1], candidates[0]] + candidates[2:]
+            else:
+                ordered = candidates
+            for rank, (orig_idx, arr) in enumerate(ordered[:per_digit_target], start=1):
+                fname = f"mnist_{d}_{rank:02d}.png"
+                fpath = d_dir / fname
+                Image.fromarray(arr, mode="L").save(fpath)
+                counts[d] += 1
+                rows.append({
+                    "file": f"{d}/{fname}",
+                    "digit": d,
+                    "kategori": "standar",
+                    "mnist_train_index": orig_idx,
+                })
+
+    # Also save the iconic digits and handwriting variants from mnist_samples.json
+    sample_json_path = MNIST_DIR / "mnist_samples.json"
+    if sample_json_path.exists():
+        mdata = json.loads(sample_json_path.read_text(encoding="utf-8"))
+        # If mnist.npz wasn't present, at least save 1 PNG per digit from mnist_samples.json
+        if not rows:
+            for d_str, mat in mdata["digits"].items():
+                d_dir = MNIST_DIR / d_str
+                d_dir.mkdir(parents=True, exist_ok=True)
+                fname = f"mnist_{d_str}_01.png"
+                arr = np.array(mat, dtype=np.uint8)
+                Image.fromarray(arr, mode="L").save(d_dir / fname)
+                rows.append({
+                    "file": f"{d_str}/{fname}",
+                    "digit": int(d_str),
+                    "kategori": "standar",
+                    "mnist_train_index": mdata.get("digit_indices", {}).get(d_str, -1),
+                })
+
+        var_dir = MNIST_DIR / "variants"
+        var_dir.mkdir(parents=True, exist_ok=True)
+        var_map = {
+            "7_a": ("mnist_7_penulis_a.png", 7),
+            "7_b": ("mnist_7_penulis_b.png", 7),
+            "5_a": ("mnist_5_penulis_a.png", 5),
+            "5_b": ("mnist_5_penulis_b.png", 5),
+        }
+        for key, (vname, d_num) in var_map.items():
+            if key in mdata.get("variants", {}):
+                vinfo = mdata["variants"][key]
+                arr = np.array(vinfo["pixels"], dtype=np.uint8)
+                Image.fromarray(arr, mode="L").save(var_dir / vname)
+                rows.append({
+                    "file": f"variants/{vname}",
+                    "digit": d_num,
+                    "kategori": f"variasi_{key}",
+                    "mnist_train_index": vinfo.get("index", -1),
+                })
+
+    meta_csv = MNIST_DIR / "metadata.csv"
+    with meta_csv.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=["file", "digit", "kategori", "mnist_train_index"])
+        writer.writeheader()
+        writer.writerows(rows)
+
+    return {
+        "mnist_dir": str(MNIST_DIR),
+        "total_png_files": len(rows),
+        "has_full_npz": npz_path.exists(),
+        "metadata_path": str(meta_csv),
+    }
+
+
 if __name__ == "__main__":
     summary = build_sample_dataset()
     print(f"Dataset sintetis selesai dibuat: {summary}")
+    mnist_summary = build_mnist_dataset()
+    print(f"Dataset MNIST selesai dibuat   : {mnist_summary}")
 

@@ -106,6 +106,18 @@ def analyze_sample_dataset() -> dict:
             "max_edge_density": round(float(grp["edge_density"].max()), 4),
         }
 
+    polos_asset = ASSETS_DIR / "sample_polos.jpg"
+    ramai_asset = ASSETS_DIR / "sample_ramai.jpg"
+    if not polos_asset.exists():
+        polos_asset = SAMPLE_DIR / "bintang" / "polos" / "bintang_polos_02.jpg"
+    if not ramai_asset.exists():
+        ramai_asset = SAMPLE_DIR / "bintang" / "ramai" / "bintang_ramai_01.jpg"
+    g_polos_hist = np.array(ImageOps.exif_transpose(Image.open(polos_asset)).convert("L"))
+    g_ramai_hist = np.array(ImageOps.exif_transpose(Image.open(ramai_asset)).convert("L"))
+
+    polos_df = df[df["kondisi"] == "polos"]
+    ramai_df = df[df["kondisi"] == "ramai"]
+
     stats = {
         "total_metadata_rows": int(len(meta)),
         "valid_images": int(len(df)),
@@ -118,6 +130,12 @@ def analyze_sample_dataset() -> dict:
         "classes": sorted(df["kelas"].unique().tolist()),
         "conditions": sorted(df["kondisi"].unique().tolist()),
         "by_condition": by_cond,
+        "hist256_polos": np.bincount(g_polos_hist.ravel(), minlength=256).tolist(),
+        "hist256_ramai": np.bincount(g_ramai_hist.ravel(), minlength=256).tolist(),
+        "dist_polos_b": [round(float(x), 2) for x in polos_df["mean_intensity"].tolist()],
+        "dist_polos_c": [round(float(x), 2) for x in polos_df["std_intensity"].tolist()],
+        "dist_ramai_b": [round(float(x), 2) for x in ramai_df["mean_intensity"].tolist()],
+        "dist_ramai_c": [round(float(x), 2) for x in ramai_df["std_intensity"].tolist()],
     }
     return stats, df
 
@@ -297,28 +315,59 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
     plt.close(fig)
     paths["resize"] = p6
 
-    # 7. Histogram & Brightness/Contrast Comparison
+    # 7. Histogram & Brightness/Contrast Comparison (Synced with HTML Slide 33 & 34: Histogram + Boxplot 119 Valid Images)
     p7 = ASSETS_DIR / "07_histogram_brightness_contrast.png"
-    with Image.open(SAMPLE_DIR / "segitiga" / "polos" / "segitiga_polos_03.jpg") as im:
-        g_polos = np.array(im.convert("L"))
-    with Image.open(SAMPLE_DIR / "segitiga" / "ramai" / "segitiga_ramai_03.jpg") as im:
-        g_ramai = np.array(im.convert("L"))
+    polos_src = ASSETS_DIR / "sample_polos.jpg"
+    ramai_src = ASSETS_DIR / "sample_ramai.jpg"
+    if not polos_src.exists():
+        polos_src = SAMPLE_DIR / "bintang" / "polos" / "bintang_polos_02.jpg"
+    if not ramai_src.exists():
+        ramai_src = SAMPLE_DIR / "bintang" / "ramai" / "bintang_ramai_01.jpg"
+    with Image.open(polos_src) as im:
+        g_polos = np.array(ImageOps.exif_transpose(im).convert("L"))
+    with Image.open(ramai_src) as im:
+        g_ramai = np.array(ImageOps.exif_transpose(im).convert("L"))
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 4.1), dpi=200)
-    ax1.hist(g_polos.ravel(), bins=32, range=(0, 255), color="#4285F4", alpha=0.85, edgecolor="#FFFFFF")
+    fig, axes_h = plt.subplots(1, 3, figsize=(11.6, 3.95), dpi=200)
+    ax1, ax2, ax3 = axes_h
+
+    ax1.hist(g_polos.ravel(), bins=32, range=(0, 256), color="#4285F4", alpha=0.88, edgecolor="#FFFFFF")
     ax1.axvline(g_polos.mean(), color="#EA4335", linestyle="--", linewidth=2.2, label=f"Mean = {g_polos.mean():.1f}")
-    ax1.set_title(f"Kondisi Polos (Contoh data sampel)\nMean={g_polos.mean():.1f} | Std={g_polos.std():.1f}", fontsize=13, fontweight="bold", color="#202124")
-    ax1.set_xlabel("Intensitas Piksel (0–255)", fontsize=12)
-    ax1.set_ylabel("Jumlah Piksel", fontsize=12)
-    ax1.legend(fontsize=11)
+    ax1.set_title(f"Histogram Polos (65.536 px)\nMean={g_polos.mean():.1f} | Std={g_polos.std():.1f}", fontsize=12, fontweight="bold", color="#1A73E8")
+    ax1.set_xlabel("Intensitas Piksel (0–255)", fontsize=11)
+    ax1.set_ylabel("Jumlah Piksel", fontsize=11)
+    ax1.legend(fontsize=10, loc="upper left")
 
-    ax2.hist(g_ramai.ravel(), bins=32, range=(0, 255), color="#EA4335", alpha=0.85, edgecolor="#FFFFFF")
+    ax2.hist(g_ramai.ravel(), bins=32, range=(0, 256), color="#EA4335", alpha=0.86, edgecolor="#FFFFFF")
     ax2.axvline(g_ramai.mean(), color="#202124", linestyle="--", linewidth=2.2, label=f"Mean = {g_ramai.mean():.1f}")
-    ax2.set_title(f"Kondisi Ramai (Contoh data sampel)\nMean={g_ramai.mean():.1f} | Std={g_ramai.std():.1f}", fontsize=13, fontweight="bold", color="#202124")
-    ax2.set_xlabel("Intensitas Piksel (0–255)", fontsize=12)
-    ax2.set_ylabel("Jumlah Piksel", fontsize=12)
-    ax2.legend(fontsize=11)
-    fig.tight_layout(pad=1.4)
+    ax2.set_title(f"Histogram Ramai (65.536 px)\nMean={g_ramai.mean():.1f} | Std={g_ramai.std():.1f}", fontsize=12, fontweight="bold", color="#C5221F")
+    ax2.set_xlabel("Intensitas Piksel (0–255)", fontsize=11)
+    ax2.set_ylabel("Jumlah Piksel", fontsize=11)
+    ax2.legend(fontsize=10, loc="upper left")
+
+    bp_b_p = np.array(stats["dist_polos_b"])
+    bp_b_r = np.array(stats["dist_ramai_b"])
+    bp_c_p = np.array(stats["dist_polos_c"])
+    bp_c_r = np.array(stats["dist_ramai_c"])
+    bplot = ax3.boxplot(
+        [bp_b_p, bp_b_r, bp_c_p, bp_c_r],
+        tick_labels=["B:Polos", "B:Ramai", "C:Polos", "C:Ramai"],
+        patch_artist=True,
+        widths=0.52,
+    )
+    for b_idx, (fcol, ecol) in enumerate([("#E8F0FE", "#1A73E8"), ("#FCE8E6", "#EA4335"), ("#E8F0FE", "#1A73E8"), ("#FCE8E6", "#EA4335")]):
+        bplot["boxes"][b_idx].set_facecolor(fcol)
+        bplot["boxes"][b_idx].set_edgecolor(ecol)
+    ax3.set_title(
+        f"Boxplot 119 Foto Valid (B vs C)\nB: {bp_b_p.mean():.1f} vs {bp_b_r.mean():.1f} | C: {bp_c_p.mean():.1f} vs {bp_c_r.mean():.1f}",
+        fontsize=11.5,
+        fontweight="bold",
+        color="#202124",
+    )
+    ax3.set_ylabel("Skala Nilai (0–255)", fontsize=11)
+    ax3.grid(axis="y", alpha=0.3)
+
+    fig.tight_layout(pad=1.2)
     fig.savefig(p7, dpi=200, facecolor="#FFFFFF")
     plt.close(fig)
     paths["histogram"] = p7
@@ -391,7 +440,7 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
     plt.close(fig)
     paths["exif"] = p9
 
-    # 11. RGB Screen Display (Synced with HTML Slide 09)
+    # 11. RGB Screen Display (Synced with HTML Slide 09: Tahap 1: Nyalakan 3 Lampu Pixel -> Tahap 2: Susun 3 Lapis RGB -> Tahap 3: Tampil Jadi Gambar Utuh)
     p11 = ASSETS_DIR / "11_rgb_screen_display.png"
     fig, ax = plt.subplots(figsize=(11.6, 3.85), dpi=200)
     ax.set_xlim(0, 11.6)
@@ -399,73 +448,100 @@ def generate_visualizations(df: pd.DataFrame, stats: dict) -> dict[str, Path]:
     ax.axis("off")
     fig.patch.set_facecolor("#FFFFFF")
 
-    # Stage 1 Box: Data Angka
-    ax.add_patch(patches.FancyBboxPatch((0.15, 0.2), 3.25, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#E8F0FE", edgecolor="#C6DAFC", linewidth=2))
-    ax.text(1.77, 3.35, "1. Angka di Memori (1 Pixel)", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#1A73E8")
-    ax.add_patch(patches.FancyBboxPatch((0.35, 1.05), 2.85, 1.95, boxstyle="round,pad=0.05,rounding_size=0.18", facecolor="#202124", edgecolor="#3C4043", linewidth=1.5))
-    ax.text(1.77, 2.75, "Pixel(112, 88) · Apel Merah", ha="center", va="center", fontsize=9.8, family="monospace", color="#9AA0A6")
-    for yy, lbl, val, pct, col in [
-        (2.30, "R (Merah)", 234, 0.92, "#EA4335"),
-        (1.80, "G (Hijau)", 67, 0.26, "#34A853"),
-        (1.30, "B (Biru)", 53, 0.21, "#4285F4"),
+    # Stage 1 Box (Left): Tahap 1: Nyalakan 3 Lampu Pixel (Zoom 1000x)
+    ax.add_patch(patches.FancyBboxPatch((0.12, 0.2), 3.40, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#E8F0FE", edgecolor="#C6DAFC", linewidth=2))
+    ax.text(1.82, 3.37, "Tahap 1: Nyalakan 3 Lampu Pixel", ha="center", va="center", fontsize=11.3, fontweight="bold", color="#1A73E8")
+    ax.add_patch(patches.FancyBboxPatch((0.26, 0.92), 3.12, 2.18, boxstyle="round,pad=0.04,rounding_size=0.16", facecolor="#111317", edgecolor="#3C4043", linewidth=1.8))
+
+    # Left inside Stage 1: 3 sub-pixel LED bars inside 1 pixel housing
+    ax.add_patch(patches.FancyBboxPatch((0.38, 1.12), 1.66, 1.80, boxstyle="round,pad=0.03,rounding_size=0.12", facecolor="#181B22", edgecolor="#5F6368", linewidth=1.1, linestyle="--"))
+    ax.text(1.21, 2.74, "1 KOTAK PIXEL LAYAR", ha="center", va="center", fontsize=7.6, fontweight="bold", color="#9AA0A6", family="monospace")
+    for xx, lbl, pct, col in [
+        (0.66, "R 92%", 0.92, "#EA4335"),
+        (1.21, "G 26%", 0.26, "#34A853"),
+        (1.76, "B 21%", 0.21, "#4285F4"),
     ]:
-        ax.text(0.48, yy, lbl, ha="left", va="center", fontsize=9.5, fontweight="bold", color=col, family="monospace")
-        ax.add_patch(patches.FancyBboxPatch((1.36, yy - 0.08), 1.32, 0.16, boxstyle="round,pad=0.0,rounding_size=0.06", facecolor="#3C4043", edgecolor="none"))
-        ax.add_patch(patches.FancyBboxPatch((1.36, yy - 0.08), 1.32 * pct, 0.16, boxstyle="round,pad=0.0,rounding_size=0.06", facecolor=col, edgecolor="none"))
-        ax.text(3.08, yy, str(val), ha="right", va="center", fontsize=10, fontweight="bold", color="#FFFFFF", family="monospace")
-    ax.text(1.77, 0.56, "Data angka 0 (mati) s.d. 255 (terang)", ha="center", va="center", fontsize=10, color="#3C4043")
+        ax.add_patch(patches.FancyBboxPatch((xx - 0.19, 1.44), 0.38, 1.12, boxstyle="round,pad=0.02,rounding_size=0.08", facecolor="#23262D", edgecolor="#3C4043", linewidth=1.0))
+        ax.add_patch(patches.FancyBboxPatch((xx - 0.15, 1.48), 0.30, 1.04 * pct, boxstyle="round,pad=0.0,rounding_size=0.06", facecolor=col, edgecolor="none"))
+        ax.text(xx, 1.26, lbl, ha="center", va="center", fontsize=7.8, fontweight="bold", color=col, family="monospace")
+
+    # Small arrow to merged color output on the right of Stage 1
+    ax.annotate("", xy=(2.38, 2.02), xytext=(2.10, 2.02), arrowprops=dict(arrowstyle="-|>,head_width=0.20,head_length=0.16", lw=2.2, color="#FBBC04"))
+    ax.add_patch(patches.FancyBboxPatch((2.42, 1.12), 0.84, 1.80, boxstyle="round,pad=0.03,rounding_size=0.12", facecolor="#181B22", edgecolor="#3C4043", linewidth=1.1))
+    ax.text(2.84, 2.66, "1 TITIK\nWARNA", ha="center", va="center", fontsize=7.4, fontweight="bold", color="#BDC1C6")
+    ax.add_patch(patches.FancyBboxPatch((2.57, 1.66), 0.54, 0.54, boxstyle="round,pad=0.02,rounding_size=0.10", facecolor="#EA4335", edgecolor="#FFFFFF", linewidth=1.5))
+    ax.text(2.84, 1.34, "Titik\nMerah", ha="center", va="center", fontsize=8.2, fontweight="bold", color="#FBBC04")
+    ax.text(1.82, 0.54, "3 lampu mikro R-G-B menyala jadi 1 titik warna", ha="center", va="center", fontsize=9.2, color="#3C4043")
 
     # Arrow 1
-    ax.annotate("", xy=(3.95, 1.95), xytext=(3.48, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.28,head_length=0.25", lw=3, color="#34A853"))
-    ax.text(3.71, 2.24, "Kirim", ha="center", va="center", fontsize=9.5, fontweight="bold", color="#137333")
+    ax.annotate("", xy=(4.00, 1.95), xytext=(3.56, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.26,head_length=0.22", lw=2.8, color="#34A853"))
+    ax.text(3.78, 2.24, "Tumpuk", ha="center", va="center", fontsize=9.0, fontweight="bold", color="#137333")
 
-    # Stage 2 Box: 3 Lampu Sub-pixel
-    ax.add_patch(patches.FancyBboxPatch((4.02, 0.2), 3.45, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FFFFFF", edgecolor="#DADCE0", linewidth=2))
-    ax.text(5.74, 3.35, "2. 3 Lampu di Layar (Zoom 1000×)", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#202124")
-    ax.add_patch(patches.FancyBboxPatch((4.30, 1.18), 2.88, 1.82, boxstyle="round,pad=0.04,rounding_size=0.18", facecolor="#111317", edgecolor="#3C4043", linewidth=2))
-    for xx, lbl, pct, col in [
-        (4.78, "R 92%", 0.92, "#EA4335"),
-        (5.74, "G 26%", 0.26, "#34A853"),
-        (6.70, "B 21%", 0.21, "#4285F4"),
-    ]:
-        ax.add_patch(patches.FancyBboxPatch((xx - 0.25, 1.56), 0.50, 1.24, boxstyle="round,pad=0.02,rounding_size=0.10", facecolor="#23262D", edgecolor="#3C4043", linewidth=1.2))
-        ax.add_patch(patches.FancyBboxPatch((xx - 0.21, 1.60), 0.42, 1.16 * pct, boxstyle="round,pad=0.0,rounding_size=0.08", facecolor=col, edgecolor="none"))
-        ax.text(xx, 1.35, lbl, ha="center", va="center", fontsize=9.5, fontweight="bold", color=col, family="monospace")
-    ax.add_patch(patches.FancyBboxPatch((4.24, 0.42), 3.00, 0.54, boxstyle="round,pad=0.02,rounding_size=0.12", facecolor="#F8F9FA", edgecolor="#DADCE0", linewidth=1.2))
-    ax.add_patch(patches.FancyBboxPatch((4.35, 0.52), 0.32, 0.32, boxstyle="round,pad=0.0,rounding_size=0.08", facecolor="#EA4335", edgecolor="#C5221F", linewidth=1))
-    ax.text(4.80, 0.68, "Lampu R terang -> titik Merah", ha="left", va="center", fontsize=9.3, fontweight="bold", color="#202124")
+    # Stage 2 Box (Middle): Tahap 2: Susun 3 Lapis RGB (3D Stacked Layers)
+    ax.add_patch(patches.FancyBboxPatch((4.04, 0.2), 3.48, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FFFFFF", edgecolor="#DADCE0", linewidth=2))
+    ax.text(5.78, 3.37, "Tahap 2: Susun 3 Lapis RGB", ha="center", va="center", fontsize=11.3, fontweight="bold", color="#202124")
+    ax.add_patch(patches.FancyBboxPatch((4.20, 0.92), 3.16, 2.18, boxstyle="round,pad=0.04,rounding_size=0.16", facecolor="#111317", edgecolor="#3C4043", linewidth=1.8))
+
+    layers_spec = [
+        (1.06, "Lapis B (21%)", "53", "#4285F4", "#8AB4F8", 0.42),
+        (1.68, "Lapis G (26%)", "67", "#34A853", "#81C995", 0.48),
+        (2.30, "Lapis R (92%)", "234", "#EA4335", "#F28B82", 0.94),
+    ]
+    ax.plot([5.32, 5.32], [1.42, 1.80], color="#FBBC04", lw=1.6, linestyle="--")
+    ax.plot([5.32, 5.32], [2.04, 2.42], color="#FBBC04", lw=1.6, linestyle="--")
+    for y_base, badge_txt, val_str, col_hex, txt_hex, cell_alpha in layers_spec:
+        plane_pts = [(4.62, y_base + 0.50), (6.12, y_base + 0.50), (5.84, y_base), (4.34, y_base)]
+        ax.add_patch(patches.Polygon(plane_pts, facecolor=col_hex, alpha=0.22, edgecolor="none"))
+        ax.add_patch(patches.Polygon(plane_pts, facecolor="none", edgecolor=col_hex, linewidth=1.5))
+        ax.plot([5.12, 4.84], [y_base + 0.50, y_base], color=col_hex, alpha=0.35, lw=0.7)
+        ax.plot([5.62, 5.34], [y_base + 0.50, y_base], color=col_hex, alpha=0.35, lw=0.7)
+        ax.plot([4.48, 5.98], [y_base + 0.25, y_base + 0.25], color=col_hex, alpha=0.35, lw=0.7)
+        cell_pts = [(5.14, y_base + 0.38), (5.62, y_base + 0.38), (5.50, y_base + 0.12), (5.02, y_base + 0.12)]
+        ax.add_patch(patches.Polygon(cell_pts, facecolor="#16181D", edgecolor="none"))
+        ax.add_patch(patches.Polygon(cell_pts, facecolor=col_hex, alpha=cell_alpha, edgecolor="#FFFFFF", linewidth=1.3))
+        ax.text(5.32, y_base + 0.25, val_str, ha="center", va="center", fontsize=9.8, fontweight="bold", color="#FFFFFF", family="monospace")
+        ax.text(6.70, y_base + 0.24, badge_txt, ha="center", va="center", fontsize=8.6, fontweight="bold", color=txt_hex, family="monospace")
+
+    ax.text(5.78, 0.54, "3 angka berasal dari 3 lapis channel R-G-B", ha="center", va="center", fontsize=9.2, color="#3C4043")
 
     # Arrow 2
-    ax.annotate("", xy=(8.02, 1.95), xytext=(7.55, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.28,head_length=0.25", lw=3, color="#FBBC04"))
-    ax.text(7.78, 2.24, "Gabung", ha="center", va="center", fontsize=9.5, fontweight="bold", color="#B06000")
+    ax.annotate("", xy=(8.02, 1.95), xytext=(7.55, 1.95), arrowprops=dict(arrowstyle="-|>,head_width=0.26,head_length=0.22", lw=2.8, color="#FBBC04"))
+    ax.text(7.78, 2.24, "Tampil", ha="center", va="center", fontsize=9.0, fontweight="bold", color="#B06000")
 
-    # Stage 3 Box: Gambar Utuh di Layar HP
-    ax.add_patch(patches.FancyBboxPatch((8.08, 0.2), 3.36, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FEF7E0", edgecolor="#FDE293", linewidth=2))
-    ax.text(9.76, 3.35, "3. Gambar Utuh di Layar HP", ha="center", va="center", fontsize=12.5, fontweight="bold", color="#B06000")
-    # Phone frame
-    ax.add_patch(patches.FancyBboxPatch((8.45, 1.02), 2.62, 1.96, boxstyle="round,pad=0.03,rounding_size=0.22", facecolor="#202124", edgecolor="#3C4043", linewidth=2))
-    ax.add_patch(patches.FancyBboxPatch((8.56, 1.13), 2.40, 1.74, boxstyle="round,pad=0.0,rounding_size=0.14", facecolor="#5E97F6", edgecolor="none"))
-    # Ground & clouds
-    ax.add_patch(patches.Rectangle((8.56, 1.13), 2.40, 0.34, facecolor="#81C995", edgecolor="none"))
-    ax.add_patch(patches.Ellipse((9.00, 2.52), 0.45, 0.22, facecolor="#FFFFFF", alpha=0.9))
-    ax.add_patch(patches.Ellipse((9.18, 2.55), 0.34, 0.20, facecolor="#FFFFFF", alpha=0.9))
-    # Apple + leaf
-    ax.add_patch(patches.Circle((9.42, 1.86), 0.38, facecolor="#EA4335", edgecolor="none"))
-    ax.add_patch(patches.Rectangle((9.39, 2.22), 0.07, 0.19, facecolor="#795548", edgecolor="none"))
-    ax.add_patch(patches.Ellipse((9.60, 2.34), 0.32, 0.16, angle=22, facecolor="#34A853", edgecolor="none"))
-    # Star
-    star_pts = []
-    for ii in range(10):
-        ang = np.pi / 2 + ii * np.pi / 5
-        rr = 0.28 if ii % 2 == 0 else 0.12
-        star_pts.append((10.45 + rr * np.cos(ang), 2.32 + rr * np.sin(ang)))
-    ax.add_patch(patches.Polygon(star_pts, facecolor="#FBBC04", edgecolor="#F9AB00", linewidth=1))
-    # Reticle
-    ax.add_patch(patches.Circle((9.42, 1.86), 0.16, facecolor="none", edgecolor="#FFFFFF", linewidth=2, linestyle="--"))
-    ax.add_patch(patches.Circle((9.42, 1.86), 0.05, facecolor="#202124", edgecolor="#FFFFFF", linewidth=1.2))
-    ax.add_patch(patches.FancyBboxPatch((9.64, 1.72), 0.80, 0.27, boxstyle="round,pad=0.02,rounding_size=0.12", facecolor="#202124", edgecolor="none"))
-    ax.text(10.04, 1.855, "Titik ini!", ha="center", va="center", fontsize=8.5, fontweight="bold", color="#FFFFFF")
-    ax.text(9.76, 0.56, "Jutaan titik rapat -> foto tampak utuh", ha="center", va="center", fontsize=10, color="#3C4043")
+    # Stage 3 Box (Right): Tahap 3: Tampil Jadi Gambar Utuh (with 1-pixel pointer & RGB readout)
+    ax.add_patch(patches.FancyBboxPatch((8.06, 0.2), 3.42, 3.45, boxstyle="round,pad=0.05,rounding_size=0.22", facecolor="#FEF7E0", edgecolor="#FDE293", linewidth=2))
+    ax.text(9.77, 3.37, "Tahap 3: Tampil Jadi Gambar Utuh", ha="center", va="center", fontsize=11.3, fontweight="bold", color="#B06000")
+    ax.add_patch(patches.FancyBboxPatch((8.20, 0.92), 3.14, 2.18, boxstyle="round,pad=0.04,rounding_size=0.16", facecolor="#202124", edgecolor="#3C4043", linewidth=1.5))
+    ax.text(9.77, 2.86, "Pixel(112, 88) · Apel Merah", ha="center", va="center", fontsize=9.0, family="monospace", color="#8AB4F8", fontweight="bold")
+
+    # Mini gridded image on the left of Stage 3 pointing to 1 pixel
+    img_x0, img_y0, img_s = 8.32, 1.16, 1.32
+    ax.add_patch(patches.FancyBboxPatch((img_x0, img_y0), img_s, img_s, boxstyle="round,pad=0.0,rounding_size=0.08", facecolor="#5E97F6", edgecolor="#8AB4F8", linewidth=1.2))
+    ax.add_patch(patches.Rectangle((img_x0, img_y0), img_s, 0.26, facecolor="#81C995", edgecolor="none"))
+    ax.add_patch(patches.Circle((img_x0 + 0.62, img_y0 + 0.62), 0.34, facecolor="#EA4335", edgecolor="none"))
+    ax.add_patch(patches.Ellipse((img_x0 + 0.78, img_y0 + 1.02), 0.24, 0.11, angle=20, facecolor="#34A853", edgecolor="none"))
+    step_g = img_s / 6.0
+    for gi in range(1, 6):
+        ax.plot([img_x0 + gi * step_g, img_x0 + gi * step_g], [img_y0, img_y0 + img_s], color="#FFFFFF", alpha=0.30, lw=0.6)
+        ax.plot([img_x0, img_x0 + img_s], [img_y0 + gi * step_g, img_y0 + gi * step_g], color="#FFFFFF", alpha=0.30, lw=0.6)
+    px_x = img_x0 + 2 * step_g
+    px_y = img_y0 + 2 * step_g
+    ax.add_patch(patches.Rectangle((px_x, px_y), step_g, step_g, facecolor="none", edgecolor="#FBBC04", linewidth=2.0))
+    ax.plot([px_x + step_g, 9.86], [px_y + step_g, 2.52], color="#FBBC04", lw=1.3, linestyle="--")
+    ax.plot([px_x + step_g, 9.86], [px_y, 1.24], color="#FBBC04", lw=1.3, linestyle="--")
+
+    # RGB bars box on the right of Stage 3
+    ax.add_patch(patches.FancyBboxPatch((9.86, 1.18), 1.36, 1.38, boxstyle="round,pad=0.03,rounding_size=0.10", facecolor="#16181D", edgecolor="#FBBC04", linewidth=1.2))
+    for yy, lbl, val, pct, col in [
+        (2.26, "R", 234, 0.92, "#EA4335"),
+        (1.86, "G", 67, 0.26, "#34A853"),
+        (1.46, "B", 53, 0.21, "#4285F4"),
+    ]:
+        ax.text(9.94, yy, lbl, ha="left", va="center", fontsize=9.0, fontweight="bold", color=col, family="monospace")
+        ax.add_patch(patches.FancyBboxPatch((10.14, yy - 0.06), 0.64, 0.12, boxstyle="round,pad=0.0,rounding_size=0.04", facecolor="#3C4043", edgecolor="none"))
+        ax.add_patch(patches.FancyBboxPatch((10.14, yy - 0.06), 0.64 * pct, 0.12, boxstyle="round,pad=0.0,rounding_size=0.04", facecolor=col, edgecolor="none"))
+        ax.text(11.16, yy, str(val), ha="right", va="center", fontsize=9.0, fontweight="bold", color="#FFFFFF", family="monospace")
+    ax.text(9.77, 0.54, "Jutaan pixel menyatu jadi gambar utuh [R,G,B]", ha="center", va="center", fontsize=9.2, color="#3C4043")
 
     fig.tight_layout(pad=0.25)
     fig.savefig(p11, dpi=200, facecolor="#FFFFFF")
@@ -898,7 +974,7 @@ Mari kita lihat langsung contoh dataset nyata paling legendaris yang dipakai di 
         Inches(5.35),
         st.CONTENT_WIDTH,
         Inches(1.35),
-        body="Dataset MNIST (tulisan tangan 0–9) berukuran 28 × 28 × 1 = 784 angka grayscale. Bandingkan dengan foto RGB proyek kita (224 × 224 × 3 = 150.528 angka — 192× lebih besar!).",
+        body="Dataset MNIST (tulisan tangan 0–9, tersedia di data/mnist/) berukuran 28 × 28 × 1 = 784 angka grayscale. Bandingkan dengan foto RGB proyek kita (224 × 224 × 3 = 150.528 angka — 192× lebih besar!).",
         bg_color=st.SURFACE_BG,
         accent_color=st.BLUE,
         body_size=Pt(22),
@@ -1520,21 +1596,21 @@ Sekarang kita beralih dari menyiapkan satu foto ke memahami keseluruhan dataset 
     )
 
     # =======================================================================
-    # SLIDE 17 — HISTOGRAM
+    # SLIDE 17 — HISTOGRAM, BRIGHTNESS & CONTRAST (SYNCED HTML SLIDE 33 & 34)
     # =======================================================================
     s17 = st.add_blank_slide(prs, st.LIGHT_BG)
-    st.add_slide_header(s17, "TEORI · EDA ISSUE #2 (PENCAHAYAAN)", "Issue #2 EDA: Histogram & Kontras Foto")
-    s17.shapes.add_picture(str(vis["histogram"]), Inches(2.1), Inches(1.60), height=Inches(3.65))
+    st.add_slide_header(s17, "TEORI · EDA ISSUE #2 (PENCAHAYAAN & KONTRAS)", "Issue #2 EDA: Histogram, Brightness & Contrast")
+    s17.shapes.add_picture(str(vis["histogram"]), Inches(0.85), Inches(1.58), width=Inches(11.6))
     st.add_card(
         s17,
         st.MARGIN_X,
         Inches(5.45),
         st.CONTENT_WIDTH,
         Inches(1.25),
-        body="Mean (rata-rata) mengukur brightness (terang/gelap). Standar deviasi (std) mengukur contrast (sebaran gelap-terang).",
+        body="Brightness (Mean: Polos 228.11 vs Ramai 127.21) mengukur terang keseluruhan foto (pixel + ΔB). Contrast (Std: Polos 45.21 vs Ramai 54.69) mengukur ketajaman jarak gelap-terang ((pixel − mean) × C).",
         bg_color=st.SURFACE_BG,
         accent_color=st.BLUE,
-        body_size=Pt(24),
+        body_size=Pt(20),
     )
     st.add_footer(s17, 17, SESSION_LABEL)
     st.set_speaker_notes(
@@ -1698,12 +1774,12 @@ Sampai ketemu 5 menit lagi untuk praktik langsung di notebook!""",
         kicker_color=st.GREEN,
     )
     steps_detail = [
-        ("01", "Load foto, cek EXIF & array piksel", "Gunakan exif_transpose(), konversi RGB, cek shape & patch 8×8.", st.BLUE),
+        ("01", "Baca foto & MNIST, intip matriks piksel", "Buka foto data/sample/ & data/mnist/, cek shape & patch 8×8.", st.BLUE),
         ("02", "Pisahkan channel RGB & grayscale", "Visualisasikan channel R, G, B serta matriks 2D grayscale.", st.RED),
-        ("03", "Resize proporsional & normalisasi", "Letterbox 224×224, konversi float32 (0–1) & preprocess_input.", st.YELLOW),
-        ("04", "Inventaris dataset, rusak & duplikat", "Verifikasi Pillow, hash SHA-256, dan tabel kelas × kondisi.", st.GREEN),
-        ("05", "Hitung statistik citra (119 foto valid)", "Ekstrak brightness (mean), kontras (std), dan edge density (Canny).", st.BLUE),
-        ("06", "Visualisasi histogram & boxplot", "Bandingkan distribusi polos vs ramai & simpan ke folder results/.", st.RED),
+        ("03", "Resize proporsional & normalisasi", "Letterbox 224×224, konversi float32 (0–1) & bukti eksperimen AI.", st.YELLOW),
+        ("04", "Saring 3 jebakan kamera HP", "Koreksi EXIF, verifikasi Pillow (verify), dan hash SHA-256.", st.GREEN),
+        ("05", "EDA dataset: Polos vs Ramai (119 foto)", "Hitung class balance, brightness (mean), kontras (std), & Canny.", st.BLUE),
+        ("06", "Simpan ringkasan audit & grafik boxplot", "Bandingkan distribusi polos vs ramai & simpan ke folder results/.", st.RED),
     ]
     st.add_numbered_steps(s21, st.MARGIN_X, Inches(1.65), Inches(7.25), steps_detail, row_height=0.86)
     st.add_card(

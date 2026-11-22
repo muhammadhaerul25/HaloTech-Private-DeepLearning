@@ -12,13 +12,15 @@ Designed for non-IT / non-technical learners:
 
 from __future__ import annotations
 
+import base64
 import json
 import re
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-STATS_PATH = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "sample_stats.json"
-MNIST_PATH = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "mnist_samples.json"
+ASSETS_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01"
+STATS_PATH = ASSETS_DIR / "sample_stats.json"
+MNIST_PATH = ASSETS_DIR / "mnist_samples.json"
 OUT_HTML = ROOT_DIR / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
 
 
@@ -47,6 +49,14 @@ def build_html() -> str:
     mnist_svg_7b = _mnist_svg_rects(m7b, 286, 42, cell=4.3)
     polos = stats["by_condition"]["polos"]
     ramai = stats["by_condition"]["ramai"]
+    hist256_polos_json = json.dumps(stats.get("hist256_polos", [0] * 256))
+    hist256_ramai_json = json.dumps(stats.get("hist256_ramai", [0] * 256))
+    dist_polos_b_json = json.dumps(stats.get("dist_polos_b", [228.11] * 60))
+    dist_polos_c_json = json.dumps(stats.get("dist_polos_c", [45.21] * 60))
+    dist_ramai_b_json = json.dumps(stats.get("dist_ramai_b", [127.21] * 59))
+    dist_ramai_c_json = json.dumps(stats.get("dist_ramai_c", [54.69] * 59))
+    polos_b64 = base64.b64encode((ASSETS_DIR / "sample_polos.jpg").read_bytes()).decode("ascii")
+    ramai_b64 = base64.b64encode((ASSETS_DIR / "sample_ramai.jpg").read_bytes()).decode("ascii")
 
     html = f"""<!DOCTYPE html>
 <html lang="id">
@@ -245,7 +255,7 @@ def build_html() -> str:
     table.io-table th {{ background: var(--dark); color: var(--white); font-family: var(--font-title); text-align: left; padding: 12px 16px; }}
     table.io-table td {{ padding: 12px 16px; border-top: 1px solid var(--border); color: #3C4043; line-height: 1.45; }}
     table.io-table tr:nth-child(even) td {{ background: var(--surface); }}
-    table.io-table.spacious th, table.io-table.spacious td {{ padding: 17px 20px; font-size: 16.5px; line-height: 1.5; }}
+    table.io-table.spacious th, table.io-table.spacious td {{ padding: 11px 18px; font-size: 15px; line-height: 1.42; }}
 
     .cluster-4 {{ position: absolute; right: 42px; top: 38px; display: grid; grid-template-columns: 36px 36px; gap: 10px; }}
     .c-circle {{ width: 34px; height: 34px; border-radius: 50%; background: var(--blue); }}
@@ -717,134 +727,220 @@ def build_html() -> str:
     <section class="slide" data-title="Ilustrasi: Cara Komputer Menampilkan Gambar" data-notes="Alokasi waktu: 1.5 menit. Lalu bagaimana foto muncul kembali di layar HP? Komputer membaca paket angka [R, G, B] untuk tiap titik, menyalakan 3 lampu kecil Merah-Hijau-Biru sesuai tingkat terangnya, lalu jutaan titik rapat itu menyatu di mata menjadi gambar utuh. Coba klik objek Apel, Daun, Bintang Kuning, atau Langit Biru di layar HP!">
       <div class="kicker">BAB 1 · ILUSTRASI 3</div>
       <h2>Cara <span class="hl-green">Komputer Menampilkan</span> Gambar ke Layar</h2>
-      <p class="subtitle">Kebalikan dari kamera: komputer membaca angka RGB tiap titik, menyalakan 3 lampu kecil di layar, lalu mata melihatnya sebagai gambar utuh.</p>
-      <div class="card surface" style="flex:1; padding:12px 16px; display:flex; flex-direction:column; gap:10px; justify-content:space-between;">
+      <p class="subtitle">Kebalikan dari kamera: komputer menyalakan 3 lampu mikro RGB di tiap pixel, menumpuk 3 lapis channel warna, hingga tampil sebagai gambar utuh di layar.</p>
+      <div class="card surface" style="flex:1; min-height:0; padding:10px 14px; display:flex; flex-direction:column; gap:8px; justify-content:space-between;">
         <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px;">
           <span style="font-size:12.5px; font-weight:700; color:var(--dark);">Klik objek atau tombol untuk mengintip cara 1 titik layar menyala:</span>
           <div id="disp-presets" style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-ui" data-sample="apple" onclick="setDispSample('apple')" style="padding:5px 11px; font-size:12px;">Apel Merah</button>
-            <button class="btn-ui outline" data-sample="leaf" onclick="setDispSample('leaf')" style="padding:5px 11px; font-size:12px;">Daun Hijau</button>
-            <button class="btn-ui outline" data-sample="star" onclick="setDispSample('star')" style="padding:5px 11px; font-size:12px;">Bintang Kuning (R+G)</button>
-            <button class="btn-ui outline" data-sample="sky" onclick="setDispSample('sky')" style="padding:5px 11px; font-size:12px;">Langit Biru</button>
+            <button class="btn-ui" data-sample="apple" onclick="setDispSample('apple')" style="padding:4px 11px; font-size:12px;">Apel Merah</button>
+            <button class="btn-ui outline" data-sample="leaf" onclick="setDispSample('leaf')" style="padding:4px 11px; font-size:12px;">Daun Hijau</button>
+            <button class="btn-ui outline" data-sample="star" onclick="setDispSample('star')" style="padding:4px 11px; font-size:12px;">Bintang Kuning (R+G)</button>
+            <button class="btn-ui outline" data-sample="sky" onclick="setDispSample('sky')" style="padding:4px 11px; font-size:12px;">Langit Biru</button>
           </div>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 30px 1.08fr 30px 1.06fr; gap:6px; align-items:stretch; flex:1;">
-          <!-- Step 1: Data Angka -->
-          <div style="background:#E8F0FE; border:1.5px solid #C6DAFC; border-radius:14px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-              <span style="font-family:var(--font-title); font-weight:700; font-size:13.5px; color:#1A73E8;">1. Angka di Memori</span>
-              <span style="font-family:var(--font-code); font-size:10.5px; background:#FFFFFF; color:#1A73E8; padding:2px 7px; border-radius:999px; font-weight:700;">1 Pixel</span>
+        <div style="display:grid; grid-template-columns:1.05fr 26px 1.10fr 26px 1.12fr; gap:6px; align-items:stretch; flex:1; min-height:0;">
+          <!-- Tahap 1: 3 Lampu Mikro Sub-Pixel Menyala di 1 Pixel -->
+          <div style="background:#E8F0FE; border:1.5px solid #C6DAFC; border-radius:14px; padding:9px 11px; display:flex; flex-direction:column; justify-content:space-between; gap:5px; min-height:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:4px;">
+              <span style="font-family:var(--font-title); font-weight:700; font-size:12.6px; color:#1A73E8; white-space:nowrap;">Tahap 1: Nyalakan 3 Lampu Pixel</span>
+              <span style="font-family:var(--font-code); font-size:9.8px; background:#FFFFFF; color:#1A73E8; padding:2px 6px; border-radius:999px; font-weight:700; white-space:nowrap;">Zoom 1000×</span>
             </div>
-            <div style="background:#202124; border-radius:11px; padding:10px 12px; display:flex; flex-direction:column; gap:7px; color:#E8EAED;">
-              <div id="disp-coord" style="font-family:var(--font-code); font-size:11px; color:#9AA0A6; border-bottom:1px solid #3C4043; padding-bottom:5px;">Pixel(112, 88) · Apel Merah</div>
-              <div style="display:grid; grid-template-columns:56px 1fr 30px; align-items:center; gap:7px; font-family:var(--font-code); font-size:11.5px;">
-                <span style="color:#F28B82; font-weight:700;">Merah</span>
-                <div style="height:8px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-r" style="height:100%; width:92%; background:#EA4335; border-radius:999px; transition:width .25s;"></div></div>
-                <strong id="disp-num-r" style="text-align:right; color:#FFF;">234</strong>
+
+            <!-- Hardware Sub-Pixel LED Capsule + Merged Eye Color Output -->
+            <div style="background:#111317; border:1.5px solid #3C4043; border-radius:11px; padding:8px 10px; display:flex; flex-direction:column; justify-content:center; gap:7px; flex:1; min-height:0;">
+              <div style="display:grid; grid-template-columns:1.18fr 18px 0.82fr; align-items:center; gap:5px;">
+                <!-- 3 Sub-pixel LEDs inside 1 screen pixel housing -->
+                <div style="background:#181B22; border:1.5px dashed #5F6368; border-radius:10px; padding:6px 6px 5px; display:flex; flex-direction:column; gap:4px;">
+                  <div style="font-family:var(--font-code); font-size:8.8px; color:#9AA0A6; text-align:center; font-weight:700;">1 KOTAK PIXEL LAYAR</div>
+                  <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; align-items:end; justify-items:center;">
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
+                      <div style="width:26px; height:52px; background:#23262D; border-radius:6px; padding:2.5px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
+                        <div id="disp-led-r" style="width:100%; height:92%; border-radius:4px; background:#EA4335; box-shadow:0 0 10px rgba(234,67,53,0.88); transition:height .25s, box-shadow .25s;"></div>
+                      </div>
+                      <span style="font-family:var(--font-code); font-size:9px; color:#F28B82; font-weight:700;">R <span id="disp-led-pct-r">92%</span></span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
+                      <div style="width:26px; height:52px; background:#23262D; border-radius:6px; padding:2.5px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
+                        <div id="disp-led-g" style="width:100%; height:26%; border-radius:4px; background:#34A853; box-shadow:0 0 4px rgba(52,168,83,0.35); transition:height .25s, box-shadow .25s;"></div>
+                      </div>
+                      <span style="font-family:var(--font-code); font-size:9px; color:#81C995; font-weight:700;">G <span id="disp-led-pct-g">26%</span></span>
+                    </div>
+                    <div style="display:flex; flex-direction:column; align-items:center; gap:2px; width:100%;">
+                      <div style="width:26px; height:52px; background:#23262D; border-radius:6px; padding:2.5px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
+                        <div id="disp-led-b" style="width:100%; height:21%; border-radius:4px; background:#4285F4; box-shadow:0 0 3px rgba(66,133,244,0.30); transition:height .25s, box-shadow .25s;"></div>
+                      </div>
+                      <span style="font-family:var(--font-code); font-size:9px; color:#8AB4F8; font-weight:700;">B <span id="disp-led-pct-b">21%</span></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Light beam arrow -->
+                <div style="display:flex; align-items:center; justify-content:center;">
+                  <svg viewBox="0 0 20 20" style="width:18px; height:18px;">
+                    <path d="M2 10 L13 10" stroke="#FBBC04" stroke-width="2.5" stroke-linecap="round"/>
+                    <polygon points="11,5 19,10 11,15" fill="#FBBC04"/>
+                  </svg>
+                </div>
+
+                <!-- Resulting glowing pixel seen by human eye -->
+                <div style="background:#181B22; border:1px solid #3C4043; border-radius:10px; padding:7px 5px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; height:100%;">
+                  <span style="font-size:8.5px; font-weight:700; color:#BDC1C6; text-transform:uppercase;">1 Titik Warna</span>
+                  <div id="disp-mix-swatch" style="width:38px; height:38px; border-radius:10px; background:rgb(234,67,53); border:2px solid #FFFFFF; box-shadow:0 0 14px rgba(234,67,53,0.75); transition:background .25s, box-shadow .25s;"></div>
+                  <span id="disp-color-label" style="font-family:var(--font-code); font-size:9px; font-weight:700; color:#FBBC04; text-align:center;">Titik Merah</span>
+                </div>
               </div>
-              <div style="display:grid; grid-template-columns:56px 1fr 30px; align-items:center; gap:7px; font-family:var(--font-code); font-size:11.5px;">
-                <span style="color:#81C995; font-weight:700;">Hijau</span>
-                <div style="height:8px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-g" style="height:100%; width:26%; background:#34A853; border-radius:999px; transition:width .25s;"></div></div>
-                <strong id="disp-num-g" style="text-align:right; color:#FFF;">67</strong>
-              </div>
-              <div style="display:grid; grid-template-columns:56px 1fr 30px; align-items:center; gap:7px; font-family:var(--font-code); font-size:11.5px;">
-                <span style="color:#8AB4F8; font-weight:700;">Biru</span>
-                <div style="height:8px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-b" style="height:100%; width:21%; background:#4285F4; border-radius:999px; transition:width .25s;"></div></div>
-                <strong id="disp-num-b" style="text-align:right; color:#FFF;">53</strong>
+
+              <!-- Note bar inside Tahap 1 -->
+              <div id="disp-mix-note" style="background:#1E222B; border:1px solid #3C4043; border-radius:7px; padding:4px 8px; font-size:10.2px; color:#E8EAED; line-height:1.3; text-align:center;">
+                <strong>Lampu R paling terang (92%)</strong> → menyatu jadi <strong>Titik Merah</strong>!
               </div>
             </div>
-            <div style="font-size:11.5px; color:#3C4043; line-height:1.38;">File foto hanya menyimpan paket 3 angka <code>0</code> (mati) s.d. <code>255</code> (terang penuh).</div>
+
+            <div style="font-size:10.8px; color:#3C4043; line-height:1.3;">Di tiap pixel layar, 3 lampu mikro <strong>R, G, B</strong> menyala membentuk 1 titik warna.</div>
           </div>
 
           <!-- Arrow 1 -->
           <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-            <span style="font-size:10px; font-weight:700; color:#137333;">Kirim</span>
-            <svg viewBox="0 0 28 18" style="width:26px; height:18px;">
+            <span style="font-size:9.5px; font-weight:700; color:#137333;">Tumpuk</span>
+            <svg viewBox="0 0 28 18" style="width:24px; height:18px;">
               <path d="M2 9 L20 9" stroke="#34A853" stroke-width="3.2" stroke-linecap="round"/>
               <polygon points="18,3 27,9 18,15" fill="#34A853"/>
             </svg>
           </div>
 
-          <!-- Step 2: Lampu Sub-Pixel Zoomed -->
-          <div style="background:#FFFFFF; border:1.5px solid #DADCE0; border-radius:14px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-              <span style="font-family:var(--font-title); font-weight:700; font-size:13.5px; color:#202124;">2. 3 Lampu di Layar</span>
-              <span style="font-family:var(--font-code); font-size:10.5px; background:#F1F3F4; color:#5F6368; padding:2px 7px; border-radius:999px; font-weight:700;">Zoom 1000×</span>
+          <!-- Tahap 2: Susun 3 Lapis Channel RGB (3D Stacked RGB Layers) -->
+          <div style="background:#FFFFFF; border:1.5px solid #DADCE0; border-radius:14px; padding:9px 11px; display:flex; flex-direction:column; justify-content:space-between; gap:5px; min-height:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:4px;">
+              <span style="font-family:var(--font-title); font-weight:700; font-size:12.6px; color:#202124; white-space:nowrap;">Tahap 2: Susun 3 Lapis RGB</span>
+              <span style="font-family:var(--font-code); font-size:9.8px; background:#F1F3F4; color:#5F6368; padding:2px 6px; border-radius:999px; font-weight:700; white-space:nowrap;">3 Channel</span>
             </div>
-            <div style="background:#111317; border:2px solid #3C4043; border-radius:11px; padding:9px 12px; display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; align-items:end;">
-              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-                <div style="width:34px; height:64px; background:#23262D; border-radius:7px; padding:3px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
-                  <div id="disp-led-r" style="width:100%; height:92%; border-radius:5px; background:#EA4335; box-shadow:0 0 12px rgba(234,67,53,0.85); transition:height .25s, box-shadow .25s;"></div>
-                </div>
-                <span style="font-family:var(--font-code); font-size:10.5px; color:#F28B82; font-weight:700;">R <span id="disp-pct-r">92%</span></span>
-              </div>
-              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-                <div style="width:34px; height:64px; background:#23262D; border-radius:7px; padding:3px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
-                  <div id="disp-led-g" style="width:100%; height:26%; border-radius:5px; background:#34A853; box-shadow:0 0 4px rgba(52,168,83,0.3); transition:height .25s, box-shadow .25s;"></div>
-                </div>
-                <span style="font-family:var(--font-code); font-size:10.5px; color:#81C995; font-weight:700;">G <span id="disp-pct-g">26%</span></span>
-              </div>
-              <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
-                <div style="width:34px; height:64px; background:#23262D; border-radius:7px; padding:3px; display:flex; align-items:flex-end; border:1px solid #3C4043;">
-                  <div id="disp-led-b" style="width:100%; height:21%; border-radius:5px; background:#4285F4; box-shadow:0 0 3px rgba(66,133,244,0.25); transition:height .25s, box-shadow .25s;"></div>
-                </div>
-                <span style="font-family:var(--font-code); font-size:10.5px; color:#8AB4F8; font-weight:700;">B <span id="disp-pct-b">21%</span></span>
-              </div>
+
+            <!-- 3D Isometric Stacked RGB Layers SVG (uses <tspan> strictly inside <svg><text>) -->
+            <div style="background:#111317; border:1.5px solid #3C4043; border-radius:11px; padding:6px 8px; display:flex; align-items:center; justify-content:center; flex:1; min-height:0;">
+              <svg id="disp-stack-svg" viewBox="0 0 268 124" style="width:100%; height:100%; max-height:148px; display:block;">
+                <!-- LAYER 3 (Bottom): BLUE CHANNEL -->
+                <g transform="translate(0, 88)">
+                  <polygon points="40,0 172,0 148,28 16,28" fill="rgba(66,133,244,0.22)" stroke="#4285F4" stroke-width="1.6"/>
+                  <line x1="84" y1="0" x2="60" y2="28" stroke="rgba(138,180,248,0.35)" stroke-width="0.8"/>
+                  <line x1="128" y1="0" x2="104" y2="28" stroke="rgba(138,180,248,0.35)" stroke-width="0.8"/>
+                  <line x1="28" y1="14" x2="160" y2="14" stroke="rgba(138,180,248,0.35)" stroke-width="0.8"/>
+                  <polygon points="81,5 123,5 113,22 71,22" fill="#16181D"/>
+                  <polygon id="stack-cell-b" points="81,5 123,5 113,22 71,22" fill="#4285F4" fill-opacity="0.45" stroke="#FFFFFF" stroke-width="1.4"/>
+                  <text id="stack-val-b" x="97" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="11" font-weight="700" fill="#FFFFFF">53</text>
+                  <rect x="176" y="4" width="88" height="20" rx="5" fill="rgba(66,133,244,0.20)" stroke="#4285F4" stroke-width="1"/>
+                  <text x="220" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#8AB4F8">Lapis B (<tspan id="disp-pct-b">21%</tspan>)</text>
+                </g>
+
+                <!-- Connector between Layer 2 (G) and Layer 3 (B) -->
+                <line x1="97" y1="69" x2="97" y2="93" stroke="#FBBC04" stroke-width="1.8" stroke-dasharray="2.5 2"/>
+
+                <!-- LAYER 2 (Middle): GREEN CHANNEL -->
+                <g transform="translate(0, 46)">
+                  <polygon points="40,0 172,0 148,28 16,28" fill="rgba(52,168,83,0.24)" stroke="#34A853" stroke-width="1.6"/>
+                  <line x1="84" y1="0" x2="60" y2="28" stroke="rgba(129,201,149,0.35)" stroke-width="0.8"/>
+                  <line x1="128" y1="0" x2="104" y2="28" stroke="rgba(129,201,149,0.35)" stroke-width="0.8"/>
+                  <line x1="28" y1="14" x2="160" y2="14" stroke="rgba(129,201,149,0.35)" stroke-width="0.8"/>
+                  <polygon points="81,5 123,5 113,22 71,22" fill="#16181D"/>
+                  <polygon id="stack-cell-g" points="81,5 123,5 113,22 71,22" fill="#34A853" fill-opacity="0.50" stroke="#FFFFFF" stroke-width="1.4"/>
+                  <text id="stack-val-g" x="97" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="11" font-weight="700" fill="#FFFFFF">67</text>
+                  <rect x="176" y="4" width="88" height="20" rx="5" fill="rgba(52,168,83,0.20)" stroke="#34A853" stroke-width="1"/>
+                  <text x="220" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#81C995">Lapis G (<tspan id="disp-pct-g">26%</tspan>)</text>
+                </g>
+
+                <!-- Connector between Layer 1 (R) and Layer 2 (G) -->
+                <line x1="97" y1="27" x2="97" y2="51" stroke="#FBBC04" stroke-width="1.8" stroke-dasharray="2.5 2"/>
+
+                <!-- LAYER 1 (Top): RED CHANNEL -->
+                <g transform="translate(0, 4)">
+                  <polygon points="40,0 172,0 148,28 16,28" fill="rgba(234,67,53,0.28)" stroke="#EA4335" stroke-width="1.6"/>
+                  <line x1="84" y1="0" x2="60" y2="28" stroke="rgba(242,139,130,0.35)" stroke-width="0.8"/>
+                  <line x1="128" y1="0" x2="104" y2="28" stroke="rgba(242,139,130,0.35)" stroke-width="0.8"/>
+                  <line x1="28" y1="14" x2="160" y2="14" stroke="rgba(242,139,130,0.35)" stroke-width="0.8"/>
+                  <polygon points="81,5 123,5 113,22 71,22" fill="#16181D"/>
+                  <polygon id="stack-cell-r" points="81,5 123,5 113,22 71,22" fill="#EA4335" fill-opacity="0.95" stroke="#FBBC04" stroke-width="1.8"/>
+                  <text id="stack-val-r" x="97" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="11" font-weight="700" fill="#FFFFFF">234</text>
+                  <rect x="176" y="4" width="88" height="20" rx="5" fill="rgba(234,67,53,0.25)" stroke="#EA4335" stroke-width="1"/>
+                  <text x="220" y="17" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#F28B82">Lapis R (<tspan id="disp-pct-r">92%</tspan>)</text>
+                </g>
+              </svg>
             </div>
-            <div style="display:flex; align-items:center; gap:8px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:9px; padding:6px 9px;">
-              <div id="disp-mix-swatch" style="width:24px; height:24px; border-radius:6px; background:rgb(234,67,53); border:1.5px solid rgba(0,0,0,0.18); flex-shrink:0;"></div>
-              <div id="disp-mix-note" style="font-size:11.5px; color:#202124; line-height:1.35;"><strong>Lampu R paling terang</strong> → titik ini terlihat Merah.</div>
-            </div>
+
+            <div style="font-size:10.8px; color:#3C4043; line-height:1.3;">Ketiga angka tersebut berasal dari <strong>3 lapis channel (R, G, B) yang ditumpuk</strong> sejajar.</div>
           </div>
 
           <!-- Arrow 2 -->
           <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-            <span style="font-size:10px; font-weight:700; color:#B06000;">Gabung</span>
-            <svg viewBox="0 0 28 18" style="width:26px; height:18px;">
+            <span style="font-size:9.5px; font-weight:700; color:#B06000;">Tampil</span>
+            <svg viewBox="0 0 28 18" style="width:24px; height:18px;">
               <path d="M2 9 L20 9" stroke="#FBBC04" stroke-width="3.2" stroke-linecap="round"/>
               <polygon points="18,3 27,9 18,15" fill="#FBBC04"/>
             </svg>
           </div>
 
-          <!-- Step 3: Layar HP Utuh -->
-          <div style="background:#FEF7E0; border:1.5px solid #FDE293; border-radius:14px; padding:12px; display:flex; flex-direction:column; justify-content:space-between; gap:8px;">
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
-              <span style="font-family:var(--font-title); font-weight:700; font-size:13.5px; color:#B06000;">3. Gambar Utuh di Layar</span>
-              <span style="font-family:var(--font-code); font-size:10.5px; background:#FFFFFF; color:#B06000; padding:2px 7px; border-radius:999px; font-weight:700;">Jutaan Pixel</span>
+          <!-- Tahap 3: Tampil Jadi Gambar Utuh di Layar (dengan penunjuk 1 Pixel & Angka RGB) -->
+          <div style="background:#FEF7E0; border:1.5px solid #FDE293; border-radius:14px; padding:9px 11px; display:flex; flex-direction:column; justify-content:space-between; gap:5px; min-height:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:4px;">
+              <span style="font-family:var(--font-title); font-weight:700; font-size:12.6px; color:#B06000; white-space:nowrap;">Tahap 3: Tampil Jadi Gambar Utuh</span>
+              <span style="font-family:var(--font-code); font-size:9.8px; background:#FFFFFF; color:#B06000; padding:2px 6px; border-radius:999px; font-weight:700; white-space:nowrap;">Layar HP</span>
             </div>
-            <svg id="disp-phone-svg" viewBox="0 0 250 132" style="width:100%; height:158px; display:block;">
-              <!-- Phone body -->
-              <rect x="20" y="4" width="210" height="124" rx="16" fill="#202124" stroke="#3C4043" stroke-width="2"/>
-              <rect x="28" y="12" width="194" height="108" rx="10" fill="#E8F0FE"/>
-              <!-- Clickable Sky -->
-              <rect x="28" y="12" width="194" height="108" rx="10" fill="#5E97F6" style="cursor:pointer;" onclick="setDispSample('sky')"/>
-              <!-- Soft cloud + ground inside screen -->
-              <ellipse cx="64" cy="36" rx="18" ry="9" fill="#FFFFFF" opacity="0.88" style="pointer-events:none;"/>
-              <ellipse cx="76" cy="34" rx="14" ry="8" fill="#FFFFFF" opacity="0.88" style="pointer-events:none;"/>
-              <rect x="28" y="94" width="194" height="26" rx="0" fill="#A8DAB5" opacity="0.65"/>
-              <rect x="28" y="106" width="194" height="14" rx="8" fill="#81C995" opacity="0.75"/>
-              <!-- Clickable Red Apple + Stem + Leaf -->
-              <circle cx="96" cy="76" r="24" fill="#EA4335" style="cursor:pointer;" onclick="setDispSample('apple')"/>
-              <circle cx="88" cy="68" r="6" fill="#F28B82" opacity="0.45" style="pointer-events:none;"/>
-              <rect x="94" y="41" width="5" height="13" rx="2" fill="#795548" style="pointer-events:none;"/>
-              <ellipse cx="109" cy="46" rx="12" ry="6.5" transform="rotate(-22 109 46)" fill="#34A853" style="cursor:pointer;" onclick="setDispSample('leaf')"/>
-              <!-- Clickable Yellow Star -->
-              <polygon points="178,24 184,38 199,39 187,49 191,64 178,56 165,64 169,49 157,39 172,38" fill="#FBBC04" stroke="#F9AB00" stroke-width="1" style="cursor:pointer;" onclick="setDispSample('star')"/>
-              <!-- Subtle pixel grid hint corner -->
-              <g opacity="0.22" stroke="#FFFFFF" stroke-width="0.6" style="pointer-events:none;">
-                <line x1="36" y1="12" x2="36" y2="44"/><line x1="44" y1="12" x2="44" y2="44"/><line x1="52" y1="12" x2="52" y2="44"/>
-                <line x1="28" y1="20" x2="60" y2="20"/><line x1="28" y1="28" x2="60" y2="28"/><line x1="28" y1="36" x2="60" y2="36"/>
-              </g>
-              <!-- Zoom reticle pointing to selected pixel -->
-              <g id="disp-reticle" style="pointer-events:none;">
-                <circle id="disp-ret-ring" cx="96" cy="76" r="11" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="3 2"/>
-                <circle id="disp-ret-dot" cx="96" cy="76" r="3.5" fill="#202124" stroke="#FFFFFF" stroke-width="1.5"/>
-                <rect id="disp-ret-bg" x="111" y="65" width="60" height="18" rx="9" fill="#202124" opacity="0.88"/>
-                <text id="disp-ret-txt" x="141" y="77" text-anchor="middle" font-family="Poppins, sans-serif" font-size="9" font-weight="700" fill="#FFFFFF">Titik ini!</text>
-              </g>
-            </svg>
-            <div style="font-size:11.5px; color:#3C4043; line-height:1.38;">Dari jarak normal, jutaan titik lampu rapat ini terlihat sebagai <strong>gambar utuh &amp; halus</strong>!</div>
+
+            <!-- Visual: Mini Image with Pixel Grid pointing to 1 Pixel -> RGB Readout Card -->
+            <div style="background:#202124; border-radius:11px; padding:8px 10px; display:flex; flex-direction:column; gap:6px; color:#E8EAED; flex:1; min-height:0; justify-content:center;">
+              <div id="disp-coord" style="font-family:var(--font-code); font-size:10.5px; color:#8AB4F8; border-bottom:1px solid #3C4043; padding-bottom:4px; font-weight:700;">Pixel(112, 88) · Apel Merah</div>
+              <div style="display:grid; grid-template-columns:108px 1fr; gap:7px; align-items:center;">
+                <!-- Mini picture with pixel grid + zoom callout lines directly to RGB card -->
+                <svg id="disp-step1-svg" viewBox="0 0 114 102" style="width:108px; height:96px; display:block; flex-shrink:0;">
+                  <!-- Mini photo frame -->
+                  <rect x="2" y="2" width="88" height="86" rx="8" fill="#5E97F6" stroke="#8AB4F8" stroke-width="1.5" style="cursor:pointer;" onclick="setDispSample('sky')"/>
+                  <!-- Ground -->
+                  <rect x="3" y="70" width="86" height="17" rx="4" fill="#81C995" opacity="0.85" style="pointer-events:none;"/>
+                  <!-- Mini cloud -->
+                  <ellipse cx="24" cy="18" rx="11" ry="5.5" fill="#FFFFFF" opacity="0.9" style="pointer-events:none;"/>
+                  <!-- Mini Yellow Star (top right) -->
+                  <polygon points="71,11 74,19 82,19 76,24 78,32 71,27 64,32 66,24 60,19 68,19" fill="#FBBC04" stroke="#F9AB00" stroke-width="0.8" style="cursor:pointer;" onclick="setDispSample('star')"/>
+                  <!-- Mini Green Leaf -->
+                  <ellipse cx="52" cy="34" rx="9" ry="4.8" transform="rotate(-22 52 34)" fill="#34A853" style="cursor:pointer;" onclick="setDispSample('leaf')"/>
+                  <!-- Mini Red Apple -->
+                  <circle cx="42" cy="56" r="18" fill="#EA4335" style="cursor:pointer;" onclick="setDispSample('apple')"/>
+                  <rect x="41" y="32" width="3.5" height="8" rx="1" fill="#795548" style="pointer-events:none;"/>
+                  <!-- Pixel Grid Overlay (8x8 cells of 11x11) -->
+                  <g stroke="rgba(255,255,255,0.32)" stroke-width="0.65" style="pointer-events:none;">
+                    <line x1="13" y1="2" x2="13" y2="88"/><line x1="24" y1="2" x2="24" y2="88"/><line x1="35" y1="2" x2="35" y2="88"/><line x1="46" y1="2" x2="46" y2="88"/><line x1="57" y1="2" x2="57" y2="88"/><line x1="68" y1="2" x2="68" y2="88"/><line x1="79" y1="2" x2="79" y2="88"/>
+                    <line x1="2" y1="13" x2="90" y2="13"/><line x1="2" y1="24" x2="90" y2="24"/><line x1="2" y1="35" x2="90" y2="35"/><line x1="2" y1="46" x2="90" y2="46"/><line x1="2" y1="57" x2="90" y2="57"/><line x1="2" y1="68" x2="90" y2="68"/><line x1="2" y1="79" x2="90" y2="79"/>
+                  </g>
+                  <!-- Highlighted 1-Pixel Box + Zoom Callout Lines directly to RGB Card on the right -->
+                  <rect id="s1-px-box" x="35" y="46" width="11" height="11" fill="none" stroke="#FBBC04" stroke-width="2.4"/>
+                  <circle id="s1-px-dot" cx="40.5" cy="51.5" r="2.2" fill="#FFFFFF"/>
+                  <path id="s1-px-line" d="M46 46 L113 10 M46 57 L113 84" stroke="#FBBC04" stroke-width="1.6" stroke-dasharray="3 2" fill="none"/>
+                  <text x="46" y="99" text-anchor="middle" font-size="8" font-weight="700" fill="#FBBC04">Tunjuk 1 kotak pixel</text>
+                </svg>
+
+                <!-- Extracted RGB values for that 1 pixel -->
+                <div style="display:flex; flex-direction:column; gap:6px; background:#16181D; border:1.5px solid #FBBC04; border-radius:9px; padding:7px 8px;">
+                  <div style="display:flex; align-items:center; justify-content:space-between; gap:4px;">
+                    <span style="font-size:9.8px; color:#FBBC04; font-weight:700; font-family:var(--font-code);">Isi 1 Pixel:</span>
+                    <span id="s1-px-swatch" style="width:14px; height:14px; border-radius:4px; background:#EA4335; border:1.5px solid #FFFFFF; display:inline-block;"></span>
+                  </div>
+                  <div style="display:grid; grid-template-columns:14px 1fr 26px; align-items:center; gap:5px; font-family:var(--font-code); font-size:11px;">
+                    <span style="color:#F28B82; font-weight:700;">R</span>
+                    <div style="height:7px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-r" style="height:100%; width:92%; background:#EA4335; border-radius:999px; transition:width .25s;"></div></div>
+                    <strong id="disp-num-r" style="text-align:right; color:#FFF;">234</strong>
+                  </div>
+                  <div style="display:grid; grid-template-columns:14px 1fr 26px; align-items:center; gap:5px; font-family:var(--font-code); font-size:11px;">
+                    <span style="color:#81C995; font-weight:700;">G</span>
+                    <div style="height:7px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-g" style="height:100%; width:26%; background:#34A853; border-radius:999px; transition:width .25s;"></div></div>
+                    <strong id="disp-num-g" style="text-align:right; color:#FFF;">67</strong>
+                  </div>
+                  <div style="display:grid; grid-template-columns:14px 1fr 26px; align-items:center; gap:5px; font-family:var(--font-code); font-size:11px;">
+                    <span style="color:#8AB4F8; font-weight:700;">B</span>
+                    <div style="height:7px; background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden;"><div id="disp-bar-b" style="height:100%; width:21%; background:#4285F4; border-radius:999px; transition:width .25s;"></div></div>
+                    <strong id="disp-num-b" style="text-align:right; color:#FFF;">53</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="font-size:10.8px; color:#3C4043; line-height:1.3;">Jutaan pixel menyatu menjadi <strong>gambar utuh</strong> (tiap 1 pixel menyimpan <code>[R, G, B]</code>).</div>
           </div>
         </div>
       </div>
@@ -1134,7 +1230,7 @@ def build_html() -> str:
           <div class="card-title">Kenapa Cukup 1 Channel Saja?</div>
           <div class="card-body">
             <ul>
-              <li><strong>MNIST</strong> adalah dataset tulisan tangan angka <code>0–9</code> paling legendaris (dipakai di video <strong>3Blue1Brown</strong>!).</li>
+              <li><strong>MNIST</strong> adalah dataset tulisan tangan angka <code>0–9</code> paling legendaris (dipakai di video <strong>3Blue1Brown</strong> &amp; tersedia di folder <code>data/mnist/</code>!).</li>
               <li>Untuk membaca angka tulisan tinta di kertas, warna tidak dibutuhkan — cukup <strong>1 channel Grayscale</strong> (<code>28 × 28 = 784</code> angka).</li>
               <li><strong>Lalu bagaimana dengan foto benda atau karakter nyata?</strong> Untuk foto penuh warna, kita masuk ke format yang <strong>paling banyak dipakai: RGB (3 Channels)!</strong></li>
             </ul>
@@ -1363,7 +1459,7 @@ def build_html() -> str:
     </section>
 
     <!-- 19: AI FUNDAMENTAL 1/3 - APA ITU AI? (INTERACTIVE 3-LEVEL EXPLORER) -->
-    <section class="slide" data-title="AI Fundamental (1/3): Apa Itu AI di Project Ini?" data-notes="Alokasi waktu: 1.5 menit. Klik 3 tombol (Program Biasa -> Machine Learning -> Deep Learning) untuk menyoroti siapa yang mencari ciri gambar: di Program Biasa 100% manual if-else; di Machine Learning mesin belajar TAPI manusia masih harus mengekstrak ciri-ciri manual (sudut, warna, ukuran); sedangkan di Deep Learning mesin berlapis otomatis mencari ciri dari garis sampai objek utuh tanpa dipilih manual!">
+    <section class="slide" data-title="AI Fundamental (1/3): Apa Itu AI di Project Ini?" data-notes="Alokasi waktu: 1.5 menit. Klik 3 tombol (Program Biasa &rarr; Machine Learning &rarr; Deep Learning) untuk menyoroti siapa yang mencari ciri gambar: di Program Biasa 100% manual if-else; di Machine Learning mesin belajar TAPI manusia masih harus mengekstrak ciri-ciri manual (sudut, warna, ukuran); sedangkan di Deep Learning mesin berlapis otomatis mencari ciri dari garis sampai objek utuh tanpa dipilih manual!">
       <div class="kicker">BAB 2 · AI FUNDAMENTAL 1/3 · SIMULATOR KONSEP</div>
       <h2>Dari Angka Pixel ke Makna: <span class="hl-blue">Apa Itu AI</span>?</h2>
       <p class="subtitle">Klik 3 tombol di bawah untuk membandingkan <strong>siapa yang menentukan ciri gambar</strong> pada tiap pendekatan:</p>
@@ -2141,69 +2237,215 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>28 / 54</span></div>
     </section>
 
-    <!-- 29: HISTOGRAM -->
-    <section class="slide" data-title="Issue #2 EDA (1/2): Melihat Sebaran Cahaya dengan Histogram" data-notes="Alokasi waktu: 1.5 menit. Issue #2 EDA (bagian 1) — Jelaskan histogram secara sederhana sebagai grafik penghitung seberapa banyak piksel gelap vs piksel terang.">
-      <div class="kicker">BAB 3 · ISSUE #2 (1/2) · PENCAHAYAAN &amp; KONTRAS</div>
-      <h2>Issue #2: Grafik <span class="hl-blue">Histogram</span> (Gelap / Silau)</h2>
+    <!-- 29: HISTOGRAM (INTERACTIVE GELAP / SILAU SIMULATOR) -->
+    <section class="slide" data-title="Issue #2 EDA (1/2): Melihat Sebaran Cahaya dengan Histogram" data-notes="Alokasi waktu: 1.5 menit. Issue #2 EDA (bagian 1) — Ajak peserta menggeser slider Gelap / Silau atau klik tombol Gelap (-90), Normal (0), dan Silau (+75) untuk melihat bagaimana gambar dan grafik histogram 65.536 pikselnya bergeser ke kiri (0) saat gelap atau menumpuk di kanan (255) saat silau.">
+      <div class="kicker">BAB 3 · ISSUE #2 (1/2) · PENCAHAYAAN &amp; KONTRAS · SIMULATOR INTERAKTIF</div>
+      <h2>Issue #2: Grafik <span class="hl-blue">Histogram</span> (Uji Gelap / Silau)</h2>
       <div class="split-60-40">
-        <div class="img-box" style="flex-direction:column; gap:10px; padding:14px;">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
-              <img src="assets/P01/sample_polos.jpg" alt="Contoh Gambar Kondisi Polos" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
-              <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Contoh Gambar Polos</span>
+        <div class="img-box" style="flex-direction:column; justify-content:space-between; gap:10px; padding:12px 14px;">
+          <!-- Interactive Brightness / Exposure Control Bar -->
+          <div style="width:100%; background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:8px 12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap;">
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="font-size:12.5px; font-weight:700; color:#202124;">Uji Geser Cahaya:</span>
+                <span id="hist-offset-badge" style="font-family:var(--font-code); font-size:11.5px; font-weight:700; background:#E8F0FE; color:#1A73E8; padding:2.5px 9px; border-radius:999px;">0 (Normal / Asli)</span>
+              </div>
+              <div id="hist-preset-btns" style="display:flex; gap:5px;">
+                <button type="button" class="btn-ui outline" data-hoff="-90" onclick="setHistOffset(-90)" style="padding:3.5px 10px; font-size:11.2px;">🌑 Gelap (−90)</button>
+                <button type="button" class="btn-ui" data-hoff="0" onclick="setHistOffset(0)" style="padding:3.5px 10px; font-size:11.2px;">☀️ Normal (0)</button>
+                <button type="button" class="btn-ui outline" data-hoff="75" onclick="setHistOffset(75)" style="padding:3.5px 10px; font-size:11.2px;">⚡ Silau (+75)</button>
+              </div>
             </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
-              <img src="assets/P01/sample_ramai.jpg" alt="Contoh Gambar Kondisi Ramai" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
-              <span style="font-size:11.5px; font-weight:700; color:#C5221F;">Contoh Gambar Ramai</span>
+            <div style="display:grid; grid-template-columns:auto 1fr auto; align-items:center; gap:9px; font-size:11px; font-weight:700; color:#5F6368;">
+              <span>🌑 Gelap (−110)</span>
+              <input id="hist-offset-sl" type="range" min="-110" max="110" step="5" value="0" style="width:100%; cursor:pointer;" oninput="updateHistDemo()" />
+              <span>⚡ Silau (+110)</span>
             </div>
           </div>
-          <img src="assets/P01/07_histogram_brightness_contrast.png" alt="Histogram foto polos vs ramai" style="max-height:220px;" />
+
+          <!-- Live Thumbnails (Polos & Ramai) -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:11px; width:100%;">
+            <div style="display:flex; align-items:center; justify-content:flex-start; gap:12px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:11px; padding:7px 12px;">
+              <canvas id="hist-thumb-polos" width="128" height="128" style="height:78px; width:78px; border-radius:8px; border:1px solid #BDC1C6; flex-shrink:0; background:#FFF;"></canvas>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <span style="font-size:12.5px; font-weight:700; color:#1A73E8;">Contoh Gambar Polos</span>
+                <span style="font-family:var(--font-code); font-size:10.5px; color:#5F6368;">256×256 = 65.536 piksel</span>
+                <span id="hist-stat-polos" style="font-family:var(--font-code); font-size:11px; font-weight:700; color:#202124; background:#E8F0FE; padding:2px 7px; border-radius:6px; width:fit-content;">Mean=232.2 | Std=40.1</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:flex-start; gap:12px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:11px; padding:7px 12px;">
+              <canvas id="hist-thumb-ramai" width="128" height="128" style="height:78px; width:78px; border-radius:8px; border:1px solid #BDC1C6; flex-shrink:0; background:#FFF;"></canvas>
+              <div style="display:flex; flex-direction:column; gap:3px;">
+                <span style="font-size:12.5px; font-weight:700; color:#C5221F;">Contoh Gambar Ramai</span>
+                <span style="font-family:var(--font-code); font-size:10.5px; color:#5F6368;">256×256 = 65.536 piksel</span>
+                <span id="hist-stat-ramai" style="font-family:var(--font-code); font-size:11px; font-weight:700; color:#202124; background:#FCE8E6; padding:2px 7px; border-radius:6px; width:fit-content;">Mean=122.9 | Std=50.2</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Calculated 32-Bin Histograms -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:11px; width:100%; flex:1; min-height:0; align-items:stretch;">
+            <div style="background:#FFFFFF; border:1px solid #E8EAED; border-radius:10px; padding:4px; display:flex; align-items:center; justify-content:center; min-height:0;">
+              <canvas id="hist-canvas-polos" width="420" height="350" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+            <div style="background:#FFFFFF; border:1px solid #E8EAED; border-radius:10px; padding:4px; display:flex; align-items:center; justify-content:center; min-height:0;">
+              <canvas id="hist-canvas-ramai" width="420" height="350" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="card">
+        <div class="card" style="padding:16px 20px; justify-content:space-between; gap:10px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title">Cara Mudah Membaca Grafik Ini</div>
-          <div class="card-body">
-            <ul>
-              <li><strong>Sisi Kiri (dekat 0):</strong> Banyak titik gelap / bayangan.</li>
-              <li><strong>Tengah (100–160):</strong> Warna dan cahaya seimbang.</li>
-              <li><strong>Sisi Kanan (dekat 255):</strong> Banyak area putih / sangat terang.</li>
-            </ul>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <span class="pill blue">PANDUAN MEMBACA HISTOGRAM (65.536 PIKSEL)</span>
+            <div class="card-title" style="font-size:18px;">Cara Mudah Membaca Grafik Ini</div>
+            <div class="card-body" style="font-size:13.4px; line-height:1.44;">
+              <ul style="gap:6px;">
+                <li><strong>Sisi Kiri (0–84):</strong> Banyak titik gelap / bayangan.</li>
+                <li><strong>Tengah (85–170):</strong> Warna dan cahaya seimbang.</li>
+                <li><strong>Sisi Kanan (171–255):</strong> Banyak area putih / sangat terang.</li>
+                <li><strong>Total Batang = 65.536 Piksel:</strong> Jumlah seluruh batang di tiap grafik selalu pas <code>256 × 256 = 65.536</code> piksel!</li>
+              </ul>
+            </div>
           </div>
-          <div class="callout"><strong>Contoh data sampel:</strong> Foto latar polos punya puncak tinggi di kanan (latar putih bersih), sedangkan foto latar ramai menyebar rata di tengah karena penuh warna!</div>
+
+          <!-- Live 3-Zone Pixel Breakdown Meter (Fills Middle Space Optimally) -->
+          <div style="background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:12px 14px; display:flex; flex-direction:column; gap:9px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:12.2px; font-weight:700; color:#202124;">Sebaran 3 Zona Cahaya (Live 65.536 px):</span>
+              <span style="font-family:var(--font-code); font-size:10.2px; color:#5F6368;">Gelap · Sedang · Terang</span>
+            </div>
+            <!-- Polos Zone Bar -->
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <div style="display:flex; justify-content:space-between; font-size:11.3px; font-weight:700;">
+                <span style="color:#1A73E8;">Gambar Polos</span>
+                <span id="hist-zone-txt-p" style="font-family:var(--font-code); font-size:10.5px; color:#3C4043;">Gelap 2% · Sedang 5% · Terang 93%</span>
+              </div>
+              <div style="display:flex; width:100%; height:13px; border-radius:999px; overflow:hidden; background:#E8EAED; border:1px solid #DADCE0;">
+                <div id="hist-zbar-p-dark" style="width:2%; background:#3C4043; transition:width 0.15s;"></div>
+                <div id="hist-zbar-p-mid" style="width:5%; background:#4285F4; transition:width 0.15s;"></div>
+                <div id="hist-zbar-p-bright" style="width:93%; background:#FBBC04; transition:width 0.15s;"></div>
+              </div>
+            </div>
+            <!-- Ramai Zone Bar -->
+            <div style="display:flex; flex-direction:column; gap:4px;">
+              <div style="display:flex; justify-content:space-between; font-size:11.3px; font-weight:700;">
+                <span style="color:#C5221F;">Gambar Ramai</span>
+                <span id="hist-zone-txt-r" style="font-family:var(--font-code); font-size:10.5px; color:#3C4043;">Gelap 25% · Sedang 58% · Terang 17%</span>
+              </div>
+              <div style="display:flex; width:100%; height:13px; border-radius:999px; overflow:hidden; background:#E8EAED; border:1px solid #DADCE0;">
+                <div id="hist-zbar-r-dark" style="width:25%; background:#3C4043; transition:width 0.15s;"></div>
+                <div id="hist-zbar-r-mid" style="width:58%; background:#EA4335; transition:width 0.15s;"></div>
+                <div id="hist-zbar-r-bright" style="width:17%; background:#FBBC04; transition:width 0.15s;"></div>
+              </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:10.5px; font-weight:600; color:#5F6368; padding-top:2px;">
+              <span>⬛ Gelap (0–84)</span>
+              <span>🟦🟥 Sedang (85–170)</span>
+              <span>🟨 Terang (171–255)</span>
+            </div>
+          </div>
+
+          <div id="hist-live-callout" class="callout" style="margin-top:0; font-size:12.6px; padding:10px 13px;"><strong>Kondisi Normal (Asli):</strong> Foto latar polos punya puncak tinggi di kanan (<code>Mean = 232.2</code>, latar putih bersih), sedangkan foto latar ramai menyebar di tengah (<code>Mean = 122.9</code>)!</div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>29 / 54</span></div>
     </section>
 
-    <!-- 30: BRIGHTNESS & CONTRAST -->
-    <section class="slide" data-title="Issue #2 EDA (2/2): Mengukur Brightness &amp; Kontras" data-notes="Alokasi waktu: 1.5 menit. Issue #2 EDA (bagian 2) — Jelaskan hasil pengukuran nyata pada 119 foto sampel valid (1 file rusak sudah disisihkan — cara menyaringnya kita bahas lengkap di Bab 4).">
-      <div class="kicker">BAB 3 · ISSUE #2 (2/2) · PENCAHAYAAN &amp; KONTRAS</div>
-      <h2>Issue #2: Mengukur <span class="hl-blue">Brightness</span> &amp; <span class="hl-red">Contrast</span></h2>
+    <!-- 30: BRIGHTNESS & CONTRAST (INTERACTIVE SIMULATOR) -->
+    <section class="slide" data-title="Issue #2 EDA (2/2): Mengukur Brightness &amp; Kontras" data-notes="Alokasi waktu: 1.5 menit. Issue #2 EDA (bagian 2) — Ajak peserta menggeser slider Brightness dan Contrast (atau klik tombol preset Kontras Rendah, Kontras Tinggi, Gelap, Normal) untuk merasakan langsung beda Brightness (rata-rata terang seluruh foto, np.mean) vs Contrast (ketajaman jarak gelap-terang, np.std) pada 119 foto valid!">
+      <div class="kicker">BAB 3 · ISSUE #2 (2/2) · PENCAHAYAAN &amp; KONTRAS · SIMULATOR INTERAKTIF</div>
+      <h2>Issue #2: Mengukur <span class="hl-blue">Brightness</span> &amp; <span class="hl-red">Contrast</span> (Uji Interaktif)</h2>
       <div class="split-60-40">
-        <div class="img-box" style="flex-direction:column; gap:10px; padding:14px;">
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
-              <img src="assets/P01/sample_polos.jpg" alt="Contoh Foto Latar Polos" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
-              <span style="font-size:11.5px; font-weight:700; color:#1A73E8;">Contoh Latar Polos</span>
+        <div class="img-box" style="flex-direction:column; justify-content:space-between; gap:9px; padding:11px 13px;">
+          <!-- Interactive Brightness & Contrast Control Bar -->
+          <div style="width:100%; background:#F8F9FA; border:1px solid #DADCE0; border-radius:12px; padding:7px 11px; display:flex; flex-direction:column; gap:6px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+              <span style="font-size:12px; font-weight:700; color:#202124;">Uji Beda Brightness vs Contrast:</span>
+              <div id="bc-preset-btns" style="display:flex; gap:5px; flex-wrap:wrap;">
+                <button type="button" class="btn-ui" data-bcp="normal" onclick="setBcPreset(0, 1.0, 'normal')" style="padding:3px 9px; font-size:10.8px;">☀️ Normal (Asli)</button>
+                <button type="button" class="btn-ui outline" data-bcp="lowc" onclick="setBcPreset(0, 0.35, 'lowc')" style="padding:3px 9px; font-size:10.8px;">🌫️ Kontras Rendah (0.35×)</button>
+                <button type="button" class="btn-ui outline" data-bcp="highc" onclick="setBcPreset(0, 1.60, 'highc')" style="padding:3px 9px; font-size:10.8px;">⚡ Kontras Tinggi (1.60×)</button>
+                <button type="button" class="btn-ui outline" data-bcp="dark" onclick="setBcPreset(-65, 1.0, 'dark')" style="padding:3px 9px; font-size:10.8px;">🌑 Gelap (B −65)</button>
+              </div>
             </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:4px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:10px; padding:6px;">
-              <img src="assets/P01/sample_ramai.jpg" alt="Contoh Foto Latar Ramai" style="height:82px; width:82px; object-fit:cover; border-radius:6px; border:1px solid #E0E0E0;" />
-              <span style="font-size:11.5px; font-weight:700; color:#C5221F;">Contoh Latar Ramai</span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:center;">
+              <div style="display:flex; align-items:center; gap:6px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:8px; padding:3.5px 9px;">
+                <span style="font-size:11px; font-weight:700; color:#1A73E8; white-space:nowrap;">Brightness:</span>
+                <input id="bc-b-sl" type="range" min="-80" max="80" step="5" value="0" style="width:100%; cursor:pointer;" oninput="updateBcDemo('custom')" />
+                <span id="bc-b-val" style="font-family:var(--font-code); font-size:11px; font-weight:700; color:#1A73E8; min-width:32px; text-align:right;">+0</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:6px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:8px; padding:3.5px 9px;">
+                <span style="font-size:11px; font-weight:700; color:#C5221F; white-space:nowrap;">Contrast:</span>
+                <input id="bc-c-sl" type="range" min="30" max="170" step="5" value="100" style="width:100%; cursor:pointer;" oninput="updateBcDemo('custom')" />
+                <span id="bc-c-val" style="font-family:var(--font-code); font-size:11px; font-weight:700; color:#C5221F; min-width:38px; text-align:right;">1.00×</span>
+              </div>
             </div>
           </div>
-          <img src="assets/P01/07b_brightness_contrast_box.png" alt="Boxplot Brightness dan Contrast Polos vs Ramai" style="max-height:220px;" />
+
+          <!-- Live Thumbnails (Polos & Ramai) -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+            <div style="display:flex; align-items:center; justify-content:flex-start; gap:11px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:11px; padding:6px 11px;">
+              <canvas id="bc-thumb-polos" width="128" height="128" style="height:74px; width:74px; border-radius:8px; border:1px solid #BDC1C6; flex-shrink:0; background:#FFF;"></canvas>
+              <div style="display:flex; flex-direction:column; gap:2.5px;">
+                <span style="font-size:12px; font-weight:700; color:#1A73E8;">Contoh Latar Polos</span>
+                <span id="bc-thumb-stat-p" style="font-family:var(--font-code); font-size:10.8px; font-weight:700; color:#202124; background:#E8F0FE; padding:2px 7px; border-radius:6px; width:fit-content;">B=232.2 | C=40.1</span>
+                <span style="font-size:10px; color:#5F6368;">Sampel: bintang_polos</span>
+              </div>
+            </div>
+            <div style="display:flex; align-items:center; justify-content:flex-start; gap:11px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:11px; padding:6px 11px;">
+              <canvas id="bc-thumb-ramai" width="128" height="128" style="height:74px; width:74px; border-radius:8px; border:1px solid #BDC1C6; flex-shrink:0; background:#FFF;"></canvas>
+              <div style="display:flex; flex-direction:column; gap:2.5px;">
+                <span style="font-size:12px; font-weight:700; color:#C5221F;">Contoh Latar Ramai</span>
+                <span id="bc-thumb-stat-r" style="font-family:var(--font-code); font-size:10.8px; font-weight:700; color:#202124; background:#FCE8E6; padding:2px 7px; border-radius:6px; width:fit-content;">B=122.9 | C=50.2</span>
+                <span style="font-size:10px; color:#5F6368;">Sampel: bintang_ramai</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Live Calculated Boxplots (Brightness & Contrast across 119 Valid Photos) -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; flex:1; min-height:0; align-items:stretch;">
+            <div style="background:#FFFFFF; border:1px solid #E8EAED; border-radius:10px; padding:4px; display:flex; align-items:center; justify-content:center; min-height:0;">
+              <canvas id="bc-canvas-b" width="420" height="340" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+            <div style="background:#FFFFFF; border:1px solid #E8EAED; border-radius:10px; padding:4px; display:flex; align-items:center; justify-content:center; min-height:0;">
+              <canvas id="bc-canvas-c" width="420" height="340" style="width:100%; height:100%; display:block;"></canvas>
+            </div>
+          </div>
         </div>
-        <div class="card" style="padding:18px 20px; gap:8px;">
+        <div class="card" style="padding:15px 19px; justify-content:space-between; gap:9px;">
           <div class="card-top-bar bar-green"></div>
-          <span class="pill green">CONTOH DATA SAMPEL (119 FOTO VALID)</span>
-          <div class="card-title" style="font-size:19px;">Temuan Nyata: Polos vs Ramai</div>
-          <div class="card-body" style="font-size:14.5px; line-height:1.45;">
-            <ul style="gap:6px;">
-              <li><strong>Brightness (Rata-rata Intensitas):</strong><br />Polos: <strong>{polos['mean_brightness']:.2f}</strong> · Ramai: <strong>{ramai['mean_brightness']:.2f}</strong><br />Foto latar polos jauh lebih terang karena didominasi latar putih.</li>
-              <li><strong>Contrast (Simpangan Baku):</strong><br />Polos: <strong>{polos['mean_contrast']:.2f}</strong> · Ramai: <strong>{ramai['mean_contrast']:.2f}</strong><br />Foto latar ramai lebih bervariasi gelap-terangnya.</li>
-            </ul>
+          <div style="display:flex; flex-direction:column; gap:7px;">
+            <span class="pill green">CONTOH DATA SAMPEL (119 FOTO VALID)</span>
+            <div class="card-title" style="font-size:18px;">Temuan Nyata: Polos vs Ramai</div>
+            <div class="card-body" style="font-size:13.2px; line-height:1.4;">
+              <ul style="gap:6px;">
+                <li><strong>Brightness (Rata-rata Terang · <code>np.mean</code>):</strong><br />
+                  Polos: <strong id="bc-mean-p" class="hl-blue">{polos['mean_brightness']:.2f}</strong> &middot; Ramai: <strong id="bc-mean-r" class="hl-red">{ramai['mean_brightness']:.2f}</strong><br />
+                  Mengukur seberapa <strong>terang/gelap keseluruhan foto</strong> (0–255).
+                </li>
+                <li><strong>Contrast (Ketajaman Beda · <code>np.std</code>):</strong><br />
+                  Polos: <strong id="bc-std-p" class="hl-blue">{polos['mean_contrast']:.2f}</strong> &middot; Ramai: <strong id="bc-std-r" class="hl-red">{ramai['mean_contrast']:.2f}</strong><br />
+                  Mengukur <strong>jarak perbedaan gelap vs terang</strong> di dalam foto.
+                </li>
+              </ul>
+            </div>
           </div>
-          <div class="callout yellow" style="margin-top:auto; font-size:13.5px; padding:10px 12px;">Jika perbedaan ini terlalu ekstrem, AI bisa menebak hanya dari terangnya foto!</div>
+
+          <!-- Comparison Grid: Brightness vs Contrast Effect (Fills Middle Space Optimally) -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:9px;">
+            <div style="background:#E8F0FE; border:1px solid #C6DAFC; border-radius:11px; padding:10px 12px; display:flex; flex-direction:column; gap:4px;">
+              <span style="font-size:11.8px; font-weight:700; color:#1A73E8;">💡 Efek Geser Brightness</span>
+              <span style="font-size:11.3px; color:#3C4043; line-height:1.38;">Menambah/mengurangi cahaya ke <strong>semua piksel</strong> → kotak <strong>Boxplot Kiri</strong> naik/turun.</span>
+              <span style="font-family:var(--font-code); font-size:10px; color:#1A73E8; font-weight:700;">Rumus: pixel + ΔB</span>
+            </div>
+            <div style="background:#FCE8E6; border:1px solid #F6AEA9; border-radius:11px; padding:10px 12px; display:flex; flex-direction:column; gap:4px;">
+              <span style="font-size:11.8px; font-weight:700; color:#C5221F;">🎚️ Efek Geser Contrast</span>
+              <span style="font-size:11.3px; color:#3C4043; line-height:1.38;">Merentangkan jarak <strong>gelap vs terang</strong> → kotak <strong>Boxplot Kanan</strong> naik/turun.</span>
+              <span style="font-family:var(--font-code); font-size:10px; color:#C5221F; font-weight:700;">Rumus: (pixel − mean) × C</span>
+            </div>
+          </div>
+
+          <div id="bc-live-callout" class="callout yellow" style="margin-top:0; font-size:12.4px; padding:9px 11px;"><strong>Kondisi Asli (119 Foto Valid):</strong> Jika perbedaan <em>Brightness</em> terlalu ekstrem (<code>228.11</code> vs <code>127.21</code>), AI bisa curang menebak hanya dari terangnya latar!</div>
         </div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>30 / 54</span></div>
@@ -2676,60 +2918,7 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>39 / 54</span></div>
     </section>
 
-    <!-- 40: HASIL AUDIT 120 FILE SAMPEL -->
-    <section class="slide" data-title="Hasil EDA: 120 File Sampel" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan angka nyata hasil EDA pada 120 file di data sampel kita.">
-      <div class="kicker">BAB 4 · HASIL EDA NYATA</div>
-      <h2>Hasil EDA <span class="hl-blue">120 File Sampel</span> Kita</h2>
-      <p class="subtitle">Contoh data sampel: hasil pemeriksaan otomatis sebelum masuk tahap berikutnya.</p>
-      <div class="grid-4" style="flex:0 0 auto;">
-        <div class="card tint-blue"><div class="big-num hl-blue">{stats['total_metadata_rows']}</div><div class="card-title">Total File</div><div class="card-body">5 jenis × 2 latar × 12 foto.</div></div>
-        <div class="card tint-green"><div class="big-num hl-green">{stats['valid_images']}</div><div class="card-title">Valid Images</div><div class="card-body">Siap dihitung &amp; dianalisis.</div></div>
-        <div class="card tint-red"><div class="big-num hl-red">{stats['corrupted_count']}</div><div class="card-title">Corrupted File</div><div class="card-body">Disisihkan otomatis.</div></div>
-        <div class="card tint-yellow"><div class="big-num hl-yellow">{stats['duplicate_file_count'] + stats['exif_orientation_6_count']}</div><div class="card-title">Perlu Perhatian</div><div class="card-body">{stats['duplicate_file_count']} duplicate + {stats['exif_orientation_6_count']} EXIF orientation=6.</div></div>
-      </div>
-      <div style="margin-top:14px; flex:1; min-height:0; display:grid; grid-template-columns:1.25fr 1fr; gap:14px;">
-        <div class="card surface" style="justify-content:center; padding:16px 20px;">
-          <div class="card-title" style="font-size:18px;">Daftar Temuan Khusus pada Sampel:</div>
-          <div class="card-body" style="font-size:14.5px; line-height:1.45;">
-            <ul style="gap:6px;">
-              <li><strong>Corrupted file:</strong> <code>segitiga_ramai_12.jpg</code> — gagal uji buka, langsung dikecualikan agar tidak merusak hitungan rata-rata.</li>
-              <li><strong>Duplicate images:</strong> <code>lingkaran_polos_01.jpg</code> &amp; <code>02.jpg</code> — memiliki <em>file hash</em> SHA-256 identik.</li>
-              <li><strong>Foto EXIF orientation=6:</strong> <code>persegi_polos_01.jpg</code> &amp; <code>bintang_ramai_01.jpg</code> — otomatis diputar tegak saat dibuka.</li>
-            </ul>
-          </div>
-        </div>
-        <div class="card" style="padding:14px 16px; justify-content:center; gap:8px;">
-          <div class="card-title" style="font-size:16px;">Cuplikan File Dataset Sampel</div>
-          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
-              <img src="assets/P01/sample_lingkaran_01.jpg" alt="lingkaran_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#1A73E8; font-weight:700;">lingkaran (Dup)</span>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
-              <img src="assets/P01/sample_persegi_01.jpg" alt="persegi_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#8A5700; font-weight:700;">persegi (EXIF=6)</span>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
-              <img src="assets/P01/sample_bintang_01.jpg" alt="bintang_ramai_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#8A5700; font-weight:700;">bintang (EXIF=6)</span>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#FCE8E6; border:1px dashed #EA4335; border-radius:8px; padding:5px;">
-              <div style="width:52px; height:52px; display:flex; align-items:center; justify-content:center; background:#FFF; border-radius:5px; color:#EA4335; font-size:20px; font-weight:700;">✕</div>
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#C5221F; font-weight:700;">segitiga (Rusak)</span>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
-              <img src="assets/P01/orig_heksagon_polos.jpg" alt="heksagon_polos_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#137333; font-weight:700;">heksagon (Valid)</span>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:3px; background:#F8F9FA; border:1px solid #DADCE0; border-radius:8px; padding:5px;">
-              <img src="assets/P01/orig_heksagon_ramai.jpg" alt="heksagon_ramai_01.jpg" style="width:52px; height:52px; object-fit:cover; border-radius:5px;" />
-              <span style="font-family:'Roboto Mono',monospace; font-size:8.5px; color:#137333; font-weight:700;">ramai (Valid)</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>40 / 54</span></div>
-    </section>
+    <!-- [HIDDEN] 40: HASIL AUDIT 120 FILE SAMPEL (Disembunyikan sesuai permintaan) -->
 
     <!-- 41: QA REVEAL #5 -->
     <section class="slide" data-title="Tanya-Jawab #5: Bahaya Data Leakage" data-notes="Alokasi waktu: 1.5 menit. Pertanyaan terakhir sebelum masuk ke praktik: apa bahayanya jika foto kembar bocor ke bahan ujian AI?">
@@ -2809,17 +2998,17 @@ foto_siap = preprocess_input(foto_asli)</code></pre>
     </section>
 
     <!-- 44: 6 LANGKAH PRAKTIK (50 MENIT) -->
-    <section class="slide" data-title="6 Langkah Praktik Terpandu (50 Menit)" data-notes="Alokasi waktu: 38.5 menit (selama sesi praktik). Keenam langkah ini sama persis dengan urutan sel di Notebook Hands-on P01. Perhatikan jembatan alurnya: Langkah 04 (Bab 4: cek rusak, EXIF, duplikat) dijalankan tepat sebelum Langkah 05 (Bab 3: hitung statistik EDA polos vs ramai) agar angka EDA bersih! Intip dulu logika kodenya sebentar di Slide 49–50 sebelum mulai run Notebook.">
+    <section class="slide" data-title="6 Langkah Praktik Terpandu (50 Menit)" data-notes="Alokasi waktu: 40 menit (selama sesi praktik). Keenam langkah ini sama persis dengan urutan sel di Notebook Hands-on P01. Perhatikan jembatan alurnya: Langkah 04 (Bab 4: cek rusak, EXIF, duplikat) dijalankan tepat sebelum Langkah 05 (Bab 3: hitung statistik EDA polos vs ramai) agar angka EDA bersih! Intip dulu logika kodenya sebentar di Slide 48–49 sebelum mulai run Notebook.">
       <div class="kicker">HANDS-ON · 50 MENIT · SINKRON DENGAN NOTEBOOK</div>
-      <h2>6 Langkah <span class="hl-blue">Praktik di Notebook</span> (Sesuai Bab 1–4)</h2>
-      <p class="subtitle" style="margin-bottom:6px;">Di praktik, <strong>Langkah 04 (Bab 4)</strong> menyaring file rusak/miring dulu sebelum <strong>Langkah 05 (Bab 3)</strong> menghitung statistik EDA — intip kodenya di Slide 49–50 lalu mulai!</p>
-      <div class="step-list">
-        <div class="step-item"><div class="step-num">01</div><div><div class="step-title">Baca Gambar &amp; Intip Matriks Pixel (Bab 1)</div><div class="step-desc">Buka 1 foto, cek shape <code>(Tinggi, Lebar, 3)</code>, lalu zoom-in <code>8×8</code> pixel melihat angka <code>0–255</code>.</div></div></div>
-        <div class="step-item"><div class="step-num red">02</div><div><div class="step-title">Pisahkan RGB Channels &amp; Grayscale (Bab 1)</div><div class="step-desc">Pisahkan 3 lapisan warna (Red, Green, Blue) dan ubah ke 1 channel <em>Grayscale</em>.</div></div></div>
-        <div class="step-item"><div class="step-num yellow">03</div><div><div class="step-title">Preprocessing: Resize Letterbox &amp; Normalization (Bab 2)</div><div class="step-desc">Samakan ukuran <code>224×224</code> tanpa gepeng dan ubah <code>uint8 (0–255)</code> ke <code>float32 (0–1)</code>.</div></div></div>
-        <div class="step-item"><div class="step-num green">04</div><div><div class="step-title">Saring 3 Jebakan Kamera HP (Bab 4)</div><div class="step-desc">Putar otomatis (<em>EXIF</em>), saring <em>corrupted</em> dengan <code>verify()</code>, &amp; cek duplikat <code>SHA-256</code>.</div></div></div>
-        <div class="step-item"><div class="step-num">05</div><div><div class="step-title">EDA Dataset: Polos vs Ramai (Bab 3)</div><div class="step-desc">Hitung <em>class balance</em>, <em>brightness</em>, <em>contrast</em>, <em>histogram</em>, &amp; <em>edge density</em> (Canny).</div></div></div>
-        <div class="step-item"><div class="step-num red">06</div><div><div class="step-title">Simpan Ringkasan Audit &amp; Grafik</div><div class="step-desc">Ekspor tabel audit (CSV) dan grafik perbandingan <strong>polos vs ramai</strong> ke folder <code>results/</code>.</div></div></div>
+      <h2 style="margin-bottom:4px;">6 Langkah <span class="hl-blue">Praktik di Notebook</span> (Sesuai Bab 1–4)</h2>
+      <p class="subtitle" style="margin-bottom:6px; font-size:13.2px; line-height:1.38;">Kode di Notebook sudah dipecah <em>cell-by-cell</em> ramah pemula dengan komentar penjelasan tiap baris. <strong>Langkah 04 (Bab 4)</strong> menyaring file rusak dulu sebelum <strong>Langkah 05 (Bab 3)</strong> menghitung statistik EDA — intip kodenya di Slide 48–49!</p>
+      <div class="step-list" style="gap:6px;">
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num" style="width:34px; height:34px; font-size:14.5px;">01</div><div><div class="step-title" style="font-size:13.8px;">Baca Gambar &amp; Intip Matriks Pixel (Bab 1)</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Buka 1 foto <code>data/sample/</code> &amp; angka <code>data/mnist/</code> (<code>28×28</code>), cek <code>.shape</code>, lalu zoom-in melihat angka <code>0–255</code>.</div></div></div>
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num red" style="width:34px; height:34px; font-size:14.5px;">02</div><div><div class="step-title" style="font-size:13.8px;">Pisahkan RGB Channels &amp; Grayscale (Bab 1)</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Pisahkan 3 lapisan warna (Red, Green, Blue) dan ubah ke 1 channel <em>Grayscale</em>.</div></div></div>
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num yellow" style="width:34px; height:34px; font-size:14.5px;">03</div><div><div class="step-title" style="font-size:13.8px;">Preprocessing: Resize Letterbox &amp; Normalization (Bab 2)</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Samakan ukuran <code>224×224</code> tanpa gepeng dan ubah <code>uint8 (0–255)</code> ke <code>float32 (0–1)</code>.</div></div></div>
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num green" style="width:34px; height:34px; font-size:14.5px;">04</div><div><div class="step-title" style="font-size:13.8px;">Saring 3 Jebakan Kamera HP (Bab 4)</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Putar otomatis (<em>EXIF</em>), saring <em>corrupted</em> dengan <code>verify()</code>, &amp; cek duplikat <code>SHA-256</code>.</div></div></div>
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num" style="width:34px; height:34px; font-size:14.5px;">05</div><div><div class="step-title" style="font-size:13.8px;">EDA Dataset: Polos vs Ramai (Bab 3)</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Hitung <em>class balance</em>, <em>brightness</em>, <em>contrast</em>, <em>histogram</em>, &amp; <em>edge density</em> (Canny).</div></div></div>
+        <div class="step-item" style="padding:7px 12px;"><div class="step-num red" style="width:34px; height:34px; font-size:14.5px;">06</div><div><div class="step-title" style="font-size:13.8px;">Simpan Ringkasan Audit &amp; Grafik</div><div class="step-desc" style="font-size:12.2px; line-height:1.32;">Ekspor tabel audit (CSV) dan grafik perbandingan <strong>polos vs ramai</strong> ke folder <code>results/</code>.</div></div></div>
       </div>
       <div class="slide-footer"><span>Memahami Gambar di Komputer &amp; Image Processing</span><span>47 / 57</span></div>
     </section>
@@ -3643,26 +3832,30 @@ def get_file_hash(lokasi_foto):
       apple: {{
         coord: 'Pixel(112, 88) · Apel Merah',
         rgb: [234, 67, 53],
-        cx: 96, cy: 76, lx: 111, ly: 65,
-        note: '<strong>Lampu R paling terang</strong> → titik ini terlihat Merah.'
+        s1x: 35, s1y: 46,
+        colorLabel: 'Titik Merah',
+        note: '<strong>Lampu R paling terang (92%)</strong> → menyatu jadi <strong>Titik Merah</strong>!'
       }},
       leaf: {{
         coord: 'Pixel(62, 108) · Daun Hijau',
         rgb: [52, 168, 83],
-        cx: 109, cy: 46, lx: 124, ly: 37,
-        note: '<strong>Lampu G dominan</strong> → titik ini terlihat Hijau.'
+        s1x: 46, s1y: 24,
+        colorLabel: 'Titik Hijau',
+        note: '<strong>Lampu G dominan (66%)</strong> → menyatu jadi <strong>Titik Hijau</strong>!'
       }},
       star: {{
         coord: 'Pixel(46, 178) · Bintang Kuning',
         rgb: [251, 188, 4],
-        cx: 178, cy: 45, lx: 148, ly: 74,
-        note: '<strong>Lampu R + G menyala bareng</strong> → cahaya bergabung jadi Kuning!'
+        s1x: 68, s1y: 13,
+        colorLabel: 'Titik Kuning',
+        note: '<strong>Lampu R (98%) + G (74%)</strong> menyala → jadi <strong>Titik Kuning</strong>!'
       }},
       sky: {{
         coord: 'Pixel(28, 130) · Langit Biru',
         rgb: [94, 151, 246],
-        cx: 142, cy: 25, lx: 74, ly: 16,
-        note: '<strong>Lampu B paling terang</strong> (dibantu G) → langit Biru cerah.'
+        s1x: 13, s1y: 13,
+        colorLabel: 'Titik Biru',
+        note: '<strong>Lampu B paling terang (96%)</strong> → menyatu jadi <strong>Titik Biru</strong>!'
       }}
     }};
 
@@ -3687,37 +3880,70 @@ def get_file_hash(lokasi_foto):
       document.getElementById('disp-num-g').textContent = String(g);
       document.getElementById('disp-num-b').textContent = String(b);
 
-      const ledR = document.getElementById('disp-led-r');
-      const ledG = document.getElementById('disp-led-g');
-      const ledB = document.getElementById('disp-led-b');
-      ledR.style.height = Math.max(8, pr) + '%';
-      ledG.style.height = Math.max(8, pg) + '%';
-      ledB.style.height = Math.max(8, pb) + '%';
-      ledR.style.boxShadow = `0 0 ${{Math.round(pr * 0.14)}}px rgba(234,67,53,${{(0.15 + pr / 120).toFixed(2)}})`;
-      ledG.style.boxShadow = `0 0 ${{Math.round(pg * 0.14)}}px rgba(52,168,83,${{(0.15 + pg / 120).toFixed(2)}})`;
-      ledB.style.boxShadow = `0 0 ${{Math.round(pb * 0.14)}}px rgba(66,133,244,${{(0.15 + pb / 120).toFixed(2)}})`;
+      // Update Step 1 mini-image pixel pointer & swatch
+      const s1Box = document.getElementById('s1-px-box');
+      const s1Dot = document.getElementById('s1-px-dot');
+      const s1Line = document.getElementById('s1-px-line');
+      const s1Swatch = document.getElementById('s1-px-swatch');
+      if (s1Box && s1Dot && s1Line) {{
+        s1Box.setAttribute('x', s.s1x);
+        s1Box.setAttribute('y', s.s1y);
+        const pxCx = s.s1x + 5.5;
+        const pxCy = s.s1y + 5.5;
+        s1Dot.setAttribute('cx', pxCx);
+        s1Dot.setAttribute('cy', pxCy);
+        s1Line.setAttribute('d', `M${{s.s1x + 11}} ${{s.s1y}} L113 10 M${{s.s1x + 11}} ${{s.s1y + 11}} L113 84`);
+      }}
+      if (s1Swatch) {{
+        s1Swatch.style.background = `rgb(${{r}},${{g}},${{b}})`;
+      }}
+
+      // Update Step 2 stacked 3D RGB layers
+      const valR = document.getElementById('stack-val-r');
+      const valG = document.getElementById('stack-val-g');
+      const valB = document.getElementById('stack-val-b');
+      if (valR) valR.textContent = String(r);
+      if (valG) valG.textContent = String(g);
+      if (valB) valB.textContent = String(b);
+
+      const cellR = document.getElementById('stack-cell-r');
+      const cellG = document.getElementById('stack-cell-g');
+      const cellB = document.getElementById('stack-cell-b');
+      if (cellR) cellR.setAttribute('fill-opacity', (0.25 + 0.72 * (r / 255)).toFixed(2));
+      if (cellG) cellG.setAttribute('fill-opacity', (0.25 + 0.72 * (g / 255)).toFixed(2));
+      if (cellB) cellB.setAttribute('fill-opacity', (0.25 + 0.72 * (b / 255)).toFixed(2));
 
       document.getElementById('disp-pct-r').textContent = pr + '%';
       document.getElementById('disp-pct-g').textContent = pg + '%';
       document.getElementById('disp-pct-b').textContent = pb + '%';
 
-      document.getElementById('disp-mix-swatch').style.background = `rgb(${{r}},${{g}},${{b}})`;
-      document.getElementById('disp-mix-note').innerHTML = s.note;
-
-      const ring = document.getElementById('disp-ret-ring');
-      const dot = document.getElementById('disp-ret-dot');
-      const bg = document.getElementById('disp-ret-bg');
-      const txt = document.getElementById('disp-ret-txt');
-      if (ring && dot && bg && txt) {{
-        ring.setAttribute('cx', s.cx);
-        ring.setAttribute('cy', s.cy);
-        dot.setAttribute('cx', s.cx);
-        dot.setAttribute('cy', s.cy);
-        bg.setAttribute('x', s.lx);
-        bg.setAttribute('y', s.ly);
-        txt.setAttribute('x', s.lx + 30);
-        txt.setAttribute('y', s.ly + 12);
+      // Update Step 3 hardware Sub-Pixel LEDs & merged eye swatch
+      const ledR = document.getElementById('disp-led-r');
+      const ledG = document.getElementById('disp-led-g');
+      const ledB = document.getElementById('disp-led-b');
+      if (ledR && ledG && ledB) {{
+        ledR.style.height = Math.max(8, pr) + '%';
+        ledG.style.height = Math.max(8, pg) + '%';
+        ledB.style.height = Math.max(8, pb) + '%';
+        ledR.style.boxShadow = `0 0 ${{Math.round(pr * 0.14)}}px rgba(234,67,53,${{(0.15 + pr / 120).toFixed(2)}})`;
+        ledG.style.boxShadow = `0 0 ${{Math.round(pg * 0.14)}}px rgba(52,168,83,${{(0.15 + pg / 120).toFixed(2)}})`;
+        ledB.style.boxShadow = `0 0 ${{Math.round(pb * 0.14)}}px rgba(66,133,244,${{(0.15 + pb / 120).toFixed(2)}})`;
       }}
+      const lpr = document.getElementById('disp-led-pct-r');
+      const lpg = document.getElementById('disp-led-pct-g');
+      const lpb = document.getElementById('disp-led-pct-b');
+      if (lpr) lpr.textContent = pr + '%';
+      if (lpg) lpg.textContent = pg + '%';
+      if (lpb) lpb.textContent = pb + '%';
+
+      const mixSwatch = document.getElementById('disp-mix-swatch');
+      if (mixSwatch) {{
+        mixSwatch.style.background = `rgb(${{r}},${{g}},${{b}})`;
+        mixSwatch.style.boxShadow = `0 0 18px rgba(${{r}},${{g}},${{b}},0.78)`;
+      }}
+      const colLbl = document.getElementById('disp-color-label');
+      if (colLbl) colLbl.textContent = s.colorLabel;
+      document.getElementById('disp-mix-note').innerHTML = s.note;
     }}
 
     // Slide 10: Interactive Pixel Count / Resolution Demo
@@ -4550,6 +4776,608 @@ def get_file_hash(lokasi_foto):
       if (e.key === TIMER_STORAGE_KEY) renderSessionTimer();
     }});
 
+    // Slide 33: Interactive Histogram & Brightness (Gelap / Silau) Simulator
+    const HIST256_POLOS = {hist256_polos_json};
+    const HIST256_RAMAI = {hist256_ramai_json};
+    const POLOS_B64_URI = "data:image/jpeg;base64,{polos_b64}";
+    const RAMAI_B64_URI = "data:image/jpeg;base64,{ramai_b64}";
+    let histBasePixelsPolos = null;
+    let histBasePixelsRamai = null;
+
+    function initHistThumbnails() {{
+      const loadThumb = (uri, canvasId, cb) => {{
+        const im = new Image();
+        im.onload = () => {{
+          const off = document.createElement('canvas');
+          off.width = 128; off.height = 128;
+          const octx = off.getContext('2d');
+          octx.drawImage(im, 0, 0, 128, 128);
+          cb(octx.getImageData(0, 0, 128, 128));
+          updateHistDemo();
+        }};
+        im.src = uri;
+      }};
+      loadThumb(POLOS_B64_URI, 'hist-thumb-polos', (id) => {{ histBasePixelsPolos = id; }});
+      loadThumb(RAMAI_B64_URI, 'hist-thumb-ramai', (id) => {{ histBasePixelsRamai = id; }});
+    }}
+
+    function renderShiftedThumb(canvasId, baseImgData, delta) {{
+      const c = document.getElementById(canvasId);
+      if (!c || !baseImgData) return;
+      const ctx = c.getContext('2d');
+      const out = ctx.createImageData(baseImgData.width, baseImgData.height);
+      const src = baseImgData.data;
+      const dst = out.data;
+      for (let i = 0; i < src.length; i += 4) {{
+        dst[i] = Math.min(255, Math.max(0, src[i] + delta));
+        dst[i + 1] = Math.min(255, Math.max(0, src[i + 1] + delta));
+        dst[i + 2] = Math.min(255, Math.max(0, src[i + 2] + delta));
+        dst[i + 3] = src[i + 3];
+      }}
+      ctx.putImageData(out, 0, 0);
+    }}
+
+    function computeShiftedHistStats(raw256, delta) {{
+      const shifted256 = new Int32Array(256);
+      let totalPx = 0;
+      let sumVal = 0;
+      let darkPx = 0, midPx = 0, brightPx = 0;
+      for (let v = 0; v < 256; v++) {{
+        const count = raw256[v] || 0;
+        if (!count) continue;
+        const vn = Math.min(255, Math.max(0, v + delta));
+        shifted256[vn] += count;
+        totalPx += count;
+        sumVal += vn * count;
+        if (vn <= 84) darkPx += count;
+        else if (vn <= 170) midPx += count;
+        else brightPx += count;
+      }}
+      const mean = totalPx > 0 ? sumVal / totalPx : 0;
+      let sumSq = 0;
+      for (let vn = 0; vn < 256; vn++) {{
+        const count = shifted256[vn];
+        if (!count) continue;
+        const d = vn - mean;
+        sumSq += d * d * count;
+      }}
+      const std = totalPx > 0 ? Math.sqrt(sumSq / totalPx) : 0;
+      const bins32 = new Int32Array(32);
+      let maxBin = 0;
+      for (let b = 0; b < 32; b++) {{
+        let s = 0;
+        for (let k = 0; k < 8; k++) s += shifted256[b * 8 + k];
+        bins32[b] = s;
+        if (s > maxBin) maxBin = s;
+      }}
+      const darkPct = totalPx > 0 ? Math.round((darkPx / totalPx) * 100) : 0;
+      const midPct = totalPx > 0 ? Math.round((midPx / totalPx) * 100) : 0;
+      const brightPct = Math.max(0, 100 - darkPct - midPct);
+      return {{ bins32, mean, std, maxBin, totalPx, darkPct, midPct, brightPct }};
+    }}
+
+    function drawHistCanvas(canvasId, statsObj, titleMain, barColor, meanLineColor) {{
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+
+      const padL = 68, padR = 14, padT = 48, padB = 40;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      // Determine clean round Y-axis ceiling and 4 step intervals
+      const rawMax = Math.max(statsObj.maxBin, 1000);
+      let stepY = 2000;
+      if (rawMax > 40000) stepY = 15000;
+      else if (rawMax > 24000) stepY = 10000;
+      else if (rawMax > 12000) stepY = 5000;
+      else if (rawMax > 6000) stepY = 2000;
+      else stepY = 1500;
+      const yMax = Math.ceil((rawMax * 1.06) / stepY) * stepY;
+
+      // Title (2 lines with clear gap above plot top border)
+      ctx.fillStyle = '#202124';
+      ctx.font = '700 13.8px Roboto, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(titleMain, padL + plotW / 2, 16);
+      ctx.font = '700 12.5px Roboto Mono, monospace';
+      ctx.fillStyle = '#1A73E8';
+      ctx.fillText(`Mean = ${{statsObj.mean.toFixed(1)}} | Std = ${{statsObj.std.toFixed(1)}}`, padL + plotW / 2, 34);
+
+      // Horizontal gridlines & Y-axis ticks
+      ctx.font = '500 10.8px Roboto Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let yv = 0; yv <= yMax; yv += stepY) {{
+        const py = padT + plotH - (yv / yMax) * plotH;
+        ctx.strokeStyle = '#ECEFF1';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padL, py);
+        ctx.lineTo(padL + plotW, py);
+        ctx.stroke();
+        ctx.fillStyle = '#5F6368';
+        ctx.fillText(yv.toLocaleString('id-ID'), padL - 6, py);
+      }}
+
+      // Plot border box
+      ctx.strokeStyle = '#9AA0A6';
+      ctx.lineWidth = 1.1;
+      ctx.strokeRect(padL, padT, plotW, plotH);
+
+      // 32 Histogram Bars (each bin = 8 intensity units, 0..255)
+      const binW = plotW / 32;
+      for (let b = 0; b < 32; b++) {{
+        const val = statsObj.bins32[b];
+        if (val <= 0) continue;
+        const bh = Math.min(plotH, (val / yMax) * plotH);
+        const bx = padL + b * binW;
+        const by = padT + plotH - bh;
+        ctx.fillStyle = barColor;
+        ctx.fillRect(bx + 0.5, by, Math.max(1, binW - 1), bh);
+      }}
+
+      // Vertical dashed Mean line
+      const meanX = padL + (statsObj.mean / 255) * plotW;
+      ctx.save();
+      ctx.strokeStyle = meanLineColor;
+      ctx.lineWidth = 2.4;
+      ctx.setLineDash([5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(meanX, padT);
+      ctx.lineTo(meanX, padT + plotH);
+      ctx.stroke();
+      ctx.restore();
+
+      // Legend badge inside plot (top-left)
+      const legW = 118, legH = 22;
+      const legX = padL + 7, legY = padT + 7;
+      ctx.fillStyle = 'rgba(255,255,255,0.92)';
+      ctx.strokeStyle = '#DADCE0';
+      ctx.lineWidth = 1;
+      ctx.fillRect(legX, legY, legW, legH);
+      ctx.strokeRect(legX, legY, legW, legH);
+      ctx.save();
+      ctx.strokeStyle = meanLineColor;
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 3]);
+      ctx.beginPath();
+      ctx.moveTo(legX + 6, legY + 11);
+      ctx.lineTo(legX + 24, legY + 11);
+      ctx.stroke();
+      ctx.restore();
+      ctx.fillStyle = '#202124';
+      ctx.font = '700 10.5px Roboto Mono, monospace';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(`Mean = ${{statsObj.mean.toFixed(1)}}`, legX + 29, legY + 11.5);
+
+      // X-axis ticks (0, 50, 100, 150, 200, 255)
+      ctx.fillStyle = '#5F6368';
+      ctx.font = '500 10.8px Roboto Mono, monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      for (const xv of [0, 50, 100, 150, 200, 255]) {{
+        const px = padL + (xv / 255) * plotW;
+        ctx.beginPath();
+        ctx.moveTo(px, padT + plotH);
+        ctx.lineTo(px, padT + plotH + 4);
+        ctx.strokeStyle = '#5F6368';
+        ctx.stroke();
+        ctx.fillText(String(xv), px, padT + plotH + 5);
+      }}
+
+      // Axis labels
+      ctx.fillStyle = '#202124';
+      ctx.font = '700 11.2px Roboto, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText('Intensitas Piksel (0–255)', padL + plotW / 2, H - 13);
+
+      ctx.save();
+      ctx.translate(4, padT + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText('Jumlah Piksel', 0, 0);
+      ctx.restore();
+    }}
+
+    function setHistOffset(val) {{
+      const sl = document.getElementById('hist-offset-sl');
+      if (sl) {{
+        sl.value = String(val);
+        updateHistDemo();
+      }}
+    }}
+
+    function updateHistDemo() {{
+      const sl = document.getElementById('hist-offset-sl');
+      if (!sl) return;
+      const delta = Number(sl.value) || 0;
+
+      // Update preset button outlines
+      document.querySelectorAll('#hist-preset-btns button').forEach((b) => {{
+        b.classList.toggle('outline', Number(b.dataset.hoff) !== delta);
+      }});
+
+      const badge = document.getElementById('hist-offset-badge');
+      if (badge) {{
+        if (delta === 0) {{
+          badge.textContent = '0 (Normal / Asli)';
+          badge.style.background = '#E8F0FE';
+          badge.style.color = '#1A73E8';
+        }} else if (delta < 0) {{
+          badge.textContent = `${{delta}} (Mode Gelap)`;
+          badge.style.background = '#FCE8E6';
+          badge.style.color = '#C5221F';
+        }} else {{
+          badge.textContent = `+${{delta}} (Mode Silau)`;
+          badge.style.background = '#FEF7E0';
+          badge.style.color = '#B06000';
+        }}
+      }}
+
+      renderShiftedThumb('hist-thumb-polos', histBasePixelsPolos, delta);
+      renderShiftedThumb('hist-thumb-ramai', histBasePixelsRamai, delta);
+
+      const stPolos = computeShiftedHistStats(HIST256_POLOS, delta);
+      const stRamai = computeShiftedHistStats(HIST256_RAMAI, delta);
+
+      const lblP = document.getElementById('hist-stat-polos');
+      const lblR = document.getElementById('hist-stat-ramai');
+      if (lblP) lblP.textContent = `Mean=${{stPolos.mean.toFixed(1)}} | Std=${{stPolos.std.toFixed(1)}}`;
+      if (lblR) lblR.textContent = `Mean=${{stRamai.mean.toFixed(1)}} | Std=${{stRamai.std.toFixed(1)}}`;
+
+      // Update 3-Zone Live Pixel Breakdown Meter in right card
+      const zTxtP = document.getElementById('hist-zone-txt-p');
+      const zTxtR = document.getElementById('hist-zone-txt-r');
+      if (zTxtP) zTxtP.textContent = `Gelap ${{stPolos.darkPct}}% · Sedang ${{stPolos.midPct}}% · Terang ${{stPolos.brightPct}}%`;
+      if (zTxtR) zTxtR.textContent = `Gelap ${{stRamai.darkPct}}% · Sedang ${{stRamai.midPct}}% · Terang ${{stRamai.brightPct}}%`;
+      const setW = (id, pct) => {{ const el = document.getElementById(id); if (el) el.style.width = `${{pct}}%`; }};
+      setW('hist-zbar-p-dark', stPolos.darkPct);
+      setW('hist-zbar-p-mid', stPolos.midPct);
+      setW('hist-zbar-p-bright', stPolos.brightPct);
+      setW('hist-zbar-r-dark', stRamai.darkPct);
+      setW('hist-zbar-r-mid', stRamai.midPct);
+      setW('hist-zbar-r-bright', stRamai.brightPct);
+
+      drawHistCanvas('hist-canvas-polos', stPolos, 'Kondisi Polos (Contoh data sampel)', 'rgba(66,133,244,0.88)', '#EA4335');
+      drawHistCanvas('hist-canvas-ramai', stRamai, 'Kondisi Ramai (Contoh data sampel)', 'rgba(234,67,53,0.86)', '#202124');
+
+      const callout = document.getElementById('hist-live-callout');
+      if (callout) {{
+        if (delta <= -35) {{
+          callout.className = 'callout red';
+          callout.innerHTML = `<strong>⚠️ Terlalu Gelap (Offset ${{delta}}):</strong> Seluruh batang histogram bergeser ke <strong>KIRI (mendekati 0)</strong>! Rata-rata terang (<em>Mean</em>) turun drastis ke <code>${{stPolos.mean.toFixed(1)}}</code> (Polos) dan <code>${{stRamai.mean.toFixed(1)}}</code> (Ramai).`;
+        }} else if (delta >= 35) {{
+          callout.className = 'callout yellow';
+          callout.innerHTML = `<strong>⚡ Terlalu Silau (Offset +${{delta}}):</strong> Batang histogram menumpuk mentok di dinding <strong>KANAN (255)</strong>! Banyak detail warna hilang luntur menjadi putih silau dan kontras (<em>Std</em>) turun ke <code>${{stPolos.std.toFixed(1)}}</code>.`;
+        }} else {{
+          callout.className = 'callout';
+          callout.innerHTML = `<strong>Kondisi Normal (Offset ${{delta >= 0 ? '+' + delta : delta}}):</strong> Foto latar polos punya puncak tinggi di kanan (<code>Mean = ${{stPolos.mean.toFixed(1)}}</code>, latar putih bersih), sedangkan foto latar ramai menyebar di tengah (<code>Mean = ${{stRamai.mean.toFixed(1)}}</code>)!`;
+        }}
+      }}
+    }}
+    // Slide 34: Interactive Brightness vs Contrast & Boxplot Simulator (119 Valid Images)
+    const DIST_POLOS_B = {dist_polos_b_json};
+    const DIST_POLOS_C = {dist_polos_c_json};
+    const DIST_RAMAI_B = {dist_ramai_b_json};
+    const DIST_RAMAI_C = {dist_ramai_c_json};
+
+    function renderBcThumb(canvasId, baseImgData, mean0, deltaB, factorC) {{
+      const c = document.getElementById(canvasId);
+      if (!c || !baseImgData) return;
+      const ctx = c.getContext('2d');
+      const out = ctx.createImageData(baseImgData.width, baseImgData.height);
+      const src = baseImgData.data;
+      const dst = out.data;
+      for (let i = 0; i < src.length; i += 4) {{
+        dst[i] = Math.min(255, Math.max(0, Math.round((src[i] - mean0) * factorC + mean0 + deltaB)));
+        dst[i + 1] = Math.min(255, Math.max(0, Math.round((src[i + 1] - mean0) * factorC + mean0 + deltaB)));
+        dst[i + 2] = Math.min(255, Math.max(0, Math.round((src[i + 2] - mean0) * factorC + mean0 + deltaB)));
+        dst[i + 3] = src[i + 3];
+      }}
+      ctx.putImageData(out, 0, 0);
+    }}
+
+    function computeBcHist256Stats(raw256, deltaB, factorC) {{
+      let total = 0, sum0 = 0;
+      for (let v = 0; v < 256; v++) {{
+        const c = raw256[v] || 0;
+        total += c;
+        sum0 += v * c;
+      }}
+      const mean0 = total > 0 ? sum0 / total : 128;
+      let sum1 = 0;
+      const mapped = new Int32Array(256);
+      for (let v = 0; v < 256; v++) {{
+        const c = raw256[v] || 0;
+        if (!c) continue;
+        const vn = Math.min(255, Math.max(0, Math.round((v - mean0) * factorC + mean0 + deltaB)));
+        mapped[vn] += c;
+        sum1 += vn * c;
+      }}
+      const mean1 = total > 0 ? sum1 / total : 0;
+      let sq = 0;
+      for (let vn = 0; vn < 256; vn++) {{
+        const c = mapped[vn];
+        if (!c) continue;
+        const d = vn - mean1;
+        sq += d * d * c;
+      }}
+      const std1 = total > 0 ? Math.sqrt(sq / total) : 0;
+      return {{ mean0, mean: mean1, std: std1 }};
+    }}
+
+    function computeBoxSummary(arr) {{
+      const s = Array.from(arr).sort((a, b) => a - b);
+      const n = s.length;
+      if (!n) return {{ min: 0, q1: 0, med: 0, q3: 0, max: 0, mean: 0 }};
+      const quantile = (p) => {{
+        const pos = (n - 1) * p;
+        const base = Math.floor(pos);
+        const rest = pos - base;
+        return s[base + 1] !== undefined ? s[base] + rest * (s[base + 1] - s[base]) : s[base];
+      }};
+      const q1 = quantile(0.25);
+      const med = quantile(0.50);
+      const q3 = quantile(0.75);
+      const iqr = q3 - q1;
+      const loFence = q1 - 1.5 * iqr;
+      const hiFence = q3 + 1.5 * iqr;
+      let wMin = s[0], wMax = s[n - 1];
+      for (let i = 0; i < n; i++) {{ if (s[i] >= loFence) {{ wMin = s[i]; break; }} }}
+      for (let i = n - 1; i >= 0; i--) {{ if (s[i] <= hiFence) {{ wMax = s[i]; break; }} }}
+      const mean = s.reduce((a, b) => a + b, 0) / n;
+      return {{ min: wMin, q1, med, q3, max: wMax, mean }};
+    }}
+
+    function drawBoxplotCanvas(canvasId, title, yLabel, boxPolos, boxRamai, yMinFixed, yMaxFixed, stepY) {{
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width;
+      const H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, W, H);
+
+      const padL = 56, padR = 16, padT = 46, padB = 38;
+      const plotW = W - padL - padR;
+      const plotH = H - padT - padB;
+
+      const yMin = yMinFixed;
+      const yMax = yMaxFixed;
+      const valToY = (v) => padT + plotH - ((Math.min(yMax, Math.max(yMin, v)) - yMin) / (yMax - yMin)) * plotH;
+
+      // Title & Live Mean Subtitle
+      ctx.fillStyle = '#202124';
+      ctx.font = '700 13.8px Roboto, Arial, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'alphabetic';
+      ctx.fillText(title, padL + plotW / 2, 16);
+      ctx.font = '700 12px Roboto Mono, monospace';
+      ctx.fillStyle = '#1A73E8';
+      ctx.fillText(`Rata-rata: Polos=${{boxPolos.mean.toFixed(2)}} | Ramai=${{boxRamai.mean.toFixed(2)}}`, padL + plotW / 2, 34);
+
+      // Gridlines & Y ticks
+      ctx.font = '500 10.8px Roboto Mono, monospace';
+      ctx.textAlign = 'right';
+      ctx.textBaseline = 'middle';
+      for (let yv = yMin; yv <= yMax + 0.001; yv += stepY) {{
+        const py = valToY(yv);
+        ctx.strokeStyle = '#ECEFF1';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(padL, py);
+        ctx.lineTo(padL + plotW, py);
+        ctx.stroke();
+        ctx.fillStyle = '#5F6368';
+        ctx.fillText(String(Math.round(yv)), padL - 6, py);
+      }}
+
+      // Plot frame
+      ctx.strokeStyle = '#9AA0A6';
+      ctx.lineWidth = 1.1;
+      ctx.strokeRect(padL, padT, plotW, plotH);
+
+      // Draw each group box (Polos at 30%, Ramai at 70%)
+      const groups = [
+        {{ cx: padL + plotW * 0.28, label: 'Latar Polos (n=60)', b: boxPolos, fill: '#E8F0FE', stroke: '#1A73E8' }},
+        {{ cx: padL + plotW * 0.72, label: 'Latar Ramai (n=59)', b: boxRamai, fill: '#FCE8E6', stroke: '#EA4335' }},
+      ];
+      const boxW = 68;
+
+      groups.forEach((g) => {{
+        const yMinW = valToY(g.b.min);
+        const yQ1 = valToY(g.b.q1);
+        const yMed = valToY(g.b.med);
+        const yQ3 = valToY(g.b.q3);
+        const yMaxW = valToY(g.b.max);
+        const yMean = valToY(g.b.mean);
+
+        // Whisker vertical line
+        ctx.strokeStyle = '#5F6368';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(g.cx, yMaxW);
+        ctx.lineTo(g.cx, yQ3);
+        ctx.moveTo(g.cx, yQ1);
+        ctx.lineTo(g.cx, yMinW);
+        ctx.stroke();
+
+        // Whisker caps
+        ctx.beginPath();
+        ctx.moveTo(g.cx - 18, yMaxW);
+        ctx.lineTo(g.cx + 18, yMaxW);
+        ctx.moveTo(g.cx - 18, yMinW);
+        ctx.lineTo(g.cx + 18, yMinW);
+        ctx.stroke();
+
+        // IQR Box (Q3 to Q1)
+        const bh = Math.max(4, yQ1 - yQ3);
+        ctx.fillStyle = g.fill;
+        ctx.strokeStyle = g.stroke;
+        ctx.lineWidth = 2;
+        ctx.fillRect(g.cx - boxW / 2, yQ3, boxW, bh);
+        ctx.strokeRect(g.cx - boxW / 2, yQ3, boxW, bh);
+
+        // Median horizontal line
+        ctx.strokeStyle = '#202124';
+        ctx.lineWidth = 2.4;
+        ctx.beginPath();
+        ctx.moveTo(g.cx - boxW / 2, yMed);
+        ctx.lineTo(g.cx + boxW / 2, yMed);
+        ctx.stroke();
+
+        // Mean diamond dot
+        ctx.fillStyle = g.stroke;
+        ctx.beginPath();
+        ctx.arc(g.cx, yMean, 4.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // X-axis category label
+        ctx.fillStyle = '#202124';
+        ctx.font = '700 11.2px Roboto, Arial, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        ctx.fillText(g.label, g.cx, padT + plotH + 9);
+      }});
+
+      // Rotated Y-axis label
+      ctx.save();
+      ctx.fillStyle = '#202124';
+      ctx.font = '700 11.2px Roboto, Arial, sans-serif';
+      ctx.translate(6, padT + plotH / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'top';
+      ctx.fillText(yLabel, 0, 0);
+      ctx.restore();
+    }}
+
+    function setBcPreset(bVal, cFactor, presetKey) {{
+      const bSl = document.getElementById('bc-b-sl');
+      const cSl = document.getElementById('bc-c-sl');
+      if (bSl && cSl) {{
+        bSl.value = String(bVal);
+        cSl.value = String(Math.round(cFactor * 100));
+        updateBcDemo(presetKey);
+      }}
+    }}
+
+    function updateBcDemo(activeKey) {{
+      const bSl = document.getElementById('bc-b-sl');
+      const cSl = document.getElementById('bc-c-sl');
+      if (!bSl || !cSl) return;
+
+      const deltaB = Number(bSl.value) || 0;
+      const factorC = (Number(cSl.value) || 100) / 100;
+
+      document.getElementById('bc-b-val').textContent = (deltaB >= 0 ? '+' : '') + deltaB;
+      document.getElementById('bc-c-val').textContent = factorC.toFixed(2) + '×';
+
+      document.querySelectorAll('#bc-preset-btns button').forEach((btn) => {{
+        const k = btn.dataset.bcp;
+        const match =
+          (k === 'normal' && deltaB === 0 && Math.abs(factorC - 1.0) < 0.01) ||
+          (k === 'lowc' && deltaB === 0 && Math.abs(factorC - 0.35) < 0.01) ||
+          (k === 'highc' && deltaB === 0 && Math.abs(factorC - 1.60) < 0.01) ||
+          (k === 'dark' && deltaB === -65 && Math.abs(factorC - 1.0) < 0.01);
+        btn.classList.toggle('outline', !match);
+      }});
+
+      // Update sample thumbnails & exact pixel stats for the 2 sample images
+      const stP = computeBcHist256Stats(HIST256_POLOS, deltaB, factorC);
+      const stR = computeBcHist256Stats(HIST256_RAMAI, deltaB, factorC);
+      renderBcThumb('bc-thumb-polos', histBasePixelsPolos, stP.mean0, deltaB, factorC);
+      renderBcThumb('bc-thumb-ramai', histBasePixelsRamai, stR.mean0, deltaB, factorC);
+
+      const thStatP = document.getElementById('bc-thumb-stat-p');
+      const thStatR = document.getElementById('bc-thumb-stat-r');
+      if (thStatP) thStatP.textContent = `B=${{stP.mean.toFixed(1)}} | C=${{stP.std.toFixed(1)}}`;
+      if (thStatR) thStatR.textContent = `B=${{stR.mean.toFixed(1)}} | C=${{stR.std.toFixed(1)}}`;
+
+      // Transform the 119-image distributions (60 Polos + 59 Ramai)
+      // At deltaB=0, factorC=1.0, preserve exact raw values so mean=228.11 vs 127.21 and std=45.21 vs 54.69
+      const shiftB = (arrB) => arrB.map((b0) => Math.min(255, Math.max(0, b0 + deltaB)));
+      const shiftC = (arrC, arrB) => arrC.map((c0, idx) => {{
+        if (deltaB === 0 && Math.abs(factorC - 1.0) < 0.001) return c0;
+        const bNew = Math.min(255, Math.max(0, arrB[idx] + deltaB));
+        // Soft clipping compression when mean approaches 0 or 255 extremes
+        const headroom = Math.min(1.0, Math.min(bNew + 18, 273 - bNew) / 75);
+        return Math.max(2.0, c0 * factorC * headroom);
+      }});
+
+      const curPolosB = shiftB(DIST_POLOS_B);
+      const curRamaiB = shiftB(DIST_RAMAI_B);
+      const curPolosC = shiftC(DIST_POLOS_C, DIST_POLOS_B);
+      const curRamaiC = shiftC(DIST_RAMAI_C, DIST_RAMAI_B);
+
+      const boxPB = computeBoxSummary(curPolosB);
+      const boxRB = computeBoxSummary(curRamaiB);
+      const boxPC = computeBoxSummary(curPolosC);
+      const boxRC = computeBoxSummary(curRamaiC);
+
+      drawBoxplotCanvas('bc-canvas-b', 'Tingkat Terang (Brightness)', 'Rata-rata Kecerahan (0–255)', boxPB, boxRB, 20, 255, 40);
+      drawBoxplotCanvas('bc-canvas-c', 'Ketajaman Beda (Contrast)', 'Simpangan Baku (Std)', boxPC, boxRC, 0, 100, 20);
+
+      // Update live numbers in right card
+      const elMP = document.getElementById('bc-mean-p');
+      const elMR = document.getElementById('bc-mean-r');
+      const elSP = document.getElementById('bc-std-p');
+      const elSR = document.getElementById('bc-std-r');
+      if (elMP) elMP.textContent = boxPB.mean.toFixed(2);
+      if (elMR) elMR.textContent = boxRB.mean.toFixed(2);
+      if (elSP) elSP.textContent = boxPC.mean.toFixed(2);
+      if (elSR) elSR.textContent = boxRC.mean.toFixed(2);
+
+      const callout = document.getElementById('bc-live-callout');
+      if (callout) {{
+        if (factorC <= 0.55) {{
+          callout.className = 'callout red';
+          callout.innerHTML = `<strong>🌫️ Kontras Rendah (${{factorC.toFixed(2)}}×):</strong> Perhatikan! Walaupun <strong>Brightness</strong> tetap sama (<code>${{boxPB.mean.toFixed(1)}}</code> vs <code>${{boxRB.mean.toFixed(1)}}</code>), nilai <strong>Contrast (Std)</strong> anjlok ke <code>${{boxPC.mean.toFixed(1)}}</code> &amp; <code>${{boxRC.mean.toFixed(1)}}</code> — foto tampak pucat berkabut karena warna gelap dan terang berdekatan!`;
+        }} else if (factorC >= 1.35) {{
+          callout.className = 'callout';
+          callout.innerHTML = `<strong>⚡ Kontras Tinggi (${{factorC.toFixed(2)}}×):</strong> Grafik kanan (<strong>Contrast / Std</strong>) naik ke <code>${{boxPC.mean.toFixed(1)}}</code> &amp; <code>${{boxRC.mean.toFixed(1)}}</code>! Area gelap makin pekat dan area terang makin menyala sehingga batas objek sangat tajam.`;
+        }} else if (Math.abs(deltaB) >= 25) {{
+          callout.className = 'callout yellow';
+          callout.innerHTML = `<strong>💡 Brightness Digeser (${{deltaB >= 0 ? '+' + deltaB : deltaB}}):</strong> Grafik kiri (<strong>Brightness / Mean</strong>) bergeser naik/turun ke <code>${{boxPB.mean.toFixed(1)}}</code> vs <code>${{boxRB.mean.toFixed(1)}}</code> karena seluruh piksel ditambah/dikurangi cahaya secara serentak!`;
+        }} else {{
+          callout.className = 'callout yellow';
+          callout.innerHTML = `<strong>Kondisi Asli (119 Foto Valid):</strong> <em>Brightness</em> mengukur rata-rata terang (<code>228.11</code> vs <code>127.21</code>), sedangkan <em>Contrast</em> mengukur ketajaman variasi gelap-terang (<code>45.21</code> vs <code>54.69</code>).`;
+        }}
+      }}
+    }}
+
+    const origInitHist = initHistThumbnails;
+    initHistThumbnails = function() {{
+      const loadBoth = (uri, cb) => {{
+        const im = new Image();
+        im.onload = () => {{
+          const off = document.createElement('canvas');
+          off.width = 128; off.height = 128;
+          const octx = off.getContext('2d');
+          octx.drawImage(im, 0, 0, 128, 128);
+          cb(octx.getImageData(0, 0, 128, 128));
+          updateHistDemo();
+          updateBcDemo('normal');
+        }};
+        im.src = uri;
+      }};
+      loadBoth(POLOS_B64_URI, (id) => {{ histBasePixelsPolos = id; }});
+      loadBoth(RAMAI_B64_URI, (id) => {{ histBasePixelsRamai = id; }});
+    }};
+    initHistThumbnails();
+    updateHistDemo();
+    updateBcDemo('normal');
+
     (function initSlide() {{
       const st = readTimerState();
       if (st && st.running && typeof st.startEpoch === 'number') {{
@@ -4600,7 +5428,7 @@ def get_file_hash(lokasi_foto):
 def verify_html(path_str: str) -> None:
     text = Path(path_str).read_text(encoding="utf-8")
     slide_count = len(re.findall(r'<section class="slide', text))
-    assert slide_count == 60, f"Expected 60 slides, got {slide_count}"
+    assert slide_count == 59, f"Expected 59 slides, got {slide_count}"
 
     # Verify no P3/P4/P5/P7/P8/P04/P13 labels in visible slide sections
     body_part = text.split('<div id="stage-wrap">', 1)[1].split('<div id="controls">', 1)[0]
@@ -4627,7 +5455,7 @@ def verify_html(path_str: str) -> None:
 
     # Verify speaker notes time sum == 120.0 min
     notes = re.findall(r'data-notes="([^"]+)"', text)
-    assert len(notes) == 60, f"Expected 60 speaker notes, got {len(notes)}"
+    assert len(notes) == 59, f"Expected 59 speaker notes, got {len(notes)}"
     total_min = 0.0
     for n in notes:
         m = re.search(r'Alokasi waktu:\s*([0-9.]+)\s*menit', n)

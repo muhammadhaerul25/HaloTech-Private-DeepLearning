@@ -19,11 +19,12 @@ ROOT = Path(__file__).resolve().parent.parent
 TOOLS_DIR = ROOT / "tools"
 
 PIPELINE = [
-    ("1/5 Generate sample dataset", "make_sample_data.py"),
-    ("2/5 Build interactive HTML slides (Main Source)", "build_html_slides_P01.py"),
-    ("3/5 Export high-quality PDF from HTML", "export_pdf_P01.py"),
-    ("4/5 Build hands-on notebooks synced with HTML", "build_notebooks_P01.py"),
-    ("5/5 Build PPTX & visual assets synced with HTML", "build_slides_P01.py"),
+    ("1/6 Generate sample dataset & MNIST", "make_sample_data.py"),
+    ("2/6 Build PPTX & visual assets synced with HTML", "build_slides_P01.py"),
+    ("3/6 Build interactive HTML slides (Main Source)", "build_html_slides_P01.py"),
+    ("4/6 Export high-quality PDF from HTML", "export_pdf_P01.py"),
+    ("5/6 Build hands-on notebooks synced with HTML", "build_notebooks_P01.py"),
+    ("6/6 Build per-slide presenter script PDF", "build_presenter_script_P01.py"),
 ]
 
 
