@@ -2142,8 +2142,13 @@ def main() -> None:
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
     STATS_JSON.write_text(json.dumps(stats, indent=2, ensure_ascii=False), encoding="utf-8")
     vis = generate_visualizations(df, stats)
-    build_deck(stats, vis)
-    print(f"PPTX berhasil dibuat: {OUT_PPTX}")
+    html_main = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
+    if html_main.exists():
+        from export_pdf_P01 import export_pptx
+        export_pptx()
+    else:
+        build_deck(stats, vis)
+        print(f"PPTX berhasil dibuat: {OUT_PPTX}")
     print(f"Statistik sampel: valid={stats['valid_images']}, rusak={stats['corrupted_count']}, duplikat={stats['duplicate_file_count']}, exif6={stats['exif_orientation_6_count']}")
 
 

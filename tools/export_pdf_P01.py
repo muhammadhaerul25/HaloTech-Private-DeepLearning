@@ -12,7 +12,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HTML_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
 PDF_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.pdf"
+PPTX_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.pptx"
 TMP_HTML_PATH = ROOT / "materials" / "P01" / "_tmp_print_P01.html"
+TMP_PPTX_HTML_PATH = ROOT / "materials" / "P01" / "_tmp_pptx_P01.html"
 
 CHROME_CANDIDATES = [
     r"C:\Program Files\Google\Chrome\Application\chrome.exe",
@@ -24,6 +26,11 @@ CHROME_CANDIDATES = [
 
 EXPAND_QA_JS = """
 () => {
+  // Tag original 1..59 slide numbers before expansion
+  Array.from(document.querySelectorAll('section.slide')).forEach((s, i) => {
+    s.setAttribute('data-orig-num', String(i + 1));
+  });
+
   function cloneSlideWithCanvases(slide, suffix) {
     const c = slide.cloneNode(true);
     const origCanvases = slide.querySelectorAll('canvas');
@@ -249,6 +256,275 @@ def export_pdf() -> None:
     )
 
 
+PPTX_VIEWPORT_CSS = """
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 1120px !important;
+  height: 630px !important;
+  overflow: hidden !important;
+  background: #FFFFFF !important;
+  -webkit-print-color-adjust: exact !important;
+  print-color-adjust: exact !important;
+}
+#progress-bar, #controls, #notes-drawer, #grid-modal, #session-timer, #edge-modal {
+  display: none !important;
+}
+#stage-wrap {
+  width: 1120px !important;
+  height: 630px !important;
+  max-width: none !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+section.slide {
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.qa-answer, .quiz-ans {
+  display: none !important;
+}
+.qa-answer.shown, .quiz-ans.shown {
+  display: block !important;
+  animation: none !important;
+  opacity: 1 !important;
+}
+section.slide:not(.pdf-answer-slide) .vis-q {
+  display: inline !important;
+}
+section.slide:not(.pdf-answer-slide) .vis-a {
+  display: none !important;
+}
+section.slide.pdf-answer-slide .vis-q {
+  display: none !important;
+}
+section.slide.pdf-answer-slide .vis-a {
+  display: inline !important;
+}
+.qa-box > .btn-ui, .quiz-item > .btn-ui, .card > .btn-ui.outline[onclick*="mc-hint"] {
+  display: none !important;
+}
+"""
+
+
+def export_pptx() -> None:
+    """Ekspor materials/P01/P01_understanding_images_processing_eda.pptx langsung dari HTML
+    agar 100% identik secara visual dan urutan halaman dengan HTML & PDF (80 slide 16:9 HD
+    lengkap dengan speaker notes detail di setiap slide).
+    """
+    import asyncio
+    import base64
+    import io
+    import json
+    import socket
+    import tempfile
+    import time
+    import urllib.request
+    from pptx import Presentation
+    from pptx.util import Inches
+    from tornado.websocket import websocket_connect
+
+    try:
+        from build_presenter_script_P01 import SLIDE_EXPLANATIONS
+    except ImportError:
+        SLIDE_EXPLANATIONS = {}
+
+    if not HTML_PATH.exists():
+        raise FileNotFoundError(f"HTML tidak ditemukan: {HTML_PATH}")
+
+    raw_html = HTML_PATH.read_text(encoding="utf-8")
+    inject_block = f"<style>{PPTX_VIEWPORT_CSS}</style>\n</body>"
+    TMP_PPTX_HTML_PATH.write_text(raw_html.replace("</body>", inject_block, 1), encoding="utf-8")
+
+    browser_bin = next((c for c in CHROME_CANDIDATES if Path(c).exists()), None)
+    if browser_bin is None:
+        TMP_PPTX_HTML_PATH.unlink(missing_ok=True)
+        raise RuntimeError("Tidak ditemukan Chrome atau Edge untuk ekspor PPTX.")
+
+    # Pick a free TCP port for Chrome DevTools Protocol
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        port = s.getsockname()[1]
+
+    user_data_dir = tempfile.mkdtemp(prefix="chr_pptx_p01_")
+    file_url = TMP_PPTX_HTML_PATH.resolve().as_uri()
+    proc = subprocess.Popen(
+        [
+            browser_bin,
+            "--headless=new",
+            "--disable-gpu",
+            "--no-first-run",
+            "--no-default-browser-check",
+            "--allow-file-access-from-files",
+            f"--user-data-dir={user_data_dir}",
+            f"--remote-debugging-port={port}",
+            "--window-size=1120,630",
+            file_url,
+        ],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    )
+
+    try:
+        # Wait for DevTools HTTP endpoint
+        ws_url = None
+        for _ in range(40):
+            try:
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}/json/list", timeout=1.0) as resp:
+                    tabs = json.loads(resp.read().decode("utf-8"))
+                    for t in tabs:
+                        if t.get("type") == "page" and t.get("webSocketDebuggerUrl"):
+                            ws_url = t["webSocketDebuggerUrl"]
+                            break
+                if ws_url:
+                    break
+            except Exception:
+                pass
+            time.sleep(0.15)
+
+        if not ws_url:
+            raise RuntimeError("Gagal terhubung ke Chrome DevTools Protocol untuk ekspor PPTX.")
+
+        async def _capture_all_slides():
+            conn = await websocket_connect(ws_url, max_message_size=50 * 1024 * 1024)
+            msg_id = 0
+
+            async def cdp_call(method: str, params: dict | None = None) -> dict:
+                nonlocal msg_id
+                msg_id += 1
+                curr_id = msg_id
+                payload = {"id": curr_id, "method": method, "params": params or {}}
+                await conn.write_message(json.dumps(payload))
+                while True:
+                    raw_msg = await conn.read_message()
+                    if raw_msg is None:
+                        raise RuntimeError("Koneksi CDP terputus.")
+                    data = json.loads(raw_msg)
+                    if data.get("id") == curr_id:
+                        if "error" in data:
+                            raise RuntimeError(f"CDP Error ({method}): {data['error']}")
+                        return data.get("result", {})
+
+            await cdp_call("Page.enable")
+            await cdp_call("Runtime.enable")
+            await cdp_call(
+                "Emulation.setDeviceMetricsOverride",
+                {"width": 1120, "height": 630, "deviceScaleFactor": 2, "mobile": False},
+            )
+
+            # Wait for document.readyState === 'complete', fonts, and base64 thumbnails
+            await asyncio.sleep(0.6)
+            await cdp_call(
+                "Runtime.evaluate",
+                {
+                    "expression": "document.fonts ? document.fonts.ready.then(() => true) : Promise.resolve(true)",
+                    "awaitPromise": True,
+                },
+            )
+
+            # Run EXPAND_QA_JS to expand tabs, presets, and Q&A pairs identically to PDF
+            exp_res = await cdp_call(
+                "Runtime.evaluate",
+                {"expression": f"({EXPAND_QA_JS})()", "returnByValue": True},
+            )
+            info = exp_res.get("result", {}).get("value", {})
+            total_slides = int(info.get("totalPdfSlides", 0))
+
+            captured = []
+            for idx in range(total_slides):
+                activate_js = f"""
+                (() => {{
+                  const all = Array.from(document.querySelectorAll('section.slide'));
+                  all.forEach((s, i) => s.classList.toggle('active', i === {idx}));
+                  const cur = all[{idx}];
+                  return {{
+                    title: cur ? (cur.getAttribute('data-title') || '') : '',
+                    notes: cur ? (cur.getAttribute('data-notes') || '') : '',
+                    origNum: cur ? parseInt(cur.getAttribute('data-orig-num') || '0', 10) : 0,
+                    isAns: cur ? cur.classList.contains('pdf-answer-slide') : false
+                  }};
+                }})()
+                """
+                meta_res = await cdp_call(
+                    "Runtime.evaluate",
+                    {"expression": activate_js, "returnByValue": True},
+                )
+                meta = meta_res.get("result", {}).get("value", {})
+                shot = await cdp_call(
+                    "Page.captureScreenshot",
+                    {
+                        "format": "png",
+                        "clip": {"x": 0, "y": 0, "width": 1120, "height": 630, "scale": 1},
+                    },
+                )
+                png_bytes = base64.b64decode(shot["data"])
+                captured.append((meta, png_bytes))
+
+            conn.close()
+            return captured
+
+        slides_data = asyncio.run(_capture_all_slides())
+
+        prs = Presentation()
+        prs.slide_width = Inches(13.333)
+        prs.slide_height = Inches(7.5)
+        blank_layout = prs.slide_layouts[6]
+
+        for idx, (meta, png_bytes) in enumerate(slides_data, 1):
+            sld = prs.slides.add_slide(blank_layout)
+            sld.shapes.add_picture(
+                io.BytesIO(png_bytes),
+                Inches(0),
+                Inches(0),
+                width=Inches(13.333),
+                height=Inches(7.5),
+            )
+
+            orig_num = int(meta.get("origNum", 0))
+            title = meta.get("title", f"Slide {idx}")
+            base_notes = meta.get("notes", "")
+            bullets = SLIDE_EXPLANATIONS.get(orig_num, [])
+            clean_bullets = [
+                re.sub(r"\*\*([^*]+)\*\*", r"\1", re.sub(r"\*([^*]+)\*", r"\1", b))
+                for b in bullets
+            ]
+            notes_lines = [
+                f"Halaman Slide {idx:02d}/{len(slides_data)} (Acuan HTML Slide {orig_num:02d}/59) — {title}",
+                "",
+            ]
+            if base_notes:
+                notes_lines.append(f"Catatan Waktu & Instruktur: {base_notes}")
+                notes_lines.append("")
+            if clean_bullets:
+                notes_lines.append("Penjelasan Detail Materi:")
+                for b in clean_bullets:
+                    notes_lines.append(f"• {b}" if not b.startswith(("•", "–")) else f"  {b}")
+
+            sld.notes_slide.notes_text_frame.text = "\n".join(notes_lines)
+
+        PPTX_PATH.parent.mkdir(parents=True, exist_ok=True)
+        prs.save(PPTX_PATH)
+        size_mb = PPTX_PATH.stat().st_size / (1024 * 1024)
+        print(
+            f"PPTX 100% Sinkron HTML/PDF berhasil dibuat: {PPTX_PATH}\n"
+            f"  Total Slide PPTX: {len(slides_data)} | Ukuran: {size_mb:.2f} MB"
+        )
+    finally:
+        proc.terminate()
+        try:
+            proc.wait(timeout=3)
+        except Exception:
+            proc.kill()
+        TMP_PPTX_HTML_PATH.unlink(missing_ok=True)
+        import shutil
+        shutil.rmtree(user_data_dir, ignore_errors=True)
+
+
 if __name__ == "__main__":
     export_pdf()
+    export_pptx()
 
