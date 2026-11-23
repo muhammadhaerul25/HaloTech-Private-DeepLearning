@@ -1,0 +1,4 @@
+skenario,total_parameter
+MNIST (28x28x1 -> Dense 64),50890
+Frozen Kecil (64x64x3 -> Dense 128),1573637
+Frozen Standar (224x224x3 -> Dense 128),19268357

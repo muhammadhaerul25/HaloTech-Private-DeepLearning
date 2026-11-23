@@ -5407,7 +5407,7 @@ def get_file_hash(lokasi_foto):
 </body>
 </html>
 """
-    # Auto-number slide footers (02 / 57 .. 57 / 57) based on actual <section class="slide"> order
+    # Auto-number slide footers (02 / N .. N / N) & dynamic slide counts based on actual <section class="slide"> order
     parts = re.split(r'(<section class="slide\b[^>]*>[\s\S]*?</section>)', html)
     total_slides = sum(1 for p in parts if p.startswith('<section class="slide'))
     slide_idx = 0
@@ -5420,6 +5420,10 @@ def get_file_hash(lokasi_foto):
                 part,
             )
     html = "".join(parts)
+    html = re.sub(r'\(\d+\s+Slides\)', f'({total_slides} Slides)', html)
+    html = re.sub(r'(id="page-jump"[^>]*max=")\d+(")', rf'\g<1>{total_slides}\2', html)
+    html = re.sub(r'Ketik nomor slide \(1-\d+\)', f'Ketik nomor slide (1-{total_slides})', html)
+    html = re.sub(r'(<span id="counter"[\s\S]*?<span>/\s*)\d+(</span>)', rf'\g<1>{total_slides}\2', html)
 
     OUT_HTML.write_text(html, encoding="utf-8")
     return str(OUT_HTML)

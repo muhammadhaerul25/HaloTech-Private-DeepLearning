@@ -37,3 +37,83 @@
 
 ### 5. Catatan Font PPTX
 - Font PPTX: `Poppins` (judul), `Roboto` (isi), `Roboto Mono` (kode/tag). Pasang ketiga font tersebut di komputer penyaji agar rendering PowerPoint/LibreOffice sesuai desain (tanpa fallback ke `Arial`).
+
+
+---
+
+## Standarisasi Arsitektur & Pipeline Materi (P01 → P02–P08)
+
+### 1. Dokumen Standar & Penyelarasan Aturan
+- **`docs/STANDAR_MATERI.md`** — SOP resmi penyusunan materi (HTML SSOT → PDF 16:9 + PPTX 16:9 HD 2× + Presenter Script PDF A4 + Notebook cell-by-cell + 6 Gerbang Validasi DoD + Registrasi Portal/PWA).
+- **`AGENTS.md`** — Diselaraskan penuh dengan standar final P01 (penomoran aktif `P01–P08`, kebijakan *timeless*, HTML SSOT, `tools/core/`, `tools/build_session.py P{NN} --validate`).
+
+### 2. Shared Engine Reusable (`tools/core/`) & CLI
+- `tools/core/registry.py` — Registri metadata resmi sesi `P01–P08` (slug URL, slug file, fase, warna aksen, path output baku).
+- `tools/core/html_shell.py` — Shell HTML5 standar (tema Google I/O, Slide Player Engine, keyboard shortcuts, Persistent Session Timer ber-namespace per sesi, Q&A/Quiz reveal, `@media print`, auto-numbering dinamis, serta helper pembatas bab & agenda).
+- `tools/core/exporter.py` — Mesin ekspor generik berbasis Chrome Headless & Chrome CDP:
+  - `export_pdf()` — PDF vektor `16:9` dengan dukungan kontrak deklaratif `window.SLIDE_PDF_EXPANDERS` + pemisahan otomatis Q&A/Kuis (Pertanyaan → Jawaban).
+  - `export_pptx()` — PPTX `16:9` Retina HD (`2240×1260`) 100% identik PDF/HTML + Speaker Notes detail (`data-notes` + `SLIDE_EXPLANATIONS`).
+  - `export_presenter_script()` — Naskah Pengajar A4 Portrait (1 slide dasar HTML = 1 halaman).
+- `tools/core/notebook_builder.py` — Helper standar notebook *cell-by-cell* (Setup 3 tahap, Colab/Lokal, `SEED=42`, `SMOKE_TEST`, pasangan `# TODO` + `<details>` Hint & Jawaban).
+- `tools/core/validator.py` — Validator 6 Gerbang DoD (HTML, Paritas PDF/PPTX, Presenter Script, Eksekusi Notebook Solusi & Peserta `SMOKE_TEST=1`, dan sinkronisasi Portal/PWA).
+- `tools/build_session.py` — Orkestrator CLI tunggal (`python tools/build_session.py P{NN} --validate`).
+- `tools/init_session.py` — Scaffolder otomatis kerangka sesi baru (`tools/sessions/P{NN}/` & `materials/P{NN}/`).
+
+### 3. Uji Regresi P01 & Scaffold P02
+- Perbaikan minor P01: angka counter `#page-jump` & judul HTML (`build_html_slides_P01.py`) kini otomatis sinkron dinamis (`59` slide, menggantikan sisa teks `60`).
+- **Hasil Validasi 6 Gerbang P01 (`.venv\Scripts\python.exe tools/build_session.py P01 --validate-only`):** **PASSED 100%**
+  - HTML: `59` slide, `28` aset lokal valid, `120.0` menit total `data-notes`, `timeless_ok = true`.
+  - PDF & PPTX: `80` halaman PDF === `80` slide PPTX (`16:9`), Speaker Notes `80/80`.
+  - Presenter Script: `59` halaman, `SLIDE_EXPLANATIONS` mencakup `59/59`.
+  - Notebooks (`SMOKE_TEST=1`): Solusi (`59` sel) dieksekusi penuh **0 error**, Peserta (`68` sel, `9` `# TODO` === `9` `<details>` Hint) berjalan bersih hingga sebelum `# TODO` pertama.
+  - Portal & PWA: `sessions.json`, `vercel.json`, dan `sw.js` terverifikasi sinkron.
+- **Scaffold P02:** Kerangka `tools/sessions/P02/` (`build_assets.py`, `build_html.py`, `build_notebooks.py`, `presenter_notes.py`) dan folder `materials/P02/` telah dibuat dan siap diisi konten penuh P02 (*Teori Neural Network / ANN*).
+
+### 4. Catatan Keputusan Arsitektur
+- Kurikulum portal aktif tetap **P01–P08** (ekstensibel di `tools/core/registry.py` bila kelak ingin menambah slot P09 untuk Demo & Laporan).
+- **PPTX HD Mirror dari HTML via Chrome CDP** ditetapkan sebagai standar permanen P02 dst.
+- Skrip P01 eksisting dipertahankan agar tampilan final P01 tidak berubah, sambil terhubung penuh ke `tools/build_session.py` dan `tools/core/validator.py`.
+
+
+---
+
+## Dataset Proyek Utama (`data/frozen_v1/`) — Siap untuk P02–P08
+
+- **Sumber Mentah (di-ignore Git via `data/*.zip`):** `data/dataset _frozen_v1.zip` (`166.63 MB`, 143 file `.HEIC` dari Apple iPhone 15 Pro Max di 1 folder datar `Frozen 1/`).
+- **Skrip Konversi Deterministik:** `tools/prepare_frozen_dataset.py` (membutuhkan `pillow-heif`, sudah ditambahkan ke `requirements.txt`).
+- **Hasil Konversi Siap Repo & Colab (`data/frozen_v1/`):**
+  - **Total file:** `143` JPEG valid (`0` rusak, `0` duplikat SHA-256), ukuran total hanya **`9.66 MB`** (~17× lebih ringan dari arsip HEIC mentah), resolusi proporsional **`576 × 768`** (`3:4` portrait, EXIF terkoreksi).
+  - **5 Kelas (`CLASS_NAMES`):** `anna` (`28`), `elsa` (`29`), `kristoff` (`28`), `olaf` (`28`), `sven` (`30`).
+  - **2 Kondisi (`polos` vs `ramai`, 4 `sub_kondisi`, 7 `sesi_foto`):**
+    - `polos` (`n = 102`, 71.3%): `mean_brightness = 143.44 ± 26.95`, `mean_contrast = 36.06`, `mean_edge_density = 0.0434` (`576×768`).
+    - `ramai` (`n = 41`, 28.7%): `mean_brightness = 116.81 ± 27.04`, `mean_contrast = 45.92`, `mean_edge_density = 0.0535` (`576×768`).
+  - **Artefak Metadata:** `data/frozen_v1/metadata.csv` & `data/frozen_v1/dataset_summary.json` (dibaca dinamis oleh seluruh slide & notebook mulai P02 dst. agar tetap aman saat foto ditambah di versi berikutnya).
+- **Kebijakan Penggunaan Visual:** Disetujui peserta untuk di-commit ke repo dan dipakai langsung sebagai contoh gambar nyata di slide HTML/PDF/PPTX dan notebook P02–P08.
+
+
+---
+
+## P02 — Teori Neural Network (ANN)
+
+### 1. Status Implementasi
+- **Status:** **FINAL & SIAP DIGUNAKAN** untuk **P02** (dibangun 100% memakai arsitektur standar `tools/core/` + dataset proyek nyata `data/frozen_v1/`).
+- **Transisi P01 → P02 → P03:** Dimulai dari titik akhir P01 (matriks piksel `0.0–1.0`) + perkenalan langsung galeri 5 karakter **Disney Frozen** (`anna, elsa, kristoff, olaf, sven`, `polos` vs `ramai`), naik bertahap dari 1 neuron → MLP `28×28` → eksperimen *Flatten* foto Frozen (`>19,2 juta` bobot di 1 layer) sebagai jembatan alami menuju **P03 (CNN Fundamentals)**.
+
+### 2. Struktur File & Artefak P02
+- **Kode Sumber Modular (`tools/sessions/P02/`):**
+  - `build_assets.py` — menghasilkan 8 thumbnail foto Frozen nyata (`thumb_*.jpg`), 5 grafik Matplotlib (`01_frozen_gallery_5classes.png` s.d. `05_flatten_frozen_visual.png`), serta `p02_data.json` dinamis dari `data/frozen_v1/`.
+  - `build_html.py` — dek HTML5 interaktif 59 slide memakai `tools/core/html_shell.py`, dengan **6 simulator interaktif** terdaftar di `window.SLIDE_PDF_EXPANDERS` (Kalkulator 1 Neuron Frozen dengan kondisi AKTIF Elsa & TIDAK AKTIF Anna, Lab Aktivasi `ReLU/Sigmoid/Tanh`, Simulator `Softmax` 5 Karakter Frozen, Simulasi `Gradient Descent` & `Learning Rate`, Evaluasi Kurva `Loss` Train vs Val, dan Kalkulator Ledakan Bobot `Flatten`).
+  - `presenter_notes.py` — `SLIDE_EXPLANATIONS` lengkap & mendalam (4–5 poin terstruktur per slide: Tujuan, Naskah/Panduan Demo, Interaksi/Sorotan Visual, Transisi) untuk seluruh `59` slide.
+  - `build_notebooks.py` — notebook peserta & kunci jawaban *cell-by-cell* memakai `tools/core/notebook_builder.py`.
+- **Keluaran Tervalidasi (`materials/P02/`, Final — Istilah Asli + Penjelasan Sederhana + Audit 80 Halaman):**
+  - `materials/P02/P02_neural_network_ann.html` — **59 slide** (`120.0` menit exact `data-notes`, `timeless_ok = true`, `29` aset lokal valid, istilah teknis asli dengan penjelasan sederhana, serta **Slide 58–59 Referensi Belajar Mandiri berisi 16 kartu video YouTube/dokumentasi klik-langsung terverifikasi + Rute Maraton ±2 Jam** setara P01).
+  - `materials/P02/P02_neural_network_ann.pdf` — **80 halaman** (`16:9`, `9.54 MB`), ekspansi penuh 6 simulator + pemisahan Pertanyaan → Jawaban pada seluruh Q&A, Mini-Challenge, & Kuis; 0 tumpang-tindih teks/SVG/kanvas.
+  - `materials/P02/P02_neural_network_ann.pptx` — **80 slide** (`16:9` Retina HD `2240×1260`, `13.74 MB`), 100% identik HTML/PDF + Speaker Notes detail di seluruh `80/80` slide.
+  - `materials/P02/P02_presenter_script.pdf` — **59 halaman** A4 Portrait (`8.28 MB`), 1 slide = 1 halaman (`59/59` naskah pengajar detail tercakup).
+  - `materials/P02/P02_neural_network_ann.ipynb` — Notebook peserta (`52` sel, `8` `# TODO` === `8` `<details>` Hint & Jawaban, seluruh rujukan nomor slide tersinkron penuh ke 59 slide termasuk Sel 50 → Slide 49).
+  - `materials/P02/solutions/P02_neural_network_ann.ipynb` — Notebook kunci (`44` sel), lolos eksekusi nyata TensorFlow 2.21 / Keras 3.15 dengan `SMOKE_TEST=1` (termasuk training MLP pada `data/frozen_v1/` & ekspor `results/p02_lr_activation_compare.png` dan `results/p02_mlp_parameter_comparison.csv`).
+
+### 3. Hasil Validasi 6 Gerbang DoD & Integrasi Portal/PWA
+- **Perintah:** `.venv\Scripts\python.exe tools/build_session.py P02 --validate` → **PASSED 100%** (termasuk verifikasi visual lembar kontak seluruh slide terdampak & Presenter Script A4).
+- **Aturan Gaya Baru (dicatat di `AGENTS.md` untuk P02–P08):** Selalu pakai istilah teknis asli (*Neuron, Layer, ReLU, Softmax, Conv2D, Feature Map*, dll.) tanpa julukan rekaan, lalu sederhanakan penjelasannya dengan bahasa Indonesia sehari-hari.
+- **Portal & PWA:** `sessions.json` (`P02` berstatus `available` + 5 tautan lengkap), `vercel.json` (rewrite `/p2` & `/p02`), `sw.js` (`dl-course-pwa-v6` + precache HTML P02), dan `requirements.txt` (`tensorflow>=2.16.0`) telah diperbarui.

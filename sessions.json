@@ -29,11 +29,17 @@
       "color": "#EA4335",
       "tint": "#FCE8E6",
       "title": "Teori Neural Network (ANN)",
-      "description": "Cara kerja neuron, weight & bias, fungsi aktivasi (ReLU, Sigmoid, Softmax), loss function, dan gradient descent secara intuitif.",
-      "topics": ["Neuron", "ReLU & Softmax", "Loss & GD"],
+      "description": "Cara kerja neuron, weight & bias, fungsi aktivasi (ReLU, Sigmoid, Softmax), loss function, dan gradient descent secara intuitif pada dataset Disney Frozen.",
+      "topics": ["Neuron", "ReLU & Softmax", "Loss & GD", "Frozen MLP"],
       "duration": "120 menit",
-      "status": "coming_soon",
-      "links": {}
+      "status": "available",
+      "links": {
+        "slidesHtml": "materials/P02/P02_neural_network_ann.html",
+        "slidesPdf": "materials/P02/P02_neural_network_ann.pdf",
+        "slidesPptx": "materials/P02/P02_neural_network_ann.pptx",
+        "notebook": "materials/P02/P02_neural_network_ann.ipynb",
+        "solution": "materials/P02/solutions/P02_neural_network_ann.ipynb"
+      }
     },
     {
       "id": "P03",

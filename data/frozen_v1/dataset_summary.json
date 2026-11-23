@@ -1,0 +1,63 @@
+{
+  "dataset_name": "Disney Frozen Figurine Dataset (v1)",
+  "total_images": 143,
+  "classes": [
+    "anna",
+    "elsa",
+    "kristoff",
+    "olaf",
+    "sven"
+  ],
+  "conditions": [
+    "polos",
+    "ramai"
+  ],
+  "sessions_count": 7,
+  "image_size_jpeg": "576x768",
+  "total_size_mb": 9.66,
+  "by_class": {
+    "anna": 28,
+    "elsa": 29,
+    "kristoff": 28,
+    "olaf": 28,
+    "sven": 30
+  },
+  "by_condition": {
+    "polos": {
+      "count": 102,
+      "mean_brightness": 143.44,
+      "std_brightness": 26.95,
+      "mean_contrast": 36.06,
+      "mean_edge_density": 0.0434
+    },
+    "ramai": {
+      "count": 41,
+      "mean_brightness": 116.81,
+      "std_brightness": 27.04,
+      "mean_contrast": 45.92,
+      "mean_edge_density": 0.0535
+    }
+  },
+  "class_x_condition": {
+    "anna": {
+      "polos": 20,
+      "ramai": 8
+    },
+    "elsa": {
+      "polos": 21,
+      "ramai": 8
+    },
+    "kristoff": {
+      "polos": 20,
+      "ramai": 8
+    },
+    "olaf": {
+      "polos": 20,
+      "ramai": 8
+    },
+    "sven": {
+      "polos": 21,
+      "ramai": 9
+    }
+  }
+}
