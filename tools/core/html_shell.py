@@ -39,6 +39,7 @@ STANDARD_CSS = """
       background: #111317;
       color: var(--dark);
       font-family: var(--font-body);
+      width: 100vw;
       height: 100vh;
       overflow: hidden;
       display: flex;
@@ -49,22 +50,40 @@ STANDARD_CSS = """
       gap: 10px;
       user-select: none;
     }
+    body.is-fullscreen, :fullscreen body {
+      padding: 0;
+      gap: 0;
+      background: #0B0D11;
+    }
 
     #progress-bar {
       position: fixed; top: 0; left: 0; height: 4px;
       background: linear-gradient(90deg, var(--blue), var(--red), var(--yellow), var(--green));
       width: 2%; transition: width 0.25s ease; z-index: 100;
     }
+    body.is-fullscreen #progress-bar, :fullscreen #progress-bar { height: 3px; }
 
-    #stage-wrap {
-      width: min(96vw, calc((100vh - 92px) * 16 / 9));
-      height: min(calc(100vh - 92px), calc(96vw * 9 / 16));
+    #stage-scaler {
+      width: 1152px;
+      height: 648px;
       flex-shrink: 0;
       position: relative;
+    }
+
+    #stage-wrap {
+      width: 1152px;
+      height: 648px;
+      position: relative;
+      transform-origin: top left;
       border-radius: 18px;
       overflow: hidden;
       box-shadow: 0 24px 70px rgba(0,0,0,0.45);
       background: var(--white);
+      will-change: transform;
+    }
+    body.is-fullscreen #stage-wrap, :fullscreen #stage-wrap {
+      border-radius: 0;
+      box-shadow: none;
     }
 
     .slide {
@@ -95,9 +114,9 @@ STANDARD_CSS = """
     .slide.bg-green .kicker, .slide.bg-yellow .kicker { color: var(--dark); }
 
     h1, h2 { font-family: var(--font-title); font-weight: 700; line-height: 1.18; letter-spacing: -0.015em; }
-    h1 { font-size: clamp(28px, 3.2vw, 44px); }
-    h2 { font-size: clamp(22px, 2.25vw, 31px); margin-bottom: 8px; }
-    .subtitle { font-size: clamp(13.5px, 1.25vw, 17px); color: var(--muted); line-height: 1.48; margin-bottom: 12px; }
+    h1 { font-size: 37px; }
+    h2 { font-size: 26px; margin-bottom: 8px; }
+    .subtitle { font-size: 14.8px; color: var(--muted); line-height: 1.48; margin-bottom: 12px; }
     .slide.dark .subtitle { color: #BDC1C6; }
 
     .hl-blue { color: var(--blue-text); }
@@ -143,25 +162,25 @@ STANDARD_CSS = """
     .bar-yellow { background: var(--yellow); }
     .bar-green { background: var(--green); }
 
-    .card-title { font-family: var(--font-title); font-size: clamp(15.5px, 1.4vw, 19px); font-weight: 700; color: var(--dark); }
-    .card-body { font-size: clamp(13.5px, 1.18vw, 15.8px); line-height: 1.55; color: #3C4043; }
+    .card-title { font-family: var(--font-title); font-size: 16.4px; font-weight: 700; color: var(--dark); }
+    .card-body { font-size: 13.8px; line-height: 1.54; color: #3C4043; }
     .card-body ul { padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
     .card .callout { margin-top: auto; }
 
     .callout {
       background: var(--tint-blue); border-left: 4px solid var(--blue);
       border-radius: 0 11px 11px 0; padding: 10px 14px;
-      font-size: clamp(12.5px, 1.08vw, 14.5px); line-height: 1.46; color: var(--dark);
+      font-size: 12.8px; line-height: 1.46; color: var(--dark);
     }
     .callout.red { background: var(--tint-red); border-left-color: var(--red); }
     .callout.yellow { background: var(--tint-yellow); border-left-color: var(--yellow); }
     .callout.green { background: var(--tint-green); border-left-color: var(--green); }
 
-    .big-num { font-family: var(--font-title); font-size: clamp(28px, 3vw, 42px); font-weight: 700; line-height: 1.05; }
+    .big-num { font-family: var(--font-title); font-size: 35px; font-weight: 700; line-height: 1.05; }
 
     pre.code {
       background: #1E2025; color: #E8EAED; font-family: var(--font-code);
-      font-size: clamp(11px, 0.96vw, 12.8px); line-height: 1.48;
+      font-size: 11.4px; line-height: 1.48;
       padding: 12px 15px; border-radius: 11px; overflow-x: auto; border: 1px solid #3C4043;
       white-space: pre-wrap; word-break: break-word;
     }
@@ -220,14 +239,14 @@ STANDARD_CSS = """
     .slide.bg-green .slide-footer, .slide.bg-yellow .slide-footer { color: rgba(32,33,36,0.82); border-top-color: rgba(32,33,36,0.18); }
 
     .divider-center { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 820px; }
-    .divider-center h1 { font-size: clamp(34px, 4.2vw, 54px); margin-top: 10px; }
-    .divider-center p { font-size: clamp(15px, 1.55vw, 20px); margin-top: 14px; opacity: 0.93; line-height: 1.5; }
+    .divider-center h1 { font-size: 48px; margin-top: 10px; }
+    .divider-center p { font-size: 18px; margin-top: 14px; opacity: 0.93; line-height: 1.5; }
 
     /* Interactive Question -> Answer Reveal */
     .qa-box { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
     .qa-question {
       background: var(--tint-blue); border: 1.5px solid #C6DAFC; border-radius: 16px;
-      padding: 18px 22px; font-family: var(--font-title); font-size: clamp(16px, 1.55vw, 21px);
+      padding: 18px 22px; font-family: var(--font-title); font-size: 18px;
       font-weight: 600; color: var(--dark); line-height: 1.4;
     }
     .qa-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
@@ -238,7 +257,7 @@ STANDARD_CSS = """
     .qa-answer {
       display: none; background: var(--tint-green); border: 1.5px solid #A8DAB5;
       border-left: 6px solid var(--green); border-radius: 14px; padding: 16px 20px;
-      font-size: clamp(13.5px, 1.18vw, 15.5px); line-height: 1.5; color: var(--dark);
+      font-size: 13.8px; line-height: 1.5; color: var(--dark);
       animation: fadeSlide 0.2s ease;
     }
     .qa-answer.shown { display: block; }
@@ -306,11 +325,15 @@ STANDARD_CSS = """
       font-family: var(--font-code); font-size: 12.5px; font-weight: 600;
     }
     #page-jump:focus { outline: none; border-color: var(--blue); }
-    :fullscreen #controls {
-      position: fixed; bottom: 10px; right: 16px; z-index: 90;
-      opacity: 0.35; transition: opacity 0.2s ease;
+    body.is-fullscreen #controls, :fullscreen #controls {
+      position: fixed; bottom: 8px; left: 50%; right: auto; transform: translateX(-50%); z-index: 90;
+      width: max-content; white-space: nowrap;
+      background: rgba(32, 33, 36, 0.88);
+      backdrop-filter: blur(10px);
+      opacity: 0.08; transition: opacity 0.22s ease;
     }
-    :fullscreen #controls:hover { opacity: 1; }
+    body.is-fullscreen #controls:hover, body.is-fullscreen #controls:focus-within,
+    :fullscreen #controls:hover, :fullscreen #controls:focus-within { opacity: 1; }
     .ctrl-btn {
       background: #303134; color: #E8EAED; border: 1px solid #5F6368;
       border-radius: 999px; padding: 4px 12px; cursor: pointer; font-family: var(--font-title); font-size: 12px;
@@ -374,7 +397,8 @@ STANDARD_CSS = """
       @page { size: 13.333in 7.5in; margin: 0; }
       body { background: white; height: auto; overflow: visible; display: block; padding: 0; gap: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       #progress-bar, #controls, #notes-drawer, #grid-modal, #session-timer { display: none !important; }
-      #stage-wrap { width: 13.333in; height: auto; box-shadow: none; border-radius: 0; overflow: visible; }
+      #stage-scaler { width: auto !important; height: auto !important; display: block !important; }
+      #stage-wrap { width: 13.333in !important; height: auto !important; transform: none !important; box-shadow: none; border-radius: 0; overflow: visible; }
       .slide { position: relative !important; display: flex !important; width: 13.333in; height: 7.5in; page-break-after: always; break-after: page; animation: none !important; opacity: 1 !important; }
       .slide:last-child { page-break-after: auto; break-after: auto; }
       .qa-answer, .quiz-ans { display: block !important; animation: none !important; opacity: 1 !important; }
@@ -414,10 +438,51 @@ def _build_core_js(session_key: str) -> str:
     function prevSlide() {{ showSlide(idx - 1); }}
     function toggleNotes() {{ document.getElementById('notes-drawer').classList.toggle('open'); }}
     function toggleGrid() {{ document.getElementById('grid-modal').classList.toggle('open'); }}
-    function toggleFull() {{
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
+    const BASE_STAGE_W = 1152;
+    const BASE_STAGE_H = 648;
+    window.__STAGE_SCALE__ = 1;
+
+    function fitStage() {{
+      const scaler = document.getElementById('stage-scaler');
+      const stage = document.getElementById('stage-wrap');
+      if (!scaler || !stage) return;
+      const isFull = Boolean(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        (window.innerWidth >= screen.width - 2 && window.innerHeight >= screen.height - 2)
+      );
+      document.body.classList.toggle('is-fullscreen', isFull);
+      const fBtn = document.getElementById('full-btn');
+      if (fBtn) fBtn.textContent = isFull ? 'Exit Full (F)' : 'Fullscreen (F)';
+
+      const availW = isFull ? window.innerWidth : Math.max(320, window.innerWidth - 32);
+      const availH = isFull ? window.innerHeight : Math.max(200, window.innerHeight - 76);
+      const scale = Math.min(availW / BASE_STAGE_W, availH / BASE_STAGE_H);
+      window.__STAGE_SCALE__ = scale;
+
+      scaler.style.width = Math.round(BASE_STAGE_W * scale) + 'px';
+      scaler.style.height = Math.round(BASE_STAGE_H * scale) + 'px';
+      stage.style.transform = `scale(${{scale.toFixed(5)}})`;
     }}
+
+    function toggleFull() {{
+      if (!document.fullscreenElement) {{
+        const req = document.documentElement.requestFullscreen || document.documentElement.webkitRequestFullscreen;
+        if (req) req.call(document.documentElement);
+      }} else {{
+        const ex = document.exitFullscreen || document.webkitExitFullscreen;
+        if (ex) ex.call(document);
+      }}
+    }}
+    window.addEventListener('resize', fitStage);
+    document.addEventListener('fullscreenchange', () => {{
+      fitStage();
+      setTimeout(() => {{ fitStage(); window.dispatchEvent(new Event('resize')); }}, 60);
+    }});
+    document.addEventListener('webkitfullscreenchange', () => {{
+      fitStage();
+      setTimeout(() => {{ fitStage(); window.dispatchEvent(new Event('resize')); }}, 60);
+    }});
 
     document.addEventListener('keydown', (e) => {{
       if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
@@ -541,6 +606,7 @@ def _build_init_js(session_key: str) -> str:
     slide_idx_key = f"{session_key}_slide_idx"
     return f"""
     (function initSlide() {{
+      fitStage();
       const st = readTimerState();
       if (st && st.running && typeof st.startEpoch === 'number') {{
         renderSessionTimer();
@@ -616,6 +682,7 @@ def render_deck_html(
 </head>
 <body>
   <div id="progress-bar"></div>
+  <div id="stage-scaler">
   <div id="stage-wrap">
     <div id="session-timer" role="timer" aria-live="off" title="Timer sesi berjalan (tidak ter-reset saat pindah slide/refresh)">
       <span class="timer-dot"></span>
@@ -624,6 +691,7 @@ def render_deck_html(
     </div>
 
 {numbered_slides}
+  </div>
   </div>
 
   <div id="controls">
@@ -635,7 +703,7 @@ def render_deck_html(
     <button class="ctrl-btn" onclick="nextSlide()">Next →</button>
     <button class="ctrl-btn" onclick="toggleNotes()">Notes (N)</button>
     <button class="ctrl-btn" onclick="toggleGrid()">Grid (G)</button>
-    <button class="ctrl-btn" onclick="toggleFull()">Fullscreen (F)</button>
+    <button id="full-btn" class="ctrl-btn" onclick="toggleFull()">Fullscreen (F)</button>
     <button id="timer-btn" class="ctrl-btn" onclick="toggleSessionTimer()">▶ Start Timer</button>
   </div>
 

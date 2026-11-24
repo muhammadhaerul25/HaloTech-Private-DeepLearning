@@ -121,6 +121,7 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "02_linear_vs_nonlinear.png",
         "03_activation_comparison.png",
         "03_flatten_frozen_visual.png",
+        "03a_one_pixel_one_neuron.png",
         "03b_flatten_to_input_layer.png",
         "03b_elsa_rgb_flatten_transform.png",
         "04_cross_entropy_penalty.png",
@@ -247,6 +248,82 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "grid": elsa_grid_8x8,
     }
 
+    # Real 5-class Frozen training math demo (6 pure pixel features > 5 Output classes for true funnel proportion!)
+    tm_features = []
+    for kls in CLASSES:
+        with Image.open(ASSETS_DIR / f"thumb_{kls}.jpg") as im_tm:
+            arr_tm = np.array(im_tm.convert("RGB"))
+        y_lim_tm = 170 if kls != "olaf" else 118
+        d_thr_tm = 22.0 if kls != "olaf" else 17.0
+        mask_tm, _ = _extract_figurine_mask(arr_tm, y_max=y_lim_tm, dist_thresh=d_thr_tm)
+        fg_tm = arr_tm[mask_tm > 0].astype(np.float32) / 255.0
+        rgb_tm = fg_tm.mean(axis=0)
+        ys_tm, xs_tm = np.where(mask_tm > 0)
+        y_split_tm = np.percentile(ys_tm, 45)
+        top_rgb_tm = arr_tm[ys_tm[ys_tm <= y_split_tm], xs_tm[ys_tm <= y_split_tm]].astype(np.float32) / 255.0
+        bot_rgb_tm = arr_tm[ys_tm[ys_tm > y_split_tm], xs_tm[ys_tm > y_split_tm]].astype(np.float32) / 255.0
+        top_bright_tm = float(top_rgb_tm.mean())
+        bot_bright_tm = float(bot_rgb_tm.mean())
+        contrast_tm = float(fg_tm.mean(axis=1).std()) * 3.0
+        tm_features.append(
+            [
+                round(float(rgb_tm[0]), 2),
+                round(float(rgb_tm[1]), 2),
+                round(float(rgb_tm[2]), 2),
+                round(top_bright_tm, 2),
+                round(bot_bright_tm, 2),
+                round(contrast_tm, 2),
+            ]
+        )
+    X_tm = np.array(tm_features, dtype=np.float64)
+    rng_tm = np.random.default_rng(42)
+    W0_tm = np.round(rng_tm.uniform(-0.4, 0.4, size=(6, 5)), 1)
+    b0_tm = np.round(rng_tm.uniform(-0.2, 0.2, size=(5,)), 1)
+    W_tm, b_tm = np.zeros((6, 5), dtype=np.float64), np.zeros((5,), dtype=np.float64)
+    Y_tm = np.eye(5)
+    l2_tm = 0.0005
+    for _ in range(5000):
+        lg_tm = X_tm @ W_tm + b_tm
+        lg_tm -= lg_tm.max(axis=1, keepdims=True)
+        pr_tm = np.exp(lg_tm) / np.exp(lg_tm).sum(axis=1, keepdims=True)
+        dZ_tm = (pr_tm - Y_tm) / 5.0
+        W_tm -= 2.5 * (X_tm.T @ dZ_tm + l2_tm * W_tm)
+        b_tm -= 2.5 * dZ_tm.sum(axis=0)
+    # Round to exact 1 decimal so displayed SVG weights, Kotak A math, & unshifted Softmax match 100% on any calculator!
+    W_tm = np.round(W_tm, 1)
+    b_tm = np.round(b_tm, 1)
+
+    # Real 1-neuron binary Elsa detector on the 4 core pixel features (balanced 1-vs-Rest Logistic Regression)
+    # Used for Slide 25 (Weight & Bias) & Slide 26 (ReLU & Sigmoid) so ONLY Elsa activates (>0 / >50%)!
+    X_bin = X_tm[:, :4]
+    y_bin = np.array([0.0, 1.0, 0.0, 0.0, 0.0], dtype=np.float64)
+    sw_bin = np.array([1.0, 4.0, 1.0, 1.0, 1.0], dtype=np.float64)
+    w_bin = np.zeros((4,), dtype=np.float64)
+    b_bin = 0.0
+    for _ in range(10000):
+        z_bin = X_bin @ w_bin + b_bin
+        p_bin = 1.0 / (1.0 + np.exp(-z_bin))
+        dz_bin = sw_bin * (p_bin - y_bin) / sw_bin.sum()
+        w_bin -= 4.0 * (X_bin.T @ dz_bin + 0.00015 * w_bin)
+        b_bin -= 4.0 * float(dz_bin.sum())
+    w_bin = np.round(w_bin, 1)
+    b_bin = round(float(b_bin), 1)
+
+    training_math_demo = {
+        "feature_names": ["Merah (R)", "Hijau (G)", "Biru (B)", "Piksel Atas", "Piksel Bawah", "Kontras"],
+        "classes": [c.capitalize() for c in CLASSES],
+        "thumbs": [f"assets/P02/thumb_{c}.jpg" for c in CLASSES],
+        "X": tm_features,
+        "W0": [[round(float(v), 1) for v in row] for row in W0_tm],
+        "b0": [round(float(v), 1) for v in b0_tm],
+        "W_trained": [[round(float(v), 1) for v in row] for row in W_tm],
+        "b_trained": [round(float(v), 1) for v in b_tm],
+        "elsa_binary": {
+            "w": [round(float(v), 1) for v in w_bin],
+            "b": b_bin,
+        },
+    }
+
     p02_data = {
         "dataset_name": summary["dataset_name"],
         "total_images": int(len(meta_df)),
@@ -258,6 +335,7 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "mini_forward_pass": mini_fp,
         "flatten_4x4": flatten_4x4,
         "elsa_rgb_ends": elsa_rgb_ends,
+        "training_math_demo": training_math_demo,
     }
     (ASSETS_DIR / "p02_data.json").write_text(json.dumps(p02_data, indent=2, ensure_ascii=False), encoding="utf-8")
     return p02_data, elsa_thumb_img
@@ -470,84 +548,12 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     fig.savefig(ASSETS_DIR / "02d_elsa_mask_closeup.png", dpi=190, facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.04)
     plt.close(fig)
 
-    # 3a. Slide 20 Hero: Real Elsa Photo -> 8x8 Pixel Grid -> 1 Highlighted Pixel -> 1 Neuron Circle
+    # 3a. Prepare real Elsa arrays for Slide 22 1D Flatten strip (Slide 20 is now live interactive 60fps HTML/Canvas)
     fp_elsa = _pick_sample_image("elsa", "polos", idx=1)
     with Image.open(fp_elsa) as im:
         elsa_sq = _center_crop_square(im.convert("RGB"), crop_frac=0.58).resize((180, 180), Image.Resampling.LANCZOS)
         elsa_arr180 = np.array(elsa_sq)
         elsa_arr160 = np.array(elsa_sq.resize((160, 160), Image.Resampling.LANCZOS))
-        elsa_8x8 = np.array(elsa_sq.resize((8, 8), Image.Resampling.BILINEAR))
-        elsa_8x8_gray = np.array(elsa_sq.convert("L").resize((8, 8), Image.Resampling.BILINEAR), dtype=np.float32) / 255.0
-
-    # Pick the bluest visible pixel right on Elsa's blue dress (row 4, col 2 in 8x8)
-    hr, hc = 4, 2
-    h_val = float(elsa_8x8_gray[hr, hc])
-    h_rgb = tuple(int(c) for c in elsa_8x8[hr, hc])
-
-    fig = plt.figure(figsize=(8.6, 4.1), dpi=200)
-    ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
-    ax.set_xlim(0, 100)
-    ax.set_ylim(0, 48)
-    ax.axis("off")
-
-    # Step 1: Real Elsa photo (left)
-    ax_p1 = fig.add_axes([0.03, 0.18, 0.24, 0.62])
-    ax_p1.imshow(elsa_arr180)
-    ax_p1.set_xticks([]); ax_p1.set_yticks([])
-    for sp in ax_p1.spines.values():
-        sp.set_edgecolor(COLORS["blue"]); sp.set_linewidth(2.4)
-    ax_p1.set_title("1. Foto Asli Elsa", fontsize=10.5, fontweight="bold", color=COLORS["dark"], pad=7)
-
-    # Arrow 1 -> 2
-    ax.annotate("", xy=(33.5, 24.5), xytext=(28.2, 24.5), arrowprops=dict(arrowstyle="-|>,head_width=0.45,head_length=0.6", color=COLORS["muted"], lw=2.4))
-    ax.text(30.8, 27.6, "Zoom\nPiksel", ha="center", va="bottom", fontsize=8.2, fontweight="bold", color=COLORS["muted"])
-
-    # Step 2: 8x8 Visible Pixel Grid of Elsa (middle)
-    ax_p2 = fig.add_axes([0.345, 0.18, 0.24, 0.62])
-    ax_p2.imshow(elsa_8x8, interpolation="nearest")
-    ax_p2.set_xticks(np.arange(-0.5, 8, 1), minor=True)
-    ax_p2.set_yticks(np.arange(-0.5, 8, 1), minor=True)
-    ax_p2.grid(which="minor", color="#FFFFFF", linestyle="-", linewidth=1.1, alpha=0.85)
-    ax_p2.tick_params(which="both", bottom=False, left=False, labelbottom=False, labelleft=False)
-    for sp in ax_p2.spines.values():
-        sp.set_edgecolor(COLORS["dark"]); sp.set_linewidth(2.0)
-    # Highlight 1 pixel on Elsa's dress
-    ax_p2.add_patch(patches.Rectangle((hc - 0.5, hr - 0.5), 1, 1, linewidth=3.0, edgecolor=COLORS["red"], facecolor="none", zorder=5))
-    ax_p2.set_title("2. Kotak-Kotak Piksel (8×8)", fontsize=10.5, fontweight="bold", color=COLORS["dark"], pad=7)
-
-    # Step 3: Magnified Pixel -> 1 Bold Neuron Circle (right)
-    # Zoom dashed guides from highlighted cell toward pixel card
-    ax.annotate("", xy=(65.5, 25.0), xytext=(59.5, 25.0), arrowprops=dict(arrowstyle="-|>,head_width=0.45,head_length=0.6", color=COLORS["red"], lw=2.6))
-    ax.text(62.5, 28.2, "Ambil\n1 Piksel", ha="center", va="bottom", fontsize=8.2, fontweight="bold", color=COLORS["red"])
-
-    # Magnified Pixel Box
-    pix_box = patches.FancyBboxPatch((66.5, 17.0), 11.5, 16.0, boxstyle="round,pad=0.6,rounding_size=1.8",
-                                     facecolor=tuple(c / 255.0 for c in h_rgb), edgecolor=COLORS["red"], linewidth=2.6)
-    ax.add_patch(pix_box)
-    txt_on_pix = "#FFFFFF" if h_val < 0.58 else "#202124"
-    ax.text(72.25, 26.8, f"{h_val:.2f}", ha="center", va="center", fontsize=14, fontweight="bold", color=txt_on_pix, family="DejaVu Sans Mono")
-    ax.text(72.25, 21.0, "nilai 0–1", ha="center", va="center", fontsize=7.8, color=txt_on_pix)
-    ax.text(72.25, 11.2, "1 Nilai Piksel", ha="center", va="center", fontsize=9.2, fontweight="bold", color=COLORS["red"])
-
-    # Arrow Pixel -> Neuron
-    ax.annotate("", xy=(83.8, 25.0), xytext=(79.0, 25.0), arrowprops=dict(arrowstyle="-|>,head_width=0.45,head_length=0.6", color=COLORS["blue_dark"], lw=2.8))
-
-    # Glowing 1 Neuron Circle
-    outer_ring = patches.Circle((90.8, 25.0), 7.6, facecolor="#E8F0FE", edgecolor="#C6DAFC", linewidth=2.0)
-    inner_node = patches.Circle((90.8, 25.0), 6.2, facecolor=COLORS["blue"], edgecolor="#FFFFFF", linewidth=2.5)
-    ax.add_patch(outer_ring)
-    ax.add_patch(inner_node)
-    ax.text(90.8, 28.0, "x₁", ha="center", va="center", fontsize=9.5, fontweight="bold", color="#D2E3FC", family="DejaVu Sans Mono")
-    ax.text(90.8, 23.6, f"{h_val:.2f}", ha="center", va="center", fontsize=13.5, fontweight="bold", color="#FFFFFF", family="DejaVu Sans Mono")
-    ax.text(90.8, 11.2, "3. 1 Neuron", ha="center", va="center", fontsize=10.5, fontweight="bold", color=COLORS["blue_dark"])
-    ax.text(90.8, 7.2, "(pemegang 1 angka)", ha="center", va="center", fontsize=8.4, color=COLORS["muted"])
-
-    # Bottom caption strip
-    ax.text(50, 2.5, "Setiap 1 kotak piksel pada foto Elsa diwakili oleh tepat 1 lingkaran Neuron yang memegang angkanya.",
-            ha="center", va="center", fontsize=9.3, fontweight="bold", color=COLORS["dark"])
-
-    fig.savefig(ASSETS_DIR / "03a_one_pixel_one_neuron.png", dpi=200, facecolor="#FFFFFF")
-    plt.close(fig)
 
     # Real first & last normalized RGB pixel values from Elsa photo (no hardcoded dummy numbers!)
     p_first = elsa_arr180[0, 0].astype(np.float32) / 255.0

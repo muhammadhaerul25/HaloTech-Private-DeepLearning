@@ -198,8 +198,13 @@ html, body {
 #progress-bar, #controls, #notes-drawer, #grid-modal, #session-timer, #edge-modal, .sim-modal {
   display: none !important;
 }
+#stage-scaler {
+  width: 1120px !important; height: 630px !important;
+  margin: 0 !important; padding: 0 !important;
+}
 #stage-wrap {
   width: 1120px !important; height: 630px !important;
+  transform: none !important;
   max-width: none !important; max-height: none !important;
   aspect-ratio: auto !important; border-radius: 0 !important;
   box-shadow: none !important; margin: 0 !important; overflow: hidden !important;

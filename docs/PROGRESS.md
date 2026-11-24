@@ -155,3 +155,19 @@
   - Presenter Script (`56/56` halaman A4 Portrait),
   - Notebook (`47` sel peserta dengan `8` `# TODO` === `8` Hint, `39` sel solusi, `solution_smoke_executed = true`, `student_prefix_executed = true`),
   - Portal & PWA (`sessions.json`, `vercel.json`, `sw.js` versi `dl-course-pwa-v8`).
+
+### 4. Pembaruan Fullscreen Engine, Animasi Slide 20, & Slide 24 Simulasi Training Matematis (57 Slide — Terverifikasi Penuh)
+- **Optimasi Mode Fullscreen (`tools/core/html_shell.py`, `tools/core/exporter.py`, `sw.js` → `dl-course-pwa-v9`):**
+  - Seluruh dek kini dirender di atas panggung kanonik `1152×648` (`16:9`) dalam `#stage-scaler` dengan penskalaan GPU `transform: scale(...)` (`fitStage()` pada `load`, `resize`, `fullscreenchange`, tombol `F`, dan `F11`) — mengisi 100% layar `1920×1080` proporsional tanpa distorsi; bar `#controls` terkunci 1 baris rapi di tengah bawah (`width: max-content; white-space: nowrap; opacity: 0.08`, hover `1.0`).
+- **Peningkatan Visual & Interaktif P02:**
+  - **Kicker Bab 2 & Penutup:** Dirapikan menjadi format seragam `BAB 02 · <TASK>` (`IMAGE CLASSIFICATION`, `OBJECT DETECTION`, `IMAGE SEGMENTATION`, `OBJECT TRACKING`), `BAB 05 · ISTIRAHAT & HANDS-ON`, dan `REFERENSI BELAJAR · BAGIAN 1/2`.
+  - **Slide 20 (`Dimulai dari 1 Neuron`):** Diganti dari gambar statis menjadi **animasi interaktif 60fps 3 tahap** (`Zoom Piksel` → grid nyata `8×8` Elsa yang bisa diklik langsung → `Ambil 1 Piksel` → *morph* kotak ke lingkaran biru `3. 1 Neuron`, default piksel biru gaun Elsa `Baris 5, Kol 3 · 0.42`).
+  - **Slide 23 (`Input Layer & Output Layer`):** Label pil kuning ditetapkan ke **`Kalkulasi probabilitas kelas`**, dilengkapi kotak **`Aturan Kunci (MLP · Klasifikasi Multi-Kelas)`** yang presisi secara ilmiah (`Ukuran piksel × channel (H×W×C)` → Input Layer; `Jumlah kelas gambar` → Output Layer, dengan catatan biner 1 neuron Sigmoid).
+  - **Slide 24 (`Simulasi Training: Bagaimana Neural Network Mengenali Gambar?`):** Dilengkapi training Softmax Regression nyata ber-L2 (`l2 = 0.0005`) pada 5 foto figurin Frozen dengan **6 fitur piksel murni** (`Merah R, Hijau G, Biru B, Piksel Atas, Piksel Bawah, Kontras` > 5 neuron output agar proporsi corong *Input > Output* tetap terjaga, jembatan eksplisit dari `150.528` piksel), node **`+1 · Bias (b)`** terpisah bebas tabrakan, legenda warna hijau/merah *weight*, animasi 4 tahap + **`⏭ +1 Tahap Hitung`**, matematika 100% eksak bisa dicek kalkulator (`W` & `b` bulat 1 desimal + unshifted Softmax `e^z / Σe^z`), dan tampilan **`Target 100% vs Prediksi → Error`** pada Tahap 4!
+  - **Slide 25 (`Weight & Bias`) & Slide 26 (`Activation Function`) Baru:** Dek kini lengkap **`59` slide** (setara P01) dengan total `data-notes` tetap **`120.0` menit**. Masing-masing slide membedah *Apa itu*, *Kenapa perlu*, *Cara kerja*, dan **simulasi interaktif langsung pada 5 foto nyata Frozen** (termasuk detektor biner nyata `elsa_binary` di `build_assets.py` agar *Bobot Ideal Elsa* hanya mengaktifkan Elsa `1/5`, *Tanpa Bias* memperlihatkan bocornya ambang, *Weight Biru Dibalik*, serta kurva Retina interaktif **`ReLU`**, **`Sigmoid`**, dan **`Softmax`** yang semuanya terdaftar di `window.SLIDE_PDF_EXPANDERS`).
+- **Lolos Penuh 6 Gerbang Validasi (`python tools/build_session.py P02 --validate`):**
+  - HTML (`59` slide, `41` aset lokal, `120.0` menit, `timeless_ok = true`),
+  - PDF & PPTX 16:9 (`87/87` halaman/slide cocok, `87/87` Speaker Notes),
+  - Presenter Script (`59/59` halaman A4 Portrait),
+  - Notebook (`47` sel peserta dengan `8` `# TODO` === `8` Hint, `39` sel solusi, `solution_smoke_executed = true`, `student_prefix_executed = true`),
+  - Portal & PWA (`sessions.json`, `vercel.json`, `sw.js` versi `dl-course-pwa-v9`).
