@@ -142,6 +142,16 @@
   - `materials/P02/solutions/P02_computer_vision_101.ipynb` — Kunci (`39` sel, `0` `# TODO`, seluruh `17` sel kode lolos AST syntax check & sel NumPy/dataset Langkah 1–3 lolos seluruh `assert`).
 - **Portal & PWA:** `tools/core/registry.py`, `sessions.json` (`P02` + deskripsi `P03`), `vercel.json` (`/p2` & `/p02`), dan `sw.js` (`dl-course-pwa-v7`) telah diperbarui dan terverifikasi sinkron. `tools/core/validator.py` diperbarui memakai `python -m nbconvert` agar tidak bergantung pada `jupyter-nbconvert.exe` di PATH Windows.
 
-### 3. Status Validasi & Catatan Blocker Lingkungan Lokal
-- **Lolos Penuh (`python tools/build_session.py P02 --validate --skip-nb-exec`):** HTML (`57` slide, `39` aset lokal, `120.0` menit, `timeless_ok = true`), PDF/PPTX parity (`79/79`, notes `79/79`), Presenter Script (`57/57`), struktur Notebook (`8` `# TODO` === `8` `<details>` Hint, `0` `# TODO` di solusi), audit visual seluruh halaman Cover, Bab 1, Bab 2, & Bab 3 (termasuk frame animasi Flatten), serta sinkronisasi Portal & PWA (`PASSED`).
-- **Blocker Eksekusi TensorFlow Lokal (`SMOKE_TEST=1`):** Eksekusi sel yang mengimpor TensorFlow di mesin lokal terblokir oleh kebijakan *Windows Application Control*: `ImportError: DLL load failed while importing _pywrap_tensor_float_32_execution: An Application Control policy has blocked this file`. Diperlukan eksekusi ulang `python tools/build_session.py P02 --validate-only` di lingkungan yang mengizinkan DLL TensorFlow (atau uji langsung di Google Colab) untuk melengkapi verifikasi eksekusi penuh sel Keras.
+### 3. Status Validasi & Pembaruan Interaktif Bab 3 (56 Slide — Terverifikasi Penuh)
+- **Peningkatan Visual & Animasi Interaktif Bab 3:**
+  - **Slide 20 (1 Piksel → 1 Neuron):** Sorotan `8×8` dipindahkan ke piksel biru nyata pada gaun Elsa `(4, 2)` (`gray = 0.45`, `RGB [108, 112, 143]`).
+  - **Slide 21 (Animasi `Flatten` 4×4):** Ditingkatkan ke `4×4` (`16` piksel warna asli gaun Elsa `thumb_elsa_flatten.jpg`), panah penghubung `Bagi 4×4 →` dari foto ke grid, dan penjajaran judul tanpa nomor.
+  - **Slide 22 (`Input Layer: Tinggi × Lebar × Channel`):** Fokus penuh ke dataset Frozen (`64×64×1`, `64×64×3`, `224×224×3` + slider `H=W` & `Ch`), pita `03c_elsa_flatten_strip.png` nyata, serta **animasi 60fps per-piksel *zero-reflow*** (`8×8` grid piksel nyata Elsa, `▶ Putar`, `⏭ +1 Piksel`, `↺ Reset`, plus klik kotak piksel mana saja di Foto Elsa & lacak balik neuron Input Layer).
+  - **Slide 23 (`Input Layer & Output Layer`):** Digabung menjadi 1 slide visual proporsi corong (*Input Layer* jauh lebih banyak dari *Output Layer*) + 4 kartu penjelasan bernomor + **animasi 60fps sangat detail** (*pixel-by-pixel → neuron-by-neuron → koneksi neuron-by-neuron `w` → Output Layer → Hasil Klasifikasi*, plus klik langsung piksel foto, neuron Input `x₁..x₁₅₀.₅₂₈`, dan neuron Output `y₁..y₅`).
+  - **Proporsi Corong & Kerapian Global:** Proporsi *Input Layer* > *Output Layer* diselaraskan pada Slide 23, 25, & 28; kicker disederhanakan menjadi `BAB NN · <TOPIK>`; `tools/core/exporter.py` diperbaiki agar ekspor PPTX selalu 100% *opaque* (menonaktifkan animasi fade-in CSS saat tangkap CDP).
+- **Lolos Penuh 6 Gerbang Validasi (`python tools/build_session.py P02 --validate`, termasuk `SMOKE_TEST=1` TensorFlow/Keras):**
+  - HTML (`56` slide, `41` aset lokal, `120.0` menit, `timeless_ok = true`),
+  - PDF & PPTX 16:9 (`79/79` halaman/slide cocok, `79/79` Speaker Notes),
+  - Presenter Script (`56/56` halaman A4 Portrait),
+  - Notebook (`47` sel peserta dengan `8` `# TODO` === `8` Hint, `39` sel solusi, `solution_smoke_executed = true`, `student_prefix_executed = true`),
+  - Portal & PWA (`sessions.json`, `vercel.json`, `sw.js` versi `dl-course-pwa-v8`).

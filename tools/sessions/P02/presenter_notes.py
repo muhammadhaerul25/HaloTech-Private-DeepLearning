@@ -55,7 +55,7 @@ SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "• **Aktivitas Kelas:** Minta peserta menempatkan proyek klasifikasi 5 karakter Frozen (memakai Neural Network berlapis banyak) di peta `AI ⊃ ML ⊃ DL`. Kunci: **C** (Deep Learning, sekaligus bagian dari ML dan AI).",
     ],
     11: [
-        "**Tujuan Slide (0.5 menit):** Pembatas masuk ke **Bab 2: 4 Task Utama Computer Vision**.",
+        "**Tujuan Slide (0.5 menit):** Pembatas masuk ke **Bab 2: Task Computer Vision**.",
         "• **Naskah Pengajar:** \"Di dalam Deep Learning, cabang yang khusus mengolah gambar dan video disebut **Computer Vision**. Mari lihat 4 tugas paling populernya.\"",
     ],
     12: [
@@ -91,154 +91,151 @@ SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "• **Naskah Pengajar:** \"Sekarang kita masuk ke jantung sesi ini. Kita bongkar Neural Network mulai dari unit paling kecil (1 Neuron) sampai terbentuk jaringan utuh.\"",
     ],
     20: [
-        "**Tujuan Slide (1.5 menit):** Memulai Bab 3 dari unit paling konkret — **1 Neuron** sebagai wadah pemegang **1 nilai angka**, khususnya 1 angka piksel (`0.76`) dari foto Elsa.",
-        "• **Naskah Pengajar:** Arahkan mata ke kanan: 1 kotak piksel foto Elsa (`0.76`) masuk ke 1 lingkaran biru (**1 Neuron**). Jelaskan akurat: di lapisan paling depan neuron hanya memegang angka piksel; nanti di lapisan berikutnya barulah neuron menghitung angkanya sendiri. Singgung singkat ilustrasi sel saraf otak kiri sebagai asal-usul nama *Neuron*.",
+        "**Tujuan Slide (1.5 menit):** Memulai Bab 3 dari unit paling konkret — **1 Neuron** sebagai wadah pemegang **1 nilai angka**, khususnya 1 angka piksel biru gaun Elsa (`0.45`).",
+        "• **Naskah Pengajar:** Arahkan mata ke kanan: 1 kotak piksel biru pada gaun Elsa (`0.45`) masuk ke 1 lingkaran biru (**1 Neuron**). Jelaskan akurat: di lapisan paling depan neuron hanya memegang angka piksel; nanti di lapisan berikutnya barulah neuron menghitung angkanya sendiri.",
     ],
     21: [
-        "**Tujuan Slide (1.5 menit):** Memperlihatkan **animasi langsung proses `Flatten`** — tiap piksel foto Elsa (`3×3` = 9 piksel nyata) dipindai dari **kiri ke kanan, atas ke bawah**, lalu terbang dan ditumpuk vertikal menjadi **1 kolom `Input Layer`**.",
-        "• **Panduan Demo Animasi Interaktif:** Klik **`▶ Putar Animasi`** (atau klik **`⏭ +1 Piksel`** satu per satu sambil menjelaskan) agar peserta melihat Baris 1 biru (`x₁..x₃`) → Baris 2 merah (`x₄..x₆`) → Baris 3 hijau (`x₇..x₉`) mendarat berurutan dari atas ke bawah menjadi **Input Layer**.",
+        "**Tujuan Slide (1.5 menit):** Memperlihatkan **animasi langsung proses `Flatten`** — tiap piksel foto Elsa (`4×4` = 16 piksel nyata) dipindai dari **kiri ke kanan, atas ke bawah**, lalu terbang dan ditumpuk vertikal menjadi **1 kolom `Input Layer`**.",
+        "• **Panduan Demo Animasi Interaktif:** Klik **`▶ Putar Animasi`** (atau klik **`⏭ +1 Piksel`** satu per satu sambil menjelaskan) agar peserta melihat Baris 1 biru (`x₁..x₄`) → Baris 2 merah (`x₅..x₈`) → Baris 3 kuning (`x₉..x₁₂`) → Baris 4 hijau (`x₁₃..x₁₆`) mendarat berurutan dari atas ke bawah menjadi **Input Layer**.",
     ],
     22: [
-        "**Tujuan Slide (2 menit):** Memperluas konsep `Input Layer` dari contoh mini `2×2` hitam-putih ke **foto berwarna (RGB)** — setiap 1 titik piksel warna punya 3 nilai (`R, G, B`) sehingga butuh 3 neuron input (`Tinggi × Lebar × Channel`).",
-        "• **Panduan Demo Simulator #3:** Tunjuk pemetaan 1 foto RGB → `x₁, x₂, x₃, ...` bertumpuk ke bawah, lalu klik `MNIST 28×28×1` (`784`), `Frozen 64×64×3` (`12.288`), dan `Frozen 224×224×3` (`150.528` neuron!).",
+        "**Tujuan Slide (2 menit):** Memperlihatkan secara besar, detail, & **beranimasi bagian-per-bagian** transformasi 3 tahap foto menuju **Input Layer**: (1) Foto Original Elsa (`H`, `W`, `C`); (2) Hasil *Flatten* 1D dengan kurung kurawal `}` perkalian `H × W × C = Total Neuron`; dan (3) Kolom **Input Layer** berisi lingkaran neuron angka nyata `0.0–1.0`.",
+        "• **Panduan Demo Interaktif Bagian-per-Bagian:** Klik **`▶ Putar`** (atau **`⏭ +1 Bagian`** / klik langsung **Foto Elsa** & **Pita 1D**) agar peserta melihat potongan baris nyata foto Elsa benar-benar terangkat dan terbang menumpuk ke Pita 1D (`Baris #1..#6`), lalu 1 piksel warna pecah di udara menjadi 3 bola `R, G, B` yang mendarat ke lingkaran `x₁, x₂, x₃`! Klik lingkaran neuron mana saja di kanan untuk menampilkan garis jejak balik ke asalnya, lalu bandingkan `64×64×1 (Gray)` vs `64×64×3 (RGB)` vs `224×224×3 (RGB)`.",
     ],
     23: [
-        "**Tujuan Slide (1 menit):** Menampilkan wujud **skala nyata** proses *Flatten* pada foto asli Elsa `224×224×3` (`03_flatten_frozen_visual.png`).",
-        "• **Naskah Pengajar:** Tunjukkan foto 2D Elsa diiris baris demi baris lalu ditumpuk vertikal menjadi strip `x₁` sampai `x₁₅₀₅₂₈`, serta bandingkan panjang kolom Input Layer antara `784`, `12.288`, dan `150.528` neuron.",
+        "**Tujuan Slide (2 menit):** Menyambungkan **Input Layer** langsung ke **Output Layer** dalam 4 tahap bernomor yang sinkron antara ilustrasi atas dan 4 kartu penjelasan di bawahnya: `1. Foto Original` → `2. Input Layer` → `3. Output Layer` → `4. Hasil Klasifikasi`.",
+        "• **Naskah Pengajar:** Ikuti nomor 1 sampai 4 dari kiri ke kanan sambil menunjuk ilustrasi dan kartu di bawahnya: **(1)** Foto asli Frozen `224×224×3` masuk; **(2)** Di-*flatten* ke **Input Layer** berisi `150.528` neuron (perhatikan ukurannya jauh lebih banyak & tinggi dibanding Output Layer); **(3)** **Output Layer** berfungsi membuat skor keputusan — selalu hanya **1 layer** dengan **jumlah neuron = jumlah kelas** (5 karakter Frozen untuk *Image Classification*; tambah karakter ke-6 seperti Hans → 6 neuron); **(4)** Skor diubah ke persentase (`Softmax`) lalu peluang tertinggi (`Elsa 89%`) dipilih sebagai hasil klasifikasi.",
+        "• **Transisi ke Slide 24:** \"Pertanyaannya sekarang: bagaimana skor mentah dari 5 neuron output tadi diubah menjadi persentase 0–100% seperti 89% Elsa? Jawabannya ada di Softmax!\"",
     ],
     24: [
-        "**Tujuan Slide (1 menit):** Menjelaskan **Output Layer** yang jumlah neuronnya sama dengan jumlah kelas (5 kelas Frozen).",
-        "• **Naskah Pengajar:** Tekankan catatan akurasi di kartu kanan: aturan `output = jumlah kelas` ini khusus untuk **Image Classification** (sesuai Bab 2, untuk *detection/segmentation* outputnya berbeda).",
-    ],
-    25: [
         "**Tujuan Slide (2 menit):** Mendemonstrasikan fungsi **Softmax** mengubah 5 skor mentah (*logits*) menjadi probabilitas 0–100% lewat Simulator #4.",
         "• **Panduan Demo Simulator #4:** Klik `1. Yakin Elsa`, `2. Ragu Elsa vs Anna`, lalu `3. Semua Skor Negatif` (tunjukkan kolom `eᶻ` yang mengubah semua nilai menjadi positif sehingga total selalu tepat `100.0%`).",
     ],
-    26: [
+    25: [
         "**Tujuan Slide (1.5 menit):** Membedah koneksi *Fully Connected / Dense* — menelusuri tepat **1 neuron input** ke seluruh **5 neuron output** lewat Simulator #5.",
         "• **Panduan Demo Simulator #5:** Klik tombol `x₁`, `x₂`, `x₃`, `x₄` bergantian. Tekankan satu hal: 1 neuron input saja sudah punya **5 garis weight** (`w₁,₁` sampai `w₁,₅`).",
     ],
-    27: [
+    26: [
         "**Tujuan Slide (1 menit):** Menghitung jumlah weight & bias **tanpa hidden layer** untuk foto `224×224×3` ke 5 kelas.",
         "• **Naskah Pengajar:** Tunjukkan hitungan persis: `150.528 × 5 = 752.640` weight + `5` bias = `752.645` parameter. Lalu jelaskan mengapa 1 lapisan lurus saja belum mampu memahami bentuk kompleks.",
     ],
-    28: [
+    27: [
         "**Tujuan Slide (1 menit):** Menjelaskan mengapa kita menambahkan **Hidden Layer** di antara Input dan Output.",
         "• **Naskah Pengajar:** Telusuri 4 kartu dari kiri ke kanan: piksel mentah → tepi & warna dasar → bagian bentuk objek → keputusan 5 karakter. Sampaikan bahwa tumpukan banyak *Hidden Layer* inilah asal kata **Deep Learning**.",
     ],
-    29: [
+    28: [
         "**Tujuan Slide (1 menit):** Menampilkan diagram utuh **Multi-Layer Perceptron (MLP)**: `Input Layer → Hidden Layer (+ ReLU) → Output Layer (+ Softmax)`.",
         "• **Naskah Pengajar:** Tunjukkan simbol `W₁, b₁` dan `W₂, b₂`. Aliran perhitungan maju dari kiri ke kanan disebut **Forward Pass**.",
     ],
-    30: [
+    29: [
         "**Tujuan Slide (1.5 menit):** Momen \"Aha!\" — menghitung lonjakan parameter ketika menambahkan **Hidden Layer** lewat Simulator #6.",
         "• **Panduan Demo Simulator #6:** Tunjukkan posisi standar `224×224×3` dengan `128` neuron hidden = **`19.268.357` parameter** (`19,27` juta!). Bandingkan dengan tombol `64×64×3` (`1,57` juta). Tunjukkan bahwa 99,99% parameter menumpuk di Layer 1.",
     ],
-    31: [
+    30: [
         "**Tujuan Slide (2.5 menit):** Menunjukkan **Forward Pass** langkah demi langkah memakai **4 piksel nyata** dari foto Elsa (`x = [0.76, 0.74, 0.65, 0.65]`) lewat Simulator #7.",
         "• **Panduan Demo Simulator #7:** Klik tombol 1 → 2 → 3 → 4 perlahan. Tunjukkan bahwa tidak ada sihir: hanya perkalian, penjumlahan bias, ReLU, dan Softmax hingga keluar probabilitas `87.47%` Elsa.",
     ],
-    32: [
+    31: [
         "**Tujuan Slide (1 menit):** Q&A #4 mengecek kemampuan peserta menghitung parameter 1 layer secara manual.",
         "• **Aktivitas Kelas:** Minta peserta menghitung `4 input → 2 hidden` dengan rumus `(4 × 2) + 2 = 10` (Kunci: **C**). Ingatkan untuk tidak melupakan angka bias.",
     ],
-    33: [
+    32: [
         "**Tujuan Slide (1.5 menit):** Masuk ke bagian intuitif *bagaimana network belajar*: memperkenalkan **Loss Function** (Cross-Entropy).",
         "• **Naskah Pengajar:** Tunjuk panel kiri grafik (`05_loss_gradient_descent_overview.png`): jika foto Elsa diberi probabilitas rendah (`10%`), hukumannya besar (`Loss = 2.30`); jika diberi `90%`, `Loss = 0.11`. Makin kecil Loss = makin bagus!",
     ],
-    34: [
+    33: [
         "**Tujuan Slide (2 menit):** Menjelaskan **Gradient Descent** sebagai \"turun bukit mencari error terkecil\" serta efek **Learning Rate** lewat Simulator #8.",
         "• **Panduan Demo Simulator #8:** Klik `LR Kecil` (lambat), `LR Ideal` (mulus ke dasar `Loss = 0.002`), lalu `LR Besar` (memantul liar/divergen). Tanpa rumus turunan berat, cukup intuisi arah turun dan lebar langkah.",
     ],
-    35: [
+    34: [
         "**Tujuan Slide (1.5 menit):** Mengenalkan **Backpropagation** sekilas secara intuitif.",
         "• **Naskah Pengajar:** Tunjuk panah biru (maju: *Forward Pass*) dan panah merah putus-putus (mundur: *Backpropagation*) serta 3 kartu langkah di bawahnya. Tenangkan peserta: seluruh perhitungan arah koreksi dikerjakan otomatis oleh Keras saat `model.fit()` dipanggil.",
     ],
-    36: [
+    35: [
         "**Tujuan Slide (1 menit):** Merangkum satu siklus penuh training (**Tebak → Ukur Loss → Koreksi → Ulangi**) dan arti **Epoch**.",
         "• **Naskah Pengajar:** Jelaskan 1 *Epoch* = 1 putaran penuh membaca seluruh data latih. Beri preview bahwa detail diagnosis kurva *Train vs Val Loss* & *Overfitting* akan diperdalam di P03.",
     ],
-    37: [
+    36: [
         "**Tujuan Slide (1 menit):** Mengunci seluruh Bab 3 lewat tangga hierarki dari unit terkecil (**1 Neuron**) hingga sistem belajar (**Training Loop**).",
         "• **Naskah Pengajar:** Baca cepat nomor 1 sampai 5 dan tanyakan apakah ada satu tangga yang masih terasa mengganjal sebelum pindah ke Bab 4.",
     ],
-    38: [
+    37: [
         "**Tujuan Slide (1 menit):** Q&A #5 menutup Bab 3 — memastikan peserta paham arah baca nilai Loss yang menurun.",
         "• **Aktivitas Kelas:** Kunci: **B** (Loss turun dari `1.65` ke `0.35` berarti bobot berhasil diperbaiki oleh Gradient Descent sehingga kesalahan mengecil).",
     ],
-    39: [
+    38: [
         "**Tujuan Slide (0.5 menit):** Pembatas masuk ke **Bab 4: Peta Arsitektur Neural Network untuk Computer Vision (Teaser)**.",
         "• **Naskah Pengajar:** \"Di Bab 4 yang singkat ini, kita sambungkan temuan 19,27 juta parameter tadi ke peta arsitektur CV modern — cukup secara konseptual dulu sebagai jembatan ke P03 dan P04.\"",
     ],
-    40: [
+    39: [
         "**Tujuan Slide (1.5 menit):** Menunjukkan 2 kelemahan utama **MLP** pada foto (`06_mlp_vs_cnn_preview.png`): boros parameter dan peka pergeseran objek akibat *Flatten*.",
         "• **Naskah Pengajar:** Bandingkan kiri (MLP mengiris foto 1D) vs kanan (CNN menggeser filter kecil `3×3` di foto 2D utuh — jauh lebih hemat bobot & tahan geser).",
     ],
-    41: [
+    40: [
         "**Tujuan Slide (2 menit):** Menelusuri peta evolusi arsitektur CV (`MLP → CNN → ResNet → MobileNetV2`) lewat Simulator #9.",
         "• **Panduan Demo Simulator #9:** Klik keempat tombol secara berurutan. Tekankan bahwa di P02 cukup kenal ide besar dan alasannya; detail konvolusi dibedah di P03 dan *Transfer Learning* di P04.",
     ],
-    42: [
-        "**Tujuan Slide (1 menit):** Menghubungkan 4 Task CV (Bab 2) dengan contoh keluarga arsitektur populernya dan menjelaskan alasan pemilihan **MobileNetV2** untuk proyek Frozen.",
+    41: [
+        "**Tujuan Slide (1 menit):** Menghubungkan Task CV (Bab 2) dengan contoh keluarga arsitektur populernya dan menjelaskan alasan pemilihan **MobileNetV2** untuk proyek Frozen.",
         "• **Naskah Pengajar:** Tunjuk 3 kartu (Classification: ResNet/MobileNetV2; Detection: YOLO/Faster R-CNN; Segmentation: U-Net/Mask R-CNN) lalu bacakan 3 alasan memilih MobileNetV2.",
     ],
-    43: [
+    42: [
         "**Tujuan Slide (1 menit):** Q&A #6 menutup sesi teori — mengunci alasan pindah dari MLP ke CNN.",
         "• **Aktivitas Kelas:** Kunci: **B** (MLP merusak struktur 2D lewat Flatten dan meledakkan parameter hingga jutaan).",
     ],
-    44: [
+    43: [
         "**Tujuan Slide (5 menit):** Jeda istirahat wajib 5 menit sebelum masuk ke sesi praktik **Hands-On Notebook**.",
         "• **Catatan Instruktur:** Ajak peserta minum air & istirahatkan mata. Pastikan file `materials/P02/P02_computer_vision_101.ipynb` dan folder `data/frozen_v1/` siap dibuka.",
     ],
-    45: [
+    44: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 1):** Mendampingi peserta menjalankan Setup 3 tahap dan membaca `metadata.csv` foto Frozen secara dinamis.",
         "• **Panduan Praktik:** Pastikan `SEED = 42` terkunci, `DATA_DIR` mengarah ke `data/frozen_v1`, dan 5 foto karakter Frozen tampil dengan benar.",
     ],
-    46: [
+    45: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 2):** Mendampingi peserta melakukan `.flatten()` foto Elsa dan mengerjakan `# TODO 1` serta `# TODO 2`.",
-        "• **Panduan Praktik:** Minta peserta membuktikan sendiri panjang vektor `64×64×3 = 12.288` dan `224×224×3 = 150.528` sesuai Slide 22–23.",
+        "• **Panduan Praktik:** Minta peserta membuktikan sendiri panjang vektor `64×64×3 = 12.288` dan `224×224×3 = 150.528` sesuai Slide 21–22.",
     ],
-    47: [
+    46: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 3):** Mendampingi peserta mengerjakan `# TODO 3` (1 Neuron + ReLU) dan `# TODO 4` (Softmax manual) serta memverifikasi Forward Pass 4 piksel nyata Elsa di NumPy.",
         "• **Tips Mengajar:** Biarkan peserta mencoba mengetik sendiri dulu sebelum membuka kotak `<details>` Hint.",
     ],
-    48: [
+    47: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 4):** Mendampingi peserta memuat foto Frozen ukuran `64×64×3` dan mengerjakan `# TODO 5` membangun MLP kecil di Keras.",
         "• **Catatan Penting:** Tegaskan kembali bahwa MLP ini hanya demo konsep untuk memahami layer dan parameter, bukan model akhir proyek.",
     ],
-    49: [
+    48: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 5):** Mendampingi peserta mengerjakan `# TODO 6` melatih MLP singkat dan memplot kurva *Training Loss*.",
         "• **Panduan Diskusi:** Amati apakah kurva Loss turun tiap epoch, dan ingatkan bahwa pembagian data resmi anti-leakage (Group Split) akan dipelajari di P05.",
     ],
-    50: [
+    49: [
         "**Tujuan Slide (7 menit — Hands-On Langkah 6):** Mendampingi peserta membaca `mlp.summary()` dan mengerjakan `# TODO 7` mencocokkan hitungan tangan parameter dengan `mlp.count_params()`.",
         "• **Momen Aha:** Pastikan peserta merasakan kepuasan saat `assert hitung_manual == mlp.count_params()` lolos 100%!",
     ],
-    51: [
+    50: [
         "**Tujuan Slide (5 menit — Mini-Challenge):** Meminta peserta menebak dampak mengubah jumlah neuron hidden (`32` vs `64` vs `128`) sebelum menjalankan `# TODO 8` di notebook.",
         "• **Poin Diskusi:** Parameter naik proporsional `2×` saat hidden naik `2×`, namun lebih banyak parameter pada dataset kecil juga memperbesar risiko menghafal data latih (*overfitting*).",
     ],
-    52: [
+    51: [
         "**Tujuan Slide (2 menit):** Mengulas singkat 12 istilah asli Computer Vision 101 di Kamus Istilah.",
         "• **Interaksi:** Tanyakan ke peserta apakah ada 1–2 istilah yang masih ingin diperjelas ulang sebelum kuis.",
     ],
-    53: [
+    52: [
         "**Tujuan Slide (4 menit):** Kuis interaktif 5 soal mencakup Bab 1 sampai Bab 4.",
         "• **Aktivitas Kelas:** Minta peserta menjawab kelima soal secara lisan dulu, lalu klik tombol `Lihat Jawaban` satu per satu untuk konfirmasi bersama.",
     ],
-    54: [
+    53: [
         "**Tujuan Slide (2 menit):** Mengunci sesi hari ini dengan 3 Poin Utama di slide gelap.",
         "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) Struktur Neuron → Layer → Forward Pass → Training; (03) Batasan MLP menjadi jembatan kuat menuju CNN di P03.",
     ],
-    55: [
+    54: [
         "**Tujuan Slide (2 menit):** Menutup kelas dengan apresiasi, tugas ringan mandiri opsional, dan preview menarik untuk **P03 (Training Neural Network & Konvolusi CNN)**.",
-        "• **Catatan Referensi:** Arahkan peserta ke Slide 56–57 untuk tautan video 3Blue1Brown & sumber resmi belajar mandiri.",
+        "• **Catatan Referensi:** Arahkan peserta ke Slide 55–56 untuk tautan video 3Blue1Brown & sumber resmi belajar mandiri.",
     ],
-    56: [
+    55: [
         "**Tujuan Slide (0 menit — Referensi Mandiri 1/2):** 6 tautan rujukan utama Neural Network & ML dasar sesuai `docs/PLAN.md` (sumber belum diverifikasi ulang diberi label `[CEK LINK]`).",
         "• **Catatan Penggunaan:** Tidak perlu dibahas panjang di kelas; rekomendasikan video 3Blue1Brown #1 sebagai tontonan opsional terbaik di rumah.",
     ],
-    57: [
+    56: [
         "**Tujuan Slide (0 menit — Referensi Mandiri 2/2):** 6 tautan rujukan Computer Vision, CNN Explainer, ResNet, dan MobileNetV2 sesuai `docs/PLAN.md` sebagai jembatan menuju P03 dan P04.",
     ],
 }

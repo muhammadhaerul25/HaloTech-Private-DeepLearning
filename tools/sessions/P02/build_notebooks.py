@@ -40,17 +40,17 @@ def build_cells(is_solution: bool) -> list:
             """
 # Hands-on P02: Computer Vision 101
 
-**Durasi Hands-on:** ±42 menit + 5 menit Mini-Challenge (6 langkah selaras Slide 45–51)  
+**Durasi Hands-on:** ±42 menit + 5 menit Mini-Challenge (6 langkah selaras Slide 44–50)  
 **Dataset Proyek Utama:** **Disney Frozen Figurine (`data/frozen_v1/`)** — 5 kelas (`anna, elsa, kristoff, olaf, sven`), dibaca secara **dinamis** dari `DATA_DIR` dan `metadata.csv`.  
 **Gaya Kode:** Ramah pemula — setiap sel pendek (5–15 baris), 1 sel = 1 tugas, lengkap dengan komentar Bahasa Indonesia (`# ...`).
 
 **Peta 6 Langkah Praktik Hari Ini:**
-1. **Langkah 1 (Slide 03 & 45):** Setup 3 tahap & membaca data Frozen secara dinamis dari `metadata.csv`.
-2. **Langkah 2 (Slide 22–23 & 46):** *Flatten* foto Frozen & menghitung jumlah neuron **Input Layer** (`H × W × C`).
-3. **Langkah 3 (Slide 20, 25, 31 & 47):** *Forward Pass* manual (1 neuron, `ReLU`, `Softmax`, dan contoh mini 4 piksel nyata Elsa) di **NumPy**.
-4. **Langkah 4 (Slide 29 & 48):** Membangun **MLP kecil** dengan `tf.keras.Sequential` untuk foto Frozen `64×64×3`.
-5. **Langkah 5 (Slide 33–36 & 49):** Melatih MLP sebentar & memplot penurunan kurva **Loss** *(demo konsep — jembatan menuju CNN di P03)*.
-6. **Langkah 6 (Slide 27, 30 & 50):** Mengecek `model.summary()` & mencocokkannya dengan hitungan tangan, lalu **Mini-Challenge (Slide 51)** membandingkan `32` vs `64` vs `128` neuron hidden.
+1. **Langkah 1 (Slide 03 & 44):** Setup 3 tahap & membaca data Frozen secara dinamis dari `metadata.csv`.
+2. **Langkah 2 (Slide 21–22 & 45):** *Flatten* foto Frozen & menghitung jumlah neuron **Input Layer** (`H × W × C`).
+3. **Langkah 3 (Slide 20, 24, 30 & 46):** *Forward Pass* manual (1 neuron, `ReLU`, `Softmax`, dan contoh mini 4 piksel nyata Elsa) di **NumPy**.
+4. **Langkah 4 (Slide 28 & 47):** Membangun **MLP kecil** dengan `tf.keras.Sequential` untuk foto Frozen `64×64×3`.
+5. **Langkah 5 (Slide 32–35 & 48):** Melatih MLP sebentar & memplot penurunan kurva **Loss** *(demo konsep — jembatan menuju CNN di P03)*.
+6. **Langkah 6 (Slide 26, 29 & 49):** Mengecek `model.summary()` & mencocokkannya dengan hitungan tangan, lalu **Mini-Challenge (Slide 50)** membandingkan `32` vs `64` vs `128` neuron hidden.
 
 > **Cara Menjalankan:** Tekan `Shift + Enter` berurutan dari atas ke bawah. Pada versi peserta, lengkapi bagian bertanda `# TODO`.
 """
@@ -74,7 +74,7 @@ def build_cells(is_solution: bool) -> list:
         md(
             """
 ---
-## Langkah 1 (7 menit): Membaca Dataset Frozen Dinamis (Sesuai Slide 03 & 45)
+## Langkah 1 (7 menit): Membaca Dataset Frozen Dinamis (Sesuai Slide 03 & 44)
 
 Kita tidak pernah meng-hardcode jumlah foto karena dataset bisa terus bertambah di versi berikutnya.  
 Mari baca tabel `metadata.csv` langsung dari `DATA_DIR` dan cek distribusi tiap karakter (`polos` vs `ramai`).
@@ -132,7 +132,7 @@ plt.show()
         md(
             """
 ---
-## Langkah 2 (7 menit): *Flatten* Foto & Hitung Neuron *Input Layer* (Sesuai Slide 22–23 & 46)
+## Langkah 2 (7 menit): *Flatten* Foto & Hitung Neuron *Input Layer* (Sesuai Slide 21–22 & 45)
 
 Ingat aturan penting di **Slide 22**:
 - Hanya ada **1 Input Layer**, tetapi jumlah **neuron** di dalamnya sama dengan banyaknya nilai piksel dari **1 gambar** setelah *resize*: `Tinggi × Lebar × Channel`.
@@ -190,7 +190,7 @@ print("✅ Cek Latihan 1 lolos!")
         cells,
         is_solution=is_solution,
         title="Latihan 2 (`# TODO 2`): Hitung Neuron Input `224×224×3` & Weight Tanpa Hidden Layer",
-        instruction_md="Hitung `neuron_input_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_tanpa_hidden = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)` (sesuai Slide 27).",
+        instruction_md="Hitung `neuron_input_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_tanpa_hidden = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)` (sesuai Slide 26).",
         student_code="""
 # TODO 2A: Hitung jumlah neuron input untuk foto 224x224x3
 neuron_input_224 = None  # TODO: IMG_SIZE * IMG_SIZE * 3
@@ -226,7 +226,7 @@ print("✅ Cek Latihan 2 lolos!")
         md(
             """
 ---
-## Langkah 3 (7 menit): *Forward Pass* Manual dengan NumPy (Sesuai Slide 20, 25, 31 & 47)
+## Langkah 3 (7 menit): *Forward Pass* Manual dengan NumPy (Sesuai Slide 20, 24, 30 & 46)
 
 Sekarang mari buktikan sendiri bahwa matematika di dalam *Neural Network* hanyalah perkalian bobot, penjumlahan bias, `ReLU`, dan `Softmax`!
 """
@@ -285,8 +285,8 @@ print("✅ Cek Latihan 3 lolos!")
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 4 (`# TODO 4`): Fungsi `softmax_manual` & Verifikasi 4-Piksel Forward Pass (Slide 31)",
-        instruction_md="Lengkapi `softmax_manual(logits)` memakai `exp_val = np.exp(shifted)` lalu `exp_val / np.sum(exp_val)`. Setelah itu kita jalankan persis contoh 4 piksel foto Elsa di Slide 31!",
+        title="Latihan 4 (`# TODO 4`): Fungsi `softmax_manual` & Verifikasi 4-Piksel Forward Pass (Slide 30)",
+        instruction_md="Lengkapi `softmax_manual(logits)` memakai `exp_val = np.exp(shifted)` lalu `exp_val / np.sum(exp_val)`. Setelah itu kita jalankan persis contoh 4 piksel foto Elsa di Slide 30!",
         student_code="""
 def softmax_manual(logits):
     shifted = logits - np.max(logits)
@@ -345,7 +345,7 @@ print("✅ Cek Latihan 4 lolos!")
         md(
             """
 ---
-## Langkah 4 (7 menit): Membangun MLP Kecil di Keras pada Foto Frozen (Sesuai Slide 29 & 48)
+## Langkah 4 (7 menit): Membangun MLP Kecil di Keras pada Foto Frozen (Sesuai Slide 28 & 47)
 
 Mari muat seluruh foto Frozen dari `DATA_DIR` ke ukuran ringkas `64×64×3` (agar RAM tetap ringan di kelas), lalu bangun **MLP kecil** memakai `tf.keras.Sequential`.
 
@@ -430,7 +430,7 @@ print("✅ Model MLP kecil berhasil dibangun! Output shape:", mlp_kecil.output_s
         md(
             """
 ---
-## Langkah 5 (7 menit): Latih MLP Sebentar & Plot Kurva *Loss* (Sesuai Slide 33–36 & 49)
+## Langkah 5 (7 menit): Latih MLP Sebentar & Plot Kurva *Loss* (Sesuai Slide 32–35 & 48)
 
 Sekarang kita panggil `mlp_kecil.fit(...)` untuk melihat langsung siklus **Forward Pass → Loss → Backpropagation → Gradient Descent** bekerja otomatis di Keras!  
 *(Catatan metodologi: pembagian resmi `train/val/test` bebas data leakage dengan Group Split akan kita pelajari tuntas di **P05**.)*
@@ -513,7 +513,7 @@ print("Grafik disimpan ke:", loss_plot_path)
         md(
             """
 ---
-## Langkah 6 (7 menit): Cocokkan `model.summary()` dengan Hitungan Tangan (Sesuai Slide 27, 30 & 50)
+## Langkah 6 (7 menit): Cocokkan `model.summary()` dengan Hitungan Tangan (Sesuai Slide 26, 29 & 49)
 
 Mari cetak tabel `mlp_kecil.summary()` lalu buktikan bahwa angka di kolom `Param #` cocok **100%** dengan rumus `(Input × Output) + Bias` dari Bab 3!
 """
@@ -584,7 +584,7 @@ print("✅ Cek Latihan 7 lolos!")
         md(
             """
 ---
-## Mini-Challenge (5 menit): Ubah Jumlah Neuron *Hidden Layer* (`32` vs `64` vs `128`) (Sesuai Slide 51)
+## Mini-Challenge (5 menit): Ubah Jumlah Neuron *Hidden Layer* (`32` vs `64` vs `128`) (Sesuai Slide 50)
 
 Sebelum menjalankan sel berikut, **tebak dulu**:
 1. Jika jumlah neuron hidden dinaikkan `2×` (dari `64` menjadi `128`), kira-kira berapa kali lipat total parameternya naik?
@@ -660,7 +660,7 @@ print("✅ Seluruh Hands-on & Mini-Challenge P02 selesai!")
     cells.append(
         md(
             """
-## Referensi Belajar Mandiri (Selaras Slide 56–57)
+## Referensi Belajar Mandiri (Selaras Slide 55–56)
 
 1. [3Blue1Brown — *But what is a Neural Network?*](https://www.youtube.com/watch?v=aircAruvnKk) *(Wajib)*
 2. [3Blue1Brown — *Playlist Neural Networks (Bab 1–4)*](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)

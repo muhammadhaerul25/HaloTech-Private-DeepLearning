@@ -204,7 +204,8 @@ html, body {
   aspect-ratio: auto !important; border-radius: 0 !important;
   box-shadow: none !important; margin: 0 !important; overflow: hidden !important;
 }
-section.slide { border-radius: 0 !important; box-shadow: none !important; }
+section.slide { border-radius: 0 !important; box-shadow: none !important; animation: none !important; transition: none !important; }
+section.slide.active { opacity: 1 !important; }
 .qa-answer, .quiz-ans { display: none !important; }
 .qa-answer.shown, .quiz-ans.shown { display: block !important; animation: none !important; opacity: 1 !important; }
 section.slide:not(.pdf-answer-slide) .vis-q { display: inline !important; }

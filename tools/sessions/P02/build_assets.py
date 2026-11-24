@@ -120,6 +120,9 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
     for old_name in (
         "02_linear_vs_nonlinear.png",
         "03_activation_comparison.png",
+        "03_flatten_frozen_visual.png",
+        "03b_flatten_to_input_layer.png",
+        "03b_elsa_rgb_flatten_transform.png",
         "04_cross_entropy_penalty.png",
         "05_flatten_frozen_visual.png",
     ):
@@ -161,23 +164,88 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
     assert elsa_thumb_img is not None
     mini_fp = _compute_real_4pixel_forward_pass(elsa_thumb_img)
 
-    # Real 3x3 Elsa pixel sample for the interactive Flatten motion animation (Slide 21)
+    # Real 4x4 Elsa pixel sample (tightly framed on Elsa's figurine) for Slide 21 Flatten animation
     fp_elsa_main = _pick_sample_image("elsa", "polos", idx=1)
     with Image.open(fp_elsa_main) as im_e:
-        elsa_crop_3x3 = _center_crop_square(im_e.convert("RGB"), crop_frac=0.58)
-        e3_rgb = np.array(elsa_crop_3x3.resize((3, 3), Image.Resampling.BILINEAR))
-        e3_gray = np.array(elsa_crop_3x3.convert("L").resize((3, 3), Image.Resampling.BILINEAR), dtype=np.float32) / 255.0
-    flatten_3x3 = [
-        {
-            "idx": r * 3 + c + 1,
-            "row": r,
-            "col": c,
-            "rgb": [int(e3_rgb[r, c, 0]), int(e3_rgb[r, c, 1]), int(e3_rgb[r, c, 2])],
-            "gray": round(float(e3_gray[r, c]), 2),
-        }
-        for r in range(3)
-        for c in range(3)
-    ]
+        im_e_rgb = im_e.convert("RGB")
+        ew_o, eh_o = im_e_rgb.size
+        side_f = int(min(ew_o, eh_o) * 0.32)
+        cx_f, cy_f = int(ew_o * 0.43), int(eh_o * 0.46)
+        left_f = max(0, min(ew_o - side_f, cx_f - side_f // 2))
+        top_f = max(0, min(eh_o - side_f, cy_f - side_f // 2))
+        elsa_crop_4x4 = im_e_rgb.crop((left_f, top_f, left_f + side_f, top_f + side_f))
+        elsa_220 = elsa_crop_4x4.resize((220, 220), Image.Resampling.LANCZOS)
+        elsa_220.save(ASSETS_DIR / "thumb_elsa_flatten.jpg", quality=92)
+        e4_full = np.array(elsa_220, dtype=np.float32)
+        bg_med = np.median(e4_full[:30, :30].reshape(-1, 3), axis=0)
+        blk_step = e4_full.shape[0] // 4
+        flatten_4x4 = []
+        for r in range(4):
+            for c in range(4):
+                blk = e4_full[r * blk_step : (r + 1) * blk_step, c * blk_step : (c + 1) * blk_step].reshape(-1, 3)
+                dist = np.linalg.norm(blk - bg_med, axis=1)
+                fg = blk[dist > 28.0]
+                if len(fg) / len(blk) >= 0.12:
+                    # True representative real pixel from Elsa figurine in this block (not washed out by wall average)
+                    top_fg = fg[np.argsort(np.linalg.norm(fg - bg_med, axis=1))[len(fg) // 3 :]]
+                    rgb_val = [int(v) for v in np.median(top_fg, axis=0)]
+                else:
+                    rgb_val = [int(v) for v in np.median(blk, axis=0)]
+                gray_val = (0.299 * rgb_val[0] + 0.587 * rgb_val[1] + 0.114 * rgb_val[2]) / 255.0
+                flatten_4x4.append(
+                    {
+                        "idx": r * 4 + c + 1,
+                        "row": r,
+                        "col": c,
+                        "rgb": rgb_val,
+                        "gray": round(float(gray_val), 2),
+                    }
+                )
+
+    # Real 8x8 Elsa pixel grid (64 real pixels from thumb_elsa.jpg) for Slide 22 per-pixel animation & click inspector
+    elsa_thumb_arr = np.array(elsa_thumb_img, dtype=np.float32)
+    grid_n = 8
+    step_g = elsa_thumb_arr.shape[0] / grid_n
+    elsa_grid_8x8 = []
+    dress_best_idx = 35
+    dress_best_score = -999.0
+    for r in range(grid_n):
+        for c in range(grid_n):
+            y0_g, y1_g = int(round(r * step_g)), int(round((r + 1) * step_g))
+            x0_g, x1_g = int(round(c * step_g)), int(round((c + 1) * step_g))
+            blk = elsa_thumb_arr[y0_g:y1_g, x0_g:x1_g, :].reshape(-1, 3)
+            # Sample median RGB of each grid square for crisp true pixel representation
+            med = np.median(blk, axis=0)
+            rgb_i = [int(np.clip(round(float(v)), 0, 255)) for v in med]
+            norm_f = [round(v / 255.0, 2) for v in rgb_i]
+            gray_f = round((0.299 * rgb_i[0] + 0.587 * rgb_i[1] + 0.114 * rgb_i[2]) / 255.0, 2)
+            idx_g = r * grid_n + c
+            elsa_grid_8x8.append(
+                {
+                    "idx": idx_g + 1,
+                    "r": r,
+                    "c": c,
+                    "rgb": rgb_i,
+                    "norm": norm_f,
+                    "gray": gray_f,
+                }
+            )
+            # Identify the bluest pixel on Elsa's figurine dress (center region)
+            if 2 <= r <= 5 and 2 <= c <= 5:
+                blueness = rgb_i[2] - 0.5 * (rgb_i[0] + rgb_i[1])
+                if blueness > dress_best_score:
+                    dress_best_score = blueness
+                    dress_best_idx = idx_g
+
+    elsa_rgb_ends = {
+        "first_rgb": elsa_grid_8x8[0]["norm"],
+        "last_rgb": elsa_grid_8x8[-1]["norm"],
+        "first_gray": [elsa_grid_8x8[0]["gray"], elsa_grid_8x8[1]["gray"], elsa_grid_8x8[2]["gray"]],
+        "last_gray": [elsa_grid_8x8[-2]["gray"], elsa_grid_8x8[-1]["gray"]],
+        "grid_n": grid_n,
+        "dress_idx": int(dress_best_idx),
+        "grid": elsa_grid_8x8,
+    }
 
     p02_data = {
         "dataset_name": summary["dataset_name"],
@@ -188,7 +256,8 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "sessions_count": int(meta_df["sesi_foto"].nunique()),
         "char_samples": char_samples,
         "mini_forward_pass": mini_fp,
-        "flatten_3x3": flatten_3x3,
+        "flatten_4x4": flatten_4x4,
+        "elsa_rgb_ends": elsa_rgb_ends,
     }
     (ASSETS_DIR / "p02_data.json").write_text(json.dumps(p02_data, indent=2, ensure_ascii=False), encoding="utf-8")
     return p02_data, elsa_thumb_img
@@ -409,11 +478,9 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
         elsa_arr160 = np.array(elsa_sq.resize((160, 160), Image.Resampling.LANCZOS))
         elsa_8x8 = np.array(elsa_sq.resize((8, 8), Image.Resampling.BILINEAR))
         elsa_8x8_gray = np.array(elsa_sq.convert("L").resize((8, 8), Image.Resampling.BILINEAR), dtype=np.float32) / 255.0
-        elsa_3x3 = np.array(elsa_sq.resize((3, 3), Image.Resampling.BILINEAR))
-        elsa_3x3_gray = np.array(elsa_sq.convert("L").resize((3, 3), Image.Resampling.BILINEAR), dtype=np.float32) / 255.0
 
-    # Pick a clearly visible pixel on Elsa's blue dress (row 5, col 4 in 8x8)
-    hr, hc = 5, 3
+    # Pick the bluest visible pixel right on Elsa's blue dress (row 4, col 2 in 8x8)
+    hr, hc = 4, 2
     h_val = float(elsa_8x8_gray[hr, hc])
     h_rgb = tuple(int(c) for c in elsa_8x8[hr, hc])
 
@@ -482,146 +549,18 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     fig.savefig(ASSETS_DIR / "03a_one_pixel_one_neuron.png", dpi=200, facecolor="#FFFFFF")
     plt.close(fig)
 
-    # 3b. Slide 21 Hero: Real 3x3 Elsa Grid (Row 1, 2, 3) -> Flatten Top-to-Bottom -> 9 Stacked Neurons = INPUT LAYER
-    fig = plt.figure(figsize=(11.4, 4.35), dpi=200)
-    ax = fig.add_axes([0.0, 0.0, 1.0, 1.0])
-    ax.set_xlim(0, 114)
-    ax.set_ylim(0, 44)
-    ax.axis("off")
+    # Real first & last normalized RGB pixel values from Elsa photo (no hardcoded dummy numbers!)
+    p_first = elsa_arr180[0, 0].astype(np.float32) / 255.0
+    p_last = elsa_arr180[-1, -1].astype(np.float32) / 255.0
 
-    row_cols = [COLORS["blue"], COLORS["red"], COLORS["green"]]
-    row_bg = ["#E8F0FE", "#FCE8E6", "#E6F4EA"]
-    row_names = ["Baris 1", "Baris 2", "Baris 3"]
+    # 3b. Slide 22 Standalone 1D Flattened Color Strip from REAL Elsa RGB pixels (used inside enlarged interactive Slide 22)
+    with Image.open(ASSETS_DIR / "thumb_elsa_flatten.jpg") as im_fl:
+        fl_20 = np.array(im_fl.convert("RGB").resize((20, 20), Image.Resampling.BILINEAR))
+    strip_1d = fl_20.reshape(-1, 1, 3)  # genuine (400, 1, 3) unrolled row-by-row
+    strip_vis = np.repeat(strip_1d, 72, axis=1)
+    Image.fromarray(strip_vis, mode="RGB").save(ASSETS_DIR / "03c_elsa_flatten_strip.png")
 
-    # Panel 1: Real Elsa mini reference (far left)
-    ax_ref = fig.add_axes([0.015, 0.24, 0.145, 0.52])
-    ax_ref.imshow(elsa_arr180)
-    ax_ref.set_xticks([]); ax_ref.set_yticks([])
-    for sp in ax_ref.spines.values():
-        sp.set_edgecolor("#DADCE0"); sp.set_linewidth(2.0)
-    ax_ref.set_title("Foto Elsa", fontsize=10.5, fontweight="bold", color=COLORS["dark"], pad=6)
-
-    ax.annotate("", xy=(24.8, 22.0), xytext=(19.0, 22.0), arrowprops=dict(arrowstyle="-|>,head_width=0.45,head_length=0.6", color=COLORS["muted"], lw=2.4))
-    ax.text(21.9, 25.2, "Contoh\n3×3", ha="center", va="bottom", fontsize=8.2, fontweight="bold", color=COLORS["muted"])
-
-    # Panel 2: Real 3x3 Colored Pixel Grid of Elsa with Row Color Coding
-    ax.text(43.5, 40.4, "1. Gambar 2D (3×3 = 9 Piksel Nyata)", ha="center", va="center", fontsize=11.0, fontweight="bold", color=COLORS["dark"])
-    gx0, gy0, cell = 32.5, 9.6, 7.2
-    for r in range(3):
-        # Row label pill on left
-        ry_center = gy0 + (2 - r) * (cell + 1.0) + cell / 2
-        pill = patches.FancyBboxPatch((25.8, ry_center - 1.85), 5.6, 3.7, boxstyle="round,pad=0.2,rounding_size=0.9",
-                                      facecolor=row_bg[r], edgecolor=row_cols[r], linewidth=1.4)
-        ax.add_patch(pill)
-        ax.text(28.6, ry_center, row_names[r], ha="center", va="center", fontsize=7.6, fontweight="bold", color=row_cols[r])
-        for c in range(3):
-            cx = gx0 + c * (cell + 0.9)
-            cy = gy0 + (2 - r) * (cell + 1.0)
-            rgb = tuple(int(v) / 255.0 for v in elsa_3x3[r, c])
-            gv = float(elsa_3x3_gray[r, c])
-            idx = r * 3 + c + 1
-            rect = patches.FancyBboxPatch((cx, cy), cell, cell, boxstyle="round,pad=0.05,rounding_size=1.0",
-                                          facecolor=rgb, edgecolor=row_cols[r], linewidth=2.4)
-            ax.add_patch(rect)
-            tc = "#FFFFFF" if gv < 0.56 else "#202124"
-            ax.text(cx + cell / 2, cy + cell * 0.66, f"x{idx}", ha="center", va="center", fontsize=8.0, fontweight="bold", color=tc, family="DejaVu Sans Mono")
-            ax.text(cx + cell / 2, cy + cell * 0.30, f"{gv:.2f}", ha="center", va="center", fontsize=9.8, fontweight="bold", color=tc, family="DejaVu Sans Mono")
-    ax.text(44.2, 4.8, "Bentuk 2D: tersusun dalam baris & kolom", ha="center", va="center", fontsize=8.8, color=COLORS["muted"])
-
-    # Middle Flatten Stage: placed high and clean ABOVE all 3 curved arrows
-    flat_badge = patches.FancyBboxPatch((59.8, 37.2), 16.8, 4.6, boxstyle="round,pad=0.3,rounding_size=1.4",
-                                        facecolor="#FEF7E0", edgecolor=COLORS["yellow"], linewidth=2.0)
-    ax.add_patch(flat_badge)
-    ax.text(68.2, 39.5, "2. FLATTEN", ha="center", va="center", fontsize=10.2, fontweight="bold", color="#B06000")
-    ax.text(68.2, 34.4, "Susun baris bertumpuk\ndari atas ke bawah", ha="center", va="center", fontsize=8.2, fontweight="bold", color=COLORS["dark"])
-
-    # Right: Vertical Stacked 9 Neuron Circles = INPUT LAYER
-    cap = patches.FancyBboxPatch((81.5, 2.0), 30.5, 39.8, boxstyle="round,pad=0.4,rounding_size=2.2",
-                                 facecolor="#F8F9FA", edgecolor=COLORS["blue"], linewidth=2.6)
-    ax.add_patch(cap)
-    ax.text(96.75, 39.2, "3. INPUT LAYER", ha="center", va="center", fontsize=11.5, fontweight="bold", color=COLORS["blue_dark"])
-    ax.text(96.75, 36.4, "(1 Kolom Vertikal = 9 Neuron)", ha="center", va="center", fontsize=8.2, color=COLORS["muted"])
-
-    ys = np.linspace(32.2, 4.8, 9)
-    for idx0, y_pos in enumerate(ys):
-        r = idx0 // 3
-        c = idx0 % 3
-        gv = float(elsa_3x3_gray[r, c])
-        circ = patches.Circle((89.0, y_pos), 1.52, facecolor=row_cols[r], edgecolor="#FFFFFF", linewidth=1.6, zorder=4)
-        ax.add_patch(circ)
-        ax.text(89.0, y_pos, f"{gv:.2f}", ha="center", va="center", fontsize=6.6, fontweight="bold", color="#FFFFFF", family="DejaVu Sans Mono", zorder=5)
-        ax.text(91.9, y_pos, f"x{idx0 + 1}", ha="left", va="center", fontsize=8.2, fontweight="bold", color=row_cols[r], family="DejaVu Sans Mono")
-        ax.text(96.2, y_pos, f"({row_names[r]}, Kol {c + 1})", ha="left", va="center", fontsize=7.6, color=COLORS["muted"])
-
-    # Clean connectors from the 3 row centers on the grid to the 3 row groups on the Input Layer
-    row_target_y = [ys[1], ys[4], ys[7]]
-    for r in range(3):
-        ry_src = gy0 + (2 - r) * (cell + 1.0) + cell / 2
-        ax.annotate(
-            "", xy=(80.8, row_target_y[r]), xytext=(57.0, ry_src),
-            arrowprops=dict(arrowstyle="-|>,head_width=0.4,head_length=0.55", color=row_cols[r], lw=2.4,
-                            connectionstyle=f"arc3,rad={-0.06 if r == 0 else (0.10 if r == 2 else 0.0)}"),
-        )
-
-    fig.savefig(ASSETS_DIR / "03b_flatten_to_input_layer.png", dpi=200, facecolor="#FFFFFF")
-    plt.close(fig)
-
-    # 3c. Slide 23 Hero: Full-Scale Real Elsa (224x224x3) -> Actual Stacked Colored Neuron Circles Capsule -> Bar Chart
-    fig = plt.figure(figsize=(11.4, 4.2), dpi=190)
-    gs = fig.add_gridspec(1, 3, width_ratios=[1.05, 1.05, 1.45], wspace=0.28)
-    ax_img = fig.add_subplot(gs[0])
-    ax_flat = fig.add_subplot(gs[1])
-    ax_bar = fig.add_subplot(gs[2])
-
-    ax_img.imshow(elsa_arr160)
-    for y_line in range(20, 160, 20):
-        ax_img.axhline(y_line, color="#FBBC04", linewidth=1.3, linestyle="--", alpha=0.92)
-    ax_img.set_title("1. Foto Elsa (224×224×3)\nDiiris baris demi baris", fontsize=10.8, fontweight="bold", color=COLORS["dark"], pad=8)
-    ax_img.axis("off")
-
-    # Panel 2: Actual Input Layer Capsule with Individual Neuron Circles (NOT window-blind stripes!)
-    ax_flat.set_xlim(0, 10)
-    ax_flat.set_ylim(0, 12)
-    ax_flat.axis("off")
-    ax_flat.set_title("2. Input Layer (Flatten 1D)\n150.528 neuron bertumpuk", fontsize=10.8, fontweight="bold", color=COLORS["blue_dark"], pad=8)
-    capsule = patches.FancyBboxPatch((1.3, 0.4), 7.4, 11.1, boxstyle="round,pad=0.2,rounding_size=0.9",
-                                     facecolor="#E8F0FE", edgecolor=COLORS["blue"], linewidth=2.2)
-    ax_flat.add_patch(capsule)
-    sample_nodes = [
-        (10.1, "x₁", "0.76", "#EA4335", "Piksel 1 (R)"),
-        (8.6, "x₂", "0.75", "#34A853", "Piksel 1 (G)"),
-        (7.1, "x₃", "0.74", "#4285F4", "Piksel 1 (B)"),
-        (2.8, "x₁₅₀₅₂₇", "0.42", "#34A853", "Piksel akhir (G)"),
-        (1.3, "x₁₅₀₅₂₈", "0.39", "#4285F4", "Piksel akhir (B)"),
-    ]
-    for ny, nlbl, nval, ncol, ndesc in sample_nodes:
-        c_node = patches.Circle((3.0, ny), 0.62, facecolor=ncol, edgecolor="#FFFFFF", linewidth=1.8, zorder=4)
-        ax_flat.add_patch(c_node)
-        ax_flat.text(3.0, ny, nval, ha="center", va="center", fontsize=7.2, fontweight="bold", color="#FFFFFF", family="DejaVu Sans Mono", zorder=5)
-        ax_flat.text(4.0, ny + 0.16, nlbl, ha="left", va="center", fontsize=8.4, fontweight="bold", color=COLORS["dark"], family="DejaVu Sans Mono")
-        ax_flat.text(4.0, ny - 0.28, ndesc, ha="left", va="center", fontsize=7.0, color=COLORS["muted"])
-    # Vertical ellipsis dots in center
-    for dy in [5.65, 4.95, 4.25]:
-        ax_flat.add_patch(patches.Circle((3.0, dy), 0.13, facecolor=COLORS["blue_dark"], edgecolor="none"))
-    ax_flat.text(4.0, 4.95, "150.523 neuron\nlainnya bertumpuk\nke bawah...", ha="left", va="center", fontsize=7.8, fontweight="bold", color=COLORS["blue_dark"])
-
-    labels = ["MNIST\n(28×28×1)", "Frozen Kecil\n(64×64×3)", "Frozen Standar\n(224×224×3)"]
-    neurons_k = [784 / 1000, 12288 / 1000, 150528 / 1000]
-    val_txts = ["784", "12.288", "150.528"]
-    bars = ax_bar.bar(labels, neurons_k, color=[COLORS["green"], COLORS["yellow"], COLORS["blue"]], edgecolor="#202124", linewidth=1.1, width=0.52)
-    for b, val, vtxt in zip(bars, neurons_k, val_txts):
-        ax_bar.text(b.get_x() + b.get_width() / 2, val + 4.0, f"{vtxt}\nneuron", ha="center", va="bottom", fontsize=9.5, fontweight="bold", color=COLORS["dark"])
-    ax_bar.set_ylim(0, 185.0)
-    ax_bar.set_ylabel("Jumlah Neuron Input (Ribu)", fontsize=10, color=COLORS["dark"])
-    ax_bar.set_title("3. Jumlah Neuron Input Layer per Ukuran Foto", fontsize=10.8, fontweight="bold", color=COLORS["dark"], pad=8)
-    ax_bar.tick_params(labelsize=9.2)
-    ax_bar.grid(axis="y", linestyle="--", alpha=0.35)
-
-    fig.subplots_adjust(left=0.03, right=0.98, top=0.84, bottom=0.14, wspace=0.26)
-    fig.savefig(ASSETS_DIR / "03_flatten_frozen_visual.png", dpi=190, facecolor="#FFFFFF")
-    plt.close(fig)
-
-    # 4. Mini 2x2 Real Elsa Patch for Forward Pass Slide 33
+    # 4. Mini 2x2 Real Elsa Patch for Forward Pass Slide 30
     x_vals = p02_data["mini_forward_pass"]["x"]
     grid_2x2 = np.array(x_vals).reshape(2, 2)
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.2, 3.0), dpi=190)
