@@ -117,3 +117,31 @@
 - **Perintah:** `.venv\Scripts\python.exe tools/build_session.py P02 --validate` → **PASSED 100%** (termasuk verifikasi visual lembar kontak seluruh slide terdampak & Presenter Script A4).
 - **Aturan Gaya Baru (dicatat di `AGENTS.md` untuk P02–P08):** Selalu pakai istilah teknis asli (*Neuron, Layer, ReLU, Softmax, Conv2D, Feature Map*, dll.) tanpa julukan rekaan, lalu sederhanakan penjelasannya dengan bahasa Indonesia sehari-hari.
 - **Portal & PWA:** `sessions.json` (`P02` berstatus `available` + 5 tautan lengkap), `vercel.json` (rewrite `/p2` & `/p02`), `sw.js` (`dl-course-pwa-v6` + precache HTML P02), dan `requirements.txt` (`tensorflow>=2.16.0`) telah diperbarui.
+
+
+---
+
+## Redesign P02 → Computer Vision 101 (Aktif)
+
+### 1. Keputusan Redesign & Usulan Perubahan `docs/PLAN.md` (Tanpa Mengedit `PLAN.md`)
+- **Alasan:** Menata ulang P02 menjadi **Computer Vision 101** dengan alur besar → kecil → membangun ulang dari bawah (*AI vs ML vs DL → 4 Task Computer Vision → Bedah Neural Network dari 1 Neuron sampai MLP, Forward Pass, & Intuisi Training → Teaser Arsitektur CV*).
+- **Pengarsipan Materi Lama:** Kode sumber P02 lama (*Teori Neural Network / ANN*) diarsipkan di `tools/sessions/_archive_P02_ann/` agar detail aktivasi (`ReLU/Sigmoid/Tanh`), `Loss`, `Learning Rate`, dan `Overfitting` dapat dipakai ulang saat menyusun **P03**.
+- **Usulan Perubahan Kurikulum (`PLAN.md` tidak diubah langsung):**
+  - **P02** menjadi *Computer Vision 101* (`P02_computer_vision_101.*`), mencakup Bab 1 (AI/ML/DL), Bab 2 (Classification, Object Detection, Instance Segmentation + beda singkat Semantic, Object Tracking), Bab 3 (Neuron → Input Layer `H×W×C` → Output Layer → 1 Neuron Input ke 5 Output → Hidden Layer → Forward Pass 4 piksel nyata Elsa → Loss/Gradient Descent/Backprop intuitif), Bab 4 (Teaser MLP → CNN → ResNet → MobileNetV2), Bab 5 (Hands-On MLP kecil + Mini-Challenge + Kamus + Kuis 5 soal).
+  - **P03** diusulkan menjadi *Training Neural Network & Konvolusi (CNN)* — fokus pada pendalaman training (aktivasi, loss, learning rate, overfitting) dan konvolusi 2D (kernel, stride, padding, pooling, feature map), tanpa mengulang Task CV yang sudah tuntas di P02. Deskripsi P03 di `sessions.json` dan `tools/core/registry.py` telah diselaraskan.
+
+### 2. Artefak Terbangun (`materials/P02/` & `tools/sessions/P02/`)
+- **Aset Visual & Data Nyata (`materials/P02/assets/P02/`):** 8 thumbnail foto Frozen nyata (`thumb_*.jpg`), 11 grafik deterministik (`01_frozen_gallery_5classes.png` s.d. `06_mlp_vs_cnn_preview.png`, termasuk siluet *mask* OpenCV Bab 2, `03a_one_pixel_one_neuron.png` zoom piksel `8×8` Elsa → 1 Neuron, serta `03_flatten_frozen_visual.png` dengan kapsul lingkaran Neuron `x₁..x₁₅₀₅₂₈`), dan `p02_data.json` dinamis dari `data/frozen_v1/` (`143` foto, `102` polos, `41` ramai, 9 piksel `3×3` Elsa untuk animasi Flatten, dan 4 piksel `2×2` Elsa untuk Forward Pass).
+- **Dek HTML5 SSOT:** `materials/P02/P02_computer_vision_101.html` — **57 slide** (Cover kolase Bento 1+4 lima karakter asli Frozen, Slide 02 gabungan *Agenda & Learning Goals*, Bab 1 dilengkapi *AI vs Bukan AI* & *ML Klasik vs Deep Learning*, Bab 2 diperbarui menjadi peta 4-panel + *Semantic and Instance Segmentation* + visual nyata Elsa/Olaf + ekspansi Latihan Slide 17, Bab 3 dibuka dengan alur mulus **Slide 20 (1 Piksel → 1 Neuron) → Slide 21 (Animasi Motion 60fps Interaktif `Flatten` 9 piksel nyata Elsa dari kiri→kanan, atas→bawah → `Input Layer`) → Slide 22 (`Input Layer` RGB `H×W×C`) → Slide 23 (Skala Nyata `150.528` Neuron)**), `10` simulator/animasi interaktif (`8` terdaftar di `window.SLIDE_PDF_EXPANDERS`), `6` Q&A Reveal, `1` Kuis 5 Soal Reveal, total `data-notes` = **`120.0` menit**, `timeless_ok = true`, `39` aset lokal terverifikasi, seluruh tautan referensi berasal dari `docs/PLAN.md` (sumber belum diverifikasi berlabel `[CEK LINK]`).
+- **Ekspor Sinkron:**
+  - `materials/P02/P02_computer_vision_101.pdf` — **79 halaman** (`16:9`, `10.88 MB`, termasuk 2 frame animasi Flatten: *mid-flight* & *9/9 selesai*).
+  - `materials/P02/P02_computer_vision_101.pptx` — **79 slide** (`16:9` Retina HD `2240×1260`, `15.53 MB`), Speaker Notes **`79/79`**.
+  - `materials/P02/P02_presenter_script.pdf` — **57 halaman** A4 Portrait (`9.19 MB`), `SLIDE_EXPLANATIONS` mencakup **`57/57`**.
+- **Notebook Hands-On:**
+  - `materials/P02/P02_computer_vision_101.ipynb` — Peserta (`47` sel, `8` `# TODO` === `8` `<details>` Hint & Jawaban, rujukan slide tersinkron ke `57` slide).
+  - `materials/P02/solutions/P02_computer_vision_101.ipynb` — Kunci (`39` sel, `0` `# TODO`, seluruh `17` sel kode lolos AST syntax check & sel NumPy/dataset Langkah 1–3 lolos seluruh `assert`).
+- **Portal & PWA:** `tools/core/registry.py`, `sessions.json` (`P02` + deskripsi `P03`), `vercel.json` (`/p2` & `/p02`), dan `sw.js` (`dl-course-pwa-v7`) telah diperbarui dan terverifikasi sinkron. `tools/core/validator.py` diperbarui memakai `python -m nbconvert` agar tidak bergantung pada `jupyter-nbconvert.exe` di PATH Windows.
+
+### 3. Status Validasi & Catatan Blocker Lingkungan Lokal
+- **Lolos Penuh (`python tools/build_session.py P02 --validate --skip-nb-exec`):** HTML (`57` slide, `39` aset lokal, `120.0` menit, `timeless_ok = true`), PDF/PPTX parity (`79/79`, notes `79/79`), Presenter Script (`57/57`), struktur Notebook (`8` `# TODO` === `8` `<details>` Hint, `0` `# TODO` di solusi), audit visual seluruh halaman Cover, Bab 1, Bab 2, & Bab 3 (termasuk frame animasi Flatten), serta sinkronisasi Portal & PWA (`PASSED`).
+- **Blocker Eksekusi TensorFlow Lokal (`SMOKE_TEST=1`):** Eksekusi sel yang mengimpor TensorFlow di mesin lokal terblokir oleh kebijakan *Windows Application Control*: `ImportError: DLL load failed while importing _pywrap_tensor_float_32_execution: An Application Control policy has blocked this file`. Diperlukan eksekusi ulang `python tools/build_session.py P02 --validate-only` di lingkungan yang mengizinkan DLL TensorFlow (atau uji langsung di Google Colab) untuk melengkapi verifikasi eksekusi penuh sel Keras.

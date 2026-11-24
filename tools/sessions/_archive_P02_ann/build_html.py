@@ -1,387 +1,30 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#202124" />
-  <link rel="manifest" href="../../manifest.webmanifest" />
-  <link rel="apple-touch-icon" href="../P01/assets/P01/icon-192.png" />
-  <title>P02 - Teori Neural Network (ANN) (59 Slides)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Roboto+Mono:wght@400;500;600&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
+"""Generate 59-slide ultra-beginner-friendly, step-by-step interactive HTML5 deck (SSOT) for P02.
 
-    :root {
-      --blue: #4285F4;
-      --blue-text: #1A73E8;
-      --red: #EA4335;
-      --yellow: #FBBC04;
-      --green: #34A853;
-      --dark: #202124;
-      --muted: #5F6368;
-      --border: #DADCE0;
-      --surface: #F8F9FA;
-      --white: #FFFFFF;
-      --tint-blue: #E8F0FE;
-      --tint-red: #FCE8E6;
-      --tint-yellow: #FEF7E0;
-      --tint-green: #E6F4EA;
-      --font-title: 'Poppins', Arial, sans-serif;
-      --font-body: 'Roboto', Arial, sans-serif;
-      --font-code: 'Roboto Mono', monospace;
-    }
+Designed specifically for non-IT / complete beginners:
+- Every concept follows: Everyday Analogy -> Concrete Frozen Example (Zero Math) ->
+  Gentle Step-by-Step Number Example -> Technical Name -> Interactive Simulator -> Visual Q&A.
+- Balanced, dense-yet-airy visual layout (zero dead whitespace, zero overlap, crisp dark-mode code).
+- 6 interactive HTML5/Canvas simulators registered in `window.SLIDE_PDF_EXPANDERS`.
+- Total speaker notes duration: exactly 120.0 minutes across 59 slides.
+"""
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #111317;
-      color: var(--dark);
-      font-family: var(--font-body);
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 16px;
-      gap: 10px;
-      user-select: none;
-    }
+from __future__ import annotations
 
-    #progress-bar {
-      position: fixed; top: 0; left: 0; height: 4px;
-      background: linear-gradient(90deg, var(--blue), var(--red), var(--yellow), var(--green));
-      width: 2%; transition: width 0.25s ease; z-index: 100;
-    }
+import json
+import sys
+from pathlib import Path
 
-    #stage-wrap {
-      width: min(96vw, calc((100vh - 92px) * 16 / 9));
-      height: min(calc(100vh - 92px), calc(96vw * 9 / 16));
-      flex-shrink: 0;
-      position: relative;
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow: 0 24px 70px rgba(0,0,0,0.45);
-      background: var(--white);
-    }
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR / "tools"))
 
-    .slide {
-      position: absolute; inset: 0;
-      padding: 34px 50px 46px;
-      display: none; flex-direction: column;
-      background: var(--white); overflow: hidden;
-    }
-    .slide.active { display: flex; animation: fadeSlide 0.22s ease; }
-    @keyframes fadeSlide {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+from core.html_shell import make_agenda_slide, make_divider_slide, write_deck_html  # noqa: E402
+from core.registry import get_session  # noqa: E402
 
-    .slide.dark { background: var(--dark); color: var(--white); }
-    .slide.bg-blue { background: var(--blue); color: var(--white); }
-    .slide.bg-green { background: var(--green); color: var(--dark); }
-    .slide.bg-yellow { background: var(--yellow); color: var(--dark); }
-    .slide.bg-red { background: var(--red); color: var(--white); }
+SESSION = get_session("P02")
+ASSETS_DIR = SESSION.assets_dir
+FOOTER = SESSION.short_title
 
-    .kicker {
-      font-family: var(--font-title); font-size: 12.5px; font-weight: 700;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--blue-text); margin-bottom: 5px;
-    }
-    .slide.dark .kicker { color: var(--yellow); }
-    .slide.bg-blue .kicker, .slide.bg-red .kicker { color: rgba(255,255,255,0.92); }
-    .slide.bg-green .kicker, .slide.bg-yellow .kicker { color: var(--dark); }
-
-    h1, h2 { font-family: var(--font-title); font-weight: 700; line-height: 1.18; letter-spacing: -0.015em; }
-    h1 { font-size: clamp(28px, 3.2vw, 44px); }
-    h2 { font-size: clamp(22px, 2.25vw, 31px); margin-bottom: 8px; }
-    .subtitle { font-size: clamp(13.5px, 1.25vw, 17px); color: var(--muted); line-height: 1.48; margin-bottom: 12px; }
-    .slide.dark .subtitle { color: #BDC1C6; }
-
-    .hl-blue { color: var(--blue-text); }
-    .hl-red { color: var(--red); }
-    .hl-green { color: #1E8E3E; }
-    .hl-yellow { color: #E37400; }
-
-    .pill {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 5px 13px; border-radius: 999px;
-      font-family: var(--font-title); font-size: 12px; font-weight: 600;
-      width: fit-content;
-    }
-    .pill.blue { background: var(--tint-blue); color: var(--blue-text); }
-    .pill.red { background: var(--tint-red); color: #C5221F; }
-    .pill.yellow { background: var(--tint-yellow); color: #B06000; }
-    .pill.green { background: var(--tint-green); color: #137333; }
-    .pill.dark { background: #303134; color: var(--white); }
-    .pill.solid-blue { background: var(--blue); color: var(--white); }
-
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; min-height: 0; }
-    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex: 1; min-height: 0; }
-    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; flex: 1; min-height: 0; }
-    .split-60-40 { display: grid; grid-template-columns: 1.38fr 1fr; gap: 18px; flex: 1; min-height: 0; align-items: stretch; }
-    .split-40-60 { display: grid; grid-template-columns: 1fr 1.38fr; gap: 18px; flex: 1; min-height: 0; align-items: stretch; }
-
-    .card {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 15px; padding: 18px 22px;
-      display: flex; flex-direction: column; gap: 10px;
-      box-shadow: 0 3px 10px rgba(32,33,36,0.05);
-      position: relative; overflow: hidden;
-    }
-    .card.surface { background: var(--surface); }
-    .card.tint-blue { background: var(--tint-blue); border-color: #C6DAFC; }
-    .card.tint-red { background: var(--tint-red); border-color: #F6AEA9; }
-    .card.tint-yellow { background: var(--tint-yellow); border-color: #FDE293; }
-    .card.tint-green { background: var(--tint-green); border-color: #A8DAB5; }
-
-    .card-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; }
-    .bar-blue { background: var(--blue); }
-    .bar-red { background: var(--red); }
-    .bar-yellow { background: var(--yellow); }
-    .bar-green { background: var(--green); }
-
-    .card-title { font-family: var(--font-title); font-size: clamp(15.5px, 1.4vw, 19px); font-weight: 700; color: var(--dark); }
-    .card-body { font-size: clamp(13.5px, 1.18vw, 15.8px); line-height: 1.55; color: #3C4043; }
-    .card-body ul { padding-left: 18px; display: flex; flex-direction: column; gap: 8px; }
-    .card .callout { margin-top: auto; }
-
-    .callout {
-      background: var(--tint-blue); border-left: 4px solid var(--blue);
-      border-radius: 0 11px 11px 0; padding: 10px 14px;
-      font-size: clamp(12.5px, 1.08vw, 14.5px); line-height: 1.46; color: var(--dark);
-    }
-    .callout.red { background: var(--tint-red); border-left-color: var(--red); }
-    .callout.yellow { background: var(--tint-yellow); border-left-color: var(--yellow); }
-    .callout.green { background: var(--tint-green); border-left-color: var(--green); }
-
-    .big-num { font-family: var(--font-title); font-size: clamp(28px, 3vw, 42px); font-weight: 700; line-height: 1.05; }
-
-    pre.code {
-      background: #1E2025; color: #E8EAED; font-family: var(--font-code);
-      font-size: clamp(11px, 0.96vw, 12.8px); line-height: 1.48;
-      padding: 12px 15px; border-radius: 11px; overflow-x: auto; border: 1px solid #3C4043;
-      white-space: pre-wrap; word-break: break-word;
-    }
-    code { font-family: var(--font-code); background: #F1F3F4; padding: 1px 5px; border-radius: 5px; font-size: 0.9em; color: #C5221F; }
-    .slide.dark code { background: rgba(255,255,255,0.13); color: #FDE293; }
-    .slide.bg-blue code, .slide.bg-red code { background: rgba(255,255,255,0.18); color: #FFFFFF; }
-    .slide.bg-yellow code, .slide.bg-green code { background: rgba(32,33,36,0.12); color: #202124; }
-    pre.code code { background: none; padding: 0; color: inherit; }
-
-    .img-box {
-      background: var(--white); border: 1px solid var(--border);
-      border-radius: 14px; padding: 10px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      overflow: hidden; height: 100%;
-    }
-    .img-box img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px; }
-
-    .step-list { display: flex; flex-direction: column; gap: 9px; flex: 1; justify-content: center; }
-    .step-item {
-      display: grid; grid-template-columns: 44px 1fr; gap: 13px; align-items: center;
-      background: var(--surface); border: 1px solid var(--border);
-      border-radius: 13px; padding: 10px 14px;
-    }
-    .step-num {
-      width: 38px; height: 38px; border-radius: 10px;
-      background: var(--blue); color: var(--white);
-      font-family: var(--font-title); font-weight: 700; font-size: 16px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .step-num.red { background: var(--red); }
-    .step-num.yellow { background: var(--yellow); color: var(--dark); }
-    .step-num.green { background: var(--green); }
-    .step-title { font-family: var(--font-title); font-weight: 700; font-size: 14.5px; color: var(--dark); }
-    .step-desc { font-size: 13px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
-
-    table.io-table { width: 100%; border-collapse: collapse; font-size: 14.5px; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
-    table.io-table th { background: var(--dark); color: var(--white); font-family: var(--font-title); text-align: left; padding: 12px 16px; }
-    table.io-table td { padding: 12px 16px; border-top: 1px solid var(--border); color: #3C4043; line-height: 1.45; }
-    table.io-table tr:nth-child(even) td { background: var(--surface); }
-    table.io-table.spacious th, table.io-table.spacious td { padding: 11px 18px; font-size: 15px; line-height: 1.42; }
-
-    .cluster-4 { position: absolute; right: 42px; top: 38px; display: grid; grid-template-columns: 36px 36px; gap: 10px; }
-    .c-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--blue); }
-    .c-square { width: 34px; height: 34px; border-radius: 8px; background: var(--red); }
-    .c-tri { width: 0; height: 0; border-left: 17px solid transparent; border-right: 17px solid transparent; border-bottom: 32px solid var(--yellow); }
-    .c-pill { width: 38px; height: 22px; border-radius: 999px; background: var(--green); align-self: center; }
-
-    .slide-footer {
-      position: absolute; bottom: 12px; left: 50px; right: 50px;
-      display: flex; justify-content: space-between; align-items: center;
-      font-size: 11.5px; color: var(--muted);
-      border-top: 1px solid rgba(218,220,224,0.6); padding-top: 6px;
-    }
-    .slide.dark .slide-footer { color: #9AA0A6; border-top-color: rgba(255,255,255,0.12); }
-    .slide.bg-blue .slide-footer, .slide.bg-red .slide-footer { color: rgba(255,255,255,0.88); border-top-color: rgba(255,255,255,0.22); }
-    .slide.bg-green .slide-footer, .slide.bg-yellow .slide-footer { color: rgba(32,33,36,0.82); border-top-color: rgba(32,33,36,0.18); }
-
-    .divider-center { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 820px; }
-    .divider-center h1 { font-size: clamp(34px, 4.2vw, 54px); margin-top: 10px; }
-    .divider-center p { font-size: clamp(15px, 1.55vw, 20px); margin-top: 14px; opacity: 0.93; line-height: 1.5; }
-
-    /* Interactive Question -> Answer Reveal */
-    .qa-box { display: flex; flex-direction: column; gap: 14px; flex: 1; justify-content: center; }
-    .qa-question {
-      background: var(--tint-blue); border: 1.5px solid #C6DAFC; border-radius: 16px;
-      padding: 18px 22px; font-family: var(--font-title); font-size: clamp(16px, 1.55vw, 21px);
-      font-weight: 600; color: var(--dark); line-height: 1.4;
-    }
-    .qa-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .qa-choice {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px 14px; font-size: 14px; color: #3C4043; line-height: 1.4;
-    }
-    .qa-answer {
-      display: none; background: var(--tint-green); border: 1.5px solid #A8DAB5;
-      border-left: 6px solid var(--green); border-radius: 14px; padding: 16px 20px;
-      font-size: clamp(13.5px, 1.18vw, 15.5px); line-height: 1.5; color: var(--dark);
-      animation: fadeSlide 0.2s ease;
-    }
-    .qa-answer.shown { display: block; }
-    .vis-a { display: none; }
-
-    .btn-ui {
-      background: var(--blue-text); color: white; border: none; border-radius: 10px;
-      padding: 8px 16px; font-family: var(--font-title); font-size: 13px; font-weight: 600;
-      cursor: pointer; width: fit-content; transition: opacity 0.15s;
-    }
-    .btn-ui:hover { opacity: 0.9; }
-    .btn-ui.outline { background: var(--white); color: var(--blue-text); border: 1.5px solid var(--blue-text); }
-    .btn-ui.green { background: #1E8E3E; color: white; }
-
-    .quiz-item { background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 14px 16px; display: flex; flex-direction: column; gap: 7px; }
-    .quiz-ans { display: none; background: var(--tint-green); border-left: 4px solid var(--green); padding: 8px 12px; border-radius: 0 8px 8px 0; font-size: 13px; line-height: 1.45; }
-    .quiz-ans.shown { display: block; }
-
-    .ref-list { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-    .ref-item {
-      display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start;
-      padding: 9px 12px; border-radius: 12px;
-      background: var(--surface); border: 1px solid var(--border);
-      text-decoration: none; color: inherit; user-select: text;
-      transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
-    }
-    .ref-item:hover {
-      border-color: var(--blue); background: var(--tint-blue);
-      transform: translateY(-1.5px); box-shadow: 0 4px 12px rgba(26,115,232,0.12);
-    }
-    .ref-item.featured { background: #FFFDF5; border: 1.5px solid var(--yellow); }
-    .ref-item.featured:hover { background: var(--tint-yellow); border-color: #E37400; }
-    .ref-num {
-      width: 26px; height: 26px; border-radius: 8px; margin-top: 1px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-title); font-size: 12px; font-weight: 700;
-      color: var(--white); background: var(--blue); flex-shrink: 0;
-    }
-    .ref-num.yellow { background: var(--yellow); color: var(--dark); }
-    .ref-num.green { background: var(--green); }
-    .ref-num.red { background: var(--red); }
-    .ref-content { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-    .ref-head { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .ref-title { font-family: var(--font-title); font-size: 12.6px; font-weight: 700; color: var(--dark); line-height: 1.28; }
-    .ref-tag {
-      font-family: var(--font-code); font-size: 9.8px; font-weight: 700;
-      padding: 2px 7px; border-radius: 999px; background: var(--tint-red); color: #C5221F;
-      white-space: nowrap; flex-shrink: 0;
-    }
-    .ref-tag.doc { background: var(--tint-blue); color: var(--blue-text); }
-    .ref-tag.code { background: var(--tint-green); color: #137333; }
-    .ref-tag.must { background: var(--yellow); color: var(--dark); }
-    .ref-desc { font-size: 11.4px; color: #3C4043; line-height: 1.38; }
-    .ref-url { font-family: var(--font-code); font-size: 9.8px; color: var(--blue-text); opacity: 0.9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-
-    /* Controls bar */
-    #controls {
-      flex-shrink: 0; display: flex; align-items: center; gap: 10px; z-index: 20;
-      background: #202124; color: #E8EAED; padding: 6px 14px; border-radius: 999px;
-      border: 1px solid #3C4043; font-size: 12.5px;
-    }
-    #page-jump {
-      width: 46px; background: #303134; color: #FFFFFF; border: 1px solid #5F6368;
-      border-radius: 7px; padding: 2px 5px; text-align: center;
-      font-family: var(--font-code); font-size: 12.5px; font-weight: 600;
-    }
-    #page-jump:focus { outline: none; border-color: var(--blue); }
-    :fullscreen #controls {
-      position: fixed; bottom: 10px; right: 16px; z-index: 90;
-      opacity: 0.35; transition: opacity 0.2s ease;
-    }
-    :fullscreen #controls:hover { opacity: 1; }
-    .ctrl-btn {
-      background: #303134; color: #E8EAED; border: 1px solid #5F6368;
-      border-radius: 999px; padding: 4px 12px; cursor: pointer; font-family: var(--font-title); font-size: 12px;
-      transition: background 0.15s ease, border-color 0.15s ease;
-    }
-    .ctrl-btn:hover { background: var(--blue); border-color: var(--blue); color: white; }
-    .ctrl-btn.timer-active { background: #C5221F; border-color: #EA4335; color: #FFFFFF; }
-    .ctrl-btn.timer-active:hover { background: #A50E0E; border-color: #EA4335; }
-
-    /* Persistent session timer inside #stage-wrap */
-    #session-timer {
-      position: absolute; top: 12px; right: 16px; z-index: 80;
-      display: none; align-items: center; gap: 8px;
-      background: rgba(32, 33, 36, 0.88); color: #FFFFFF;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 999px; padding: 5px 10px 5px 12px;
-      backdrop-filter: blur(8px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.24);
-      font-family: var(--font-code); font-size: 13px; font-weight: 600;
-      user-select: none;
-    }
-    #session-timer.active { display: inline-flex; }
-    #session-timer.overtime { border-color: rgba(251, 188, 4, 0.7); background: rgba(60, 24, 24, 0.92); }
-    .timer-dot {
-      width: 8px; height: 8px; border-radius: 50%; background: #34A853;
-      box-shadow: 0 0 0 3px rgba(52, 168, 83, 0.28);
-      animation: timerPulse 1.6s ease-in-out infinite;
-      flex-shrink: 0;
-    }
-    #session-timer.overtime .timer-dot { background: #FBBC04; box-shadow: 0 0 0 3px rgba(251, 188, 4, 0.3); }
-    @keyframes timerPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.55; transform: scale(0.85); }
-    }
-    .timer-end-mini {
-      background: rgba(234, 67, 53, 0.9); color: #FFFFFF; border: none;
-      border-radius: 999px; padding: 2px 8px; cursor: pointer;
-      font-family: var(--font-title); font-size: 10.5px; font-weight: 700;
-      transition: background 0.15s ease;
-    }
-    .timer-end-mini:hover { background: #C5221F; }
-
-    #notes-drawer {
-      position: fixed; right: 18px; bottom: 58px; width: min(440px, 90vw); max-height: 44vh;
-      background: #202124; color: #E8EAED; border: 1px solid #3C4043; border-radius: 14px;
-      padding: 16px; box-shadow: 0 18px 45px rgba(0,0,0,0.5); display: none;
-      flex-direction: column; gap: 8px; overflow-y: auto; z-index: 95; font-size: 13px; line-height: 1.52; user-select: text;
-    }
-    #notes-drawer.open { display: flex; }
-    #notes-drawer h4 { font-family: var(--font-title); color: var(--yellow); font-size: 14px; }
-
-    #grid-modal { position: fixed; inset: 0; background: rgba(17,19,23,0.95); z-index: 120; display: none; padding: 26px; overflow-y: auto; }
-    #grid-modal.open { display: block; }
-    .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; max-width: 1300px; margin: 16px auto; }
-    .g-item { background: #292A2D; color: #E8EAED; border: 1px solid #3C4043; border-radius: 11px; padding: 12px; cursor: pointer; }
-    .g-item:hover { border-color: var(--blue); background: #303134; }
-    .g-num { font-family: var(--font-code); font-size: 11.5px; color: var(--yellow); }
-    .g-ttl { font-family: var(--font-title); font-size: 13px; font-weight: 600; margin-top: 3px; }
-
-    @media print {
-      @page { size: 13.333in 7.5in; margin: 0; }
-      body { background: white; height: auto; overflow: visible; display: block; padding: 0; gap: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-      #progress-bar, #controls, #notes-drawer, #grid-modal, #session-timer { display: none !important; }
-      #stage-wrap { width: 13.333in; height: auto; box-shadow: none; border-radius: 0; overflow: visible; }
-      .slide { position: relative !important; display: flex !important; width: 13.333in; height: 7.5in; page-break-after: always; break-after: page; animation: none !important; opacity: 1 !important; }
-      .slide:last-child { page-break-after: auto; break-after: auto; }
-      .qa-answer, .quiz-ans { display: block !important; animation: none !important; opacity: 1 !important; }
-      .vis-q { display: none !important; }
-      .vis-a { display: inline !important; }
-      .btn-ui { display: none !important; }
-    }
-
-
+EXTRA_CSS = """
     .sim-bar { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
     .sim-slider-row { display: grid; grid-template-columns: 118px 1fr 56px; gap: 8px; align-items: center; font-size: 12.5px; }
     .sim-slider-row input[type="range"] { width: 100%; accent-color: var(--blue-text); cursor: pointer; }
@@ -407,19 +50,60 @@
     .marathon-bar { display: grid; grid-template-columns: auto repeat(5, 1fr); gap: 8px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: 13px; padding: 8px 12px; margin-top: 8px; }
     .marathon-step { display: flex; align-items: center; gap: 6px; background: var(--white); border: 1px solid var(--border); border-radius: 9px; padding: 5px 8px; font-size: 10.8px; font-weight: 600; color: var(--dark); text-decoration: none; }
     .marathon-dot { width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-title); font-size: 10px; font-weight: 700; color: #FFF; flex-shrink: 0; }
-
-  </style>
-</head>
-<body>
-  <div id="progress-bar"></div>
-  <div id="stage-wrap">
-    <div id="session-timer" role="timer" aria-live="off" title="Timer sesi berjalan (tidak ter-reset saat pindah slide/refresh)">
-      <span class="timer-dot"></span>
-      <span id="session-timer-val">00:00</span>
-      <button type="button" class="timer-end-mini" onclick="endSessionTimer()" title="Klik untuk mengakhiri timer">End</button>
-    </div>
+"""
 
 
+def _qa_slide(
+    *,
+    qa_id: str,
+    qa_num: int,
+    kicker: str,
+    title_html: str,
+    question_html: str,
+    choices: list[str],
+    answer_html: str,
+    vis_q_html: str,
+    vis_a_html: str,
+    notes: str,
+) -> str:
+    choices_html = "\n            ".join(f'<div class="qa-choice">{c}</div>' for c in choices)
+    return f"""
+    <section class="slide" data-title="Tanya-Jawab #{qa_num}" data-notes="{notes}">
+      <div class="kicker">{kicker}</div>
+      <h2>{title_html}</h2>
+      <div class="split-60-40" style="align-items:stretch;">
+        <div class="qa-box" style="justify-content:center; gap:12px;">
+          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">{question_html}</div>
+          <div style="display:flex; flex-direction:column; gap:8px;">
+            {choices_html}
+          </div>
+          <button class="btn-ui" onclick="toggleQA('{qa_id}', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
+          <div id="{qa_id}" class="qa-answer" style="padding:12px 16px; font-size:13.5px;">{answer_html}</div>
+        </div>
+        <div id="{qa_id}-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
+          <div class="card-top-bar bar-blue"></div>
+          <div class="vis-q" style="width:100%;">{vis_q_html}</div>
+          <div class="vis-a" style="width:100%;">{vis_a_html}</div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+"""
+
+
+def build_slides_html(data: dict) -> str:
+    total_imgs = data["total_images"]
+    polos_n = data["polos_count"]
+    ramai_n = data["ramai_count"]
+    sessions_n = data["sessions_count"]
+
+    s: list[str] = []
+
+    # =========================================================================
+    # PEMBUKA & TRANSISI MULUS DARI P01 (SLIDE 01–05 · 5.5 menit)
+    # =========================================================================
+    s.append(
+        f"""
     <!-- 01: COVER -->
     <section class="slide active" data-title="Cover — Teori Neural Network (ANN)" data-notes="Alokasi waktu: 1 menit. Selamat datang di P02! Di P01 kita sudah berhasil mengubah foto menjadi angka 0 sampai 1. Hari ini kita pelan-pelan membuka isi otak AI (Neural Network) memakai foto asli 5 karakter Disney Frozen!" style="background: radial-gradient(circle at 82% 46%, rgba(234,67,53,0.12) 0%, rgba(66,133,244,0.10) 35%, rgba(251,188,4,0.08) 60%, #FFFFFF 100%); justify-content: space-between;">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
@@ -506,26 +190,28 @@
         <div class="step-item"><div class="step-num yellow">04</div><div><div class="step-title">Kenapa Foto Frozen Tidak Cukup Pakai MLP Biasa?</div><div class="step-desc">Dampak <em>Flatten</em> pada foto <strong>Elsa</strong> 2D &amp; ledakan 19,2 juta bobot — alasan logis menuju <strong>CNN (P03)</strong>!</div></div></div>
         <div class="step-item"><div class="step-num">05</div><div><div class="step-title">Praktik Santai di Notebook, Mini-Challenge &amp; Kuis</div><div class="step-desc">6 langkah kode pendek (5–15 baris/sel), menebak output Softmax tanpa kalkulator, kamus istilah, dan kuis 5 soal.</div></div></div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>02 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    s.append(
+        make_agenda_slide(
+            footer_label=FOOTER,
+            notes="Alokasi waktu: 1 menit. Pembagian 120 menit persis seperti P01 agar ritme belajar nyaman dan ada jeda istirahat sebelum praktik kode.",
+            blocks=[
+                ("blue", "00–10 · Recap & Kenalan Frozen", "Menyambung angka piksel P01 dan mengenal 5 karakter proyek akhir Disney Frozen."),
+                ("red", "10–40 · Teori Santai + 6 Simulator", "Belajar pelan lewat analogi sehari-hari & 6 simulator interaktif yang bisa langsung dicoba."),
+                ("yellow", "40–45 · Istirahat Singkat", "Jeda 5 menit untuk minum air & meregangkan mata sebelum menyentuh kode."),
+                ("green", "45–95 · Hands-On Notebook", "6 langkah kode super pendek: 1 neuron NumPy, Softmax, MLP Keras, & uji foto Frozen."),
+                ("blue", "95–110 · Mini-Challenge", "Menebak peluang Softmax tanpa kalkulator & diskusi intuisi bersama."),
+                ("red", "110–120 · Kuis & Penutup", "Kuis interaktif 5 soal, rangkuman 3 poin inti, dan preview P03 (CNN)."),
+            ],
+        )
+    )
 
-    <section class="slide" data-title="Alur Sesi 120 Menit" data-notes="Alokasi waktu: 1 menit. Pembagian 120 menit persis seperti P01 agar ritme belajar nyaman dan ada jeda istirahat sebelum praktik kode.">
-      <div class="kicker">AGENDA · 120 MENIT</div>
-      <h2>Alur Sesi <span class="hl-blue">Hari Ini</span></h2>
-      <p class="subtitle">Belajar pelan-pelan, penuh ilustrasi visual, dan tanya-jawab interaktif yang tuntas di kelas.</p>
-      <div class="grid-3">
-        <div class="card tint-blue"><div class="card-top-bar bar-blue"></div><div class="card-title">00–10 · Recap & Kenalan Frozen</div><div class="card-body">Menyambung angka piksel P01 dan mengenal 5 karakter proyek akhir Disney Frozen.</div></div>
-        <div class="card tint-red"><div class="card-top-bar bar-red"></div><div class="card-title">10–40 · Teori Santai + 6 Simulator</div><div class="card-body">Belajar pelan lewat analogi sehari-hari & 6 simulator interaktif yang bisa langsung dicoba.</div></div>
-        <div class="card tint-yellow"><div class="card-top-bar bar-yellow"></div><div class="card-title">40–45 · Istirahat Singkat</div><div class="card-body">Jeda 5 menit untuk minum air & meregangkan mata sebelum menyentuh kode.</div></div>
-        <div class="card tint-green"><div class="card-top-bar bar-green"></div><div class="card-title">45–95 · Hands-On Notebook</div><div class="card-body">6 langkah kode super pendek: 1 neuron NumPy, Softmax, MLP Keras, & uji foto Frozen.</div></div>
-        <div class="card tint-blue"><div class="card-top-bar bar-blue"></div><div class="card-title">95–110 · Mini-Challenge</div><div class="card-body">Menebak peluang Softmax tanpa kalkulator & diskusi intuisi bersama.</div></div>
-        <div class="card tint-red"><div class="card-top-bar bar-red"></div><div class="card-title">110–120 · Kuis & Penutup</div><div class="card-body">Kuis interaktif 5 soal, rangkuman 3 poin inti, dan preview P03 (CNN).</div></div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>03 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 04: TUJUAN BELAJAR (PADAT & KONKRET) -->
     <section class="slide" data-title="Apa yang Akan Kita Kuasai?" data-notes="Alokasi waktu: 1 menit. Tiga kemampuan konkret yang akan kamu kuasai setelah sesi ini — semuanya langsung bisa dicek di akhir kelas.">
       <div class="kicker">TUJUAN BELAJAR</div>
@@ -577,7 +263,7 @@
           <div class="callout green"><strong>Hasil:</strong> Siap melatih model pertama di Keras &amp; lanjut ke P03!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>04 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 05: RECAP P01 & PERKENALAN DATASET PROYEK NYATA FROZEN (DENGAN KPI STRIP!) -->
@@ -590,10 +276,10 @@
             <img src="assets/P02/01_frozen_gallery_5classes.png" alt="Galeri 5 Karakter Disney Frozen Polos vs Ramai" />
           </div>
           <div class="kpi-strip">
-            <div class="kpi-mini"><div class="k-num">143</div><div class="k-lbl">Foto Asli (v1)</div></div>
+            <div class="kpi-mini"><div class="k-num">{total_imgs}</div><div class="k-lbl">Foto Asli (v1)</div></div>
             <div class="kpi-mini"><div class="k-num" style="color:#137333;">5 Kelas</div><div class="k-lbl">Anna s.d. Sven</div></div>
-            <div class="kpi-mini"><div class="k-num" style="color:#EA4335;">102 / 41</div><div class="k-lbl">Polos vs Ramai</div></div>
-            <div class="kpi-mini"><div class="k-num" style="color:#B06000;">7 Sesi</div><div class="k-lbl">Klaster Foto</div></div>
+            <div class="kpi-mini"><div class="k-num" style="color:#EA4335;">{polos_n} / {ramai_n}</div><div class="k-lbl">Polos vs Ramai</div></div>
+            <div class="kpi-mini"><div class="k-num" style="color:#B06000;">{sessions_n} Sesi</div><div class="k-lbl">Klaster Foto</div></div>
           </div>
         </div>
         <div class="card surface" style="gap:9px;">
@@ -606,23 +292,31 @@
               <li><strong>Misi P02 Hari Ini:</strong> Membuka <strong>&ldquo;Kotak Hitam Otak AI&rdquo;</strong> — melihat bagaimana angka piksel foto <strong>Elsa</strong> diproses sampai keluar prediksi <strong>&ldquo;85% Elsa&rdquo;</strong>!</li>
             </ul>
           </div>
-          <div class="callout"><strong>Catatan:</strong> Dataset <code>v1</code> berisi 143 foto dan bisa terus ditambah di versi berikutnya — semua kode kita membacanya secara otomatis!</div>
+          <div class="callout"><strong>Catatan:</strong> Dataset <code>v1</code> berisi {total_imgs} foto dan bisa terus ditambah di versi berikutnya — semua kode kita membacanya secara otomatis!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>05 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    # =========================================================================
+    # BAB 1: DARI CARA MANUSIA MENEBAK KE 1 NEURON & LAYER (SLIDE 06–16 · 11.5m)
+    # =========================================================================
+    s.append(
+        make_divider_slide(
+            bg_class="bg-blue",
+            kicker="BAB 1 · ANATOMI NEURON & LAYER",
+            title="Bagaimana <em>Neuron</em> &amp; <em>Layer</em> Menilai Foto?",
+            description="Mulai dari cara manusia mengecek ciri foto tanpa rumus, lalu menerjemahkannya secara sederhana menjadi 1 Neuron hingga banyak Layer.",
+            footer_label=FOOTER,
+            data_title="Bab 1: Cara Neuron & Layer Menilai Foto",
+            notes="Alokasi waktu: 0.5 menit. Masuk Bab 1! Kita mulai tanpa rumus sama sekali — dari cara kita sendiri mengenali karakter Frozen lalu langsung menghubungkannya ke konsep Neuron dan Layer.",
+        )
+    )
 
-    <section class="slide bg-blue" data-title="Bab 1: Cara Neuron &amp; Layer Menilai Foto" data-notes="Alokasi waktu: 0.5 menit. Masuk Bab 1! Kita mulai tanpa rumus sama sekali — dari cara kita sendiri mengenali karakter Frozen lalu langsung menghubungkannya ke konsep Neuron dan Layer.">
-      <div class="divider-center">
-        <div class="kicker">BAB 1 · ANATOMI NEURON & LAYER</div>
-        <h1>Bagaimana <em>Neuron</em> &amp; <em>Layer</em> Menilai Foto?</h1>
-        <p>Mulai dari cara manusia mengecek ciri foto tanpa rumus, lalu menerjemahkannya secara sederhana menjadi 1 Neuron hingga banyak Layer.</p>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>06 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 07: STEP 1 (ZERO MATH) — BAGAIMANA MANUSIA MENEBAK ELSA? -->
     <section class="slide" data-title="Step 1: Bagaimana Kamu Sendiri Menebak Foto Elsa?" data-notes="Alokasi waktu: 1 menit. Mulai dari nol matematika! Tanya peserta: bagaimana otakmu langsung tahu foto ini Elsa? Pasti karena kamu mengumpulkan ciri visual (gaun biru, rambut pirang, tidak bertanduk) lalu menilai seberapa kuat tiap ciri.">
       <div class="kicker">BAB 1 · STEP 1 (NOL RUMUS!)</div>
@@ -645,7 +339,7 @@
           <div class="callout green"><strong>Intinya:</strong> Jika total skor ciri-cirinya <strong>melewati batas minimum</strong> → kita menyimpulkan <strong>&ldquo;Ini ELSA!&rdquo;</strong>. Cara kerja 1 <strong>Neuron</strong> di Neural Network persis seperti ini!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>07 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 08: STEP 2 — TERJEMAHAN KE ISTILAH NEURON AI -->
@@ -675,7 +369,7 @@
         </div>
       </div>
       <div class="callout" style="margin-top:10px;"><strong>Ingat Sederhananya:</strong> 1 <strong>Neuron</strong> bukanlah sesuatu yang rumit — ia hanyalah <strong>unit hitung kecil</strong> yang menghitung <code>input × weight + bias</code> lalu melewatkannya ke fungsi aktivasi.</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>08 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 09: STEP 3 — CONTOH HITUNG PELAN PAKAI ANGKA BULAT! -->
@@ -719,7 +413,7 @@
           <div class="callout red" style="font-size:13.4px;"><strong>Total Skor <code>z</code> = 0 + 0 − 5 − 3 = <code>-8</code> (≤ 0) → Neuron TIDAK AKTIF! &ldquo;Bukan Elsa&rdquo;</strong></div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>09 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 10: STEP 4 — ANATOMI RESMI 1 NEURON (SVG + RUMUS) -->
@@ -783,7 +477,7 @@
           <div class="callout yellow"><strong>Siap Mencoba?</strong> Di slide berikutnya kita geser langsung bobot <code>w</code> &amp; <code>b</code> pada foto asli Elsa, Anna, dan Olaf!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>10 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 11: STEP 5 — SIMULATOR #1 (KALKULATOR 1 NEURON + BAR KONTRIBUSI LIVE!) -->
@@ -843,7 +537,7 @@
           <div id="n1-status" class="callout green" style="padding:8px 12px; font-size:12.8px;">Neuron AKTIF!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>11 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 12: STEP 6 — MENGAPA BUTUH BIAS? (DENGAN SVG VISUAL KONKRET — ZERO OVERLAP!) -->
@@ -891,7 +585,7 @@
           </div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>12 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 13: STEP 7 — DARI 1 NEURON KE BANYAK LAYER (MLP) -->
@@ -947,7 +641,7 @@
           <div class="callout green">Inilah alasan disebut <strong><em>Deep</em> Learning</strong> — karena memiliki banyak <em>Hidden Layer</em> yang saling bertumpuk!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>13 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 14: STEP 8 — FORWARD PASS LENGKAP (ZERO WHITESPACE!) -->
@@ -998,68 +692,66 @@ Sven     :  0.9%</pre>
         </div>
       </div>
       <div class="callout" style="margin-top:10px;"><strong>Pengingat:</strong> Aliran maju dari Tahap 1 → 4 ini disebut <strong><em>Forward Pass</em></strong>. Nanti di Bab 3 kita lihat bagaimana AI belajar kalau tebakan Tahap 4 ini meleset!</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>14 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    s.append(
+        _qa_slide(
+            qa_id="qa1",
+            qa_num=1,
+            kicker="TANYA-JAWAB #1 · LATIHAN HITUNG TANGAN",
+            title_html='Coba Hitung Sendiri: <span class="hl-blue">Berapa Skor <code>z</code> Neuron Ini?</span>',
+            question_html="Sebuah neuron menerima 2 input <code>x = [0.8, 0.2]</code> dengan bobot <code>w = [2.0, -1.0]</code> dan bias <code>b = 0.5</code>. Berapakah nilai skor mentah <code>z</code>?",
+            choices=[
+                "<strong>A.</strong> <code>z = 1.4</code>",
+                "<strong>B.</strong> <code>z = 1.9</code>",
+                "<strong>C.</strong> <code>z = 2.3</code>",
+            ],
+            answer_html="<strong>Jawaban: B — Tepatnya <code>z = 1.9</code>!</strong><br/>Langkah: <code>(0.8 × 2.0) + (0.2 × -1.0) + 0.5 = 1.6 − 0.2 + 0.5 = 1.9</code>. Karena positif, jika masuk <code>ReLU</code> neuron langsung menyala!",
+            vis_q_html='<span class="pill blue">PETUNJUK RUMUS</span><div class="formula-box" style="margin:12px 0; font-size:14px;">z = (x₁ · w₁) + (x₂ · w₂) + b</div><div class="mini-box">Hitung pelan-pelan:<br/>1) <code>0.8 × 2.0 = ?</code><br/>2) <code>0.2 × (-1.0) = ?</code><br/>3) Tambahkan <code>+ 0.5</code>!</div>',
+            vis_a_html='<span class="pill green">RINCIAN HITUNGAN</span><div class="mini-box" style="text-align:left; font-family:var(--font-code); font-size:12.8px; margin-top:10px;">1) 0.8 × 2.0  = +1.6<br/>2) 0.2 × -1.0 = -0.2<br/>3) Bias b     = +0.5<br/>--------------------<br/><strong>Total skor z  = +1.9 ★</strong></div><div class="callout green" style="margin-top:8px;">Skor positif → Neuron AKTIF!</div>',
+            notes="Alokasi waktu: 1 menit. Beri waktu 30 detik agar peserta menghitung 1 neuron dengan tangan memakai petunjuk di kartu kanan, lalu klik Reveal.",
+        )
+    )
 
-    <section class="slide" data-title="Tanya-Jawab #1" data-notes="Alokasi waktu: 1 menit. Beri waktu 30 detik agar peserta menghitung 1 neuron dengan tangan memakai petunjuk di kartu kanan, lalu klik Reveal.">
-      <div class="kicker">TANYA-JAWAB #1 · LATIHAN HITUNG TANGAN</div>
-      <h2>Coba Hitung Sendiri: <span class="hl-blue">Berapa Skor <code>z</code> Neuron Ini?</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:12px;">
-          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">Sebuah neuron menerima 2 input <code>x = [0.8, 0.2]</code> dengan bobot <code>w = [2.0, -1.0]</code> dan bias <code>b = 0.5</code>. Berapakah nilai skor mentah <code>z</code>?</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="qa-choice"><strong>A.</strong> <code>z = 1.4</code></div>
-            <div class="qa-choice"><strong>B.</strong> <code>z = 1.9</code></div>
-            <div class="qa-choice"><strong>C.</strong> <code>z = 2.3</code></div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa1', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa1" class="qa-answer" style="padding:12px 16px; font-size:13.5px;"><strong>Jawaban: B — Tepatnya <code>z = 1.9</code>!</strong><br/>Langkah: <code>(0.8 × 2.0) + (0.2 × -1.0) + 0.5 = 1.6 − 0.2 + 0.5 = 1.9</code>. Karena positif, jika masuk <code>ReLU</code> neuron langsung menyala!</div>
-        </div>
-        <div id="qa1-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><span class="pill blue">PETUNJUK RUMUS</span><div class="formula-box" style="margin:12px 0; font-size:14px;">z = (x₁ · w₁) + (x₂ · w₂) + b</div><div class="mini-box">Hitung pelan-pelan:<br/>1) <code>0.8 × 2.0 = ?</code><br/>2) <code>0.2 × (-1.0) = ?</code><br/>3) Tambahkan <code>+ 0.5</code>!</div></div>
-          <div class="vis-a" style="width:100%;"><span class="pill green">RINCIAN HITUNGAN</span><div class="mini-box" style="text-align:left; font-family:var(--font-code); font-size:12.8px; margin-top:10px;">1) 0.8 × 2.0  = +1.6<br/>2) 0.2 × -1.0 = -0.2<br/>3) Bias b     = +0.5<br/>--------------------<br/><strong>Total skor z  = +1.9 ★</strong></div><div class="callout green" style="margin-top:8px;">Skor positif → Neuron AKTIF!</div></div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>15 / 59</span></div>
-    </section>
+    s.append(
+        _qa_slide(
+            qa_id="qa2",
+            qa_num=2,
+            kicker="TANYA-JAWAB #2 · KONSEP BIAS",
+            title_html='Cek Pemahaman: <span class="hl-yellow">Apa Fungsi Bias (<code>b</code>)?</span>',
+            question_html="Mengapa setiap neuron menambahkan angka <code>bias (b)</code> setelah menghitung <code>input × weight</code>?",
+            choices=[
+                "<strong>A.</strong> Agar jumlah file foto di folder bertambah banyak",
+                "<strong>B.</strong> Untuk menggeser ambang nyala neuron agar tidak terkunci di titik nol <code>(0, 0)</code>",
+                "<strong>C.</strong> Agar semua foto berubah menjadi hitam-putih",
+            ],
+            answer_html="<strong>Jawaban: B — Menggeser ambang nyala neuron!</strong><br/>Dengan <code>bias</code>, neuron bisa mengatur sendiri seberapa ketat/mudahnya ia menyala terhadap sebuah pola (persis seperti standar kelulusan).",
+            vis_q_html='<span class="pill yellow">INGAT ANALOGI</span><div class="big-num" style="color:#B06000; margin:12px 0;">y = m·x + c</div><div class="mini-box">Di rumus garis sederhana, <code>w</code> mengatur kemiringan, sedangkan <strong><code>b</code></strong> berperan sebagai <code>c</code> yang menggeser posisi garis!</div>',
+            vis_a_html='<span class="pill green">TEPAT SEKALI!</span><div class="big-num" style="color:#137333; margin:10px 0;">z = w·x + b</div><div class="mini-box"><strong>Bias negatif besar</strong> → neuron lebih ketat.<br/><strong>Bias positif</strong> → neuron lebih mudah aktif.<br/>Tanpa bias, input 0 selalu menghasilkan 0!</div>',
+            notes="Alokasi waktu: 1 menit. Pastikan peserta benar-benar paham peran bias sebelum lanjut ke Bab 2 (Fungsi Aktivasi & Softmax).",
+        )
+    )
 
+    # =========================================================================
+    # BAB 2: FUNGSI AKTIVASI (ReLU) & SOFTMAX (SLIDE 17–26 · 11.5 menit)
+    # =========================================================================
+    s.append(
+        make_divider_slide(
+            bg_class="bg-red",
+            kicker="BAB 2 · FUNGSI AKTIVASI & SOFTMAX",
+            title="Fungsi Aktivasi (<code>ReLU</code>) &amp; Probabilitas <code>Softmax</code>",
+            description="Mengenal 2 komponen wajib agar jaringan bisa memahami pola non-linear dan mengeluarkan prediksi dalam bentuk persentase 0–100%.",
+            footer_label=FOOTER,
+            data_title="Bab 2: Fungsi Aktivasi & Softmax",
+            notes="Alokasi waktu: 0.5 menit. Masuk Bab 2! Kita pelajari dulu Fungsi Aktivasi ReLU secara sederhana, lalu bagaimana Softmax menghasilkan probabilitas 100%.",
+        )
+    )
 
-    <section class="slide" data-title="Tanya-Jawab #2" data-notes="Alokasi waktu: 1 menit. Pastikan peserta benar-benar paham peran bias sebelum lanjut ke Bab 2 (Fungsi Aktivasi & Softmax).">
-      <div class="kicker">TANYA-JAWAB #2 · KONSEP BIAS</div>
-      <h2>Cek Pemahaman: <span class="hl-yellow">Apa Fungsi Bias (<code>b</code>)?</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:12px;">
-          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">Mengapa setiap neuron menambahkan angka <code>bias (b)</code> setelah menghitung <code>input × weight</code>?</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="qa-choice"><strong>A.</strong> Agar jumlah file foto di folder bertambah banyak</div>
-            <div class="qa-choice"><strong>B.</strong> Untuk menggeser ambang nyala neuron agar tidak terkunci di titik nol <code>(0, 0)</code></div>
-            <div class="qa-choice"><strong>C.</strong> Agar semua foto berubah menjadi hitam-putih</div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa2', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa2" class="qa-answer" style="padding:12px 16px; font-size:13.5px;"><strong>Jawaban: B — Menggeser ambang nyala neuron!</strong><br/>Dengan <code>bias</code>, neuron bisa mengatur sendiri seberapa ketat/mudahnya ia menyala terhadap sebuah pola (persis seperti standar kelulusan).</div>
-        </div>
-        <div id="qa2-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><span class="pill yellow">INGAT ANALOGI</span><div class="big-num" style="color:#B06000; margin:12px 0;">y = m·x + c</div><div class="mini-box">Di rumus garis sederhana, <code>w</code> mengatur kemiringan, sedangkan <strong><code>b</code></strong> berperan sebagai <code>c</code> yang menggeser posisi garis!</div></div>
-          <div class="vis-a" style="width:100%;"><span class="pill green">TEPAT SEKALI!</span><div class="big-num" style="color:#137333; margin:10px 0;">z = w·x + b</div><div class="mini-box"><strong>Bias negatif besar</strong> → neuron lebih ketat.<br/><strong>Bias positif</strong> → neuron lebih mudah aktif.<br/>Tanpa bias, input 0 selalu menghasilkan 0!</div></div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>16 / 59</span></div>
-    </section>
-
-
-    <section class="slide bg-red" data-title="Bab 2: Fungsi Aktivasi &amp; Softmax" data-notes="Alokasi waktu: 0.5 menit. Masuk Bab 2! Kita pelajari dulu Fungsi Aktivasi ReLU secara sederhana, lalu bagaimana Softmax menghasilkan probabilitas 100%.">
-      <div class="divider-center">
-        <div class="kicker">BAB 2 · FUNGSI AKTIVASI & SOFTMAX</div>
-        <h1>Fungsi Aktivasi (<code>ReLU</code>) &amp; Probabilitas <code>Softmax</code></h1>
-        <p>Mengenal 2 komponen wajib agar jaringan bisa memahami pola non-linear dan mengeluarkan prediksi dalam bentuk persentase 0–100%.</p>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>17 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 18: STEP 1 (ZERO MATH) — MENGENAL ReLU DENGAN SEDERHANA -->
     <section class="slide" data-title="Step 1: Mengenal Fungsi Aktivasi ReLU Secara Sederhana" data-notes="Alokasi waktu: 1 menit. Jelaskan ReLU pakai bahasa sehari-hari dulu sebelum menyebut istilah non-linearitas! Aturannya cuma 1 kalimat: kalau negatif ubah jadi 0, kalau positif biarkan tetap.">
       <div class="kicker">BAB 2 · STEP 1 (ATURAN PALING SEDERHANA DI DEEP LEARNING)</div>
@@ -1097,7 +789,7 @@ Sven     :  0.9%</pre>
           <div class="callout red"><strong>Sederhananya:</strong> Tanpa <code>ReLU</code>, model hanya bisa menarik 1 garis lurus; dengan <code>ReLU</code>, model bisa melipat batas mengikuti bentuk objek!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>18 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 19: STEP 2 — BUKTI VISUAL GARIS LURUS VS MELENGKUNG -->
@@ -1120,7 +812,7 @@ Sven     :  0.9%</pre>
           <div class="mini-box" style="background:var(--tint-green); border-color:#A8DAB5;"><strong>Intinya:</strong> <em>Fungsi Aktivasi Non-Linear</em> berarti fungsi yang membuat batas keputusan model <strong>bisa melengkung mengikuti pola nyata</strong>, tidak kaku seperti 1 garis lurus.</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>19 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 20: STEP 3 — 3 FUNGSI AKTIVASI POPULER (ReLU, Sigmoid, Tanh) -->
@@ -1139,7 +831,7 @@ Sven     :  0.9%</pre>
         </tbody>
       </table>
       <div class="callout" style="margin-top:8px; padding:7px 12px; font-size:12.6px;"><strong>Tips Awam:</strong> Kamu tidak perlu menghafal rumus <code>e⁻ᶻ</code> — cukup ingat <strong><code>ReLU</code> untuk tengah jaringan</strong> dan <strong><code>Sigmoid/Softmax</code> untuk ujung output</strong>!</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>20 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 21: STEP 4 — SIMULATOR #2 (LABORATORIUM AKTIVASI) -->
@@ -1173,7 +865,7 @@ Sven     :  0.9%</pre>
           <div id="act-note" class="callout">ReLU aktif!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>21 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 22: STEP 5 — KENAPA RELU RAJA HIDDEN LAYER? -->
@@ -1200,7 +892,7 @@ Sven     :  0.9%</pre>
           <div class="mini-box"><strong>Dampak:</strong> Model <strong>MobileNetV2</strong> di P04–P08 juga memakai versi ReLU (<code>ReLU6</code>)!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>22 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 23: STEP 6 — MENGENAL SOFTMAX (PROBABILITAS 100%) -->
@@ -1231,7 +923,7 @@ Sven     :  0.9%</pre>
           <div class="callout green"><strong>Di Keras:</strong> Cukup tulis <code>Dense(5, activation="softmax")</code> di baris paling terakhir model!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>23 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 24: STEP 7 — SIMULATOR #3 (SIMULATOR SOFTMAX + KOLOM e^z LIVE!) -->
@@ -1271,7 +963,7 @@ Sven     :  0.9%</pre>
           <div id="sm-winner" class="callout green" style="padding:8px 12px; font-size:12.6px;">Prediksi AI: ELSA!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>24 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 25: STEP 8 — SIGMOID VS SOFTMAX (DENGAN FOTO CONTOH NYATA!) -->
@@ -1314,44 +1006,47 @@ Sven     :  0.9%</pre>
           <div class="formula-box" style="font-size:11.8px; border-color:#A8DAB5;">Dense(5, "softmax") + sparse_categorical_crossentropy</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>25 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    s.append(
+        _qa_slide(
+            qa_id="qa3",
+            qa_num=3,
+            kicker="TANYA-JAWAB #3 · SOFTMAX MULTI-KELAS",
+            title_html='Cek Pemahaman: <span class="hl-green">Kenapa Softmax, Bukan ReLU, di Output Layer?</span>',
+            question_html="Untuk menebak 5 karakter Disney Frozen, mengapa kita memakai <strong>Softmax</strong> di lapisan paling akhir dan bukan <code>ReLU</code>?",
+            choices=[
+                "<strong>A.</strong> Karena ReLU tidak bisa mengeluarkan angka positif",
+                "<strong>B.</strong> Karena Softmax mengubah 5 skor mentah menjadi peluang <code>0–100%</code> yang totalnya tepat <code>100%</code>",
+                "<strong>C.</strong> Karena Softmax otomatis memperbesar foto jadi 224×224",
+            ],
+            answer_html="<strong>Jawaban: B — Menghasilkan peluang 0–100% berjumlah 100%!</strong><br/><code>ReLU</code> bisa mengeluarkan angka tak terbatas (mis. <code>50</code> dan <code>120</code>) sehingga tidak terbaca sebagai peluang. <code>Softmax</code> mengubah 5 skor mentah menjadi probabilitas yang jumlahnya tepat 100%.",
+            vis_q_html='<span class="pill red">BANDINGKAN OUTPUT</span><div class="mini-box" style="text-align:left; font-family:var(--font-code); font-size:12px; margin-top:10px;">ReLU    : [0.8, 3.2, 0.0, 0.2, 0.0]<br/>Total   : 4.2 (bukan persen!)<br/><br/>Softmax : [8%, 85%, 2%, 4%, 1%]<br/>Total   : ???</div>',
+            vis_a_html='<span class="pill green">TOTAL PAS 100%!</span><div class="big-num" style="color:#137333; margin:10px 0;">100.0%</div><div class="mini-box">Setiap karakter mendapat porsi peluang jelas antara <code>0%</code> s.d. <code>100%</code> dan total kelimanya selalu tepat <code>1.0</code>!</div>',
+            notes="Alokasi waktu: 1.5 menit. Minta peserta menebak dari kotak perbandingan kanan, lalu klik Reveal sebelum masuk Bab 3.",
+        )
+    )
 
-    <section class="slide" data-title="Tanya-Jawab #3" data-notes="Alokasi waktu: 1.5 menit. Minta peserta menebak dari kotak perbandingan kanan, lalu klik Reveal sebelum masuk Bab 3.">
-      <div class="kicker">TANYA-JAWAB #3 · SOFTMAX MULTI-KELAS</div>
-      <h2>Cek Pemahaman: <span class="hl-green">Kenapa Softmax, Bukan ReLU, di Output Layer?</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:12px;">
-          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">Untuk menebak 5 karakter Disney Frozen, mengapa kita memakai <strong>Softmax</strong> di lapisan paling akhir dan bukan <code>ReLU</code>?</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="qa-choice"><strong>A.</strong> Karena ReLU tidak bisa mengeluarkan angka positif</div>
-            <div class="qa-choice"><strong>B.</strong> Karena Softmax mengubah 5 skor mentah menjadi peluang <code>0–100%</code> yang totalnya tepat <code>100%</code></div>
-            <div class="qa-choice"><strong>C.</strong> Karena Softmax otomatis memperbesar foto jadi 224×224</div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa3', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa3" class="qa-answer" style="padding:12px 16px; font-size:13.5px;"><strong>Jawaban: B — Menghasilkan peluang 0–100% berjumlah 100%!</strong><br/><code>ReLU</code> bisa mengeluarkan angka tak terbatas (mis. <code>50</code> dan <code>120</code>) sehingga tidak terbaca sebagai peluang. <code>Softmax</code> mengubah 5 skor mentah menjadi probabilitas yang jumlahnya tepat 100%.</div>
-        </div>
-        <div id="qa3-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><span class="pill red">BANDINGKAN OUTPUT</span><div class="mini-box" style="text-align:left; font-family:var(--font-code); font-size:12px; margin-top:10px;">ReLU    : [0.8, 3.2, 0.0, 0.2, 0.0]<br/>Total   : 4.2 (bukan persen!)<br/><br/>Softmax : [8%, 85%, 2%, 4%, 1%]<br/>Total   : ???</div></div>
-          <div class="vis-a" style="width:100%;"><span class="pill green">TOTAL PAS 100%!</span><div class="big-num" style="color:#137333; margin:10px 0;">100.0%</div><div class="mini-box">Setiap karakter mendapat porsi peluang jelas antara <code>0%</code> s.d. <code>100%</code> dan total kelimanya selalu tepat <code>1.0</code>!</div></div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>26 / 59</span></div>
-    </section>
+    # =========================================================================
+    # BAB 3: BAGAIMANA AI BELAJAR DARI KESALAHAN? (SLIDE 27–38 · 13.0 menit)
+    # =========================================================================
+    s.append(
+        make_divider_slide(
+            bg_class="bg-green",
+            kicker="BAB 3 · PROSES TRAINING MODEL",
+            title="Bagaimana Model Belajar dari Kesalahan?",
+            description="Mengikuti perjalanan 1 foto Elsa dari bobot acak awal hingga model memperbaiki bobotnya sendiri lewat Loss, Gradient Descent, dan Backpropagation.",
+            footer_label=FOOTER,
+            data_title="Bab 3: Proses Training (Loss, Gradient Descent & Backprop)",
+            notes="Alokasi waktu: 0.5 menit. Masuk Bab 3! Ini bagian inti Deep Learning — kita urai langkah demi langkah bagaimana bobot model berubah dari acak menjadi akurat.",
+        )
+    )
 
-
-    <section class="slide bg-green" data-title="Bab 3: Proses Training (Loss, Gradient Descent &amp; Backprop)" data-notes="Alokasi waktu: 0.5 menit. Masuk Bab 3! Ini bagian inti Deep Learning — kita urai langkah demi langkah bagaimana bobot model berubah dari acak menjadi akurat.">
-      <div class="divider-center">
-        <div class="kicker">BAB 3 · PROSES TRAINING MODEL</div>
-        <h1>Bagaimana Model Belajar dari Kesalahan?</h1>
-        <p>Mengikuti perjalanan 1 foto Elsa dari bobot acak awal hingga model memperbaiki bobotnya sendiri lewat Loss, Gradient Descent, dan Backpropagation.</p>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>27 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 28: STEP 1 — KONDISI AWAL: BOBOT MASIH ACAK -->
     <section class="slide" data-title="Step 1: Kondisi Awal — Bobot Masih Acak" data-notes="Alokasi waktu: 1 menit. Mulai dari kondisi nyata saat model baru dibuat: semua weight w dan bias b diisi angka acak, sehingga prediksinya masih keliru. Dari sinilah proses training dimulai.">
       <div class="kicker">BAB 3 · STEP 1 (TITIK MULAI PROSES TRAINING)</div>
@@ -1384,7 +1079,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="callout red" style="padding:7px 10px; font-size:12.4px;"><strong>Pertanyaan Kunci:</strong> Bagaimana cara mengukur seberapa besar kesalahannya lalu memperbaiki bobotnya?</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>28 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 29: STEP 2 — MENGUKUR KESALAHAN (CROSS-ENTROPY LOSS) -->
@@ -1409,7 +1104,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="callout red"><strong>Sederhananya:</strong> <em>Loss</em> adalah jarak kesalahan antara tebakan model dan label asli. Tujuan <em>training</em> adalah <strong>mengubah bobot agar <em>Loss</em> sekecil mungkin!</strong></div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>29 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 30: STEP 3 — GRADIENT DESCENT -->
@@ -1451,7 +1146,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="callout green">Di Keras, algoritma <em>optimizer</em> modern yang kita pakai untuk mengatur langkah ini bernama <strong><code>Adam</code></strong>!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>30 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 31: STEP 4 — LEARNING RATE DENGAN MINI-SVG DI TIAP KARTU -->
@@ -1491,7 +1186,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
         </div>
       </div>
       <div class="callout" style="margin-top:10px;"><strong>Patokan Aman:</strong> Mulai dengan <code>Adam(learning_rate=0.001)</code>; nanti saat <em>fine-tuning</em> MobileNetV2 di P07 kita kecilkan jadi <code>0.00001 (1e-5)</code>.</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>31 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 32: STEP 5 — SIMULATOR #4 (LEMBAH LOSS — SINKRON w = -2.8!) -->
@@ -1528,7 +1223,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div id="gd-note" class="callout green">Berhasil turun mulus!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>32 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 33: STEP 6 — BACKPROPAGATION DENGAN DIAGRAM SVG 2 ARAH PENUH! -->
@@ -1580,7 +1275,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           </div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>33 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 34: STEP 7 — CERITA UTUH 1 PUTARAN BELAJAR + PROGRES EPOCH (FILLED CLEANLY) -->
@@ -1614,7 +1309,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
         </div>
         <div class="callout green" style="padding:8px 14px; font-size:12.8px;"><strong>Kesimpulan:</strong> Seluruh proses <code>01 → 02 → 03 → 04</code> ini berjalan otomatis di belakang layar setiap kali kamu menjalankan 1 baris <code>model.fit(...)</code>!</div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>34 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 35: STEP 8 — BATCH SIZE & EPOCH DENGAN VISUAL BUKU SOAL -->
@@ -1657,7 +1352,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="callout red"><strong>Peringatan:</strong> Mengulang terlalu banyak <em>epoch</em> tanpa rem bisa membuat AI &ldquo;menghafal&rdquo; foto latih (<strong>Overfitting</strong>)!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>35 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 36: STEP 9 — PENGENALAN OVERFITTING (POLOS VS RAMAI) -->
@@ -1684,8 +1379,8 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="mini-box"><strong>Tanda:</strong> Garis biru &amp; merah makin melebar!</div>
         </div>
       </div>
-      <div class="callout red" style="margin-top:10px;"><strong>Kenapa Penting di Project Kita?</strong> Karena dataset Frozen <code>v1</code> masih kecil (<code>143</code> foto), memantau <strong>Train Loss vs Val Loss</strong> adalah wajib!</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>36 / 59</span></div>
+      <div class="callout red" style="margin-top:10px;"><strong>Kenapa Penting di Project Kita?</strong> Karena dataset Frozen <code>v1</code> masih kecil (<code>{total_imgs}</code> foto), memantau <strong>Train Loss vs Val Loss</strong> adalah wajib!</div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 37: STEP 10 — SIMULATOR #5 (EVALUASI KURVA LOSS — PADAT DENGAN 3 KPI LIVE!) -->
@@ -1716,44 +1411,47 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div id="ov-action" class="callout green" style="padding:8px 12px; font-size:12.5px;">Tindakan disarankan.</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>37 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    s.append(
+        _qa_slide(
+            qa_id="qa4",
+            qa_num=4,
+            kicker="TANYA-JAWAB #4 · LEARNING RATE",
+            title_html='Cek Pemahaman: <span class="hl-red">Apa Efek Learning Rate Terlalu Besar?</span>',
+            question_html="Saat melatih model di Keras, kamu memasang <code>learning_rate = 0.5</code> (terlalu besar). Apa yang paling mungkin terlihat pada grafik <em>Loss</em>?",
+            choices=[
+                "<strong>A.</strong> Loss turun mulus dan akurasi langsung 100%",
+                "<strong>B.</strong> Bobot melompat melewati dasar lembah sehingga Loss naik-turun liar atau malah meningkat",
+                "<strong>C.</strong> Jumlah foto di folder otomatis berkurang",
+            ],
+            answer_html="<strong>Jawaban: B — Loss naik-turun liar / gagal stabil!</strong><br/>Langkah terlalu lebar membuat bola terus terlempar ke dinding seberang lembah. Solusi cepat: kecilkan <code>learning_rate</code> (mis. <code>0.001</code>)!",
+            vis_q_html='<span class="pill red">INGAT ANALOGI SHOWER</span><div class="mini-box" style="margin-top:10px;">Kalau kamu memutar keran shower terlalu brutal setiap kali kurang hangat, apa yang terjadi pada suhu air?</div>',
+            vis_a_html='<span class="pill green">TEPAT!</span><div class="mini-box" style="margin-top:10px;">Air terus bolak-balik kepanasan–kedinginan! Sama seperti <em>Loss</em> yang memantul liar saat <code>LR</code> kebesaran.</div>',
+            notes="Alokasi waktu: 1 menit. Tanyakan dulu ke peserta sebelum klik Reveal, lalu masuk ke Bab 4 (Jembatan menuju CNN!).",
+        )
+    )
 
-    <section class="slide" data-title="Tanya-Jawab #4" data-notes="Alokasi waktu: 1 menit. Tanyakan dulu ke peserta sebelum klik Reveal, lalu masuk ke Bab 4 (Jembatan menuju CNN!).">
-      <div class="kicker">TANYA-JAWAB #4 · LEARNING RATE</div>
-      <h2>Cek Pemahaman: <span class="hl-red">Apa Efek Learning Rate Terlalu Besar?</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:12px;">
-          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">Saat melatih model di Keras, kamu memasang <code>learning_rate = 0.5</code> (terlalu besar). Apa yang paling mungkin terlihat pada grafik <em>Loss</em>?</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="qa-choice"><strong>A.</strong> Loss turun mulus dan akurasi langsung 100%</div>
-            <div class="qa-choice"><strong>B.</strong> Bobot melompat melewati dasar lembah sehingga Loss naik-turun liar atau malah meningkat</div>
-            <div class="qa-choice"><strong>C.</strong> Jumlah foto di folder otomatis berkurang</div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa4', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa4" class="qa-answer" style="padding:12px 16px; font-size:13.5px;"><strong>Jawaban: B — Loss naik-turun liar / gagal stabil!</strong><br/>Langkah terlalu lebar membuat bola terus terlempar ke dinding seberang lembah. Solusi cepat: kecilkan <code>learning_rate</code> (mis. <code>0.001</code>)!</div>
-        </div>
-        <div id="qa4-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><span class="pill red">INGAT ANALOGI SHOWER</span><div class="mini-box" style="margin-top:10px;">Kalau kamu memutar keran shower terlalu brutal setiap kali kurang hangat, apa yang terjadi pada suhu air?</div></div>
-          <div class="vis-a" style="width:100%;"><span class="pill green">TEPAT!</span><div class="mini-box" style="margin-top:10px;">Air terus bolak-balik kepanasan–kedinginan! Sama seperti <em>Loss</em> yang memantul liar saat <code>LR</code> kebesaran.</div></div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>38 / 59</span></div>
-    </section>
+    # =========================================================================
+    # BAB 4: BATASAN MLP PADA FOTO FROZEN & JEMBATAN KE P03 (SLIDE 39–44 · 6.5m)
+    # =========================================================================
+    s.append(
+        make_divider_slide(
+            bg_class="bg-yellow",
+            kicker="BAB 4 · JEMBATAN MENUJU P03 (CNN)",
+            title="Kenapa Foto Frozen Tidak Cukup Pakai MLP Biasa?",
+            description="Melihat langsung dampak Flatten pada foto Elsa 2D dan ledakan 19,2 juta bobot — alasan lahirnya CNN!",
+            footer_label=FOOTER,
+            data_title="Bab 4: Batasan MLP & Jembatan ke CNN",
+            notes="Alokasi waktu: 0.5 menit. Bab 4 menjembatani mulus dari P02 (ANN/MLP) ke P03 (CNN) memakai foto nyata Elsa.",
+        )
+    )
 
-
-    <section class="slide bg-yellow" data-title="Bab 4: Batasan MLP &amp; Jembatan ke CNN" data-notes="Alokasi waktu: 0.5 menit. Bab 4 menjembatani mulus dari P02 (ANN/MLP) ke P03 (CNN) memakai foto nyata Elsa.">
-      <div class="divider-center">
-        <div class="kicker">BAB 4 · JEMBATAN MENUJU P03 (CNN)</div>
-        <h1>Kenapa Foto Frozen Tidak Cukup Pakai MLP Biasa?</h1>
-        <p>Melihat langsung dampak Flatten pada foto Elsa 2D dan ledakan 19,2 juta bobot — alasan lahirnya CNN!</p>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>39 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 40: STEP 1 — MEMAHAMI FLATTEN PADA FOTO ELSA -->
     <section class="slide" data-title="Step 1: Apa Itu Flatten pada Foto 2D?" data-notes="Alokasi waktu: 1.5 menit. Jelaskan Flatten secara sederhana: layer Dense hanya bisa menerima 1 deretan angka (vektor 1D), jadi foto Elsa 2D harus dipecah per baris lalu disambung memanjang!">
       <div class="kicker">BAB 4 · STEP 1 · OPERASI FLATTEN PADA GAMBAR</div>
@@ -1764,7 +1462,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
       <div class="callout red" style="margin-top:9px; font-size:13.2px;">
         <strong>Masalah Utama <em>Flatten</em>:</strong> Foto Elsa <code>224×224×3</code> diratakan baris demi baris menjadi <strong>1 vektor panjang <code>150.528</code> angka</strong>. Akibatnya, piksel kepala dan bahu yang tadinya bertetangga atas-bawah jadi terpisah jauh — <strong>struktur 2D gambar rusak!</strong>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>40 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 41: STEP 2 — SIMULATOR #6 (LEDAKAN PARAMETER MLP + RASIO 192x!) -->
@@ -1801,7 +1499,7 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <canvas id="fl-canvas" width="560" height="330"></canvas>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>41 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 42: STEP 3 — DAMPAK NYATA DI FOTO POLOS VS RAMAI (FOTO LEBIH BESAR & RAPAT) -->
@@ -1824,13 +1522,13 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="card-top-bar bar-yellow"></div>
           <div>
             <span class="pill red">TIDAK SEIMBANG!</span>
-            <div class="big-num" style="color:#C5221F; margin-top:6px;">19.2 Juta vs 143 Foto</div>
+            <div class="big-num" style="color:#C5221F; margin-top:6px;">19.2 Juta vs {total_imgs} Foto</div>
           </div>
           <div>
             <div class="card-title">2. Terlalu Banyak Bobot = Menghafal Latar Belakang</div>
             <div class="card-body" style="font-size:13.2px; margin-top:5px;">
               <ul>
-                <li>Jumlah bobot MLP jauh terlalu besar untuk 143 foto → model malah menghafal warna dinding atau properti rak (<strong>Overfitting</strong>).</li>
+                <li>Jumlah bobot MLP jauh terlalu besar untuk {total_imgs} foto → model malah menghafal warna dinding atau properti rak (<strong>Overfitting</strong>).</li>
                 <li><strong>Solusi di P03:</strong> Arsitektur yang membaca foto <strong>tetap dalam bentuk 2D utuh</strong> &amp; jauh lebih hemat bobot → <strong>CNN!</strong></li>
               </ul>
             </div>
@@ -1838,34 +1536,32 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
           <div class="callout yellow"><strong>Kabar Baiknya:</strong> Di P03 kita hanya mengganti bagian ekstraksi ciri depannya menjadi <strong>CNN</strong>!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>42 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    s.append(
+        _qa_slide(
+            qa_id="qa5",
+            qa_num=5,
+            kicker="TANYA-JAWAB #5 · JEMBATAN KE P03",
+            title_html='Cek Pemahaman: <span class="hl-blue">Apa Masalah Utama MLP untuk Foto?</span>',
+            question_html="Jika foto Frozen <code>224×224×3</code> langsung di-<em>flatten</em> masuk ke MLP biasa (<code>Dense</code>), dua masalah besar apa yang muncul?",
+            choices=[
+                "<strong>A.</strong> MLP tidak bisa memakai aktivasi ReLU dan Softmax",
+                "<strong>B.</strong> Struktur 2D gambar rusak dan jumlah bobot meledak jutaan sehingga mudah <em>overfitting</em>",
+                "<strong>C.</strong> Foto tidak bisa dibuka menggunakan Python",
+            ],
+            answer_html="<strong>Jawaban: B — Struktur 2D rusak &amp; jumlah bobot meledak!</strong><br/>Itulah alasan tepat mengapa di sesi <strong>P03</strong> kita mempelajari <strong>Convolutional Neural Network (CNN)</strong>!",
+            vis_q_html='<span class="pill yellow">INGAT 2 FAKTA INI</span><div class="mini-box" style="margin-top:10px;">1) Foto 2D diratakan jadi 1 vektor panjang (<code>Flatten</code>)<br/>2) Layer 1 butuh <strong>19.267.712 bobot</strong> untuk <code>143</code> foto!</div>',
+            vis_a_html='<span class="pill green">SIAP LANJUT KE CNN!</span><div class="mini-box" style="margin-top:10px;"><strong>CNN (P03)</strong> memindai gambar tetap dalam matriks <strong>2D utuh</strong> dengan filter kecil <code>3×3</code> yang dipakai ulang di seluruh foto!</div>',
+            notes="Alokasi waktu: 1 menit. Pastikan peserta benar-benar merasakan alasan logis mengapa kita membutuhkan CNN di P03.",
+        )
+    )
 
-    <section class="slide" data-title="Tanya-Jawab #5" data-notes="Alokasi waktu: 1 menit. Pastikan peserta benar-benar merasakan alasan logis mengapa kita membutuhkan CNN di P03.">
-      <div class="kicker">TANYA-JAWAB #5 · JEMBATAN KE P03</div>
-      <h2>Cek Pemahaman: <span class="hl-blue">Apa Masalah Utama MLP untuk Foto?</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:12px;">
-          <div class="qa-question" style="font-size:clamp(15px,1.4vw,18.5px);">Jika foto Frozen <code>224×224×3</code> langsung di-<em>flatten</em> masuk ke MLP biasa (<code>Dense</code>), dua masalah besar apa yang muncul?</div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="qa-choice"><strong>A.</strong> MLP tidak bisa memakai aktivasi ReLU dan Softmax</div>
-            <div class="qa-choice"><strong>B.</strong> Struktur 2D gambar rusak dan jumlah bobot meledak jutaan sehingga mudah <em>overfitting</em></div>
-            <div class="qa-choice"><strong>C.</strong> Foto tidak bisa dibuka menggunakan Python</div>
-          </div>
-          <button class="btn-ui" onclick="toggleQA('qa5', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="qa5" class="qa-answer" style="padding:12px 16px; font-size:13.5px;"><strong>Jawaban: B — Struktur 2D rusak &amp; jumlah bobot meledak!</strong><br/>Itulah alasan tepat mengapa di sesi <strong>P03</strong> kita mempelajari <strong>Convolutional Neural Network (CNN)</strong>!</div>
-        </div>
-        <div id="qa5-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><span class="pill yellow">INGAT 2 FAKTA INI</span><div class="mini-box" style="margin-top:10px;">1) Foto 2D diratakan jadi 1 vektor panjang (<code>Flatten</code>)<br/>2) Layer 1 butuh <strong>19.267.712 bobot</strong> untuk <code>143</code> foto!</div></div>
-          <div class="vis-a" style="width:100%;"><span class="pill green">SIAP LANJUT KE CNN!</span><div class="mini-box" style="margin-top:10px;"><strong>CNN (P03)</strong> memindai gambar tetap dalam matriks <strong>2D utuh</strong> dengan filter kecil <code>3×3</code> yang dipakai ulang di seluruh foto!</div></div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>43 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 44: STEP 4 — GAMBAR BESAR PIPELINE (ILMU P02 TETAP DIPAKAI DI MODEL FINAL — VISUAL PIPELINE!) -->
     <section class="slide" data-title="Step 4: Ilmu P02 Tetap Dipakai di Model Final Kita!" data-notes="Alokasi waktu: 1 menit. Yakinkan peserta bahwa seluruh ilmu P02 hari ini (Dense, ReLU, Softmax, Loss, Adam) tetap dipakai sebagai classification head di ujung MobileNetV2!">
       <div class="kicker">BAB 4 · STEP 4 · GAMBAR BESAR PROJECT AKHIR</div>
@@ -1905,20 +1601,28 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
         </div>
         <div class="callout" style="padding:8px 14px; font-size:13px;">Sekarang kamu sudah menguasai fondasi <strong>Data (P01)</strong> dan <strong>Classification Head ANN (P02)</strong> — saatnya istirahat 5 menit lalu praktik di notebook!</div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>44 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
+    # =========================================================================
+    # BAB 5: ISTIRAHAT, PRAKTIK HANDS-ON, MINI-CHALLENGE, KAMUS, KUIS & REFERENSI (SLIDE 45–59 · 72.0m)
+    # =========================================================================
+    s.append(
+        make_divider_slide(
+            bg_class="bg-blue",
+            kicker="BAB 5 · ISTIRAHAT 5 MENIT & PRAKTIK HANDS-ON",
+            title="Saatnya Praktik Santai di Notebook!",
+            description="Istirahat 5 menit dulu (minum air & regangkan mata), lalu kita coba langsung 1 neuron, Softmax, dan MLP pertama di Keras.",
+            footer_label=FOOTER,
+            data_title="Bab 5: Istirahat & Praktik Hands-On",
+            notes="Alokasi waktu: 5 menit. Beri jeda istirahat penuh 5 menit sebelum membuka notebook P02_neural_network_ann.ipynb.",
+        )
+    )
 
-    <section class="slide bg-blue" data-title="Bab 5: Istirahat &amp; Praktik Hands-On" data-notes="Alokasi waktu: 5 menit. Beri jeda istirahat penuh 5 menit sebelum membuka notebook P02_neural_network_ann.ipynb.">
-      <div class="divider-center">
-        <div class="kicker">BAB 5 · ISTIRAHAT 5 MENIT & PRAKTIK HANDS-ON</div>
-        <h1>Saatnya Praktik Santai di Notebook!</h1>
-        <p>Istirahat 5 menit dulu (minum air & regangkan mata), lalu kita coba langsung 1 neuron, Softmax, dan MLP pertama di Keras.</p>
-      </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>45 / 59</span></div>
-    </section>
-
-
+    s.append(
+        f"""
     <!-- 46: PETA 6 LANGKAH PRAKTIK HANDS-ON -->
     <section class="slide" data-title="6 Langkah Praktik Hands-On P02 (±50 Menit)" data-notes="Alokasi waktu: 44 menit. Pandu peserta mengerjakan P02_neural_network_ann.ipynb sel demi sel dari Setup 1-3 sampai Langkah 6. Setiap sel hanya 5-15 baris dan ada tombol Hint & Jawaban.">
       <div class="kicker">BAB 5 · PRAKTIK NOTEBOOK (<code>P02_neural_network_ann.ipynb</code>)</div>
@@ -1928,10 +1632,10 @@ Elsa     : 10%  ← (Padahal ini asli!)</pre>
         <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-red"></div><span class="pill red">LANGKAH 2 · 6m</span><div class="card-title" style="font-size:15px;">Softmax Manual vs Keras</div><div class="card-body" style="font-size:12.8px;">Hitung <code>softmax_manual()</code> untuk 5 karakter Frozen lalu buktikan hasilnya persis sama dengan <code>tf.nn.softmax</code>.</div></div>
         <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-green"></div><span class="pill green">LANGKAH 3 · 12m</span><div class="card-title" style="font-size:15px;">MLP Pertama di Keras</div><div class="card-body" style="font-size:12.8px;">Normalisasi gambar <code>28×28</code> (Fashion-MNIST / MNIST), susun <code>Flatten → Dense(64) → Softmax</code>, &amp; latih!</div></div>
         <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-yellow"></div><span class="pill yellow">LANGKAH 4 · 10m</span><div class="card-title" style="font-size:15px;">Eksperimen LR &amp; Aktivasi</div><div class="card-body" style="font-size:12.8px;">Uji <code>LR = 0.001</code> vs <code>LR = 0.1</code> serta <code>ReLU</code> vs <code>Sigmoid</code>, lalu simpan grafik kurva <em>Val Loss</em>.</div></div>
-        <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-red"></div><span class="pill red">LANGKAH 5 · 10m</span><div class="card-title" style="font-size:15px;">Flatten Foto Frozen</div><div class="card-body" style="font-size:12.8px;">Muat <code>143</code> foto <code>data/frozen_v1/</code>, bangun MLP 5 kelas, &amp; lihat ledakan bobot <code>64×64</code> vs <code>224×224</code>!</div></div>
+        <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-red"></div><span class="pill red">LANGKAH 5 · 10m</span><div class="card-title" style="font-size:15px;">Flatten Foto Frozen</div><div class="card-body" style="font-size:12.8px;">Muat <code>{total_imgs}</code> foto <code>data/frozen_v1/</code>, bangun MLP 5 kelas, &amp; lihat ledakan bobot <code>64×64</code> vs <code>224×224</code>!</div></div>
         <div class="card surface" style="padding:13px;"><div class="card-top-bar bar-blue"></div><span class="pill blue">LANGKAH 6 · 4m</span><div class="card-title" style="font-size:15px;">Cek Mini-Challenge</div><div class="card-body" style="font-size:12.8px;">Cocokkan tebakan Softmax manual <code>[2.0, 1.0, 0.0]</code> dan simpan tabel perbandingan ke <code>results/</code>.</div></div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>46 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 47: DI BALIK LAYAR KODE 1/2 (DENGAN CONTOH OUTPUT NYATA!) -->
@@ -1963,7 +1667,7 @@ probs_keras = tf.nn.softmax(logits_frozen).numpy()</code></pre>
           <div class="callout green">Mengurangi <code>np.max(logits)</code> menjaga komputer tidak error angka terlalu besar!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>47 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 48: DI BALIK LAYAR KODE 2/2 (DENGAN OUTPUT PARAMETER!) -->
@@ -2002,7 +1706,7 @@ model.compile(
           <div class="callout green">Di P03, kita cukup mengganti <code>Flatten()</code> di depan dengan <strong><code>Conv2D + MaxPooling2D</code></strong>!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>48 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 49: MINI-CHALLENGE SOFTMAX (DENGAN THUMBNAIL FROZEN!) -->
@@ -2038,7 +1742,7 @@ model.compile(
           </div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>49 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 50: KAMUS ISTILAH 1/2 (6 BARIS PADAT + CALLOUT!) -->
@@ -2057,7 +1761,7 @@ model.compile(
         </tbody>
       </table>
       <div class="callout" style="margin-top:10px; padding:8px 13px; font-size:12.8px;"><strong>Ringkasan Alur Bab 1–2:</strong> <em>Input × Weight + Bias → Aktivasi ReLU → Lanjut ke Layer Berikutnya!</em></div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>50 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 51: KAMUS ISTILAH 2/2 (6 BARIS PADAT + CALLOUT!) -->
@@ -2076,7 +1780,7 @@ model.compile(
         </tbody>
       </table>
       <div class="callout red" style="margin-top:10px; padding:8px 13px; font-size:12.8px;"><strong>Ringkasan Alur Bab 3–4:</strong> <em>Forward Pass → Hitung Loss → Backpropagation → Update Bobot (Adam)!</em></div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>51 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 52: KUIS INTERAKTIF SOAL 1 & 2 -->
@@ -2096,7 +1800,7 @@ model.compile(
         </div>
       </div>
       <div class="callout" style="padding:8px 13px; font-size:12.5px;"><strong>Tips:</strong> Jawab dulu dengan bahasamu sendiri sebelum membuka tombol hijau di atas!</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>52 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 53: KUIS INTERAKTIF SOAL 3 & 4 -->
@@ -2116,7 +1820,7 @@ model.compile(
         </div>
       </div>
       <div class="callout red" style="padding:8px 13px; font-size:12.5px;"><strong>Cek Cepat:</strong> Jika kamu bisa menjawab Soal 3 &amp; 4 dengan tepat, fondasi Bab 2 &amp; Bab 3 sudah mantap!</div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>53 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 54: KUIS INTERAKTIF SOAL 5 + SELF-CHECK KRITERIA BERHASIL (NO MORE EMPTY SLIDE!) -->
@@ -2145,7 +1849,7 @@ model.compile(
           <div class="mini-box">Jika 3/3 tercetak di kepala, kamu <strong>100% siap</strong> masuk ke CNN di P03!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>54 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 55: 3 POIN UTAMA HARI INI (DARK — KONTRAST CODE RAPI!) -->
@@ -2169,7 +1873,7 @@ model.compile(
           <div class="card-body" style="color:#BDC1C6; font-size:13.5px;">Meratakan foto <code>224×224×3</code> (<code>Flatten</code>) merusak posisi 2D &amp; meledakkan &gt;19 juta bobot. Di <strong>P03</strong> kita pelajari arsitektur khusus gambar: <strong>CNN</strong>!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>55 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 56: TUGAS MANDIRI & PREVIEW P03 -->
@@ -2201,7 +1905,7 @@ model.compile(
           <div class="mini-box"><strong>Hasil di P03:</strong> Kita langsung melihat <em>Feature Map</em> nyata dari foto Frozen kita sendiri!</div>
         </div>
       </div>
-      <div class="slide-footer"><span>Teori Neural Network (ANN) untuk Pemula</span><span>56 / 59</span></div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 57: CLOSING & KEY QUOTE -->
@@ -2221,7 +1925,7 @@ model.compile(
           Di balik kecerdasan <span style="color:#EA4335;">Deep Learning</span> tidak ada sihir — hanya ribuan <strong>Neuron</strong> sederhana yang terus <span style="color:#1A73E8;">belajar memperbaiki bobot</span> dari kesalahannya.
         </h1>
       </div>
-      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>57 / 59</span></div>
+      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>__NUM__</span></div>
     </section>
 
     <!-- 58: REFERENSI BELAJAR MANDIRI 1/2 (0 MENIT — SETARA P01: 3 KOLOM, 8 KARTU KLIK-LANGSUNG!) -->
@@ -2335,7 +2039,7 @@ model.compile(
           <div class="callout green" style="font-size:11.2px; padding:7px 10px;"><strong>Fokus Slide:</strong> <em>Softmax 5 Kelas &amp; Cross-Entropy Loss</em>.</div>
         </div>
       </div>
-      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>58 / 59</span></div>
+      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>__NUM__</span></div>
     </section>
 
     <!-- 59: REFERENSI BELAJAR MANDIRI 2/2 (0 MENIT — SETARA P01: 2 KOLOM, 8 KARTU KLIK-LANGSUNG + RUTE MARATON!) -->
@@ -2441,225 +2145,55 @@ model.compile(
         <a class="marathon-step" href="https://www.youtube.com/watch?v=Ilg3gGewQ5U" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--red);">4</span><span>Backprop</span></a>
         <a class="marathon-step" href="https://www.coursera.org/learn/convolutional-neural-networks" target="_blank" rel="noopener"><span class="marathon-dot" style="background:var(--dark);">5</span><span>Preview P03</span></a>
       </div>
-      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>59 / 59</span></div>
+      <div class="slide-footer"><span>P02 - Teori Neural Network (ANN)</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
-  </div>
-
-  <div id="controls">
-    <button class="ctrl-btn" onclick="prevSlide()">← Prev</button>
-    <span id="counter" style="display:inline-flex; align-items:center; gap:5px;">
-      <input id="page-jump" type="number" min="1" max="59" value="1" title="Ketik nomor slide (1-59) lalu tekan Enter" onchange="jumpToSlide(this.value)" onkeydown="if(event.key==='Enter'){jumpToSlide(this.value); this.blur();}" />
-      <span>/ 59</span>
-    </span>
-    <button class="ctrl-btn" onclick="nextSlide()">Next →</button>
-    <button class="ctrl-btn" onclick="toggleNotes()">Notes (N)</button>
-    <button class="ctrl-btn" onclick="toggleGrid()">Grid (G)</button>
-    <button class="ctrl-btn" onclick="toggleFull()">Fullscreen (F)</button>
-    <button id="timer-btn" class="ctrl-btn" onclick="toggleSessionTimer()">▶ Start Timer</button>
-  </div>
-
-  <div id="notes-drawer">
-    <h4>Catatan Pengajar (Speaker Notes)</h4>
-    <div id="notes-text"></div>
-  </div>
-
-  <div id="grid-modal">
-    <div style="max-width:1300px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; color:white;">
-      <h3 style="font-family:var(--font-title);">Daftar Semua Slide (59 Slides)</h3>
-      <button class="ctrl-btn" onclick="toggleGrid()">Tutup (Esc)</button>
-    </div>
-    <div id="grid-cards" class="grid-cards"></div>
-  </div>
+    return "\n".join(s)
 
 
-
-  <script>
-
-    window.SLIDE_PDF_EXPANDERS = window.SLIDE_PDF_EXPANDERS || [];
-
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    let idx = 0;
-
-    function showSlide(n, syncHash = true) {
-      idx = Math.max(0, Math.min(slides.length - 1, n));
-      slides.forEach((s, i) => s.classList.toggle('active', i === idx));
-      const pj = document.getElementById('page-jump');
-      if (pj) pj.value = String(idx + 1);
-      document.getElementById('progress-bar').style.width = ((idx + 1) / slides.length * 100) + '%';
-      document.getElementById('notes-text').textContent = slides[idx].dataset.notes || 'Tidak ada catatan.';
-      if (syncHash) {
-        try { history.replaceState(null, '', '#slide-' + (idx + 1)); } catch (e) {}
-        try { localStorage.setItem('p02_slide_idx', String(idx)); } catch (e) {}
-      }
-    }
-    function jumpToSlide(val) {
-      const num = parseInt(val, 10);
-      if (!isNaN(num)) showSlide(num - 1);
-    }
-    function nextSlide() { showSlide(idx + 1); }
-    function prevSlide() { showSlide(idx - 1); }
-    function toggleNotes() { document.getElementById('notes-drawer').classList.toggle('open'); }
-    function toggleGrid() { document.getElementById('grid-modal').classList.toggle('open'); }
-    function toggleFull() {
-      if (!document.fullscreenElement) document.documentElement.requestFullscreen();
-      else document.exitFullscreen();
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
-      else if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
-      else if (e.key === 'n' || e.key === 'N') toggleNotes();
-      else if (e.key === 'g' || e.key === 'G') toggleGrid();
-      else if (e.key === 'f' || e.key === 'F') toggleFull();
-      else if (e.key === 'j' || e.key === 'J') { e.preventDefault(); const pj = document.getElementById('page-jump'); if (pj) { pj.focus(); pj.select(); } }
-      else if (e.key === 'Escape') document.getElementById('grid-modal').classList.remove('open');
-    });
-
-    window.addEventListener('hashchange', () => {
-      const m = window.location.hash.match(/^#slide-(\d+)$/);
-      if (m) showSlide(parseInt(m[1], 10) - 1, false);
-    });
-
-    // Build grid overview
-    const gc = document.getElementById('grid-cards');
-    if (gc) {
-      slides.forEach((s, i) => {
-        const d = document.createElement('div');
-        d.className = 'g-item';
-        d.innerHTML = `<div class="g-num">SLIDE ${String(i + 1).padStart(2, '0')}</div><div class="g-ttl">${s.dataset.title || ''}</div>`;
-        d.onclick = () => { showSlide(i); toggleGrid(); };
-        gc.appendChild(d);
-      });
-    }
-
-    function syncVisualReveal(id, shown) {
-      const vis = document.getElementById(id + '-vis');
-      if (!vis) return;
-      vis.querySelectorAll('.vis-q').forEach((n) => { n.style.display = shown ? 'none' : ''; });
-      vis.querySelectorAll('.vis-a').forEach((n) => { n.style.display = shown ? 'inline' : 'none'; });
-    }
-    function toggleQA(id, btn) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const shown = el.classList.toggle('shown');
-      syncVisualReveal(id, shown);
-      if (btn) btn.textContent = shown ? 'Sembunyikan Jawaban' : 'Klik untuk Lihat Jawaban & Penjelasan';
-    }
-    function toggleAns(id, btn) {
-      const el = document.getElementById(id);
-      if (!el) return;
-      const shown = el.classList.toggle('shown');
-      syncVisualReveal(id, shown);
-      if (btn) btn.textContent = shown ? 'Sembunyikan Jawaban' : 'Lihat Jawaban';
-    }
-
-    // Persistent Session Timer (namespaced per session)
-    const TIMER_STORAGE_KEY = 'p02_session_timer_v1';
-    let sessionTimerInterval = null;
-    let memoryTimerState = null;
-
-    function formatTimerDuration(ms) {
-      const totalSec = Math.max(0, Math.floor(ms / 1000));
-      const hrs = Math.floor(totalSec / 3600);
-      const mins = Math.floor((totalSec % 3600) / 60);
-      const secs = totalSec % 60;
-      const pad = (n) => String(n).padStart(2, '0');
-      return hrs > 0 ? `${hrs}:${pad(mins)}:${pad(secs)}` : `${pad(mins)}:${pad(secs)}`;
-    }
-    function readTimerState() {
-      try {
-        const raw = localStorage.getItem(TIMER_STORAGE_KEY);
-        if (raw) { memoryTimerState = JSON.parse(raw); return memoryTimerState; }
-      } catch (e) {}
-      return memoryTimerState;
-    }
-    function writeTimerState(state) {
-      memoryTimerState = state;
-      try {
-        if (state) localStorage.setItem(TIMER_STORAGE_KEY, JSON.stringify(state));
-        else localStorage.removeItem(TIMER_STORAGE_KEY);
-      } catch (e) {}
-    }
-    function renderSessionTimer() {
-      const badge = document.getElementById('session-timer');
-      const valEl = document.getElementById('session-timer-val');
-      const btn = document.getElementById('timer-btn');
-      const st = readTimerState();
-      if (st && st.running && typeof st.startEpoch === 'number') {
-        const elapsedMs = Math.max(0, Date.now() - st.startEpoch);
-        if (valEl) valEl.textContent = formatTimerDuration(elapsedMs);
-        if (badge) {
-          badge.classList.add('active');
-          badge.classList.toggle('overtime', elapsedMs >= 120 * 60 * 1000);
-        }
-        if (btn) { btn.textContent = '■ End Timer'; btn.classList.add('timer-active'); }
-      } else {
-        if (badge) badge.classList.remove('active', 'overtime');
-        if (valEl) valEl.textContent = '00:00';
-        if (btn) { btn.textContent = '▶ Start Timer'; btn.classList.remove('timer-active'); }
-      }
-    }
-    function startSessionTimer() {
-      const cur = readTimerState();
-      if (cur && cur.running && typeof cur.startEpoch === 'number') return;
-      writeTimerState({ running: true, startEpoch: Date.now() });
-      renderSessionTimer();
-      if (!sessionTimerInterval) sessionTimerInterval = setInterval(renderSessionTimer, 1000);
-    }
-    function endSessionTimer() {
-      writeTimerState({ running: false, startEpoch: null });
-      if (sessionTimerInterval) { clearInterval(sessionTimerInterval); sessionTimerInterval = null; }
-      renderSessionTimer();
-    }
-    function toggleSessionTimer() {
-      const st = readTimerState();
-      if (st && st.running) endSessionTimer();
-      else startSessionTimer();
-    }
-    window.addEventListener('storage', (e) => {
-      if (e.key === TIMER_STORAGE_KEY) renderSessionTimer();
-    });
-
-
+def build_extra_js(data: dict) -> str:
+    cs_json = json.dumps(data["char_samples"], ensure_ascii=False)
+    total_imgs = data["total_images"]
+    return f"""
     // =========================================================================
     // SIMULATOR #1 (Slide 11): Kalkulator 1 Neuron + Bar Kontribusi Live
     // =========================================================================
-    const FROZEN_CHAR_DATA = {"anna": {"file": "anna_polos_02.jpg", "rgb_norm": [0.55, 0.51, 0.51], "count_total": 28, "count_polos": 20, "count_ramai": 8}, "elsa": {"file": "elsa_polos_02.jpg", "rgb_norm": [0.67, 0.66, 0.67], "count_total": 29, "count_polos": 21, "count_ramai": 8}, "kristoff": {"file": "kristoff_polos_02.jpg", "rgb_norm": [0.61, 0.59, 0.57], "count_total": 28, "count_polos": 20, "count_ramai": 8}, "olaf": {"file": "olaf_polos_02.jpg", "rgb_norm": [0.63, 0.6, 0.57], "count_total": 28, "count_polos": 20, "count_ramai": 8}, "sven": {"file": "sven_polos_02.jpg", "rgb_norm": [0.6, 0.57, 0.55], "count_total": 30, "count_polos": 21, "count_ramai": 9}};
+    const FROZEN_CHAR_DATA = {cs_json};
     let n1Char = 'elsa';
 
-    function setN1Char(kls) {
+    function setN1Char(kls) {{
       n1Char = kls;
-      document.querySelectorAll('#n1-presets button').forEach((b) => {
+      document.querySelectorAll('#n1-presets button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.char !== kls);
-      });
+      }});
       const img = document.getElementById('n1-img');
-      if (img) img.src = `assets/P02/thumb_${kls}.jpg`;
+      if (img) img.src = `assets/P02/thumb_${{kls}}.jpg`;
       const nameEl = document.getElementById('n1-char-name');
       if (nameEl) nameEl.textContent = kls.charAt(0).toUpperCase() + kls.slice(1) + ' (Foto Asli)';
       updateN1();
-    }
+    }}
 
-    function _renderContrib(barId, valId, v) {
+    function _renderContrib(barId, valId, v) {{
       const bar = document.getElementById(barId);
       const txt = document.getElementById(valId);
       if (txt) txt.textContent = (v >= 0 ? '+' : '') + v.toFixed(2);
       if (!bar) return;
       const pct = Math.min(50, (Math.abs(v) / 2.2) * 50);
-      if (v >= 0) {
+      if (v >= 0) {{
         bar.style.left = '50%';
         bar.style.width = pct.toFixed(1) + '%';
         bar.style.background = '#34A853';
-      } else {
+      }} else {{
         bar.style.left = (50 - pct).toFixed(1) + '%';
         bar.style.width = pct.toFixed(1) + '%';
         bar.style.background = '#EA4335';
-      }
-    }
+      }}
+    }}
 
-    function updateN1() {
-      const info = FROZEN_CHAR_DATA[n1Char] || { rgb_norm: [0.5, 0.5, 0.5] };
+    function updateN1() {{
+      const info = FROZEN_CHAR_DATA[n1Char] || {{ rgb_norm: [0.5, 0.5, 0.5] }};
       const [r, g, bVal] = info.rgb_norm;
       const w1 = parseFloat(document.getElementById('n1-w1').value);
       const w2 = parseFloat(document.getElementById('n1-w2').value);
@@ -2671,7 +2205,7 @@ model.compile(
       document.getElementById('n1-w2-v').textContent = fmt(w2);
       document.getElementById('n1-w3-v').textContent = fmt(w3);
       document.getElementById('n1-b-v').textContent = fmt(bias);
-      document.getElementById('n1-rgb-txt').textContent = `R=${r.toFixed(2)} · G=${g.toFixed(2)} · B=${bVal.toFixed(2)}`;
+      document.getElementById('n1-rgb-txt').textContent = `R=${{r.toFixed(2)}} · G=${{g.toFixed(2)}} · B=${{bVal.toFixed(2)}}`;
 
       const c0 = r * w1, c1 = g * w2, c2 = bVal * w3, c3 = bias;
       _renderContrib('n1-cb0', 'n1-cv0', c0);
@@ -2684,20 +2218,20 @@ model.compile(
       const sig = 1 / (1 + Math.exp(-z));
 
       document.getElementById('n1-eq').textContent =
-        `z = (${r.toFixed(2)}×${fmt(w1)}) + (${g.toFixed(2)}×${fmt(w2)}) + (${bVal.toFixed(2)}×${fmt(w3)}) + (${fmt(bias)}) = ${z.toFixed(2)}`;
+        `z = (${{r.toFixed(2)}}×${{fmt(w1)}}) + (${{g.toFixed(2)}}×${{fmt(w2)}}) + (${{bVal.toFixed(2)}}×${{fmt(w3)}}) + (${{fmt(bias)}}) = ${{z.toFixed(2)}}`;
       document.getElementById('n1-z').textContent = (z >= 0 ? '+' : '') + z.toFixed(2);
       document.getElementById('n1-relu').textContent = relu.toFixed(2);
       document.getElementById('n1-sig').textContent = Math.round(sig * 100) + '%';
 
       const st = document.getElementById('n1-status');
-      if (z > 0.0) {
+      if (z > 0.0) {{
         st.className = 'callout green';
-        st.innerHTML = `<strong>Neuron AKTIF!</strong> Sumbangan positif mengalahkan negatif → <code>z = +${z.toFixed(2)}</code>, <code>ReLU = ${relu.toFixed(2)}</code>.`;
-      } else {
+        st.innerHTML = `<strong>Neuron AKTIF!</strong> Sumbangan positif mengalahkan negatif → <code>z = +${{z.toFixed(2)}}</code>, <code>ReLU = ${{relu.toFixed(2)}}</code>.`;
+      }} else {{
         st.className = 'callout red';
-        st.innerHTML = `<strong>Neuron TIDAK AKTIF (ReLU = 0.00)!</strong> Skor <code>z = ${z.toFixed(2)}</code> bernilai negatif/nol → output menjadi 0.`;
-      }
-    }
+        st.innerHTML = `<strong>Neuron TIDAK AKTIF (ReLU = 0.00)!</strong> Skor <code>z = ${{z.toFixed(2)}}</code> bernilai negatif/nol → output menjadi 0.`;
+      }}
+    }}
     updateN1();
 
     // =========================================================================
@@ -2705,21 +2239,21 @@ model.compile(
     // =========================================================================
     let actMode = 'relu';
 
-    function evalAct(mode, z) {
+    function evalAct(mode, z) {{
       if (mode === 'relu') return Math.max(0, z);
       if (mode === 'sigmoid') return 1 / (1 + Math.exp(-z));
       return Math.tanh(z);
-    }
+    }}
 
-    function setActMode(m) {
+    function setActMode(m) {{
       actMode = m;
-      document.querySelectorAll('#act-tabs button').forEach((b) => {
+      document.querySelectorAll('#act-tabs button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.act !== m);
-      });
+      }});
       updateActSim();
-    }
+    }}
 
-    function updateActSim() {
+    function updateActSim() {{
       const sl = document.getElementById('act-z-sl');
       if (!sl) return;
       const zVal = parseFloat(sl.value);
@@ -2727,29 +2261,29 @@ model.compile(
       const yVal = evalAct(actMode, zVal);
       document.getElementById('act-out-val').textContent = yVal.toFixed(3);
 
-      const meta = {
-        relu: {
+      const meta = {{
+        relu: {{
           title: 'ReLU: max(0, z)',
           color: '#4285F4', yMin: -0.6, yMax: 5.2,
           note: zVal <= 0
             ? '<strong>Zona Padam (z ≤ 0):</strong> Output tepat <code>0.000</code> — neuron istirahat untuk skor minus.'
-            : `<strong>Zona Aktif (z &gt; 0):</strong> Output lurus mengikuti input (<code>${yVal.toFixed(2)}</code>) tanpa melambat!`,
-        },
-        sigmoid: {
+            : `<strong>Zona Aktif (z &gt; 0):</strong> Output lurus mengikuti input (<code>${{yVal.toFixed(2)}}</code>) tanpa melambat!`,
+        }},
+        sigmoid: {{
           title: 'Sigmoid: Kurva S (0%–100%)',
           color: '#EA4335', yMin: -0.15, yMax: 1.15,
-          note: `<strong>Rentang 0 s.d. 1:</strong> Terbaca seperti peluang 2 kelas (<code>${(yVal*100).toFixed(1)}%</code>). Di ujung kiri/kanan kurva sangat mendatar.`,
-        },
-        tanh: {
+          note: `<strong>Rentang 0 s.d. 1:</strong> Terbaca seperti peluang 2 kelas (<code>${{(yVal*100).toFixed(1)}}%</code>). Di ujung kiri/kanan kurva sangat mendatar.`,
+        }},
+        tanh: {{
           title: 'Tanh: Skala -1 s.d. +1',
           color: '#34A853', yMin: -1.25, yMax: 1.25,
           note: zVal < 0
-            ? `<strong>Simetris di Nol (Zona Negatif):</strong> Input negatif tetap negatif (<code>${yVal.toFixed(3)}</code>), mendekati <code>-1</code>.`
+            ? `<strong>Simetris di Nol (Zona Negatif):</strong> Input negatif tetap negatif (<code>${{yVal.toFixed(3)}}</code>), mendekati <code>-1</code>.`
             : zVal > 0
-              ? `<strong>Simetris di Nol (Zona Positif):</strong> Input positif tetap positif (<code>+${yVal.toFixed(3)}</code>), mendekati <code>+1</code>.`
+              ? `<strong>Simetris di Nol (Zona Positif):</strong> Input positif tetap positif (<code>+${{yVal.toFixed(3)}}</code>), mendekati <code>+1</code>.`
               : '<strong>Tepat di Nol:</strong> Saat <code>z = 0</code>, output Tanh tepat <code>0.000</code> (simetris kiri-kanan).',
-        },
-      }[actMode];
+        }},
+      }}[actMode];
 
       document.getElementById('act-title').textContent = meta.title;
       document.getElementById('act-note').innerHTML = meta.note;
@@ -2767,9 +2301,9 @@ model.compile(
       const toY = (y) => padT + ph - ((y - meta.yMin) / (meta.yMax - meta.yMin)) * ph;
 
       ctx.strokeStyle = '#ECEFF1'; ctx.lineWidth = 1;
-      for (let gx = -4; gx <= 4; gx += 2) {
+      for (let gx = -4; gx <= 4; gx += 2) {{
         const px = toX(gx); ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + ph); ctx.stroke();
-      }
+      }}
       ctx.strokeStyle = '#9AA0A6'; ctx.lineWidth = 1.4;
       const y0 = toY(0), x0 = toX(0);
       ctx.beginPath(); ctx.moveTo(padL, y0); ctx.lineTo(padL + pw, y0); ctx.stroke();
@@ -2778,11 +2312,11 @@ model.compile(
 
       ctx.strokeStyle = meta.color; ctx.lineWidth = 3.5;
       ctx.beginPath();
-      for (let i = 0; i <= 200; i++) {
+      for (let i = 0; i <= 200; i++) {{
         const zv = -5 + (i / 200) * 10;
         const px = toX(zv), py = toY(evalAct(actMode, zv));
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
+      }}
       ctx.stroke();
 
       const ax = toX(zVal), ay = toY(yVal);
@@ -2796,81 +2330,81 @@ model.compile(
       for (const xv of [-5, -2.5, 0, 2.5, 5]) ctx.fillText(String(xv), toX(xv), padT + ph + 16);
       ctx.fillStyle = '#202124'; ctx.font = '700 11.5px Roboto, sans-serif';
       ctx.fillText('Input Skor Mentah (z)', padL + pw / 2, H - 5);
-    }
+    }}
     updateActSim();
 
     // =========================================================================
     // SIMULATOR #3 (Slide 24): Mesin Softmax 5 Karakter Frozen (+ kolom e^z)
     // =========================================================================
     const SM_NAMES = ['Anna', 'Elsa', 'Kristoff', 'Olaf', 'Sven'];
-    const SM_PRESETS = {
+    const SM_PRESETS = {{
       elsa: [0.8, 3.2, -0.6, 0.2, -1.0],
       ragu: [2.2, 2.4, -0.8, -0.4, -1.2],
       neg: [-2.4, -0.8, -3.0, -2.6, -3.4],
-    };
+    }};
 
-    function setSmPreset(key) {
+    function setSmPreset(key) {{
       const vals = SM_PRESETS[key];
       if (!vals) return;
-      vals.forEach((v, i) => {
+      vals.forEach((v, i) => {{
         const el = document.getElementById('sm-' + i);
-        if (el) { el.value = String(v); el.setAttribute('value', String(v)); }
-      });
-      document.querySelectorAll('#sm-presets button').forEach((b) => {
+        if (el) {{ el.value = String(v); el.setAttribute('value', String(v)); }}
+      }});
+      document.querySelectorAll('#sm-presets button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.smp !== key);
-      });
+      }});
       updateSm();
-    }
+    }}
 
-    function updateSm() {
+    function updateSm() {{
       const logits = [0, 1, 2, 3, 4].map((i) => parseFloat(document.getElementById('sm-' + i).value));
       const rawExps = logits.map((v) => Math.exp(v));
       const sumE = rawExps.reduce((a, b) => a + b, 0);
       const probs = rawExps.map((e) => (e / sumE) * 100);
 
       let bestIdx = 0;
-      probs.forEach((p, i) => {
+      probs.forEach((p, i) => {{
         if (p > probs[bestIdx]) bestIdx = i;
         document.getElementById('sm-v' + i).textContent = (logits[i] >= 0 ? '+' : '') + logits[i].toFixed(1);
         document.getElementById('sm-e' + i).textContent = rawExps[i] >= 10 ? rawExps[i].toFixed(1) : rawExps[i].toFixed(2);
         document.getElementById('sm-b' + i).style.width = p.toFixed(1) + '%';
         document.getElementById('sm-p' + i).textContent = p.toFixed(1) + '%';
-      });
+      }});
       const tot = probs.reduce((a, b) => a + b, 0);
-      document.getElementById('sm-sum-pill').textContent = `Total = ${tot.toFixed(1)}%`;
+      document.getElementById('sm-sum-pill').textContent = `Total = ${{tot.toFixed(1)}}%`;
       document.getElementById('sm-winner').innerHTML =
-        `<strong>Prediksi AI: ${SM_NAMES[bestIdx].toUpperCase()} (${probs[bestIdx].toFixed(1)}%)</strong> — Perhatikan kolom <code>eᶻ</code>: semua positif, sehingga total porsi selalu tepat <code>100.0%</code>!`;
-    }
+        `<strong>Prediksi AI: ${{SM_NAMES[bestIdx].toUpperCase()}} (${{probs[bestIdx].toFixed(1)}}%)</strong> — Perhatikan kolom <code>eᶻ</code>: semua positif, sehingga total porsi selalu tepat <code>100.0%</code>!`;
+    }}
     updateSm();
 
     // =========================================================================
     // SIMULATOR #4 (Slide 32): Lembah Loss & Learning Rate (Sinkron w = -2.8!)
     // =========================================================================
     let gdMode = 'ideal';
-    const GD_CFGS = {
-      small: {
+    const GD_CFGS = {{
+      small: {{
         lr: 0.03, title: 'LR Terlalu Kecil (0.03) — Lambat', cls: 'callout yellow',
         note: '<strong>Terlalu Lambat:</strong> Setelah 8 langkah, bola baru bergerak sedikit dari <code>-2.8</code> dan masih jauh dari dasar!',
-      },
-      ideal: {
+      }},
+      ideal: {{
         lr: 0.20, title: 'LR Ideal (0.20) — Turun Mulus', cls: 'callout green',
         note: '<strong>Berhasil!</strong> Dengan <code>LR = 0.20</code>, bola meluncur cepat dan tepat berhenti di dasar lembah <em>Loss</em>.',
-      },
-      large: {
+      }},
+      large: {{
         lr: 1.06, title: 'LR Terlalu Besar (1.06) — Memantul Liar!', cls: 'callout red',
         note: '<strong>Bahaya Divergen!</strong> Langkah terlalu lebar membuat bola melompati dasar lembah dan memantul makin tinggi!',
-      },
-    };
+      }},
+    }};
 
-    function setGdMode(m) {
+    function setGdMode(m) {{
       gdMode = m;
-      document.querySelectorAll('#gd-presets button').forEach((b) => {
+      document.querySelectorAll('#gd-presets button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.gd !== m);
-      });
+      }});
       renderGdCanvas();
-    }
+    }}
 
-    function renderGdCanvas() {
+    function renderGdCanvas() {{
       const cfg = GD_CFGS[gdMode];
       const canvas = document.getElementById('gd-canvas');
       if (!canvas) return;
@@ -2881,10 +2415,10 @@ model.compile(
 
       const pts = [];
       let w = -2.8;
-      for (let step = 0; step <= 8; step++) {
-        pts.push({ w, loss: w * w });
+      for (let step = 0; step <= 8; step++) {{
+        pts.push({{ w, loss: w * w }});
         w = w - cfg.lr * (2 * w);
-      }
+      }}
       const last = pts[pts.length - 1];
       document.getElementById('gd-title').textContent = cfg.title;
       document.getElementById('gd-end-w').textContent = last.w.toFixed(2);
@@ -2902,11 +2436,11 @@ model.compile(
       ctx.strokeStyle = '#DADCE0'; ctx.lineWidth = 1.2; ctx.strokeRect(padL, padT, pw, ph);
       ctx.strokeStyle = '#5F6368'; ctx.lineWidth = 2.8;
       ctx.beginPath();
-      for (let i = 0; i <= 160; i++) {
+      for (let i = 0; i <= 160; i++) {{
         const xv = -maxX + (i / 160) * (2 * maxX);
         const px = toX(xv), py = toY(xv * xv);
         if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-      }
+      }}
       ctx.stroke();
 
       ctx.fillStyle = '#34A853';
@@ -2915,35 +2449,35 @@ model.compile(
       const pCol = gdMode === 'ideal' ? '#1A73E8' : gdMode === 'small' ? '#E37400' : '#EA4335';
       ctx.strokeStyle = pCol; ctx.lineWidth = 2.4;
       ctx.beginPath();
-      pts.forEach((p, idx) => { const px = toX(p.w), py = toY(p.loss); if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); });
+      pts.forEach((p, idx) => {{ const px = toX(p.w), py = toY(p.loss); if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }});
       ctx.stroke();
 
-      pts.forEach((p, idx) => {
+      pts.forEach((p, idx) => {{
         const px = toX(p.w), py = toY(p.loss);
         ctx.fillStyle = idx === 0 ? '#202124' : idx === pts.length - 1 ? pCol : '#FFFFFF';
         ctx.strokeStyle = pCol; ctx.lineWidth = 2;
         ctx.beginPath(); ctx.arc(px, py, idx === pts.length - 1 ? 6.5 : 4.5, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        if (idx === 0 || idx === pts.length - 1) {
+        if (idx === 0 || idx === pts.length - 1) {{
           ctx.fillStyle = '#202124'; ctx.font = '700 10.5px Roboto Mono'; ctx.textAlign = 'center';
           const lblX = Math.max(padL + 44, Math.min(padL + pw - 44, px));
           const lblY = idx === pts.length - 1 && py < padT + 26 ? py + 20 : Math.max(padT + 14, py - 11);
           ctx.fillText(idx === 0 ? 'Mulai (t=0)' : 'Akhir (t=8)', lblX, lblY);
-        }
-      });
+        }}
+      }});
 
       ctx.fillStyle = '#202124'; ctx.font = '700 11.5px Roboto'; ctx.textAlign = 'center';
       ctx.fillText('Nilai Bobot (w) — Target Dasar Lembah di w = 0', padL + pw / 2, H - 6);
       ctx.save(); ctx.translate(15, padT + ph / 2); ctx.rotate(-Math.PI / 2);
       ctx.fillText('Nilai Loss', 0, 0); ctx.restore();
-    }
+    }}
     renderGdCanvas();
 
     // =========================================================================
     // SIMULATOR #5 (Slide 37): Evaluasi Kurva Loss (+ 3 KPI Live & Ciri Cepat!)
     // =========================================================================
     let ovMode = 'good';
-    const OV_DATA = {
-      under: {
+    const OV_DATA = {{
+      under: {{
         title: 'Underfitting — Model Belum Belajar',
         desc: 'Baik <strong>Train Loss (biru)</strong> maupun <strong>Val Loss (merah)</strong> sama-sama tetap tinggi &amp; datar.',
         signs: '<strong>Ciri di Grafik:</strong> Kedua garis berada di atas (&gt;1.3) dan hampir tidak turun meski epoch bertambah.',
@@ -2951,8 +2485,8 @@ model.compile(
         act: '<strong>Solusi:</strong> Tambah jumlah epoch, periksa Learning Rate, atau perbesar jumlah neuron.',
         tr: [1.62, 1.54, 1.49, 1.45, 1.42, 1.40, 1.39, 1.38, 1.38, 1.37],
         va: [1.65, 1.58, 1.53, 1.50, 1.48, 1.46, 1.46, 1.45, 1.45, 1.45],
-      },
-      good: {
+      }},
+      good: {{
         title: 'Good Fit (Ideal) — Sehat &amp; Generalisasi Baik',
         desc: 'Kurva <strong>Train Loss (biru)</strong> dan <strong>Val Loss (merah)</strong> turun mulus bersama dan jaraknya tetap rapat.',
         signs: '<strong>Ciri di Grafik:</strong> Kedua garis turun serempak mendekati <code>0.2–0.3</code> dengan celah tipis (<code>+0.09</code>).',
@@ -2960,8 +2494,8 @@ model.compile(
         act: '<strong>Status:</strong> Model sehat &amp; benar-benar paham ciri karakter Frozen!',
         tr: [1.58, 1.15, 0.84, 0.62, 0.47, 0.36, 0.29, 0.24, 0.21, 0.19],
         va: [1.60, 1.19, 0.90, 0.69, 0.54, 0.43, 0.36, 0.32, 0.29, 0.28],
-      },
-      over: {
+      }},
+      over: {{
         title: 'Overfitting — Menghafal Foto Latih!',
         desc: 'Mulai Epoch 5, <strong>Train Loss (biru)</strong> mendekati 0, <strong>tetapi Val Loss (merah) justru berbalik NAIK!</strong>',
         signs: '<strong>Ciri di Grafik:</strong> Kedua garis berpisah tajam — selisih (gap) antara Train &amp; Val melonjak menjadi <code>+1.50</code>!',
@@ -2969,18 +2503,18 @@ model.compile(
         act: '<strong>Solusi (P06–P07):</strong> Data Augmentation, Dropout, EarlyStopping, &amp; Transfer Learning!',
         tr: [1.55, 1.08, 0.72, 0.45, 0.26, 0.15, 0.09, 0.05, 0.03, 0.02],
         va: [1.58, 1.16, 0.88, 0.72, 0.70, 0.79, 0.95, 1.14, 1.32, 1.52],
-      },
-    };
+      }},
+    }};
 
-    function setOvMode(m) {
+    function setOvMode(m) {{
       ovMode = m;
-      document.querySelectorAll('#ov-btns button').forEach((b) => {
+      document.querySelectorAll('#ov-btns button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.ov !== m);
-      });
+      }});
       renderOvCanvas();
-    }
+    }}
 
-    function renderOvCanvas() {
+    function renderOvCanvas() {{
       const d = OV_DATA[ovMode];
       document.getElementById('ov-title').innerHTML = d.title;
       document.getElementById('ov-desc').innerHTML = d.desc;
@@ -3010,21 +2544,21 @@ model.compile(
       const toY = (v) => padT + ph - (Math.min(1.8, v) / 1.8) * ph;
 
       ctx.strokeStyle = '#ECEFF1'; ctx.lineWidth = 1;
-      for (const yv of [0.4, 0.8, 1.2, 1.6]) {
+      for (const yv of [0.4, 0.8, 1.2, 1.6]) {{
         const py = toY(yv);
         ctx.beginPath(); ctx.moveTo(padL, py); ctx.lineTo(padL + pw, py); ctx.stroke();
         ctx.fillStyle = '#5F6368'; ctx.font = '500 10.5px Roboto Mono'; ctx.textAlign = 'right';
         ctx.fillText(yv.toFixed(1), padL - 6, py + 3);
-      }
+      }}
       ctx.strokeStyle = '#9AA0A6'; ctx.lineWidth = 1.2; ctx.strokeRect(padL, padT, pw, ph);
 
-      const drawLine = (arr, col) => {
+      const drawLine = (arr, col) => {{
         ctx.strokeStyle = col; ctx.lineWidth = 3.2;
         ctx.beginPath();
-        arr.forEach((v, i) => { const px = toX(i), py = toY(v); if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); });
+        arr.forEach((v, i) => {{ const px = toX(i), py = toY(v); if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }});
         ctx.stroke();
-        arr.forEach((v, i) => { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(toX(i), toY(v), 4, 0, Math.PI * 2); ctx.fill(); });
-      };
+        arr.forEach((v, i) => {{ ctx.fillStyle = col; ctx.beginPath(); ctx.arc(toX(i), toY(v), 4, 0, Math.PI * 2); ctx.fill(); }});
+      }};
       drawLine(d.tr, '#1A73E8');
       drawLine(d.va, '#EA4335');
 
@@ -3036,28 +2570,28 @@ model.compile(
 
       ctx.fillStyle = '#202124'; ctx.font = '700 11.5px Roboto'; ctx.textAlign = 'center';
       ctx.fillText('Putaran Training (Epoch 1 s.d. 10)', padL + pw / 2, H - 6);
-    }
+    }}
     renderOvCanvas();
 
     // =========================================================================
     // SIMULATOR #6 (Slide 41): Kalkulator Ledakan Parameter MLP (+ Rasio 192x!)
     // =========================================================================
     let flMode = 'f224';
-    const FL_MODES = {
-      mnist: { label: 'MNIST (28×28×1)', inputs: 28 * 28 * 1, color: '#34A853' },
-      f64:   { label: 'Frozen Kecil (64×64×3)', inputs: 64 * 64 * 3, color: '#FBBC04' },
-      f224:  { label: 'Frozen Standar (224×224×3)', inputs: 224 * 224 * 3, color: '#EA4335' },
-    };
+    const FL_MODES = {{
+      mnist: {{ label: 'MNIST (28×28×1)', inputs: 28 * 28 * 1, color: '#34A853' }},
+      f64:   {{ label: 'Frozen Kecil (64×64×3)', inputs: 64 * 64 * 3, color: '#FBBC04' }},
+      f224:  {{ label: 'Frozen Standar (224×224×3)', inputs: 224 * 224 * 3, color: '#EA4335' }},
+    }};
 
-    function setFlMode(m) {
+    function setFlMode(m) {{
       flMode = m;
-      document.querySelectorAll('#fl-presets button').forEach((b) => {
+      document.querySelectorAll('#fl-presets button').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.fl !== m);
-      });
+      }});
       updateFlSim();
-    }
+    }}
 
-    function updateFlSim() {
+    function updateFlSim() {{
       const units = parseInt(document.getElementById('fl-units').value, 10) || 128;
       document.getElementById('fl-units-v').textContent = String(units);
       const cur = FL_MODES[flMode];
@@ -3065,21 +2599,21 @@ model.compile(
       const ratio = Math.round(cur.inputs / FL_MODES.mnist.inputs);
 
       document.getElementById('fl-params').textContent = total.toLocaleString('id-ID');
-      document.getElementById('fl-input-len').textContent = `${cur.inputs.toLocaleString('id-ID')} input × ${units} neuron`;
+      document.getElementById('fl-input-len').textContent = `${{cur.inputs.toLocaleString('id-ID')}} input × ${{units}} neuron`;
       const ratioEl = document.getElementById('fl-ratio');
-      if (ratioEl) ratioEl.textContent = ratio === 1 ? 'Baseline 1×' : `${ratio}× MNIST!`;
+      if (ratioEl) ratioEl.textContent = ratio === 1 ? 'Baseline 1×' : `${{ratio}}× MNIST!`;
 
       const noteEl = document.getElementById('fl-note');
-      if (flMode === 'mnist') {
+      if (flMode === 'mnist') {{
         noteEl.className = 'callout green';
-        noteEl.innerHTML = `<strong>Masih Ringan!</strong> Gambar kecil <code>28×28×1</code> hanya butuh <strong>${total.toLocaleString('id-ID')}</strong> bobot di layer 1.`;
-      } else if (flMode === 'f64') {
+        noteEl.innerHTML = `<strong>Masih Ringan!</strong> Gambar kecil <code>28×28×1</code> hanya butuh <strong>${{total.toLocaleString('id-ID')}}</strong> bobot di layer 1.`;
+      }} else if (flMode === 'f64') {{
         noteEl.className = 'callout yellow';
-        noteEl.innerHTML = `<strong>16× Lebih Besar!</strong> Foto kecil <code>64×64×3</code> sudah butuh <strong>${(total/1e6).toFixed(2)} juta bobot</strong> untuk <code>143</code> foto Frozen.`;
-      } else {
+        noteEl.innerHTML = `<strong>16× Lebih Besar!</strong> Foto kecil <code>64×64×3</code> sudah butuh <strong>${{(total/1e6).toFixed(2)}} juta bobot</strong> untuk <code>{total_imgs}</code> foto Frozen.`;
+      }} else {{
         noteEl.className = 'callout red';
-        noteEl.innerHTML = `<strong>192× Meledak!</strong> Baru <code>143</code> foto Frozen, tapi 1 layer MLP saja sudah butuh <strong>${(total/1e6).toFixed(2)} juta bobot</strong>!`;
-      }
+        noteEl.innerHTML = `<strong>192× Meledak!</strong> Baru <code>{total_imgs}</code> foto Frozen, tapi 1 layer MLP saja sudah butuh <strong>${{(total/1e6).toFixed(2)}} juta bobot</strong>!`;
+      }}
 
       const canvas = document.getElementById('fl-canvas');
       if (!canvas) return;
@@ -3096,7 +2630,7 @@ model.compile(
 
       ctx.strokeStyle = '#DADCE0'; ctx.strokeRect(padL, padT, pw, ph);
       const barW = 98;
-      keys.forEach((k, i) => {
+      keys.forEach((k, i) => {{
         const cx = padL + (pw / 3) * (i + 0.5);
         const bh = Math.max(8, (valsM[i] / maxM) * ph);
         const by = padT + ph - bh;
@@ -3109,31 +2643,31 @@ model.compile(
         ctx.strokeRect(cx - barW / 2, by, barW, bh);
 
         ctx.fillStyle = '#202124'; ctx.font = '700 12.5px Roboto Mono'; ctx.textAlign = 'center';
-        ctx.fillText(`${valsM[i].toFixed(2)} Jt`, cx, by - 9);
+        ctx.fillText(`${{valsM[i].toFixed(2)}} Jt`, cx, by - 9);
         ctx.font = '700 11.5px Roboto';
         ctx.fillText(k === 'mnist' ? '28×28×1' : k === 'f64' ? '64×64×3' : '224×224×3', cx, padT + ph + 19);
-      });
+      }});
       ctx.fillStyle = '#202124'; ctx.font = '700 12.5px Poppins'; ctx.textAlign = 'center';
-      ctx.fillText(`Perbandingan Jumlah Bobot Layer 1 (Dense ${units} Neuron)`, padL + pw / 2, 19);
-    }
+      ctx.fillText(`Perbandingan Jumlah Bobot Layer 1 (Dense ${{units}} Neuron)`, padL + pw / 2, 19);
+    }}
     updateFlSim();
 
     // =========================================================================
     // DECLARATIVE PDF/PPTX EXPANDERS (Standard Contract for tools/core/exporter.py)
     // =========================================================================
-    window.SLIDE_PDF_EXPANDERS.push(({ cloneSlideWithCanvases }) => {
-      const expandHelper = (hostId, states, applyFn, prefix) => {
+    window.SLIDE_PDF_EXPANDERS.push(({{ cloneSlideWithCanvases }}) => {{
+      const expandHelper = (hostId, states, applyFn, prefix) => {{
         const host = document.getElementById(hostId);
         if (!host) return;
         const slide = host.closest('section.slide');
         if (!slide) return;
-        const clones = states.map((st) => {
+        const clones = states.map((st) => {{
           applyFn(st);
           return cloneSlideWithCanvases(slide, prefix + '-' + st);
-        });
+        }});
         clones.forEach((c) => slide.parentNode.insertBefore(c, slide));
         slide.remove();
-      };
+      }};
 
       expandHelper('n1-presets', ['elsa', 'anna', 'olaf'], setN1Char, 'n1');
       expandHelper('act-tabs', ['relu', 'sigmoid', 'tanh'], setActMode, 'act');
@@ -3141,29 +2675,25 @@ model.compile(
       expandHelper('gd-presets', ['small', 'ideal', 'large'], setGdMode, 'gd');
       expandHelper('ov-btns', ['under', 'good', 'over'], setOvMode, 'ov');
       expandHelper('fl-presets', ['mnist', 'f64', 'f224'], setFlMode, 'fl');
-    });
+    }});
+"""
 
 
-    (function initSlide() {
-      const st = readTimerState();
-      if (st && st.running && typeof st.startEpoch === 'number') {
-        renderSessionTimer();
-        sessionTimerInterval = setInterval(renderSessionTimer, 1000);
-      } else {
-        renderSessionTimer();
-      }
-      if ('serviceWorker' in navigator && location.protocol !== 'file:') {
-        navigator.serviceWorker.register('../../sw.js', { scope: '../../' }).catch(() => {});
-      }
-      const m = window.location.hash.match(/^#slide-(\d+)$/);
-      if (m) { showSlide(parseInt(m[1], 10) - 1); return; }
-      try {
-        const saved = localStorage.getItem('p02_slide_idx');
-        if (saved !== null) { showSlide(parseInt(saved, 10)); return; }
-      } catch (e) {}
-      showSlide(0);
-    })();
+def main() -> None:
+    data_path = ASSETS_DIR / "p02_data.json"
+    if not data_path.exists():
+        raise FileNotFoundError(f"Jalankan build_assets.py dulu: {data_path} tidak ditemukan.")
+    data = json.loads(data_path.read_text(encoding="utf-8"))
+    slides_html = build_slides_html(data)
+    extra_js = build_extra_js(data)
+    out_path, total = write_deck_html(
+        SESSION,
+        slides_html,
+        extra_css=EXTRA_CSS,
+        extra_js=extra_js,
+    )
+    print(f"✅ HTML interaktif {SESSION.id} ({total} slide) berhasil dibuat: {out_path}")
 
-  </script>
-</body>
-</html>
+
+if __name__ == "__main__":
+    main()

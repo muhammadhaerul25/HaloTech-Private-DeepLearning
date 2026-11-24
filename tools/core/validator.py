@@ -184,7 +184,7 @@ def validate_notebooks(session: SessionConfig, execute: bool = True) -> dict:
         with tempfile.TemporaryDirectory(prefix=f"nb_val_{session.id.lower()}_") as tmp_dir:
             tmp_sol_out = Path(tmp_dir) / "sol_exec.ipynb"
             cmd = [
-                sys.executable, "-m", "jupyter", "nbconvert",
+                sys.executable, "-m", "nbconvert",
                 "--to", "notebook", "--execute",
                 "--ExecutePreprocessor.timeout=300",
                 "--output", str(tmp_sol_out),
@@ -205,7 +205,7 @@ def validate_notebooks(session: SessionConfig, execute: bool = True) -> dict:
             nbformat.write(prefix_nb, tmp_stu_in)
             try:
                 cmd_stu = [
-                    sys.executable, "-m", "jupyter", "nbconvert",
+                    sys.executable, "-m", "nbconvert",
                     "--to", "notebook", "--execute",
                     "--ExecutePreprocessor.timeout=180",
                     "--output", str(tmp_stu_out),
