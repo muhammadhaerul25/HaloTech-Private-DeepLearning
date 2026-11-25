@@ -291,7 +291,7 @@ if HIDE_SLIDES_28_40:
                 "**Tujuan Slide (2 menit):** Memberikan gambaran utuh sesi 120 menit dalam 1 halaman ringkas — menyatukan 3 Bab teori (`AI/ML/DL`, `4 Tugas CV`, `Bedah Total Neural Network`), Kuis, Kamus & Referensi, serta Hands-On Notebook & Rangkuman Penutup beserta 3 *Learning Goals* di kanan."
             )
             _notes[1] = (
-                "• **Naskah Pengajar:** Bacakan singkat ritme 120 menit (~58 menit pembuka, Bab 1–3, kuis & kamus, lalu 62 menit sesi hands-on praktik & rangkuman penutup), lalu tunjuk 3 target penguasaan di kanan."
+                "• **Naskah Pengajar:** Bacakan singkat ritme 120 menit (~58 menit pembuka, Bab 1–3, kuis & kamus, lalu 62 menit sesi hands-on praktik model 1-layer & rangkuman penutup), lalu tunjuk 3 target penguasaan di kanan."
             )
         elif _orig_idx == 27:
             _notes[-1] = (
@@ -307,16 +307,54 @@ if HIDE_SLIDES_28_40:
             _notes[0] = _notes[0].replace("Q&A #6", "Q&A #4")
         elif _orig_idx == 46 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (1 menit — Cover Hands-On):** Pembuka sesi praktik langsung **Hands-On: Praktik Neural Network** pada dataset foto Disney Frozen.",
-                "• **Catatan Instruktur:** Ajak peserta membuka `materials/p02_teori_neural_network/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal dan pastikan folder `data/frozen_v1/` sudah siap diakses untuk 6 langkah praktik.",
+                "**Tujuan Slide (1 menit — Cover Hands-On):** Pembuka sesi praktik langsung **Hands-On: Praktik Neural Network** pada dataset foto Disney Frozen (`143` foto).",
+                "• **Catatan Instruktur:** Ajak peserta membuka `materials/p02_teori_neural_network/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal dan arahkan sekilas ke 6 langkah di strip bawah.",
+            ]
+        elif _orig_idx == 47 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (9.5 menit — Hands-On Langkah 1):** Mendampingi peserta menjalankan Setup 3 tahap dan membaca `metadata.csv` foto Frozen secara dinamis (`143` foto: polos vs ramai).",
+                "• **Panduan Praktik:** Pastikan `SEED = 42` terkunci, `DATA_DIR` mengarah ke `data/frozen_v1`, dan output tabel crosstab cocok dengan panel **Expected Output** kanan.",
+            ]
+        elif _orig_idx == 48 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (9.5 menit — Hands-On Langkah 2):** Mendampingi peserta melakukan `.flatten()` foto Elsa dan mengerjakan `# TODO 1` (`12.288` neuron) serta `# TODO 2` (`150.528` neuron → `752.645` parameter `W + b`).",
+                "• **Panduan Praktik:** Cocokkan angka `752.645` langsung dengan diagram Slide 29 agar teori dan kode terasa 100% menyatu!",
+            ]
+        elif _orig_idx == 49 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (10 menit — Hands-On Langkah 3):** Mendampingi peserta mengerjakan `# TODO 3` (1 Neuron `W·x + b` + ReLU) dan `# TODO 4` (`softmax_manual`, `Argmax`, & `Loss`) pada 4 piksel nyata Elsa (`ELSA 85.5% | Loss = 0.16`).",
+                "• **Tips Mengajar:** Biarkan peserta mencoba mengetik sendiri dulu 2 menit sebelum membuka kotak `<details>` Hint.",
+            ]
+        elif _orig_idx == 50 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (10 menit — Hands-On Langkah 4):** Mendampingi peserta memuat `143` foto Frozen ukuran `64×64×3` dan mengerjakan `# TODO 5` membangun **Neural Network 1-Layer** (`Input → Flatten → Dense(5, softmax)`).",
+                "• **Catatan Penting:** Tegaskan bahwa model 1-layer ini sama persis dengan diagram Slide 29 — dan menjadi fondasi sebelum naik ke arsitektur berlapis & CNN di P03!",
+            ]
+        elif _orig_idx == 51 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (10 menit — Hands-On Langkah 5):** Mendampingi peserta mengerjakan `# TODO 6` menjalankan `model_nn.fit()` (8 epoch: `Loss 3.39 → 1.44`, `Acc 20.3% → 44.8%`) dan menyimpan `results/p02_nn_loss_curve.png`.",
+                "• **Panduan Diskusi:** Amati kurva Loss yang turun stabil, lalu diskusikan dengan jujur mengapa model 1-layer mulai kesulitan pada latar ramai — pembagian split anti-leakage akan dibahas di P05.",
+            ]
+        elif _orig_idx == 52 and HIDE_BAB4_ARCH:
+            _notes = [
+                "**Tujuan Slide (9 menit — Hands-On Langkah 6):** Mendampingi peserta membaca `model_nn.summary()` (`61.445` parameter), membuktikannya di `# TODO 7` (`12.288 × 5 + 5`), lalu menguji `# TODO 8` (eksperimen opsional 3 nilai *Learning Rate*).",
+                "• **Momen Aha:** Pastikan peserta melihat `assert n_weight + n_bias == model_nn.count_params()` lolos 100% dan menyambungkannya dengan angka `752.645` pada resolusi `224×224×3`.",
             ]
         elif _orig_idx == 54 and HIDE_BAB4_ARCH:
-            _notes[0] = "**Tujuan Slide (2 menit):** Mengulas singkat 12 istilah asli **Teori Neural Network** (termasuk `Epoch & Learning Rate`) di Kamus Istilah setelah kuis."
+            _notes = [
+                "**Tujuan Slide (2 menit — Kamus Istilah):** Mengulas 12 istilah asli Bab 1–3 yang kini dikelompokkan berdasarkan warna bab (`Bab 1` Biru, `Bab 2` Merah, `Bab 3` Hijau/Kuning).",
+                "• **Panduan Interaktif:** Gunakan tombol filter **`Semua` / `Bab 1` / `Bab 2` / `Bab 3`** di pojok kanan atas untuk menyorot kelompok konsep tertentu jika ada pertanyaan dari peserta.",
+            ]
         elif _orig_idx == 55 and HIDE_BAB4_ARCH:
-            _notes[0] = "**Tujuan Slide (5 menit):** Kuis interaktif 5 soal langsung setelah Cover Evaluasi untuk mengunci pemahaman Bab 1 sampai Bab 3 (termasuk soal #5 tentang *Backpropagation & Gradient Descent* yang menurunkan rata-rata *Loss* dari `1.70 → 0.21`)."
+            _notes = [
+                "**Tujuan Slide (5 menit — Kuis Interaktif 5 Soal):** Menguji pemahaman Bab 1–3 secara aktif sebelum masuk praktik notebook.",
+                "• **Panduan Interaktif:** Minta peserta mengklik langsung salah satu chip pilihan di setiap kartu soal hingga panel **`Skor: 0 / 5`** bertambah hijau/merah, lalu klik **`Lihat Penjelasan`** atau **`Buka Semua`** untuk membahas alasan setiap jawaban.",
+            ]
         elif _orig_idx == 56 and HIDE_BAB4_ARCH:
-            _notes[0] = "**Tujuan Slide (3 menit — Penutup):** Mengunci seluruh sesi **P02 — Teori Neural Network** dengan 3 Poin Utama di slide gelap sekaligus preview singkat menuju **P03 (Arsitektur Neural Network & Konvolusi CNN)**."
-            _notes[1] = "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) 5 Tahap runtut Neural Network dari 1 Piksel → Backpropagation; (03) MLP `19,27` juta parameter sebagai jembatan alami menuju **P03 (Arsitektur Neural Network & Konvolusi CNN)**, dan ingatkan daftar referensi mandiri di Slide 33–34."
+            _notes = [
+                "**Tujuan Slide (3 menit — Grand Finale 3 Poin Utama):** Mengunci seluruh sesi **P02 — Teori Neural Network** dalam 3 pilar rapi di slide gelap beserta jembatan menuju **P03 (Arsitektur Neural Network & Konvolusi CNN)**.",
+                "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) 5 Tahap runtut 1 Piksel → Flatten → Weight+Bias → Softmax → Backprop; (03) Neural Network 1-Layer terbukti di Keras (`61.445` / `752.645` param) sebagai jembatan alami menuju **P03 (Arsitektur & CNN)**. Ingatkan pula Slide 33–34 untuk belajar mandiri.",
+            ]
         elif _orig_idx == 57:
             _notes[0] = (
                 "**Tujuan Slide (2 menit):** Menutup kelas dengan apresiasi, tugas ringan mandiri opsional, dan preview menarik untuk **P03 (Arsitektur Neural Network & Konvolusi CNN)**."
@@ -331,7 +369,7 @@ if HIDE_SLIDES_28_40:
             SLIDE_EXPLANATIONS[_new_idx] = [
                 "**Tujuan Slide (2.5 menit — Tahap 5):** Mengikat seluruh Bab 3 (`Slide 24–27`) menjadi **1 siklus belajar utuh**: `Forward Pass → Hitung Loss → Backpropagation & Gradient Descent → Ulangi tiap Epoch`, memakai angka nyata foto **Olaf** dari model `150.528` piksel Slide 27 (`Loss 2.18 → 0.23`, `P(Olaf) 11.3% → 79.2%`).",
                 "• **Panduan Demo Interaktif (`▶ Play` / `■ Stop` / `⏭ +1 Tahap` / `↺ Reset`):** Klik **`▶ Play`** atau jalankan 4 tahap satu per satu: (1) **Forward Pass** = alur maju Tahap 4.1–4.3 (`Epoch 1: P(Olaf)=11.3%`, salah tebak Kristoff); (2) **Hitung Loss** = ukur kesalahan (`Loss=2.18`); (3) **Backpropagation & Gradient Descent** = lacak mundur bobot salah lalu geser sebesar *Learning Rate*; (4) **Epoch** = ulangi ke seluruh foto Frozen hingga kurva *Loss* di bawah turun mulus dari `2.18` ke `0.23` (`Olaf 79.2% ✅`).",
-                "• **Transisi ke Ultimate Slide 29 (Simulasi Full Neural Network):** \"Sekarang kelima tahap sudah kita kuasai satu per satu! Mari kita lihat **seluruh 5 tahap bekerja bersama dari ujung ke ujung** dalam 1 jaringan Neural Network nyata berlapis *Hidden Layer* di Slide 29!\"",
+                "• **Transisi ke Ultimate Slide 29 (Simulasi Full Neural Network):** \"Sekarang kelima tahap sudah kita kuasai satu per satu! Mari kita lihat **seluruh 5 tahap bekerja bersama dari ujung ke ujung** dalam 1 simulasi Neural Network nyata dari piksel sampai Backpropagation di Slide 29!\"",
             ]
             _new_idx += 1
             # Sisipkan Slide 29 (Ultimate Bab 3): Simulasi Full Neural Network End-to-End (Tahap 1–5)!

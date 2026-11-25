@@ -1,12 +1,12 @@
 """Generator notebook peserta & kunci jawaban untuk Hands-on P02:
-Computer Vision 101 — Menggunakan Dataset Proyek Disney Frozen (`data/frozen_v1/`).
+Teori Neural Network — Menggunakan Dataset Proyek Disney Frozen (`data/frozen_v1/`).
 
-Standar ultra awam-friendly (`docs/STANDAR_MATERI.md`):
+100% selaras Bab 1–3 (Slide 01–42) — TANPA konsep Hidden Layer / MLP yang belum diajarkan:
 - Sel kode pendek (5–15 baris), 1 sel = 1 aksi sederhana, komentar Bahasa Indonesia.
 - Setup 3 tahap standar (Libraries + versi, Colab/Lokal + SEED=42, Config dinamis DATA_DIR & CLASS_NAMES).
 - 8 latihan `# TODO` terfokus + `assert` + 8 sel `<details>` Hint & Jawaban (versi peserta).
+- Model Neural Network 1-Layer nyata (`Input -> Flatten -> Dense(5, softmax)`) persis Slide 29.
 - Versi solusi lolos 100% dieksekusi dengan `SMOKE_TEST=1`.
-- MLP hanya sebagai demo konsep (tidak mengklaim akurasi tinggi — jembatan ke CNN di P03).
 """
 
 from __future__ import annotations
@@ -44,13 +44,13 @@ def build_cells(is_solution: bool) -> list:
 **Dataset Proyek Utama:** **Disney Frozen Figurine (`data/frozen_v1/`)** — 5 kelas (`anna, elsa, kristoff, olaf, sven`), dibaca secara **dinamis** dari `DATA_DIR` dan `metadata.csv`.  
 **Gaya Kode:** Ramah pemula — setiap sel pendek (5–15 baris), 1 sel = 1 tugas, lengkap dengan komentar Bahasa Indonesia (`# ...`).
 
-**Peta 6 Langkah Praktik Hari Ini:**
+**Peta 6 Langkah Praktik Hari Ini (100% Selaras Bab 1–3):**
 1. **Langkah 1 (Slide 03 & 36):** Setup 3 tahap & membaca data Frozen secara dinamis dari `metadata.csv`.
-2. **Langkah 2 (Slide 21–22 & 37):** *Flatten* foto Frozen & menghitung jumlah neuron **Input Layer** (`H × W × C`).
-3. **Langkah 3 (Slide 25–29 & 38):** *Forward Pass* manual (1 neuron *Weight & Bias*, `ReLU`, `Softmax`, dan contoh mini 4 piksel nyata Elsa) di **NumPy**.
-4. **Langkah 4 (Slide 29 & 39):** Membangun **MLP kecil** dengan `tf.keras.Sequential` untuk foto Frozen `64×64×3`.
-5. **Langkah 5 (Slide 28–29 & 40):** Melatih MLP sebentar & memplot penurunan kurva **Loss** *(demo konsep — jembatan menuju Arsitektur & CNN di P03)*.
-6. **Langkah 6 (Slide 29 & 41):** Mengecek `model.summary()` & mencocokkannya dengan hitungan tangan *(plus eksperimen opsional `32` vs `64` vs `128` neuron)*.
+2. **Langkah 2 (Slide 21–22 & 37):** *Flatten* foto Frozen & menghitung neuron **Input Layer** (`H × W × C`) serta parameter 1-layer (`752.645`).
+3. **Langkah 3 (Slide 25–29 & 38):** *Forward Pass* manual di **NumPy** (1 neuron *Weight & Bias*, `ReLU`, `Softmax`, `Argmax`, & *Cross-Entropy Loss*).
+4. **Langkah 4 (Slide 29 & 39):** Membangun **Neural Network 1-Layer** (`Input → Flatten → Dense(5, softmax)`) dengan `tf.keras.Sequential`.
+5. **Langkah 5 (Slide 28–29 & 40):** Melatih model (`model.fit()`) & memplot kurva penurunan **Loss** per *Epoch*.
+6. **Langkah 6 (Slide 29 & 41):** Mencocokkan `model.summary()` dengan hitungan tangan `(Input × Output) + Bias`, plus eksperimen opsional **Learning Rate**.
 
 > **Cara Menjalankan:** Tekan `Shift + Enter` berurutan dari atas ke bawah. Pada versi peserta, lengkapi bagian bertanda `# TODO`.
 """
@@ -58,7 +58,7 @@ def build_cells(is_solution: bool) -> list:
     )
 
     # =========================================================================
-    # SETUP 3 TAHAP BAKU (LANGKAH 1 BAGIAN A — SLIDE 46)
+    # SETUP 3 TAHAP BAKU (LANGKAH 1 BAGIAN A — SLIDE 36)
     # =========================================================================
     cells.extend(
         setup_cells_standard(
@@ -68,13 +68,13 @@ def build_cells(is_solution: bool) -> list:
     )
 
     # =========================================================================
-    # LANGKAH 1: MEMBACA DATA FROZEN SECARA DINAMIS (SLIDE 03 & 46)
+    # LANGKAH 1: MEMBACA DATA FROZEN SECARA DINAMIS (SLIDE 03 & 36)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 1 (8,5 menit): Membaca Dataset Frozen Dinamis (Sesuai Slide 03 & 36)
+## Langkah 1 (9,5 menit): Membaca Dataset Frozen Dinamis (Sesuai Slide 03 & 36)
 
 Kita tidak pernah meng-hardcode jumlah foto karena dataset bisa terus bertambah di versi berikutnya.  
 Mari baca tabel `metadata.csv` langsung dari `DATA_DIR` dan cek distribusi tiap karakter (`polos` vs `ramai`).
@@ -126,17 +126,17 @@ plt.show()
     )
 
     # =========================================================================
-    # LANGKAH 2: FLATTEN & HITUNG NEURON INPUT LAYER (SLIDE 23–24 & 47)
+    # LANGKAH 2: FLATTEN & HITUNG NEURON INPUT LAYER (SLIDE 21–22 & 37)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 2 (8,5 menit): *Flatten* Foto & Hitung Neuron *Input Layer* (Sesuai Slide 21–22 & 37)
+## Langkah 2 (9,5 menit): *Flatten* Foto & Hitung Neuron *Input Layer* (Sesuai Slide 21–22 & 37)
 
-Ingat aturan penting di **Slide 22**:
-- Hanya ada **1 Input Layer**, tetapi jumlah **neuron** di dalamnya sama dengan banyaknya nilai piksel dari **1 gambar** setelah *resize*: `Tinggi × Lebar × Channel`.
-- Agar bisa masuk ke *Input Layer* MLP, gambar 3D `(H, W, 3)` diluruskan menjadi 1 vektor panjang lewat operasi **Flatten**.
+Ingat aturan penting di **Slide 22–23**:
+- Jumlah **neuron** di *Input Layer* sama dengan banyaknya nilai piksel dari **1 gambar** setelah *resize*: `Tinggi × Lebar × Channel`.
+- Agar bisa masuk ke *Input Layer*, gambar 3D `(H, W, 3)` diluruskan menjadi 1 vektor panjang lewat operasi **Flatten**.
 """
         )
     )
@@ -189,46 +189,46 @@ print("✅ Cek Latihan 1 lolos!")
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 2 (`# TODO 2`): Hitung Neuron Input `224×224×3` & Weight Tanpa Hidden Layer",
-        instruction_md="Hitung `neuron_input_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_tanpa_hidden = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)` (sesuai rumus `(Input × Output) + Bias`).",
+        title="Latihan 2 (`# TODO 2`): Hitung Neuron Input `224×224×3` & Total Parameter `W + b`",
+        instruction_md="Hitung `neuron_input_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_1layer_224 = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)` — cocokkan dengan angka **`752.645`** di Slide 29!",
         student_code="""
 # TODO 2A: Hitung jumlah neuron input untuk foto 224x224x3
 neuron_input_224 = None  # TODO: IMG_SIZE * IMG_SIZE * 3
 
-# TODO 2B: Hitung total parameter (weight + bias) jika langsung ke 5 neuron output
-param_tanpa_hidden = None  # TODO: neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
+# TODO 2B: Hitung total parameter (weight + bias) menuju 5 neuron output
+param_1layer_224 = None  # TODO: neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_input_224 == 150_528
-assert param_tanpa_hidden == 752_645
+assert param_1layer_224 == 752_645
 print("Neuron Input (224x224x3) :", f"{neuron_input_224:,}")
-print("Param langsung -> 5 kelas:", f"{param_tanpa_hidden:,}")
+print("Total Param (W + b)      :", f"{param_1layer_224:,}")
 print("✅ Cek Latihan 2 lolos!")
 """,
         solution_code="""
-# Hitung jumlah neuron input (H * W * C) dan parameter langsung ke output layer
+# Hitung jumlah neuron input (H * W * C) dan total parameter (Input * Output + Bias)
 neuron_input_224 = IMG_SIZE * IMG_SIZE * 3
-param_tanpa_hidden = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
+param_1layer_224 = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_input_224 == 150_528
-assert param_tanpa_hidden == 752_645
+assert param_1layer_224 == 752_645
 print("Neuron Input (224x224x3) :", f"{neuron_input_224:,}")
-print("Param langsung -> 5 kelas:", f"{param_tanpa_hidden:,}")
+print("Total Param (W + b)      :", f"{param_1layer_224:,}")
 print("✅ Cek Latihan 2 lolos!")
 """,
-        hint_code="neuron_input_224 = IMG_SIZE * IMG_SIZE * 3\nparam_tanpa_hidden = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)",
+        hint_code="neuron_input_224 = IMG_SIZE * IMG_SIZE * 3\nparam_1layer_224 = neuron_input_224 * len(CLASS_NAMES) + len(CLASS_NAMES)",
         hint_label="Latihan 2",
     )
 
     # =========================================================================
-    # LANGKAH 3: FORWARD PASS MANUAL DENGAN NUMPY (SLIDE 21, 26, 32 & 48)
+    # LANGKAH 3: FORWARD PASS MANUAL DENGAN NUMPY (SLIDE 25–29 & 38)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 3 (8,5 menit): *Forward Pass* Manual dengan NumPy (Sesuai Slide 25–29 & 38)
+## Langkah 3 (10 menit): *Forward Pass* Manual dengan NumPy (Sesuai Slide 25–29 & 38)
 
-Sekarang mari buktikan sendiri bahwa matematika di dalam *Neural Network* hanyalah perkalian bobot, penjumlahan bias, `ReLU`, dan `Softmax`!
+Sekarang mari buktikan sendiri bahwa matematika di dalam *Neural Network* hanyalah perkalian bobot + bias (`z = Σ(x·w) + b`), fungsi aktivasi (`ReLU` / `Softmax`), `Argmax`, dan `Loss (-ln P)`!
 """
         )
     )
@@ -236,8 +236,8 @@ Sekarang mari buktikan sendiri bahwa matematika di dalam *Neural Network* hanyal
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 3 (`# TODO 3`): Menghitung 1 Neuron & Aktivasi `ReLU`",
-        instruction_md="Lengkapi perhitungan `z = float(np.dot(x_rgb, w) + b)` dan fungsi `relu(v)` yang mengembalikan `np.maximum(0.0, v)`.",
+        title="Latihan 3 (`# TODO 3`): Menghitung 1 Neuron (`W·x + b`) & Aktivasi `ReLU`",
+        instruction_md="Lengkapi perhitungan `z = float(np.dot(x_rgb, w) + b)` dan fungsi `relu(v)` yang mengembalikan `np.maximum(0.0, v)` (sesuai Slide 25–26).",
         student_code="""
 # Contoh input 3 angka [R, G, B] dan bobot 1 neuron
 x_rgb = np.array([0.67, 0.66, 0.67], dtype=np.float32)
@@ -285,8 +285,8 @@ print("✅ Cek Latihan 3 lolos!")
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 4 (`# TODO 4`): Fungsi `softmax_manual` & Verifikasi 4-Piksel Forward Pass",
-        instruction_md="Lengkapi `softmax_manual(logits)` memakai `exp_val = np.exp(shifted)` lalu `exp_val / np.sum(exp_val)`. Setelah itu kita jalankan contoh mini 4 piksel foto Elsa!",
+        title="Latihan 4 (`# TODO 4`): `softmax_manual`, `Argmax` & *Cross-Entropy Loss*",
+        instruction_md="Lengkapi `softmax_manual(logits)` memakai `exp_val = np.exp(shifted)` lalu `exp_val / np.sum(exp_val)`. Setelah itu kita jalankan Forward Pass 1-Layer lengkap (`W·x + b → Softmax → Argmax → Loss`) pada 4 piksel nyata Elsa!",
         student_code="""
 def softmax_manual(logits):
     shifted = logits - np.max(logits)
@@ -294,21 +294,25 @@ def softmax_manual(logits):
     exp_val = None  # TODO: np.exp(shifted)
     return None     # TODO: exp_val / np.sum(exp_val)
 
-# Jalankan contoh mini 4 piksel nyata Elsa (Slide 33): 4 Input -> 2 Hidden -> 2 Output
+# Forward Pass 1-Layer nyata pada 4 piksel Elsa -> 5 kelas Frozen (persis alur Slide 25-29!)
 x_4px = np.array([0.76, 0.74, 0.65, 0.65], dtype=np.float64)
-W1 = np.array([[0.8, -0.4], [0.6, 0.5], [-0.2, 0.9], [0.4, -0.3]])
-b1 = np.array([-0.1, 0.1])
-W2 = np.array([[1.5, -0.8], [-0.5, 1.2]])
-b2 = np.array([0.2, -0.2])
+W_demo = np.array([
+    [-0.4,  1.2, -0.3, -0.5, -0.2],
+    [-0.3,  1.1, -0.2, -0.4, -0.3],
+    [-0.2,  0.9, -0.4, -0.3, -0.1],
+    [-0.3,  0.8, -0.2, -0.2, -0.3],
+])
+b_demo = np.array([-0.1, -0.5, 0.1, 0.0, -0.1])
 
-h1 = relu(x_4px @ W1 + b1)
-logits_mini = h1 @ W2 + b2
-probs_mini = softmax_manual(logits_mini)
+z_skor = x_4px @ W_demo + b_demo
+probs = softmax_manual(z_skor)
 
-assert probs_mini is not None and np.isclose(np.sum(probs_mini), 1.0)
-print("Hidden h1 (ReLU) :", np.round(h1, 3))
-print("Output logits    :", np.round(logits_mini, 3))
-print(f"Probabilitas     : Elsa = {probs_mini[0]*100:.2f}%, Lain = {probs_mini[1]*100:.2f}%")
+assert probs is not None and np.isclose(np.sum(probs), 1.0)
+pred_idx = int(np.argmax(probs))
+loss_elsa = float(-np.log(probs[1]))  # Target Elsa = index 1
+print("Skor mentah z    :", np.round(z_skor, 2))
+print("Probabilitas (%) :", np.round(probs * 100, 1))
+print(f"Argmax Prediksi  : {CLASS_NAMES[pred_idx].upper()} ({probs[pred_idx]*100:.1f}%) | Loss = {loss_elsa:.2f}")
 print("✅ Cek Latihan 4 lolos!")
 """,
         solution_code="""
@@ -317,21 +321,25 @@ def softmax_manual(logits):
     exp_val = np.exp(shifted)
     return exp_val / np.sum(exp_val)
 
-# Jalankan contoh mini 4 piksel nyata Elsa (Slide 33): 4 Input -> 2 Hidden -> 2 Output
+# Forward Pass 1-Layer nyata pada 4 piksel Elsa -> 5 kelas Frozen (persis alur Slide 25-29!)
 x_4px = np.array([0.76, 0.74, 0.65, 0.65], dtype=np.float64)
-W1 = np.array([[0.8, -0.4], [0.6, 0.5], [-0.2, 0.9], [0.4, -0.3]])
-b1 = np.array([-0.1, 0.1])
-W2 = np.array([[1.5, -0.8], [-0.5, 1.2]])
-b2 = np.array([0.2, -0.2])
+W_demo = np.array([
+    [-0.4,  1.2, -0.3, -0.5, -0.2],
+    [-0.3,  1.1, -0.2, -0.4, -0.3],
+    [-0.2,  0.9, -0.4, -0.3, -0.1],
+    [-0.3,  0.8, -0.2, -0.2, -0.3],
+])
+b_demo = np.array([-0.1, -0.5, 0.1, 0.0, -0.1])
 
-h1 = relu(x_4px @ W1 + b1)
-logits_mini = h1 @ W2 + b2
-probs_mini = softmax_manual(logits_mini)
+z_skor = x_4px @ W_demo + b_demo
+probs = softmax_manual(z_skor)
 
-assert probs_mini is not None and np.isclose(np.sum(probs_mini), 1.0)
-print("Hidden h1 (ReLU) :", np.round(h1, 3))
-print("Output logits    :", np.round(logits_mini, 3))
-print(f"Probabilitas     : Elsa = {probs_mini[0]*100:.2f}%, Lain = {probs_mini[1]*100:.2f}%")
+assert probs is not None and np.isclose(np.sum(probs), 1.0)
+pred_idx = int(np.argmax(probs))
+loss_elsa = float(-np.log(probs[1]))  # Target Elsa = index 1
+print("Skor mentah z    :", np.round(z_skor, 2))
+print("Probabilitas (%) :", np.round(probs * 100, 1))
+print(f"Argmax Prediksi  : {CLASS_NAMES[pred_idx].upper()} ({probs[pred_idx]*100:.1f}%) | Loss = {loss_elsa:.2f}")
 print("✅ Cek Latihan 4 lolos!")
 """,
         hint_code="exp_val = np.exp(shifted)\nreturn exp_val / np.sum(exp_val)",
@@ -339,17 +347,17 @@ print("✅ Cek Latihan 4 lolos!")
     )
 
     # =========================================================================
-    # LANGKAH 4: BANGUN MLP KECIL DENGAN KERAS (SLIDE 30 & 49)
+    # LANGKAH 4: BANGUN NEURAL NETWORK 1-LAYER DI KERAS (SLIDE 29 & 39)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 4 (8,5 menit): Membangun MLP Kecil di Keras pada Foto Frozen (Sesuai Slide 29 & 39)
+## Langkah 4 (10 menit): Membangun Neural Network Pertamamu di Keras (Sesuai Slide 29 & 39)
 
-Mari muat seluruh foto Frozen dari `DATA_DIR` ke ukuran ringkas `64×64×3` (agar RAM tetap ringan di kelas), lalu bangun **MLP kecil** memakai `tf.keras.Sequential`.
+Mari muat seluruh foto Frozen dari `DATA_DIR` ke ukuran ringkas `64×64×3` (agar RAM tetap ringan di kelas), lalu bangun **Neural Network 1-Layer** persis seperti diagram Slide 29: `Input → Flatten → Dense(5, activation="softmax")`!
 
-> **Catatan Jujur:** MLP di sini hanya untuk **demo konsep** struktur layer, parameter, dan penurunan Loss — *bukan* model akhir proyek. Di **P03** kita pindah ke **CNN** yang jauh lebih cocok untuk gambar!
+> **Catatan Jujur:** Model 1-layer ini adalah langkah awal agar kamu paham penuh alur piksel → bobot → Softmax → Loss. Di **P03** kita akan naik ke arsitektur berlapis & **CNN** yang jauh lebih kuat mengenali pola 2D foto!
 """
         )
     )
@@ -377,15 +385,14 @@ print("Shape X_frozen :", X_frozen.shape, "| Jumlah label:", len(y_frozen))
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 5 (`# TODO 5`): Menyusun Model MLP Kecil (`buat_mlp_frozen`)",
-        instruction_md="Lengkapi fungsi `buat_mlp_frozen(hidden_units=64)` dengan urutan layer: `Input((SMALL_SIZE, SMALL_SIZE, 3))` → `Flatten()` → `Dense(hidden_units, activation='relu')` → `Dense(len(CLASS_NAMES), activation='softmax')`.",
+        title="Latihan 5 (`# TODO 5`): Menyusun Neural Network 1-Layer (`buat_nn_frozen`)",
+        instruction_md="Lengkapi fungsi `buat_nn_frozen(lr=0.001)` dengan urutan persis Slide 29: `Input((SMALL_SIZE, SMALL_SIZE, 3))` → `Flatten()` → `Dense(len(CLASS_NAMES), activation='softmax')`.",
         student_code="""
-def buat_mlp_frozen(hidden_units=64, lr=0.001):
-    # TODO 5: Lengkapi daftar layer MLP berikut
+def buat_nn_frozen(lr=0.001):
+    # TODO 5: Lengkapi layer Flatten dan Output Dense(5, softmax)
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(SMALL_SIZE, SMALL_SIZE, 3)),
         None,  # TODO: tf.keras.layers.Flatten()
-        None,  # TODO: tf.keras.layers.Dense(hidden_units, activation="relu")
         None,  # TODO: tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax")
     ])
     model.compile(
@@ -395,17 +402,16 @@ def buat_mlp_frozen(hidden_units=64, lr=0.001):
     )
     return model
 
-mlp_kecil = buat_mlp_frozen(hidden_units=64)
-assert mlp_kecil.output_shape == (None, len(CLASS_NAMES))
-print("✅ Model MLP kecil berhasil dibangun! Output shape:", mlp_kecil.output_shape)
+model_nn = buat_nn_frozen(lr=0.001)
+assert model_nn.output_shape == (None, len(CLASS_NAMES))
+print("✅ Neural Network 1-Layer berhasil dibangun! Output shape:", model_nn.output_shape)
 """,
         solution_code="""
-def buat_mlp_frozen(hidden_units=64, lr=0.001):
-    # Susun layer MLP: Input 64x64x3 -> Flatten -> Hidden ReLU -> Output Softmax (5 kelas)
+def buat_nn_frozen(lr=0.001):
+    # Susun Neural Network 1-Layer persis Slide 29: Input -> Flatten -> Output Softmax (5 kelas)
     model = tf.keras.Sequential([
         tf.keras.layers.Input(shape=(SMALL_SIZE, SMALL_SIZE, 3)),
         tf.keras.layers.Flatten(),
-        tf.keras.layers.Dense(hidden_units, activation="relu"),
         tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),
     ])
     model.compile(
@@ -415,24 +421,24 @@ def buat_mlp_frozen(hidden_units=64, lr=0.001):
     )
     return model
 
-mlp_kecil = buat_mlp_frozen(hidden_units=64)
-assert mlp_kecil.output_shape == (None, len(CLASS_NAMES))
-print("✅ Model MLP kecil berhasil dibangun! Output shape:", mlp_kecil.output_shape)
+model_nn = buat_nn_frozen(lr=0.001)
+assert model_nn.output_shape == (None, len(CLASS_NAMES))
+print("✅ Neural Network 1-Layer berhasil dibangun! Output shape:", model_nn.output_shape)
 """,
-        hint_code='tf.keras.layers.Flatten(),\ntf.keras.layers.Dense(hidden_units, activation="relu"),\ntf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),',
+        hint_code='tf.keras.layers.Flatten(),\ntf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),',
         hint_label="Latihan 5",
     )
 
     # =========================================================================
-    # LANGKAH 5: LATIH MLP SEBENTAR & PLOT LOSS (SLIDE 34–37 & 50)
+    # LANGKAH 5: LATIH MODEL & PLOT KURVA LOSS (SLIDE 28–29 & 40)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 5 (8,5 menit): Latih MLP Sebentar & Plot Kurva *Loss* (Sesuai Slide 28–29 & 40)
+## Langkah 5 (10 menit): Latih Model (`model.fit()`) & Plot Kurva *Loss* (Sesuai Slide 28–29 & 40)
 
-Sekarang kita panggil `mlp_kecil.fit(...)` untuk melihat langsung siklus **Forward Pass → Loss → Backpropagation → Gradient Descent** bekerja otomatis di Keras!  
+Sekarang kita panggil `model_nn.fit(...)` untuk melihat langsung siklus **Forward Pass → Loss → Backpropagation → Gradient Descent** bekerja otomatis di Keras!  
 *(Catatan metodologi: pembagian resmi `train/val/test` bebas data leakage dengan Group Split akan kita pelajari tuntas di **P05**.)*
 """
         )
@@ -441,12 +447,12 @@ Sekarang kita panggil `mlp_kecil.fit(...)` untuk melihat langsung siklus **Forwa
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 6 (`# TODO 6`): Menjalankan `mlp_kecil.fit(...)`",
-        instruction_md="Latih `mlp_kecil` memakai `X_frozen` dan `y_frozen` selama `EPOCHS` (`2` saat `SMOKE_TEST`, `8` saat kelas normal) dengan `batch_size=16`.",
+        title="Latihan 6 (`# TODO 6`): Menjalankan `model_nn.fit(...)`",
+        instruction_md="Latih `model_nn` memakai `X_frozen` dan `y_frozen` selama `EPOCHS` (`2` saat `SMOKE_TEST`, `8` saat kelas normal) dengan `batch_size=16`.",
         student_code="""
 EPOCHS = 2 if SMOKE_TEST else 8
 
-# TODO 6: Panggil mlp_kecil.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)
+# TODO 6: Panggil model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)
 history = None  # TODO
 
 assert history is not None and "loss" in history.history
@@ -457,8 +463,8 @@ print("✅ Cek Latihan 6 lolos!")
         solution_code="""
 EPOCHS = 2 if SMOKE_TEST else 8
 
-# Jalankan training singkat untuk mengamati penurunan nilai Loss (demo konsep)
-history = mlp_kecil.fit(
+# Jalankan training singkat untuk mengamati penurunan nilai Loss (demo konsep Bab 3)
+history = model_nn.fit(
     X_frozen, y_frozen,
     epochs=EPOCHS,
     batch_size=16,
@@ -470,7 +476,7 @@ print(f"Loss Epoch 1     : {history.history['loss'][0]:.4f}")
 print(f"Loss Epoch akhir : {history.history['loss'][-1]:.4f}")
 print("✅ Cek Latihan 6 lolos!")
 """,
-        hint_code="history = mlp_kecil.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)",
+        hint_code="history = model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)",
         hint_label="Latihan 6",
     )
 
@@ -485,11 +491,11 @@ Mari gambar grafik *Training Loss* per *Epoch* dan simpan ke folder `results/`:
     cells.append(
         code(
             """
-# Plot kurva Training Loss MLP kecil pada foto Frozen (demo konsep)
+# Plot kurva Training Loss Neural Network 1-Layer pada foto Frozen (demo konsep)
 fig, ax = plt.subplots(figsize=(7.0, 3.6))
 epoch_x = range(1, len(history.history["loss"]) + 1)
 ax.plot(epoch_x, history.history["loss"], marker="o", color="#4285F4", linewidth=2.5, label="Training Loss")
-ax.set_title("Kurva Training Loss — Demo MLP Kecil pada Foto Frozen (64×64×3)")
+ax.set_title("Kurva Training Loss — Neural Network 1-Layer pada Foto Frozen (64×64×3)")
 ax.set_xlabel("Epoch")
 ax.set_ylabel("Cross-Entropy Loss (makin kecil makin baik)")
 ax.set_xticks(list(epoch_x))
@@ -497,7 +503,7 @@ ax.grid(True, linestyle="--", alpha=0.4)
 ax.legend()
 plt.tight_layout()
 
-loss_plot_path = RESULTS_DIR / "p02_mlp_loss_curve.png"
+loss_plot_path = RESULTS_DIR / "p02_nn_loss_curve.png"
 fig.savefig(loss_plot_path, dpi=150)
 plt.show()
 assert loss_plot_path.exists()
@@ -507,15 +513,15 @@ print("Grafik disimpan ke:", loss_plot_path)
     )
 
     # =========================================================================
-    # LANGKAH 6: CEK model.summary() VS HITUNGAN TANGAN (SLIDE 28, 31 & 51)
+    # LANGKAH 6: CEK model.summary() VS HITUNGAN TANGAN (SLIDE 29 & 41)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Langkah 6 (8 menit): Cocokkan `model.summary()` dengan Hitungan Tangan (Sesuai Slide 29 & 41)
+## Langkah 6 (9 menit): Cocokkan `model.summary()` dengan Hitungan Tangan (Sesuai Slide 29 & 41)
 
-Mari cetak tabel `mlp_kecil.summary()` lalu buktikan bahwa angka di kolom `Param #` cocok **100%** dengan rumus `(Input × Output) + Bias` dari Bab 3!
+Mari cetak tabel `model_nn.summary()` lalu buktikan bahwa angka di kolom `Param #` cocok **100%** dengan rumus `(Input × Output) + Bias` dari Bab 3!
 """
         )
     )
@@ -524,7 +530,7 @@ Mari cetak tabel `mlp_kecil.summary()` lalu buktikan bahwa angka di kolom `Param
         code(
             """
 # Tampilkan ringkasan arsitektur & jumlah parameter dari Keras
-mlp_kecil.summary()
+model_nn.summary()
 """
         )
     )
@@ -532,65 +538,60 @@ mlp_kecil.summary()
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 7 (`# TODO 7`): Membuktikan Hitungan Tangan == `mlp_kecil.count_params()`",
-        instruction_md="Hitung `param_l1 = (n_input * 64) + 64` dan `param_l2 = (64 * n_kelas) + n_kelas`, lalu jumlahkan ke `total_manual` dan pastikan sama persis dengan `mlp_kecil.count_params()`!",
+        title="Latihan 7 (`# TODO 7`): Membuktikan Hitungan Tangan == `model_nn.count_params()`",
+        instruction_md="Hitung `n_weight = n_input * n_kelas` dan `n_bias = n_kelas`, lalu jumlahkan ke `total_manual` dan pastikan sama persis dengan `model_nn.count_params()` (`61.445`)!",
         student_code="""
 n_input = SMALL_SIZE * SMALL_SIZE * 3   # 12.288 neuron input
-n_hidden = 64
 n_kelas = len(CLASS_NAMES)              # 5 neuron output
 
-# TODO 7A: Hitung parameter Layer 1 (Input -> Hidden)
-param_l1 = None  # TODO: (n_input * n_hidden) + n_hidden
-# TODO 7B: Hitung parameter Layer 2 (Hidden -> Output)
-param_l2 = None  # TODO: (n_hidden * n_kelas) + n_kelas
+# TODO 7A: Hitung jumlah Weight (Input * Output)
+n_weight = None  # TODO: n_input * n_kelas
+# TODO 7B: Hitung jumlah Bias (= jumlah neuron output)
+n_bias = None    # TODO: n_kelas
 
-total_manual = (param_l1 + param_l2) if (param_l1 and param_l2) else None
-total_keras = mlp_kecil.count_params()
+total_manual = (n_weight + n_bias) if (n_weight is not None and n_bias is not None) else None
+total_keras = model_nn.count_params()
 
 assert total_manual == total_keras, f"Belum cocok: manual={total_manual}, keras={total_keras}"
-print(f"Layer 1 (Input -> Hidden)  : {param_l1:>10,}")
-print(f"Layer 2 (Hidden -> Output) : {param_l2:>10,}")
+print(f"Jumlah Weight (12.288 x 5) : {n_weight:>10,}")
+print(f"Jumlah Bias (5 kelas)      : {n_bias:>10,}")
 print(f"Total Hitungan Tangan      : {total_manual:>10,}")
 print(f"Total Keras count_params() : {total_keras:>10,}  <-- COCOK 100%!")
 print("✅ Cek Latihan 7 lolos!")
 """,
         solution_code="""
 n_input = SMALL_SIZE * SMALL_SIZE * 3   # 12.288 neuron input
-n_hidden = 64
 n_kelas = len(CLASS_NAMES)              # 5 neuron output
 
-# Hitung jumlah parameter Layer 1 dan Layer 2 sesuai rumus (Input * Output) + Bias
-param_l1 = (n_input * n_hidden) + n_hidden
-param_l2 = (n_hidden * n_kelas) + n_kelas
+# Hitung jumlah Weight & Bias sesuai rumus (Input * Output) + Bias
+n_weight = n_input * n_kelas
+n_bias = n_kelas
 
-total_manual = param_l1 + param_l2
-total_keras = mlp_kecil.count_params()
+total_manual = n_weight + n_bias
+total_keras = model_nn.count_params()
 
 assert total_manual == total_keras, f"Belum cocok: manual={total_manual}, keras={total_keras}"
-print(f"Layer 1 (Input -> Hidden)  : {param_l1:>10,}")
-print(f"Layer 2 (Hidden -> Output) : {param_l2:>10,}")
+print(f"Jumlah Weight (12.288 x 5) : {n_weight:>10,}")
+print(f"Jumlah Bias (5 kelas)      : {n_bias:>10,}")
 print(f"Total Hitungan Tangan      : {total_manual:>10,}")
 print(f"Total Keras count_params() : {total_keras:>10,}  <-- COCOK 100%!")
 print("✅ Cek Latihan 7 lolos!")
 """,
-        hint_code="param_l1 = (n_input * n_hidden) + n_hidden\nparam_l2 = (n_hidden * n_kelas) + n_kelas",
+        hint_code="n_weight = n_input * n_kelas\nn_bias = n_kelas",
         hint_label="Latihan 7",
     )
 
     # =========================================================================
-    # MINI-CHALLENGE (SLIDE 52)
+    # EKSPERIMEN TAMBAHAN (OPSIONAL): PENGARUH LEARNING RATE
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Eksperimen Tambahan (Opsional): Ubah Jumlah Neuron *Hidden Layer* (`32` vs `64` vs `128`)
+## Eksperimen Tambahan (Opsional): Pengaruh *Learning Rate* (`0.0001` vs `0.001` vs `0.01`)
 
-Sebelum menjalankan sel berikut, **tebak dulu**:
-1. Jika jumlah neuron hidden dinaikkan `2×` (dari `64` menjadi `128`), kira-kira berapa kali lipat total parameternya naik?
-2. Berapa total parameter jika resolusi dinaikkan ke standar `224×224×3` dengan `128` neuron hidden?
-
-Lengkapi `# TODO 8` lalu amati tabel hasilnya!
+Ingat **Tahap 5 (Backpropagation & Gradient Descent)** di Bab 3: **Learning Rate** mengatur seberapa besar langkah koreksi bobot `W & b` tiap langkah!  
+Lengkapi `# TODO 8` untuk membandingkan 3 nilai *Learning Rate* berbeda pada dataset Frozen kita!
 """
         )
     )
@@ -598,64 +599,66 @@ Lengkapi `# TODO 8` lalu amati tabel hasilnya!
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Latihan 8 (`# TODO 8`): Eksperimen Ukuran Hidden Layer `32`, `64`, & `128`",
-        instruction_md="Di dalam loop `daftar_hidden = [32, 64, 128]`, panggil `buat_mlp_frozen(hidden_units=u)` lalu latih selama `EPOCHS` dan catat jumlah parameter serta loss akhirnya.",
+        title="Latihan 8 (`# TODO 8` · Opsional): Eksperimen 3 Nilai *Learning Rate*",
+        instruction_md="Di dalam loop `daftar_lr = [0.0001, 0.001, 0.01]`, panggil `buat_nn_frozen(lr=lr_val)` lalu latih selama `EPOCHS` dan catat *Loss* awal vs *Loss* akhirnya.",
         student_code="""
-daftar_hidden = [32, 64, 128]
+daftar_lr = [0.0001, 0.001, 0.01]
 hasil_eksperimen = []
 
-for u in daftar_hidden:
-    # TODO 8: Bangun model memakai buat_mlp_frozen(hidden_units=u)
+for lr_val in daftar_lr:
+    # TODO 8: Bangun model memakai buat_nn_frozen(lr=lr_val)
     m_uji = None  # TODO
     assert m_uji is not None
     h_uji = m_uji.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=0)
     hasil_eksperimen.append({
-        "hidden_units": u,
-        "total_parameter": int(m_uji.count_params()),
+        "learning_rate": lr_val,
+        "loss_awal": round(float(h_uji.history["loss"][0]), 4),
         "loss_akhir": round(float(h_uji.history["loss"][-1]), 4),
+        "total_parameter": int(m_uji.count_params()),
     })
 
 df_exp = pd.DataFrame(hasil_eksperimen)
-exp_csv = RESULTS_DIR / "p02_hidden_experiment.csv"
+exp_csv = RESULTS_DIR / "p02_lr_experiment.csv"
 df_exp.to_csv(exp_csv, index=False)
 
 assert len(df_exp) == 3 and exp_csv.exists()
-param_224_128 = (224 * 224 * 3 * 128 + 128) + (128 * len(CLASS_NAMES) + len(CLASS_NAMES))
+param_224 = (IMG_SIZE * IMG_SIZE * 3 * len(CLASS_NAMES)) + len(CLASS_NAMES)
 print(df_exp.to_string(index=False))
-print(f"\\nSebagai perbandingan — MLP 224x224x3 (Hidden 128): {param_224_128:,} parameter (~19,27 juta!)")
-print("✅ Seluruh Hands-on & Mini-Challenge P02 selesai!")
+print(f"\\nSebagai perbandingan — 1-Layer 224x224x3: {param_224:,} parameter (persis Slide 29!)")
+print("✅ Seluruh Hands-on P02 selesai!")
 """,
         solution_code="""
-daftar_hidden = [32, 64, 128]
+daftar_lr = [0.0001, 0.001, 0.01]
 hasil_eksperimen = []
 
-for u in daftar_hidden:
-    # Bangun dan latih singkat MLP dengan jumlah neuron hidden berbeda
-    m_uji = buat_mlp_frozen(hidden_units=u)
+for lr_val in daftar_lr:
+    # Bangun dan latih singkat Neural Network 1-Layer dengan Learning Rate berbeda
+    m_uji = buat_nn_frozen(lr=lr_val)
     assert m_uji is not None
     h_uji = m_uji.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=0)
     hasil_eksperimen.append({
-        "hidden_units": u,
-        "total_parameter": int(m_uji.count_params()),
+        "learning_rate": lr_val,
+        "loss_awal": round(float(h_uji.history["loss"][0]), 4),
         "loss_akhir": round(float(h_uji.history["loss"][-1]), 4),
+        "total_parameter": int(m_uji.count_params()),
     })
 
 df_exp = pd.DataFrame(hasil_eksperimen)
-exp_csv = RESULTS_DIR / "p02_hidden_experiment.csv"
+exp_csv = RESULTS_DIR / "p02_lr_experiment.csv"
 df_exp.to_csv(exp_csv, index=False)
 
 assert len(df_exp) == 3 and exp_csv.exists()
-param_224_128 = (224 * 224 * 3 * 128 + 128) + (128 * len(CLASS_NAMES) + len(CLASS_NAMES))
+param_224 = (IMG_SIZE * IMG_SIZE * 3 * len(CLASS_NAMES)) + len(CLASS_NAMES)
 print(df_exp.to_string(index=False))
-print(f"\\nSebagai perbandingan — MLP 224x224x3 (Hidden 128): {param_224_128:,} parameter (~19,27 juta!)")
-print("✅ Seluruh Hands-on & Mini-Challenge P02 selesai!")
+print(f"\\nSebagai perbandingan — 1-Layer 224x224x3: {param_224:,} parameter (persis Slide 29!)")
+print("✅ Seluruh Hands-on P02 selesai!")
 """,
-        hint_code="m_uji = buat_mlp_frozen(hidden_units=u)",
+        hint_code="m_uji = buat_nn_frozen(lr=lr_val)",
         hint_label="Latihan 8",
     )
 
     # =========================================================================
-    # REFERENSI MANDIRI (SELARAS SLIDE 57–58 & docs/PLAN.md)
+    # REFERENSI MANDIRI (SELARAS SLIDE 33–34 & docs/PLAN.md)
     # =========================================================================
     cells.append(
         md(
