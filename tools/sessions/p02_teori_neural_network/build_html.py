@@ -200,6 +200,7 @@ EXTRA_CSS = """
 
     /* Slides 30 & 35 Cover Roadmaps (high-contrast on bg-yellow & bg-blue) */
     .cover-roadmap { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .cover-roadmap-3x2 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; max-width: 740px; margin-top: 20px; }
     .cover-chip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 13px; border: 1.5px solid rgba(0,0,0,0.10); }
     .bg-yellow .cover-chip { background: rgba(255,255,255,0.62); border-color: rgba(32,33,36,0.16); color: #202124; }
     .bg-blue   .cover-chip { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.34); color: #FFFFFF; }
@@ -227,50 +228,148 @@ EXTRA_CSS = """
     section.slide.pdf-answer-slide .qz-opt[data-correct="true"] { background: #E6F4EA !important; border-color: #34A853 !important; color: #137333 !important; font-weight: 700 !important; }
     @media print { .qz-ctrl-hide { display: none !important; } }
 
-    /* Slide 32 Interactive Glossary Filters & Color-Coded Cards */
-    .gloss-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+    /* Slide 32 Interactive 2-Column Grouped Dictionary List */
+    .gloss-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .gloss-controls { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; }
+    .gloss-search-wrap { position: relative; display: flex; align-items: center; }
+    .gloss-search {
+      font-family: var(--font-body); font-size: 11px; color: #202124;
+      background: #F8F9FA; border: 1.4px solid #DADCE0; border-radius: 999px;
+      padding: 4px 11px 4px 26px; width: 158px; outline: none; transition: all 0.16s ease;
+    }
+    .gloss-search:focus { background: #FFFFFF; border-color: #4285F4; width: 185px; box-shadow: 0 0 0 3px rgba(66,133,244,0.14); }
+    .gloss-search-ico { position: absolute; left: 9px; font-size: 10.5px; color: #5F6368; pointer-events: none; }
     .gloss-filter-bar { display: flex; gap: 5px; flex-wrap: wrap; }
     .gloss-fbtn { font-family: var(--font-title); font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1.4px solid #DADCE0; background: #FFFFFF; color: #5F6368; cursor: pointer; transition: all 0.14s ease; }
+    .gloss-fbtn:hover { border-color: #4285F4; color: #1A73E8; }
     .gloss-fbtn.active { background: #202124; color: #FFFFFF; border-color: #202124; }
-    .gloss-card { position: relative; transition: opacity 0.18s ease, box-shadow 0.18s ease; border-top-width: 3px; }
-    .gloss-card.ch-blue   { border-top-color: #4285F4; }
-    .gloss-card.ch-red    { border-top-color: #EA4335; }
-    .gloss-card.ch-green  { border-top-color: #34A853; }
-    .gloss-card.ch-yellow { border-top-color: #FBBC04; }
-    .gloss-card.ch-dim    { opacity: 0.24; }
-    .gloss-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
-    .gloss-tag { font-family: var(--font-title); font-size: 8.6px; font-weight: 800; padding: 1.5px 6px; border-radius: 999px; flex-shrink: 0; }
-    .gloss-tag.b1 { background: #E8F0FE; color: #1A73E8; }
-    .gloss-tag.b2 { background: #FCE8E6; color: #C5221F; }
-    .gloss-tag.b3 { background: #E6F4EA; color: #137333; }
-    .gloss-tag.b3y { background: #FEF7E0; color: #B06000; }
+    .dict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; min-height: 0; align-items: stretch; }
+    .dict-col { display: flex; flex-direction: column; gap: 11px; min-height: 0; }
+    .dict-group { background: #FFFFFF; border: 1.4px solid #DADCE0; border-radius: 13px; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+    .dict-group.grow { flex: 1; }
+    .dict-group-head { display: flex; align-items: center; justify-content: space-between; padding: 7px 13px; font-family: var(--font-title); font-size: 11px; font-weight: 800; letter-spacing: 0.02em; border-bottom: 1px solid #E8EAED; }
+    .dict-group-head.b1 { background: #E8F0FE; color: #1A73E8; border-bottom-color: #D2E3FC; }
+    .dict-group-head.b2 { background: #FCE8E6; color: #C5221F; border-bottom-color: #FAD2CF; }
+    .dict-group-head.b3 { background: #E6F4EA; color: #137333; border-bottom-color: #CEEAD6; }
+    .dict-group-cnt { font-size: 9.6px; font-weight: 700; padding: 1.5px 7px; border-radius: 999px; background: rgba(255,255,255,0.82); }
+    .dict-list { display: flex; flex-direction: column; flex: 1; }
+    .dict-row {
+      display: grid; grid-template-columns: 144px 1fr auto; gap: 10px; align-items: center;
+      padding: 8px 13px; border-bottom: 1px solid #EEF0F3; flex: 1;
+      transition: background 0.14s ease, opacity 0.18s ease;
+    }
+    .dict-row:nth-child(even) { background: #FAFBFD; }
+    .dict-row:last-child { border-bottom: none; }
+    .dict-row:hover { background: #F1F6FE; }
+    .dict-row.ch-dim { opacity: 0.20; }
+    .dict-term { font-family: var(--font-title); font-size: 11.9px; font-weight: 700; line-height: 1.24; }
+    .dict-term.b1 { color: #1A73E8; }
+    .dict-term.b2 { color: #C5221F; }
+    .dict-term.b3 { color: #137333; }
+    .dict-def { font-size: 11.4px; line-height: 1.38; color: #3C4043; }
+    .dict-slide-btn {
+      font-family: var(--font-code); font-size: 9.4px; font-weight: 700;
+      padding: 2.5px 7px; border-radius: 7px; border: 1px solid #DADCE0;
+      background: #FFFFFF; color: #5F6368; cursor: pointer; white-space: nowrap;
+      transition: all 0.14s ease;
+    }
+    .dict-slide-btn:hover { background: #1A73E8; border-color: #1A73E8; color: #FFFFFF; }
+    @media print { .gloss-search-wrap { display: none !important; } }
 
-    /* Slides 33 & 34 Recommended Learning Route & Bridge Strip */
-    .ref-route-bar { margin-top: auto; background: #F8F9FA; border: 1.5px solid #E0E3E7; border-radius: 13px; padding: 10px 14px; display: flex; flex-direction: column; gap: 7px; }
-    .ref-route-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-title); font-size: 11.4px; font-weight: 700; color: #202124; }
-    .ref-route-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-    .ref-step-box { background: #FFFFFF; border: 1px solid #DADCE0; border-radius: 10px; padding: 8px 10px; font-size: 11px; line-height: 1.35; color: #3C4043; }
+    /* Slides 33 & 34 Balanced Full-Height Reference Cards & Guide Strip */
+    .ref-grid-full {
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-rows: repeat(3, minmax(0, 1fr));
+      gap: 9px; flex: 1; min-height: 0; margin-top: 2px;
+    }
+    .ref-card-rich {
+      display: flex; flex-direction: column; justify-content: space-between; gap: 5px;
+      padding: 9px 13px; border-radius: 12px; min-width: 0; overflow: hidden;
+      background: #FFFFFF; border: 1px solid #DADCE0; border-left: 4px solid #4285F4;
+      text-decoration: none; color: inherit; user-select: text;
+      transition: border-color 0.16s ease, transform 0.16s ease, background 0.16s ease, box-shadow 0.16s ease;
+    }
+    .ref-card-rich.acc-blue   { border-left-color: #4285F4; }
+    .ref-card-rich.acc-green  { border-left-color: #34A853; }
+    .ref-card-rich.acc-yellow { border-left-color: #FBBC04; }
+    .ref-card-rich.acc-red    { border-left-color: #EA4335; }
+    .ref-card-rich.featured   { background: #FFFDF4; border-color: #F6C343; border-left: 4px solid #FBBC04; }
+    .ref-card-rich:hover {
+      border-color: #4285F4; background: #F4F8FF;
+      transform: translateY(-1.5px); box-shadow: 0 5px 14px rgba(26,115,232,0.12);
+    }
+    .ref-card-rich.featured:hover { background: #FEF7E0; border-color: #E37400; }
+    .ref-card-top { display: flex; align-items: flex-start; gap: 9px; min-width: 0; }
+    .ref-card-top .ref-num { width: 25px; height: 25px; font-size: 11.6px; margin-top: 0; }
+    .ref-card-head { flex: 1; min-width: 0; display: flex; align-items: flex-start; justify-content: space-between; gap: 7px; }
+    .ref-card-rich .ref-title { font-size: 12.6px; line-height: 1.24; }
+    .ref-card-rich .ref-desc { font-size: 11.4px; line-height: 1.38; color: #3C4043; padding-left: 34px; }
+    .ref-card-foot {
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding-top: 5px; padding-left: 34px; border-top: 1px dashed #E8EAED; min-width: 0;
+    }
+    .ref-card-rich .ref-url { font-size: 9.9px; font-weight: 600; color: #1A73E8; min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .ref-ctx-pill {
+      font-family: var(--font-title); font-size: 9.2px; font-weight: 700;
+      padding: 2px 7.5px; border-radius: 999px; background: #F1F3F4; color: #3C4043;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .ref-route-bar { margin-top: 10px; background: #F8F9FA; border: 1.5px solid #E0E3E7; border-radius: 12px; padding: 8px 13px; display: flex; flex-direction: column; gap: 5px; flex-shrink: 0; }
+    .ref-route-head { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-title); font-size: 11.2px; font-weight: 700; color: #202124; }
+    .ref-route-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+    .ref-step-box { background: #FFFFFF; border: 1px solid #DADCE0; border-radius: 9px; padding: 6.5px 10px; font-size: 10.8px; line-height: 1.34; color: #3C4043; }
 
-    /* Slides 36-41 Hands-On Stepper, Highlighted Code & Expected Terminal */
-    .ho-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-bottom: 8px; }
-    .ho-stepper { display: flex; align-items: center; gap: 4px; background: #F8F9FA; border: 1px solid #E0E3E7; border-radius: 999px; padding: 3.5px 6px; flex-shrink: 0; }
-    .ho-step-dot { font-family: var(--font-title); font-size: 9.6px; font-weight: 700; padding: 3px 8px; border-radius: 999px; color: #5F6368; white-space: nowrap; }
+    /* Slides 36-41 Visual-First Hands-On Stepper, Compact Code & Real Visual Output */
+    .ho-layout { display: grid; grid-template-columns: 0.92fr 1.28fr; gap: 15px; flex: 1; min-height: 0; align-items: stretch; }
+    .ho-head-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+    .ho-stepper { display: flex; align-items: center; gap: 3.5px; background: #F8F9FA; border: 1px solid #E0E3E7; border-radius: 999px; padding: 3px 5.5px; flex-shrink: 0; }
+    .ho-step-dot { font-family: var(--font-title); font-size: 9.3px; font-weight: 700; padding: 3px 7.5px; border-radius: 999px; color: #5F6368; white-space: nowrap; }
     .ho-step-dot.done { background: #E6F4EA; color: #137333; }
     .ho-step-dot.cur  { background: #1A73E8; color: #FFFFFF; box-shadow: 0 2px 6px rgba(26,115,232,0.28); }
-    .ho-left-card { justify-content: flex-start !important; gap: 11px; padding: 15px 17px !important; }
-    .ho-theory-chip { display: inline-flex; align-items: center; gap: 6px; background: #F1F3F4; border: 1px solid #DADCE0; border-radius: 8px; padding: 5px 10px; font-size: 11.3px; color: #3C4043; width: fit-content; }
-    .ho-code-card { background: #181A1F; border: 1px solid #3C4043; padding: 12px 15px !important; gap: 8px; justify-content: flex-start !important; }
-    .ho-win-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 6px; border-bottom: 1px solid #2D3036; }
+    .ho-left-card { justify-content: flex-start !important; gap: 9px; padding: 13px 15px !important; }
+    .ho-sub-list { list-style: none !important; padding-left: 0 !important; margin: 0 !important; display: flex; flex-direction: column; gap: 7px; }
+    .ho-sub-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 12.2px; line-height: 1.40; color: #3C4043; }
+    .ho-sub-tag {
+      font-family: var(--font-code); font-size: 9.8px; font-weight: 700;
+      padding: 1.5px 6.5px; border-radius: 6px; background: #E8F0FE; color: #1A73E8;
+      border: 1px solid #C6DAFC; flex-shrink: 0; margin-top: 1px;
+    }
+    .ho-sub-tag.green  { background: #E6F4EA; color: #137333; border-color: #A8DAB5; }
+    .ho-sub-tag.red    { background: #FCE8E6; color: #C5221F; border-color: #F6AEA9; }
+    .ho-sub-tag.yellow { background: #FEF7E0; color: #B06000; border-color: #FDE293; }
+    .ho-theory-chip { display: inline-flex; align-items: center; gap: 6px; background: #F1F3F4; border: 1px solid #DADCE0; border-radius: 8px; padding: 4.5px 9px; font-size: 11px; color: #3C4043; width: fit-content; }
+    .ho-right-col { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+    .ho-code-card { background: #181A1F; border: 1px solid #3C4043; border-radius: 13px; padding: 9px 13px !important; gap: 6px; justify-content: flex-start !important; flex: 0 0 auto; }
+    .ho-win-bar { display: flex; align-items: center; justify-content: space-between; gap: 8px; padding-bottom: 5px; border-bottom: 1px solid #2D3036; }
     .ho-dots { display: inline-flex; gap: 5px; align-items: center; margin-right: 6px; }
-    .ho-dots span { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
-    .ho-copy-btn { font-family: var(--font-title); font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 7px; border: 1px solid #4A4E57; background: #262930; color: #E8EAED; cursor: pointer; }
+    .ho-dots span { width: 8.5px; height: 8.5px; border-radius: 50%; display: inline-block; }
+    .ho-copy-btn { font-family: var(--font-title); font-size: 9.8px; font-weight: 600; padding: 2.5px 8.5px; border-radius: 7px; border: 1px solid #4A4E57; background: #262930; color: #E8EAED; cursor: pointer; }
     .ho-copy-btn:hover { background: #353942; }
-    .ho-pre { margin: 0 !important; flex: 0 0 auto !important; border: none !important; background: transparent !important; padding: 4px 2px !important; font-size: 11.7px !important; line-height: 1.48 !important; color: #E8EAED; }
+    .ho-pre { margin: 0 !important; flex: 0 0 auto !important; border: none !important; background: transparent !important; padding: 2px 1px !important; font-size: 11px !important; line-height: 1.42 !important; color: #E8EAED; }
+    .tok-todo { color: #FDD663; font-weight: 700; font-style: normal; background: rgba(253,214,99,0.12); padding: 0 4px; border-radius: 4px; }
     .tok-cm  { color: #7F8794; font-style: italic; }
+    .ho-check-box { background: #FFFFFF; border: 1.2px solid #DADCE0; border-radius: 10px; padding: 7.5px 10px; display: flex; flex-direction: column; gap: 3px; }
+    .ho-check-ttl { font-family: var(--font-title); font-size: 9.6px; font-weight: 800; color: #137333; letter-spacing: 0.03em; }
+    .ho-check-items { font-size: 11px; color: #3C4043; line-height: 1.38; }
     .tok-kw  { color: #8AB4F8; font-weight: 600; }
     .tok-str { color: #81C995; }
     .tok-num { color: #FDD663; }
     .tok-fn  { color: #F28B82; }
+    .ho-vis-card {
+      flex: 1; min-height: 0; background: #FFFFFF; border: 1.5px solid #DADCE0; border-radius: 13px;
+      display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 2px 8px rgba(32,33,36,0.05);
+    }
+    .ho-vis-bar {
+      background: #F8F9FA; border-bottom: 1px solid #E8EAED; padding: 5px 11px;
+      display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-shrink: 0;
+    }
+    .ho-vis-body {
+      flex: 1; min-height: 0; padding: 6px 8px; display: flex; align-items: center; justify-content: center; background: #FFFFFF;
+    }
+    .ho-vis-body img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; display: block; border-radius: 6px; }
+    .ho-vis-cap {
+      font-size: 10.4px; color: #5F6368; background: #FAFBFD; border-top: 1px solid #EEF0F3;
+      padding: 4.5px 11px; flex-shrink: 0; line-height: 1.3;
+    }
     .ho-term { margin-top: auto; background: #0F1115; border: 1px solid #2E323A; border-radius: 10px; overflow: hidden; }
     .ho-term-bar { background: #1E2128; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2E323A; }
     .ho-term-pre { margin: 0; padding: 8px 11px; font-family: var(--font-code); font-size: 10.9px; line-height: 1.42; color: #A8DAB5; white-space: pre-wrap; }
@@ -298,6 +397,8 @@ def _qa_slide(
     notes: str,
     bar_color: str = "blue",
     correct_choice: str | None = None,
+    data_title: str = "",
+    quiz_progress_idx: int = 0,
 ) -> str:
     if correct_choice is None:
         m_ans = re.search(r"Jawaban:\s*([A-Z])\b", answer_html)
@@ -313,20 +414,36 @@ def _qa_slide(
             f'<span>{c}</span><span class="qa-choice-badge"></span></div>'
         )
     choices_html = "\n            ".join(choice_divs)
+    slide_dt = data_title or f"Tanya-Jawab #{qa_num}"
+    if quiz_progress_idx > 0:
+        dots = []
+        for qi in range(1, 6):
+            cls = "done" if qi < quiz_progress_idx else ("cur" if qi == quiz_progress_idx else "")
+            mk = "✓ " if qi < quiz_progress_idx else ""
+            dots.append(f'<span class="ho-step-dot {cls}">{mk}Soal {qi}</span>')
+        head_html = f"""<div class="ho-head-row" style="margin-bottom:10px;">
+        <div>
+          <div class="kicker">{kicker}</div>
+          <h2 style="margin-bottom:0;">{title_html}</h2>
+        </div>
+        <div class="ho-stepper">{"".join(dots)}</div>
+      </div>"""
+    else:
+        head_html = f"""<div class="kicker">{kicker}</div>
+      <h2>{title_html}</h2>"""
     return f"""
-    <section class="slide" data-title="Tanya-Jawab #{qa_num}" data-notes="{notes}">
-      <div class="kicker">{kicker}</div>
-      <h2>{title_html}</h2>
+    <section class="slide" data-title="{slide_dt}" data-notes="{notes}">
+      {head_html}
       <div class="split-60-40" style="align-items:stretch;">
-        <div class="qa-box" style="justify-content:center; gap:11px;">
-          <div class="qa-question" style="font-size:16px;">{question_html}</div>
+        <div class="qa-box" style="justify-content:center; gap:10px;">
+          <div class="qa-question" style="font-size:15.2px;">{question_html}</div>
           <div style="display:flex; flex-direction:column; gap:7px;">
             {choices_html}
           </div>
           <button class="btn-ui" onclick="toggleQA('{qa_id}', this)">Klik untuk Lihat Jawaban &amp; Penjelasan</button>
-          <div id="{qa_id}" class="qa-answer" style="padding:11px 15px; font-size:13.2px;">{answer_html}</div>
+          <div id="{qa_id}" class="qa-answer" style="padding:10px 14px; font-size:12.4px; line-height:1.45;">{answer_html}</div>
         </div>
-        <div id="{qa_id}-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:10px;">
+        <div id="{qa_id}-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:8px; padding:14px 16px;">
           <div class="card-top-bar bar-{bar_color}"></div>
           <div class="vis-q" style="width:100%;">{vis_q_html}</div>
           <div class="vis-a" style="width:100%;">{vis_a_html}</div>
@@ -338,10 +455,11 @@ def _qa_slide(
 
 
 _PY_TOKEN_RE = re.compile(
-    r'(?P<cm>#[^\n]*)'
+    r'(?P<todo>#\s*TODO[^\n]*)'
+    r'|(?P<cm>#[^\n]*)'
     r'|(?P<str>"(?:\\.|[^"\\])*"|\x27(?:\\.|[^\x27\\])*\x27)'
     r'|(?P<kw>\b(?:def|return|for|in|if|else|assert|import|from|as|None|True|False)\b)'
-    r'|(?P<fn>\b(?:print|len|np|pd|tf|plt|softmax_manual|relu|buat_nn_frozen)\b)'
+    r'|(?P<fn>\b(?:print|len|np|pd|tf|plt|tampilkan_piksel_grid|tampilkan_zoom_piksel|tampilkan_visual_flatten|tampilkan_skala_parameter|tampilkan_timbangan_neuron|tampilkan_relu|tampilkan_softmax_frozen|tampilkan_tebakan_model|tampilkan_kurva_training|tampilkan_peta_bobot)\b)'
     r'|(?P<num>\b\d+(?:\.\d+)?\b)'
 )
 
@@ -365,6 +483,7 @@ def _highlight_py(snippet: str) -> str:
 def _handson_step_slide(
     *,
     step_num: int,
+    stage_badge: str,
     title: str,
     kicker: str,
     goal_html: str,
@@ -374,9 +493,11 @@ def _handson_step_slide(
     color: str,
     notes: str,
     theory_ref: str = "",
-    expected_output: str = "",
+    output_img: str = "",
+    output_caption: str = "",
+    checklist_html: str = "",
 ) -> str:
-    step_labels = ["1. Data", "2. Flatten", "3. NumPy", "4. Keras", "5. Fit", "6. Summary"]
+    step_labels = ["1. Piksel", "2. Flatten", "3. Neuron", "4. Model", "5. Fit", "6. Tebak"]
     stepper_items = []
     for idx_s, lbl_s in enumerate(step_labels, 1):
         cls_s = "done" if idx_s < step_num else ("cur" if idx_s == step_num else "")
@@ -385,29 +506,37 @@ def _handson_step_slide(
     stepper_html = "\n          ".join(stepper_items)
 
     theory_html = (
-        f'<div class="ho-theory-chip"><span>🔗</span><span><strong>Konsep:</strong> {theory_ref}</span></div>'
+        f'<div class="ho-theory-chip"><span>🔗</span><span><strong>Bab 3:</strong> {theory_ref}</span></div>'
         if theory_ref
         else ""
     )
+    check_html = (
+        f'<div class="ho-check-box"><div class="ho-check-ttl">🎯 CEK BERHASIL</div><div class="ho-check-items">{checklist_html}</div></div>'
+        if checklist_html
+        else ""
+    )
     hl_code = _highlight_py(code_snippet)
-    term_html = (
+    vis_html = (
         f"""
-          <div class="ho-term">
-            <div class="ho-term-bar">
-              <span style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#81C995; letter-spacing:0.04em;">● EXPECTED OUTPUT (DATA FROZEN v1)</span>
-              <span style="font-family:var(--font-code); font-size:9.5px; color:#9AA0A6;">Python 3 · Colab/Lokal</span>
+          <div class="ho-vis-card">
+            <div class="ho-vis-bar">
+              <span style="font-family:var(--font-title); font-size:9.6px; font-weight:800; color:#137333; letter-spacing:0.03em;">● OUTPUT VISUAL NYATA (DATA FROZEN v1)</span>
+              <span style="font-family:var(--font-code); font-size:9.4px; color:#5F6368;">Hasil langsung di bawah sel</span>
             </div>
-            <pre class="ho-term-pre">{html_lib.escape(expected_output)}</pre>
+            <div class="ho-vis-body">
+              <img src="{output_img}" alt="Visual Output {html_lib.escape(title)}" />
+            </div>
+            <div class="ho-vis-cap">{output_caption}</div>
           </div>"""
-        if expected_output
+        if output_img
         else ""
     )
     return f"""
-    <section class="slide" data-title="Hands-On Langkah {step_num}: {title}" data-notes="{notes}">
+    <section class="slide" data-title="Hands-On {stage_badge}: {title}" data-notes="{notes}">
       <div class="ho-head-row">
         <div>
           <div class="kicker">{kicker}</div>
-          <h2 style="margin-bottom:0;">Langkah {step_num}: <span class="hl-{color}">{title}</span></h2>
+          <h2 style="margin-bottom:0;">{stage_badge}: <span class="hl-{color}">{title}</span></h2>
         </div>
         <div class="ho-stepper">
           {stepper_html}
@@ -417,31 +546,29 @@ def _handson_step_slide(
         <div class="card surface ho-left-card">
           <div class="card-top-bar bar-{color}"></div>
           <div>
-            <span class="pill {color}">LANGKAH {step_num} / 6 · NOTEBOOK P02</span>
-            <div class="card-title" style="margin-top:7px;">{goal_html}</div>
+            <span class="pill {color}">{stage_badge.upper()} · NOTEBOOK P02</span>
+            <div class="card-title" style="margin-top:6px; font-size:15px;">{goal_html}</div>
           </div>
-          <div class="card-body" style="font-size:13.1px;">
-            <ul>{bullets_html}</ul>
-          </div>
+          <ul class="ho-sub-list">{bullets_html}</ul>
           {theory_html}
-          <div class="callout {color if color != 'blue' else ''}" style="margin-top:auto;">{callout_html}</div>
+          {check_html}
+          <div class="callout {color if color != 'blue' else ''}" style="margin-top:auto; padding:7.5px 10.5px; font-size:11.3px;">{callout_html}</div>
         </div>
-        <div class="card ho-code-card">
-          <div class="ho-win-bar">
-            <div style="display:flex; align-items:center;">
-              <span class="ho-dots"><span style="background:#EA4335;"></span><span style="background:#FBBC04;"></span><span style="background:#34A853;"></span></span>
-              <span class="pill dark" style="font-size:10.5px;">p02_teori_neural_network.ipynb</span>
+        <div class="ho-right-col">
+          <div class="card ho-code-card">
+            <div class="ho-win-bar">
+              <div style="display:flex; align-items:center;">
+                <span class="ho-dots"><span style="background:#EA4335;"></span><span style="background:#FBBC04;"></span><span style="background:#34A853;"></span></span>
+                <span class="pill dark" style="font-size:10px; padding:1.5px 8px;">p02_teori_neural_network.ipynb</span>
+              </div>
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="font-family:var(--font-code); font-size:10px; color:#9AA0A6;">3–6 baris · Shift+Enter</span>
+                <button type="button" class="ho-copy-btn" onclick="copyHandsOnCode(this, 'ho-code-{step_num}')">Salin</button>
+              </div>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-              <span style="font-family:var(--font-code); font-size:10.5px; color:#9AA0A6;">Python · NumPy / Keras</span>
-              <button type="button" class="ho-copy-btn" onclick="copyHandsOnCode(this, 'ho-code-{step_num}')">Salin</button>
-            </div>
+            <pre class="code ho-pre"><code id="ho-code-{step_num}">{hl_code}</code></pre>
           </div>
-          <pre class="code ho-pre"><code id="ho-code-{step_num}">{hl_code}</code></pre>
-          {term_html}
-          <div style="font-size:11.1px; color:#BDC1C6; border-top:1px solid #2D3036; padding-top:6px;">
-            Jalankan sel satu per satu (<code>Shift + Enter</code>) dan cocokkan hasilnya dengan teori {"Bab 1–3" if HIDE_BAB4_ARCH else "Bab 1–4"}.
-          </div>
+          {vis_html}
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -451,6 +578,18 @@ def _handson_step_slide(
 
 def build_slides_html(data: dict) -> str:
     total_imgs = data["total_images"]
+    ho_m = data.get("handson_metrics", {})
+    e0_loss = ho_m.get("epoch0_loss", 1.71)
+    e0_acc = ho_m.get("epoch0_acc_pct", 24.5)
+    e1_loss = ho_m.get("epoch1_loss", 2.41)
+    e_end = ho_m.get("epochs", 20)
+    e_end_loss = ho_m.get("epoch_end_loss", 1.04)
+    e_end_acc = ho_m.get("epoch_end_acc_pct", 65.7)
+    s_e0 = ho_m.get("sample_e0_correct", 2)
+    s_end = ho_m.get("sample_end_correct", 4)
+    ho_z_gaun = ho_m.get("neuron_z", 0.33)
+    ho_z_wall = ho_m.get("wall_z", -0.23)
+    ho_loss_sm = ho_m.get("softmax_loss_demo", 0.38)
     polos_n = data["polos_count"]
     ramai_n = data["ramai_count"]
     sessions_n = data["sessions_count"]
@@ -2991,7 +3130,7 @@ def build_slides_html(data: dict) -> str:
     # =========================================================================
     _eval_cover_slide = f"""
     <!-- COVER EVALUASI & SUMBER BELAJAR -->
-    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 12 Istilah Kunci, dan daftar Referensi Belajar Mandiri.">
+    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 12 Istilah Kunci, dan daftar Referensi Materi Bab 1–3.">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="855" cy="110" r="78" fill="none" stroke="rgba(32,33,36,0.10)" stroke-width="18"/>
         <circle cx="855" cy="110" r="42" fill="rgba(255,255,255,0.22)"/>
@@ -3000,7 +3139,7 @@ def build_slides_html(data: dict) -> str:
       </svg>
       <div class="divider-center" style="position:relative; z-index:1;">
         <div class="kicker">EVALUASI &amp; SUMBER BELAJAR</div>
-        <h1>Kuis, Kamus Istilah &amp; Referensi</h1>
+        <h1>Kuis, Kamus Istilah &amp; Referensi Materi</h1>
         <p>Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 12 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.</p>
         <div class="cover-roadmap">
           <div class="cover-chip">
@@ -3020,8 +3159,8 @@ def build_slides_html(data: dict) -> str:
           <div class="cover-chip">
             <span class="cover-chip-num">3</span>
             <div>
-              <div class="cover-chip-ttl">12 Sumber Belajar Mandiri</div>
-              <div class="cover-chip-sub">Video, sandbox &amp; persiapan P03</div>
+              <div class="cover-chip-ttl">12 Referensi Materi</div>
+              <div class="cover-chip-sub">Rujukan lengkap Bab 1, 2 &amp; 3</div>
             </div>
           </div>
         </div>
@@ -3032,8 +3171,8 @@ def build_slides_html(data: dict) -> str:
 
     _break_slide = (
         f"""
-    <!-- COVER HANDS-ON -->
-    <section class="slide bg-blue" data-title="Cover — Hands-On Praktik Neural Network" data-notes="Alokasi waktu: 1 menit. Cover pembuka sesi praktik Hands-On. Ajak peserta membuka materials/P02/p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal dan pastikan folder data/frozen_v1/ siap diakses.">
+    <!-- COVER HANDS-ON (VISUAL-FIRST · MIKRO-TASK TAHAP 1-5) -->
+    <section class="slide bg-blue" data-title="Cover — Hands-On Praktik Neural Network" data-notes="Alokasi waktu: 1 menit. Cover pembuka sesi praktik Hands-On Visual-First. Ajak peserta membuka materials/P02/p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal. Jelaskan bahwa kode grafik sudah dirapikan ke Alat Visualisasi sehingga setiap tugas cuma 3–6 baris dan langsung memunculkan gambar nyata!">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="848" cy="116" r="82" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="18"/>
         <circle cx="848" cy="116" r="44" fill="rgba(255,255,255,0.10)"/>
@@ -3043,18 +3182,18 @@ def build_slides_html(data: dict) -> str:
         <circle cx="788" cy="364" r="4" fill="rgba(255,255,255,0.5)"/>
       </svg>
       <div class="divider-center" style="position:relative; z-index:1;">
-        <div class="kicker">SESI PRAKTIK · NOTEBOOK P02</div>
+        <div class="kicker">SESI PRAKTIK VISUAL-FIRST · NOTEBOOK P02</div>
         <h1>Hands-On: Praktik Neural Network</h1>
-        <p>Saatnya membuktikan teori langsung di kode Python! Kita buka notebook dan jalankan 6 langkah NumPy &amp; Keras pada {total_imgs} foto asli Disney Frozen.</p>
-        <div class="cover-roadmap">
-          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">Setup &amp; Data Frozen</div><div class="cover-chip-sub">{total_imgs} foto · 5 kelas</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">Flatten &amp; Param</div><div class="cover-chip-sub">12.288 &amp; 150.528 px</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">3</span><div><div class="cover-chip-ttl">NumPy Forward Pass</div><div class="cover-chip-sub">W·x+b · Softmax · Loss</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">4</span><div><div class="cover-chip-ttl">Model 1-Layer Keras</div><div class="cover-chip-sub">Input → Flatten → Dense(5)</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">5</span><div><div class="cover-chip-ttl">Fit &amp; Kurva Loss</div><div class="cover-chip-sub">8 Epoch Backprop</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">6</span><div><div class="cover-chip-ttl">Summary &amp; Cek LR</div><div class="cover-chip-sub">61.445 == 61.445 ✓</div></div></div>
+        <p>Ikuti perjalanan 1 foto asli Elsa melewati <strong>Tahap 1 → Tahap 5 Bab 3</strong>! Setiap tugas dipecah super kecil (<strong>3–6 baris kode</strong>) dan langsung menampilkan <strong>output visual nyata</strong>.</p>
+        <div class="cover-roadmap-3x2">
+          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">Tahap 1 · Piksel</div><div class="cover-chip-sub">1.1 Grid 8×8 · 1.2 RGB</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">Tahap 2 · Flatten</div><div class="cover-chip-sub">2.1 Pita 1D · 2.2 Skala</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">3</span><div><div class="cover-chip-ttl">Tahap 3 · Neuron</div><div class="cover-chip-sub">3.1 z · 3.2 ReLU · 3.3 Softmax</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">4</span><div><div class="cover-chip-ttl">Tahap 4 · Model</div><div class="cover-chip-sub">4.1–4.3 Model Bayi E0</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">5</span><div><div class="cover-chip-ttl">Tahap 5 · Training</div><div class="cover-chip-sub">5.1 Fit · 5.2 Kurva Loss</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">6</span><div><div class="cover-chip-ttl">Tahap 5.3–5.4</div><div class="cover-chip-sub">Before/After &amp; Bobot ΔW</div></div></div>
         </div>
-        <div class="cover-env-strip">📓 p02_teori_neural_network.ipynb &nbsp;·&nbsp; 📁 data/frozen_v1/ ({total_imgs} foto) &nbsp;·&nbsp; ▶ Colab / Jupyter</div>
+        <div class="cover-env-strip">📓 p02_teori_neural_network.ipynb &nbsp;·&nbsp; 📁 data/frozen_v1/ ({total_imgs} foto) &nbsp;·&nbsp; 🎨 1 Sel = 1 Visual Nyata</div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
@@ -3074,280 +3213,563 @@ def build_slides_html(data: dict) -> str:
     _handson_slides = [
         _handson_step_slide(
             step_num=1,
-            title="Setup 3 Tahap & Baca Data Frozen Dinamis",
-            kicker="HANDS-ON · LANGKAH 1/6 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Menyiapkan library, kunci <code>SEED = 42</code>, dan membaca <code>metadata.csv</code>",
+            stage_badge="Tahap 1",
+            title="Foto Menjadi Kotak Piksel &amp; Angka RGB",
+            kicker="HANDS-ON · TAHAP 0 &amp; 1 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Melihat sendiri 1 foto Elsa berubah menjadi grid <code>8×8</code> angka <code>0.0–1.0</code>",
             bullets_html=f"""
-              <li>Jalankan <strong>Setup 1/3, 2/3, 3/3</strong> untuk memuat NumPy, Pandas, Matplotlib, TensorFlow, serta mendeteksi folder <code>DATA_DIR</code> otomatis.</li>
-              <li>Baca tabel <code>metadata.csv</code> secara <strong>dinamis</strong> (tanpa meng-hardcode jumlah {total_imgs} foto).</li>
-              <li>Tampilkan 5 contoh foto nyata karakter Frozen (<code>anna, elsa, kristoff, olaf, sven</code>).</li>
+              <li><span class="ho-sub-tag">0.1–0.3</span><span>Tekan <code>Shift+Enter</code> pada Setup, Alat Visualisasi, &amp; galeri {total_imgs} foto Frozen <em>(0 coding!)</em>.</span></li>
+              <li><span class="ho-sub-tag">1.1</span><span><strong># TODO 1 (1 baris):</strong> Normalisasi <code>foto_mini = arr_8x8 / 255.0</code> → muncul grid <code>8×8</code> kotak warna + angka!</span></li>
+              <li><span class="ho-sub-tag">1.2</span><span><strong># TODO 2 (1 baris):</strong> Ambil 1 piksel gaun Elsa <code>foto_mini[4, 2]</code> → lihat batang <strong>Blue (B)</strong> paling tinggi!</span></li>
             """,
-            code_snippet="""# Setup 3/3 + baca metadata dinamis (Langkah 1)
-df_meta = pd.read_csv(DATA_DIR / "metadata.csv")
-print("Total foto tersedia :", len(df_meta))
-print(pd.crosstab(df_meta["kelas"], df_meta["kondisi"]))""",
-            expected_output=f"""Total foto tersedia : {total_imgs}
-kondisi   polos  ramai
-anna         20      8
-elsa         21      8
-kristoff     20      8
-olaf         20      8
-sven         21      9""",
-            theory_ref="Slide 03 — Matriks Angka & Dataset Proyek Frozen",
-            callout_html="<strong>Target Langkah 1:</strong> Semua setup hijau tanpa error dan galeri 5 karakter Frozen muncul di layar.",
+            code_snippet="""# Tahap 1.1 & 1.2: Normalisasi 8x8 lalu intip 1 piksel gaun Elsa
+foto_mini = arr_8x8 / 255.0            # TODO 1 (0-255 -> 0.0-1.0)
+tampilkan_piksel_grid(foto_elsa, foto_mini, pr=4, pc=2)
+
+piksel_gaun = foto_mini[4, 2]          # TODO 2 (ambil [R, G, B])
+tampilkan_zoom_piksel(foto_mini, 4, 2, piksel_gaun)""",
+            output_img="assets/P02/ho_step1_pixel_grid.png",
+            output_caption="Foto asli Elsa → Grid 8×8 kotak angka 0.0–1.0 → Zoom piksel gaun [4, 2] dengan kanal Biru (B) paling dominan!",
+            theory_ref="Slide 20 — Dimulai dari 1 Piksel → 1 Neuron",
+            checklist_html="✓ <code>foto_mini</code> bershape <code>(8, 8, 3)</code> &amp; nilai <code>0.0–1.0</code><br/>✓ Batang <strong>Blue (B = 0.60)</strong> tertinggi pada piksel gaun <code>[4, 2]</code>",
+            callout_html="<strong>Tangible!</strong> Angka di kotak grid = kecerahan rata-rata; aslinya tiap kotak punya 3 angka <code>[R, G, B]</code>.",
             color="blue",
-            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta menjalankan Setup 1/3 sampai 3/3 dan membaca metadata.csv secara dinamis. Pastikan Colab/lokal menemukan folder data/frozen_v1/.",
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 0 (Setup + Alat Visualisasi + Galeri Frozen), lalu pandu # TODO 1 (dibagi 255.0) dan # TODO 2 (ambil piksel gaun biru [4, 2]) hingga 3 gambar visual muncul!",
         ),
         _handson_step_slide(
             step_num=2,
-            title="Flatten Foto & Hitung Neuron Input Layer",
-            kicker="HANDS-ON · LANGKAH 2/6 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Mengubah foto 3D menjadi vektor 1D dan menghitung neuron serta bobot <code>W + b</code>",
+            stage_badge="Tahap 2",
+            title="Flatten Foto 2D Menjadi Pita 1D",
+            kicker="HANDS-ON · TAHAP 2.1 &amp; 2.2 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Meluruskan kotak <code>8×8</code> menjadi 1 pita warna 1D &amp; menghitung skala <code>752.645</code>",
             bullets_html="""
-              <li>Buka 1 foto asli Elsa, ubah ukurannya ke <code>(64, 64, 3)</code> dan <code>(224, 224, 3)</code>, lalu normalisasi ke <code>0.0–1.0</code>.</li>
-              <li>Lakukan <code>.flatten()</code> di NumPy dan buktikan panjang vektornya tepat sama dengan <code>H × W × C</code>.</li>
-              <li>Kerjakan <strong># TODO 1</strong> &amp; <strong># TODO 2</strong> untuk membuktikan <code>150.528 × 5 + 5 = 752.645</code> parameter (persis Slide 29!).</li>
+              <li><span class="ho-sub-tag green">2.1</span><span><strong># TODO 3 (1 baris):</strong> Panggil <code>vektor_elsa = foto_mini.flatten()</code> → lihat baris <code>B1..B8</code> berjejer jadi <strong>1 pita warna lurus</strong>!</span></li>
+              <li><span class="ho-sub-tag green">2.2</span><span><strong># TODO 4 (2 baris):</strong> Hitung <code>neuron_224 = 224 * 224 * 3</code> (<code>150.528</code>) dan <code>param_224 = neuron_224 * 5 + 5</code> (<code>752.645</code>).</span></li>
+              <li><span class="ho-sub-tag green">Visual</span><span>Bandingkan langsung grafik tangga parameter: <code>8×8</code> (<code>965</code>) → <code>64×64</code> (<code>61.445</code>) → <code>224×224</code> (<code>752.645</code>)!</span></li>
             """,
-            code_snippet="""# Ubah foto 64x64x3 jadi array 0.0-1.0 lalu flatten
-arr_64 = np.array(img_64, dtype=np.float32) / 255.0
-vektor_64 = arr_64.flatten()
-print("Shape 3D      :", arr_64.shape)
-print("Neuron Input  :", f"{len(vektor_64):,}")""",
-            expected_output="""Shape 3D                 : (64, 64, 3)
-Neuron Input (64x64x3)   : 12,288
-Neuron Input (224x224x3) : 150,528
-Total Param (W + b)      : 752,645  ✓""",
-            theory_ref="Slide 21–22 — Animasi Flatten & Skala 150.528 Neuron",
-            callout_html="<strong>Target Langkah 2:</strong> Paham hubungan langsung <code>shape (H, W, C)</code> dengan jumlah neuron di <em>Input Layer</em> &amp; total kabel <code>W + b</code>.",
+            code_snippet="""# Tahap 2.1: Luruskan kotak 2D menjadi 1 pita warna 1D
+vektor_elsa = foto_mini.flatten()       # TODO 3: (8,8,3) -> (192,)
+tampilkan_visual_flatten(foto_mini, vektor_elsa)
+
+# Tahap 2.2: Hitung skala foto penuh 224x224x3 (persis Slide 29!)
+neuron_224 = IMG_SIZE * IMG_SIZE * 3    # TODO 4A -> 150.528
+param_224 = neuron_224 * 5 + 5          # TODO 4B -> 752.645""",
+            output_img="assets/P02/ho_step2_flatten_strip.png",
+            output_caption="Atas: 8×8 (B1–B8) diluruskan jadi 64 piksel warna (P1 x1–3 .. P64 x190–192 = 192 neuron RGB). Bawah: skala parameter.",
+            theory_ref="Slide 21–22 — Animasi Flatten & 150.528 Neuron Input",
+            checklist_html="✓ <code>len(vektor_elsa) == 192</code> (64 piksel × 3 RGB)<br/>✓ Skala penuh: <code>150.528</code> neuron → <code>752.645</code> param (persis Slide 29!)",
+            callout_html="<strong>Momen Klik!</strong> Biru gaun Elsa di baris <code>B4–B5</code> tampak nyata pindah menjadi garis vertikal di tengah pita 1D!",
             color="green",
-            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta menyelesaikan TODO 1 & TODO 2 tentang flatten dan hitungan neuron input layer (12.288 dan 150.528 -> 752.645 param persis Slide 29).",
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta mengerjakan # TODO 3 (.flatten()) dan sorot gambar pita warna 1D (biru gaun di B4-B5, tangan di B7-B8), lalu lanjut # TODO 4 menghitung 150.528 neuron -> 752.645 parameter.",
         ),
         _handson_step_slide(
             step_num=3,
-            title="Forward Pass Manual dengan NumPy",
-            kicker="HANDS-ON · LANGKAH 3/6 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Menulis sendiri hitungan 1 neuron (<code>W·x + b</code>), <code>ReLU</code>, <code>Softmax</code>, &amp; <code>Loss</code>",
+            stage_badge="Tahap 3",
+            title="Weight, Bias, ReLU &amp; Softmax",
+            kicker="HANDS-ON · TAHAP 3.1, 3.2 &amp; 3.3 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Membuktikan 1 neuron hanyalah kali-tambah biasa, <code>ReLU</code>, &amp; <code>Softmax 100%</code>",
             bullets_html="""
-              <li>Kerjakan <strong># TODO 3</strong>: hitung skor mentah <code>z = np.dot(x_rgb, w) + b</code> dan aktivasi <code>relu(z)</code>.</li>
-              <li>Kerjakan <strong># TODO 4</strong>: buat fungsi <code>softmax_manual(logits)</code> dan buktikan jumlah probabilitasnya selalu <code>1.0</code>.</li>
-              <li>Jalankan Forward Pass 1-Layer pada <strong>4 piksel nyata Elsa</strong> → <code>Argmax</code> → hitung <code>Cross-Entropy Loss</code>!</li>
+              <li><span class="ho-sub-tag red">3.1</span><span><strong># TODO 5 (1 baris):</strong> Hitung <code>z = r*w_r + g*w_g + b*w_b + bias</code> pada piksel gaun Elsa <em>(tanpa <code>np.dot</code> rumit!)</em>.</span></li>
+              <li><span class="ho-sub-tag red">3.2</span><span><strong># TODO 6 (1 baris):</strong> Terapkan <code>np.maximum(0.0, skor_contoh)</code> → batang minus langsung rata jadi <code>0</code>!</span></li>
+              <li><span class="ho-sub-tag red">3.3</span><span><strong>Eksperimen Bebas:</strong> Ubah 1 angka (mis. <code>skor_olaf = 3.0</code>) &amp; lihat foto pemenang <code>Argmax</code> berpindah live!</span></li>
             """,
-            code_snippet="""# Forward Pass 1-Layer di NumPy (Langkah 3)
-z_skor = x_4px @ W_demo + b_demo
-probs = softmax_manual(z_skor)
-pred_idx = int(np.argmax(probs))
-loss_elsa = float(-np.log(probs[1]))""",
-            expected_output="""Skor mentah z    : [-0.95  2.33 -0.67 -1.00 -0.73]
-Probabilitas (%) : [ 3.2  85.5   4.3   3.1   4.0]
-Argmax Prediksi  : ELSA (85.5%) | Loss = 0.16  ✓""",
-            theory_ref="Slide 25–29 — Weight+Bias, ReLU, Softmax & Loss",
-            callout_html="<strong>Target Langkah 3:</strong> Semua <code>assert</code> lolos dan terlihat nyata bahwa Forward Pass hanyalah perkalian bobot + bias + Softmax.",
+            code_snippet="""# Tahap 3.1: Hitung 1 neuron (kali-tambah biasa!)
+z = (r * w_r) + (g * w_g) + (b * w_b) + bias   # TODO 5
+tampilkan_timbangan_neuron(r, g, b, w_r, w_g, w_b, bias, z)
+
+# Tahap 3.2 & 3.3: ReLU + eksperimen bebas Softmax 5 karakter
+hasil_relu = np.maximum(0.0, skor_contoh)       # TODO 6
+tampilkan_softmax_frozen([0.4, 2.3, 0.1, -0.2, 0.2], df_meta, DATA_DIR)""",
+            output_img="assets/P02/ho_step3_neuron_relu_softmax.png",
+            output_caption=f"Kiri: z Gaun ({ho_z_gaun:+.2f}) vs Dinding ({ho_z_wall:+.2f}). Tengah: ReLU (negatif → 0). Kanan: Softmax 100% + Loss ({ho_loss_sm:.2f})!",
+            theory_ref="Slide 25–27 — Weight+Bias, ReLU, Softmax & Loss",
+            checklist_html="✓ Gaun biru menyala (<code>z &gt; 0</code>) sementara dinding redup (<code>z &lt; 0</code>)<br/>✓ Ubah <code>skor_olaf = 3.0</code> → lihat <code>Argmax</code> pindah &amp; <code>Loss</code> melonjak!",
+            callout_html="<strong>Bebas Panik Sintaks:</strong> Tanpa <code>np.dot</code> rumit — peserta langsung melihat kaitan bobot, <code>ReLU</code>, <code>Softmax</code>, &amp; <code>Loss</code>!",
             color="red",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '8'} menit. Minta peserta melengkapi TODO 3 & TODO 4 (1 neuron + ReLU lalu Softmax manual 5 kelas Frozen pada 4 piksel Elsa). Jangan membuka Hint sebelum mencoba 2 menit.",
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '8'} menit. Pandu # TODO 5 (kali-tambah sederhana), # TODO 6 (ReLU), lalu ajak peserta bermain di Tahap 3.3 mengganti angka skor_olaf atau skor_anna untuk melihat Softmax & foto Argmax berubah seketika!",
         ),
         _handson_step_slide(
             step_num=4,
-            title="Bangun Neural Network 1-Layer dengan Keras",
-            kicker="HANDS-ON · LANGKAH 4/6 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Menyusun arsitektur <code>Input → Flatten → Dense(5, Softmax)</code> persis Slide 29",
+            stage_badge="Tahap 4",
+            title="Rakit Model 1-Layer &amp; Uji Model Bayi",
+            kicker="HANDS-ON · TAHAP 4.1, 4.2 &amp; 4.3 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Menyusun 2 layer Keras (<code>61.445</code> param) &amp; melihat tebakan acak <strong>Epoch 0</strong>",
             bullets_html=f"""
-              <li>Muat seluruh {total_imgs} foto Frozen ke ukuran ringkas <code>64×64×3</code> (agar RAM aman &amp; training cepat di kelas).</li>
-              <li>Kerjakan <strong># TODO 5</strong>: susun model <code>tf.keras.Sequential</code> dengan <code>Flatten()</code> dan <code>Dense(len(CLASS_NAMES), activation="softmax")</code>.</li>
-              <li><em>Compile</em> model memakai optimizer <code>Adam(learning_rate=0.001)</code> dan loss <code>sparse_categorical_crossentropy</code>.</li>
+              <li><span class="ho-sub-tag yellow">4.1</span><span>Jalankan sel pemuat {total_imgs} foto Frozen ukuran <code>64×64×3</code> (<code>Shift+Enter</code>, siap dalam 1 detik).</span></li>
+              <li><span class="ho-sub-tag yellow">4.2</span><span><strong># TODO 7 (2 baris):</strong> Lengkapi <code>Flatten()</code> &amp; <code>Dense(5, activation="softmax")</code> → cocokkan <code>61.445</code> di <code>summary()</code>!</span></li>
+              <li><span class="ho-sub-tag yellow">4.3</span><span><strong>Tes "Model Bayi" (Epoch 0):</strong> Lihat sendiri bar probabilitas ~20% rata semua (<code>Loss {e0_loss:.2f}</code>, tebak acak {s_e0}/5)!</span></li>
             """,
-            code_snippet="""# Bangun Neural Network 1-Layer di Keras (Langkah 4)
-model = tf.keras.Sequential([
+            code_snippet="""# Tahap 4.2: Rakit Neural Network 1-Layer persis diagram Slide 29
+model_nn = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(64, 64, 3)),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),
-])""",
-            expected_output=f"""Shape X_frozen : ({total_imgs}, 64, 64, 3) | label: {total_imgs}
-✅ Neural Network 1-Layer berhasil dibangun!
-Output shape   : (None, 5)""",
-            theory_ref="Slide 29 — Diagram 150.528 Input → 5 Output Softmax",
-            callout_html="<strong>Catatan jujur:</strong> Model 1-Layer ini dibangun persis seperti teori Bab 3 — di <strong>P03</strong> kita naik ke arsitektur berlapis &amp; CNN!",
+    tf.keras.layers.Flatten(),                        # TODO 7A
+    tf.keras.layers.Dense(5, activation="softmax"),   # TODO 7B
+])
+# Tahap 4.3: Uji tebakan SEBELUM belajar (Epoch 0 — bobot acak!)
+tampilkan_tebakan_model(model_nn, X_5foto, y_5foto)""",
+            output_img="assets/P02/ho_step4_baby_model.png",
+            output_caption=f"Epoch 0 (Bobot Acak): Model belum belajar — bar probabilitas ~20% merata, akurasi awal {e0_acc:.1f}% ({s_e0}/5 benar).",
+            theory_ref="Slide 29 — Input → Flatten → Dense(5, Softmax)",
+            checklist_html="✓ <code>model_nn.summary()</code> tampil tepat <strong>61.445</strong> parameter<br/>✓ Grafik Epoch 0 menunjukkan bar ~20% rata (tebak acak)",
+            callout_html="<strong>Kenapa perlu Training?</strong> Melihat &ldquo;Model Bayi&rdquo; menebak acak di Epoch 0 bikin peserta langsung paham fungsi <code>model.fit()</code>!",
             color="yellow",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Tunjukkan kaitan baris demi baris Sequential dengan diagram Slide 29 (Input -> Flatten -> Dense(5, softmax)).",
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 7 (Flatten + Dense(5, softmax)) dan cocokkan angka 61.445 di model.summary(), lalu jalankan Tahap 4.3 agar peserta melihat tebakan acak Model Bayi (Epoch 0, Loss {e0_loss:.2f}).",
         ),
         _handson_step_slide(
             step_num=5,
-            title="Latih Model (model.fit) & Plot Kurva Loss",
-            kicker="HANDS-ON · LANGKAH 5/6 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Menjalankan <code>model_nn.fit()</code> dan mengamati penurunan nilai <em>Loss</em>",
-            bullets_html="""
-              <li>Kerjakan <strong># TODO 6</strong>: latih model pada foto Frozen (<code>2</code> epoch saat <code>SMOKE_TEST=1</code>, <code>8</code> epoch di kelas normal).</li>
-              <li>Plot grafik <strong>Training Loss</strong> tiap epoch dan simpan ke <code>results/p02_nn_loss_curve.png</code>.</li>
-              <li>Amati secara jujur bahwa Loss turun stabil (<code>3.39 → 1.44</code>), namun latar ramai tetap menantang model 1-layer!</li>
+            stage_badge="Tahap 5",
+            title="Latih Model (model.fit) &amp; Kurva Loss",
+            kicker="HANDS-ON · TAHAP 5.1 &amp; 5.2 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Menjalankan siklus <strong>Backprop + Gradient Descent</strong> &amp; melihat <em>Loss</em> turun",
+            bullets_html=f"""
+              <li><span class="ho-sub-tag">5.1</span><span><strong># TODO 8 (1 baris):</strong> Panggil <code>model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16)</code> ({e_end} epoch di kelas, 2 saat smoke test).</span></li>
+              <li><span class="ho-sub-tag">5.2</span><span>Jalankan <code>tampilkan_kurva_training(history)</code> → simpan grafik otomatis ke <code>results/p02_nn_loss_curve.png</code>!</span></li>
+              <li><span class="ho-sub-tag">Hasil</span><span>Amati nyata: <strong>Loss turun</strong> <code>{e1_loss:.2f} → {e_end_loss:.2f}</code> &amp; <strong>Akurasi naik</strong> <code>{e0_acc:.1f}% → {e_end_acc:.1f}%</code>!</span></li>
             """,
-            code_snippet="""# Latih singkat & plot kurva Loss (Langkah 5)
-history = model_nn.fit(
-    X_frozen, y_frozen,
-    epochs=2 if SMOKE_TEST else 8,
-    batch_size=16, verbose=1,
+            code_snippet="""# Tahap 5.1: Jalankan siklus Backprop & Gradient Descent otomatis!
+EPOCHS = 2 if SMOKE_TEST else 20
+history = model_nn.fit(                               # TODO 8
+    X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1
 )
-plt.plot(history.history["loss"], marker="o")""",
-            expected_output="""Epoch 1/8 - loss: 3.3900 - acc: 0.203 (20.3%)
-Epoch 4/8 - loss: 2.1150 - acc: 0.231 (23.1%)
-Epoch 8/8 - loss: 1.4390 - acc: 0.448 (44.8%)
-Grafik disimpan: results/p02_nn_loss_curve.png  ✓""",
-            theory_ref="Slide 28–29 — Siklus Backpropagation & Kurva Loss",
+# Tahap 5.2: Plot kurva Loss turun & Akurasi naik
+tampilkan_kurva_training(history, simpan_ke=RESULTS_DIR / "p02_nn_loss_curve.png")""",
+            output_img="assets/P02/ho_step5_loss_curve.png",
+            output_caption=f"Hasil nyata 1-Layer NN pada {total_imgs} foto Frozen: Loss turun mulus ({e1_loss:.2f} → {e_end_loss:.2f}) & Akurasi naik ke {e_end_acc:.1f}%.",
+            theory_ref="Slide 28–29 — Siklus Backpropagation, Gradient Descent & Epoch",
+            checklist_html="✓ Kurva merah <strong>Loss</strong> turun mulus dari Epoch 1 → 20<br/>✓ File <code>results/p02_nn_loss_curve.png</code> tersimpan otomatis",
             callout_html="<strong>Ingat metodologi:</strong> Pembagian data <em>train/val/test</em> resmi bebas <em>leakage</em> (Group Split) akan dipelajari tuntas di <strong>P05</strong>.",
             color="blue",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Jalankan training singkat dan sorot kurva Loss yang turun. Diskusikan jujur mengapa foto latar ramai butuh arsitektur CNN (P03).",
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 8 menjalankan model_nn.fit() selama 20 epoch (~2 detik) dan plot kurva Loss turun ({e1_loss:.2f} -> {e_end_loss:.2f}) serta Akurasi naik ke {e_end_acc:.1f}%!",
         ),
         _handson_step_slide(
             step_num=6,
-            title="Cek model.summary() & Eksperimen Learning Rate",
-            kicker="HANDS-ON · LANGKAH 6/6 (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
-            goal_html="Membuktikan rumus <code>(Input × Output) + Bias</code> cocok 100% dengan Keras",
-            bullets_html="""
-              <li>Panggil <code>model_nn.summary()</code> dan baca kolom <code>Param #</code> (<code>61.445</code>).</li>
-              <li>Kerjakan <strong># TODO 7</strong>: hitung manual <code>n_weight = 12288 * 5</code> + <code>n_bias = 5</code> dan buktikan <code>assert</code> cocok 100%!</li>
-              <li><em>(Opsional # TODO 8)</em> Uji efek 3 nilai <strong>Learning Rate</strong> (<code>0.0001</code>, <code>0.001</code>, <code>0.01</code>) &amp; bandingkan dengan skala <code>752.645</code> param!</li>
+            stage_badge="Tahap 5.3–5.4",
+            title="Uji Tebak &amp; Peta Bobot ΔW",
+            kicker="HANDS-ON · TAHAP 5.3, 5.4 &amp; BONUS (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            goal_html="Menguji model menebak 5 foto Frozen &amp; mengintip isi otak bobot <code>ΔW</code>",
+            bullets_html=f"""
+              <li><span class="ho-sub-tag green">5.3</span><span><strong>Before vs After:</strong> Bandingkan tebakan Epoch 0 ({s_e0}/5) vs Epoch {e_end} (<strong>{s_end}/5 benar ✓</strong>) pada 5 karakter Frozen!</span></li>
+              <li><span class="ho-sub-tag green">5.4</span><span><strong>Intip Peta Bobot <code>ΔW</code>:</strong> Lihat area piksel terang yang paling diingat neuron Anna, Elsa, Kristoff, Olaf, &amp; Sven!</span></li>
+              <li><span class="ho-sub-tag green">Bonus</span><span><em>(Opsional)</em> Ubah 1 angka <code>LEARNING_RATE_COBA = 0.01</code> lalu lihat efek langkah kebesaran pada kurva <em>Loss</em>!</span></li>
             """,
-            code_snippet="""# Cocokkan hitungan tangan vs Keras (Langkah 6)
-model_nn.summary()
-n_weight = (64 * 64 * 3) * 5   # 61.440 weight
-n_bias = 5                     # 5 bias kelas
-assert n_weight + n_bias == model_nn.count_params()""",
-            expected_output="""dense (Dense)   (None, 5)      Param #: 61,445
-Total Hitungan Tangan :     61,445
-Total Keras count     :     61,445  <-- COCOK 100%!
-Skala 224x224x3       :    752,645 param (Slide 29)""",
-            theory_ref="Slide 29 — Total Parameter W + b = 752.645",
-            callout_html="<strong>Momen Aha:</strong> Angka di <code>model.summary()</code> bukan angka misterius — kamu sekarang tahu persis asal setiap weight dan bias-nya!",
+            code_snippet="""# Tahap 5.3: Uji kembali model pada 5 foto Frozen (Sesudah Belajar!)
+tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="SESUDAH BELAJAR")
+
+# Tahap 5.4 (Bonus Aha!): Intip area piksel yg diingat bobot ΔW
+tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
+            output_img="assets/P02/ho_step6_predict_and_weights.png",
+            output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar! Bawah: peta ΔW menunjukkan area fokus tiap neuron (jembatan ke CNN P03).",
+            theory_ref="Jembatan P02 → P03 (CNN) & P05 (Anti-Leakage Split)",
+            checklist_html=f"✓ Tebakan naik dari <strong>{s_e0}/5 → {s_end}/5</strong> &amp; siluet muncul di peta <code>ΔW</code><br/>✓ Cek jujur <code>polos vs ramai</code> mengungkap risiko <em>shortcut learning</em>!",
+            callout_html="<strong>Momen Aha!</strong> Model 1-layer cenderung menghafal posisi piksel &amp; latar — inilah alasan kita butuh <strong>CNN (P03)</strong> &amp; <strong>Group Split (P05)</strong>!",
             color="green",
-            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Pastikan peserta melihat assert n_weight + n_bias == model_nn.count_params() lolos (61.445), lalu jelaskan eksperimen Learning Rate opsional di sel akhir notebook.",
+            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 5.3 (Before vs After {s_e0}/5 -> {s_end}/5 benar) dan Tahap 5.4 (heatmap Fokus Bobot ΔW). Tunjuk langsung area kuning menyala di tengah heatmap sebagai jembatan alami menuju P03 (CNN)!",
         ),
     ]
 
     _challenge_html = ""  # Removed from active P02 deck; preserved in git history if ever needed
 
-    # Slide 32: Color-coded Interactive Kamus Istilah (ZERO Hidden Layer / MLP leak!)
-    _gloss_items = [
-        ("AI / ML / DL", "BAB 1", "b1", "ch-blue", "1", "Hierarki subset: AI (bidang luas) ⊃ ML (belajar dari data) ⊃ DL (memakai Neural Network berlapis)."),
-        ("Supervised Learning &amp; Fitur", "BAB 1", "b1", "ch-blue", "1", "Model belajar dari pasangan <code>Data + Label</code>; DL otomatis menemukan pola fitur dari piksel mentah."),
-        ("Image Classification", "BAB 2", "b2", "ch-red", "2", "Memberi 1 label kategori dan probabilitas pada keseluruhan foto (tugas utama proyek Frozen kita)."),
-        ("Object Detection", "BAB 2", "b2", "ch-red", "2", "Mencari banyak objek sekaligus dalam 1 foto beserta kotak koordinat <em>bounding box</em> + label."),
-        ("Semantic &amp; Instance Segm.", "BAB 2", "b2", "ch-red", "2", "Memetakan bentuk per piksel (<em>mask</em>): <em>Semantic</em> per kelas, <em>Instance</em> memisahkan tiap individu objek."),
-        ("Object Tracking", "BAB 2", "b2", "ch-red", "2", "Mendeteksi dan mempertahankan nomor ID objek yang konsisten antar-frame di dalam video."),
-        ("Input Layer &amp; Flatten", "BAB 3", "b3", "ch-green", "3", "<code>Flatten</code> meluruskan foto <code>H×W×C</code> menjadi 1 kolom vektor piksel penerima input (<code>150.528</code> neuron)."),
-        ("Neuron, Weight &amp; Bias", "BAB 3", "b3", "ch-yellow", "3", "Unit hitung inti: tiap input dikali bobot (<code>W</code>) lalu ditambah pergeseran ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>."),
-        ("ReLU, Sigmoid &amp; Softmax", "BAB 3", "b3", "ch-yellow", "3", "Fungsi aktivasi: <code>ReLU</code> memangkas negatif jadi <code>0</code>; <code>Softmax</code> mengubah skor jadi probabilitas total <code>100%</code>."),
-        ("Forward Pass &amp; Argmax", "BAB 3", "b3", "ch-green", "3", "Aliran hitung maju dari piksel foto → Softmax, lalu <code>Argmax</code> memilih kelas berpeluang tertinggi."),
-        ("Loss Function", "BAB 3", "b3", "ch-green", "3", "Skor hukuman seberapa jauh prediksi model dari label asli (<code>−ln P</code> — makin kecil makin baik!)."),
-        ("Backprop, GD &amp; Epoch", "BAB 3", "b3", "ch-yellow", "3", "<code>Backpropagation</code> melacak asal salah; <code>Gradient Descent</code> menggeser <code>W, b</code> tiap putaran <code>Epoch</code>."),
+    # Slide 32: 2-Column Grouped Dictionary List (Bab 1-2 Left | Bab 3 Right, clickable slide jump + search + filter)
+    _dict_b1 = [
+        ("AI / ML / DL", "Hierarki subset: AI (bidang luas) ⊃ ML (belajar dari data) ⊃ DL (memakai Neural Network berlapis).", 8, "ai ml dl artificial intelligence machine learning deep learning hierarki"),
+        ("Supervised Learning", "Model belajar dari pasangan <code>Data + Label</code>; DL otomatis menemukan pola fitur dari piksel mentah.", 7, "supervised learning fitur data label"),
     ]
-    _gloss_cards_html = "\n        ".join(
-        f'<div class="gloss-card {col}" data-ch="{ch}">'
-        f'<div class="gloss-top"><div class="gloss-term">{term}</div><span class="gloss-tag {tag_cls}">{tag}</span></div>'
-        f'<div class="gloss-def">{defn}</div></div>'
-        for term, tag, tag_cls, col, ch, defn in _gloss_items
-    )
+    _dict_b2 = [
+        ("Image Classification", "Memberi 1 label kategori dan probabilitas pada keseluruhan foto (tugas utama proyek Frozen kita).", 13, "image classification klasifikasi foto label"),
+        ("Object Detection", "Mencari banyak objek sekaligus dalam 1 foto beserta kotak koordinat <em>bounding box</em> + label.", 14, "object detection bounding box deteksi"),
+        ("Segmentation", "Memetakan bentuk per piksel (<em>mask</em>): <em>Semantic</em> per kelas, <em>Instance</em> memisahkan tiap individu objek.", 15, "semantic instance segmentation mask piksel"),
+        ("Object Tracking", "Mendeteksi dan mempertahankan nomor ID objek yang konsisten antar-frame di dalam video.", 16, "object tracking video id frame"),
+    ]
+    _dict_b3 = [
+        ("Input Layer &amp; Flatten", "<code>Flatten</code> meluruskan foto <code>H×W×C</code> menjadi 1 kolom vektor piksel penerima input (<code>150.528</code> neuron).", 21, "input layer flatten piksel vektor 150528"),
+        ("Neuron, Weight &amp; Bias", "Unit hitung inti: tiap input dikali bobot (<code>W</code>) lalu ditambah pergeseran ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>.", 25, "neuron weight bias bobot ambang"),
+        ("ReLU &amp; Softmax", "Fungsi aktivasi: <code>ReLU</code> memangkas negatif jadi <code>0</code>; <code>Softmax</code> mengubah skor jadi probabilitas total <code>100%</code>.", 26, "relu sigmoid softmax aktivasi probabilitas"),
+        ("Forward Pass &amp; Argmax", "Aliran hitung maju dari piksel foto → Softmax, lalu <code>Argmax</code> memilih kelas berpeluang tertinggi.", 27, "forward pass argmax prediksi output"),
+        ("Loss Function", "Skor hukuman seberapa jauh prediksi model dari label asli (<code>−ln P</code> — makin kecil makin baik!).", 28, "loss function error hukuman cross entropy"),
+        ("Backprop, GD &amp; Epoch", "<code>Backpropagation</code> melacak asal salah; <code>Gradient Descent</code> menggeser <code>W, b</code> tiap putaran <code>Epoch</code>.", 29, "backpropagation gradient descent epoch learning rate training"),
+    ]
+    def _render_dict_rows(items, ch, cls):
+        return "\n            ".join(
+            f'<div class="dict-row" data-ch="{ch}" data-search="{kw}">'
+            f'<div class="dict-term {cls}">{term}</div>'
+            f'<div class="dict-def">{defn}</div>'
+            f'<button type="button" class="dict-slide-btn" onclick="jumpToSlide({snum})" title="Lompat ke Slide {snum:02d}">S{snum:02d} ↗</button>'
+            f'</div>'
+            for term, defn, snum, kw in items
+        )
     _glossary_html = f"""
-    <!-- KAMUS ISTILAH (COLOR-CODED + FILTERABLE BY BAB) -->
-    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 12 istilah asli yang dipakai di Bab 1–3 memakai tombol filter Bab agar peserta mudah mengaitkan konsep dengan visual yang baru dipelajari.">
+    <!-- KAMUS ISTILAH (2-COLUMN GROUPED DICTIONARY LIST + FILTER + SEARCH + SLIDE JUMP) -->
+    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 12 istilah asli Bab 1–3 dalam format kamus 2 kolom. Gunakan tombol filter Bab, kotak cari istilah, atau klik kode slide (S08–S29) jika peserta ingin langsung menengok ulang visualnya.">
       <div class="gloss-head-row">
         <div>
           <div class="kicker">GLOSARIUM RINGKAS · TEORI NEURAL NETWORK</div>
           <h2 style="margin-bottom:0;">Kamus Istilah <span class="hl-blue">Teori Neural Network</span></h2>
         </div>
-        <div class="gloss-filter-bar pdf-keep-ui">
-          <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (12)</button>
-          <button type="button" class="gloss-fbtn" data-ch="1" onclick="filterGlossary('1', this)">Bab 1 (2)</button>
-          <button type="button" class="gloss-fbtn" data-ch="2" onclick="filterGlossary('2', this)">Bab 2 (4)</button>
-          <button type="button" class="gloss-fbtn" data-ch="3" onclick="filterGlossary('3', this)">Bab 3 (6)</button>
+        <div class="gloss-controls pdf-keep-ui">
+          <div class="gloss-search-wrap">
+            <span class="gloss-search-ico">🔍</span>
+            <input type="text" id="gloss-search-inp" class="gloss-search" placeholder="Cari istilah..." oninput="searchGlossary(this.value)" />
+          </div>
+          <div class="gloss-filter-bar">
+            <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (12)</button>
+            <button type="button" class="gloss-fbtn" data-ch="1" onclick="filterGlossary('1', this)">Bab 1 (2)</button>
+            <button type="button" class="gloss-fbtn" data-ch="2" onclick="filterGlossary('2', this)">Bab 2 (4)</button>
+            <button type="button" class="gloss-fbtn" data-ch="3" onclick="filterGlossary('3', this)">Bab 3 (6)</button>
+          </div>
         </div>
       </div>
-      <div class="glossary-grid">
-        {_gloss_cards_html}
+      <div class="dict-grid">
+        <div class="dict-col">
+          <div class="dict-group">
+            <div class="dict-group-head b1">
+              <span>BAB 1 · AI, MACHINE LEARNING &amp; DEEP LEARNING</span>
+              <span class="dict-group-cnt">2 istilah</span>
+            </div>
+            <div class="dict-list">
+              {_render_dict_rows(_dict_b1, "1", "b1")}
+            </div>
+          </div>
+          <div class="dict-group grow">
+            <div class="dict-group-head b2">
+              <span>BAB 2 · 4 TUGAS COMPUTER VISION</span>
+              <span class="dict-group-cnt">4 istilah</span>
+            </div>
+            <div class="dict-list">
+              {_render_dict_rows(_dict_b2, "2", "b2")}
+            </div>
+          </div>
+        </div>
+        <div class="dict-col">
+          <div class="dict-group grow">
+            <div class="dict-group-head b3">
+              <span>BAB 3 · ALUR MESIN NEURAL NETWORK</span>
+              <span class="dict-group-cnt">6 istilah</span>
+            </div>
+            <div class="dict-list">
+              {_render_dict_rows(_dict_b3, "3", "b3")}
+            </div>
+          </div>
+        </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 """
 
-    # Slide 31: Upgraded Interactive Quiz (clickable quick-check chips + scoreboard + compact PDF-safe answers!)
-    _quiz_html = f"""
-    <!-- KUIS INTERAKTIF 5 SOAL -->
-    <section class="slide" data-title="Kuis Interaktif 5 Soal" data-notes="Alokasi waktu: 5 menit. Minta peserta mengklik opsi jawaban cepat pada kelima soal (langsung menyala hijau/merah dan mencatat skor 0–5), lalu klik Penjelasan atau Buka Semua untuk mengonfirmasi alasannya.">
-      <div class="qz-head-row">
-        <div>
-          <div class="kicker">EVALUASI CEPAT · KUIS 5 SOAL</div>
-          <h2 style="margin-bottom:0;">Kuis Interaktif <span class="hl-red">5 Soal</span></h2>
-        </div>
-        <div class="qz-toolbar qz-ctrl-hide">
-          <span id="qz-score-pill" class="qz-score-pill">Skor: 0 / 5</span>
-          <button type="button" class="btn-ui outline" style="padding:4px 10px; font-size:10.5px;" onclick="revealAllQuiz(true)">Buka Semua</button>
-          <button type="button" class="btn-ui outline" style="padding:4px 10px; font-size:10.5px; color:#5F6368; border-color:#DADCE0;" onclick="resetMiniQuiz()">↺ Reset</button>
-        </div>
-      </div>
-      <div class="quiz-grid-compact" style="gap:9px;">
-        <div class="quiz-item compact qz-item-tight">
-          <div class="q-txt">1. Apa hubungan antara AI, Machine Learning (ML), dan Deep Learning (DL)?</div>
-          <div class="qz-opts">
-            <button type="button" class="qz-opt" data-q="q1" data-correct="false" onclick="pickMiniQuiz(this, 'q1')">ML ⊃ AI ⊃ DL</button>
-            <button type="button" class="qz-opt" data-q="q1" data-correct="true" onclick="pickMiniQuiz(this, 'q1')">AI ⊃ ML ⊃ DL</button>
-            <button type="button" class="qz-opt" data-q="q1" data-correct="false" onclick="pickMiniQuiz(this, 'q1')">DL ⊃ ML ⊃ AI</button>
-          </div>
-          <div class="qz-foot qz-ctrl-hide"><button type="button" class="qz-mini-btn" onclick="toggleAns('q1', this)">Lihat Penjelasan</button></div>
-          <div id="q1" class="quiz-ans"><strong>Tepat — AI ⊃ ML ⊃ DL:</strong> DL adalah bagian dari ML yang memakai Neural Network untuk belajar fitur otomatis.</div>
-        </div>
-        <div class="quiz-item compact qz-item-tight">
-          <div class="q-txt">2. Apa beda utama <em>Image Classification</em> dan <em>Object Detection</em>?</div>
-          <div class="qz-opts">
-            <button type="button" class="qz-opt" data-q="q2" data-correct="false" onclick="pickMiniQuiz(this, 'q2')">Detection = 1 label saja</button>
-            <button type="button" class="qz-opt" data-q="q2" data-correct="true" onclick="pickMiniQuiz(this, 'q2')">Detection = banyak objek + kotak</button>
-            <button type="button" class="qz-opt" data-q="q2" data-correct="false" onclick="pickMiniQuiz(this, 'q2')">Keduanya sama persis</button>
-          </div>
-          <div class="qz-foot qz-ctrl-hide"><button type="button" class="qz-mini-btn" onclick="toggleAns('q2', this)">Lihat Penjelasan</button></div>
-          <div id="q2" class="quiz-ans"><strong>Tepat:</strong> Classification memberi 1 label per foto; Detection menemukan banyak objek beserta kotak lokasinya.</div>
-        </div>
-        <div class="quiz-item compact qz-item-tight">
-          <div class="q-txt">3. Jika foto berukuran <code>100×100×3</code>, berapa jumlah neuron di <em>Input Layer</em>?</div>
-          <div class="qz-opts">
-            <button type="button" class="qz-opt" data-q="q3" data-correct="false" onclick="pickMiniQuiz(this, 'q3')">10.000 neuron</button>
-            <button type="button" class="qz-opt" data-q="q3" data-correct="true" onclick="pickMiniQuiz(this, 'q3')">30.000 neuron</button>
-            <button type="button" class="qz-opt" data-q="q3" data-correct="false" onclick="pickMiniQuiz(this, 'q3')">100.000 neuron</button>
-          </div>
-          <div class="qz-foot qz-ctrl-hide"><button type="button" class="qz-mini-btn" onclick="toggleAns('q3', this)">Lihat Penjelasan</button></div>
-          <div id="q3" class="quiz-ans"><strong>Tepat — 30.000:</strong> Dihitung dari <code>100 × 100 × 3 (RGB) = 30.000</code> neuron penerima nilai piksel.</div>
-        </div>
-        <div class="quiz-item compact qz-item-tight">
-          <div class="q-txt">4. Mengapa di <em>Output Layer</em> klasifikasi 5 karakter Frozen kita memakai <code>Softmax</code>?</div>
-          <div class="qz-opts">
-            <button type="button" class="qz-opt" data-q="q4" data-correct="true" onclick="pickMiniQuiz(this, 'q4')">Skor → probabilitas 100%</button>
-            <button type="button" class="qz-opt" data-q="q4" data-correct="false" onclick="pickMiniQuiz(this, 'q4')">Mengubah nilai jadi negatif</button>
-            <button type="button" class="qz-opt" data-q="q4" data-correct="false" onclick="pickMiniQuiz(this, 'q4')">Menghapus piksel latar</button>
-          </div>
-          <div class="qz-foot qz-ctrl-hide"><button type="button" class="qz-mini-btn" onclick="toggleAns('q4', this)">Lihat Penjelasan</button></div>
-          <div id="q4" class="quiz-ans"><strong>Tepat:</strong> <code>Softmax</code> mengubah 5 skor mentah <code>z</code> menjadi probabilitas <code>0–100%</code> yang jumlahnya tepat <code>100%</code>.</div>
-        </div>
-        <div class="quiz-item compact qz-item-tight">
-          <div class="q-txt">5. Saat training E1→E8, <em>Mean Loss</em> turun <code>1.70 → 0.21</code>. Proses apa yang mengoreksi bobot <code>W &amp; b</code>?</div>
-          <div class="qz-opts">
-            <button type="button" class="qz-opt" data-q="q5" data-correct="false" onclick="pickMiniQuiz(this, 'q5')">Flatten + Argmax</button>
-            <button type="button" class="qz-opt" data-q="q5" data-correct="true" onclick="pickMiniQuiz(this, 'q5')">Backprop + Gradient Descent</button>
-            <button type="button" class="qz-opt" data-q="q5" data-correct="false" onclick="pickMiniQuiz(this, 'q5')">Resize + Normalisasi</button>
-          </div>
-          <div class="qz-foot qz-ctrl-hide"><button type="button" class="qz-mini-btn" onclick="toggleAns('q5', this)">Lihat Penjelasan</button></div>
-          <div id="q5" class="quiz-ans"><strong>Tepat:</strong> <strong>Backpropagation</strong> melacak mundur sumber kesalahan, lalu <strong>Gradient Descent</strong> menggeser <code>W, b</code> menurunkan <em>Loss</em>!</div>
-        </div>
-        <div class="card tint-green" style="padding:10px 13px; justify-content:space-between; gap:5px;">
-          <div>
-            <div class="card-title" style="font-size:13.2px; color:#137333;">Target Penguasaan Bab 1–3</div>
-            <div style="font-size:11.3px; line-height:1.42; color:#202124; margin-top:5px;">
-              ✓ Membedakan AI / ML / DL &amp; 4 Task CV<br/>
-              ✓ Menghitung neuron <code>H×W×C</code> &amp; parameter <code>W + b</code><br/>
-              ✓ Paham alur <em>Forward Pass</em>, <em>ReLU</em>, &amp; <em>Softmax</em><br/>
-              ✓ Paham <em>Loss</em>, <em>Backpropagation</em>, <em>GD</em> &amp; <em>Epoch</em>!
-            </div>
-          </div>
-          <div id="qz-done-badge" style="font-family:var(--font-title); font-size:10.8px; font-weight:700; color:#137333; background:#FFFFFF; border:1px solid #A8DAB5; border-radius:8px; padding:4px 9px;">Klik opsi A/B/C di tiap kartu untuk uji cepat!</div>
-        </div>
-      </div>
-      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
-    </section>
-"""
+    # Slides 31-35: 5 Dedicated 1-by-1 Interactive Quiz Slides (clickable A/B/C + custom question/answer visual illustrations + thorough explanations!)
+    _quiz_slides = [
+        _qa_slide(
+            qa_id="quiz-p02-1",
+            qa_num=1,
+            quiz_progress_idx=1,
+            data_title="Kuis 1/5 — Peta AI, ML & Deep Learning",
+            kicker="EVALUASI CEPAT · KUIS 1 / 5 (BAB 1)",
+            title_html='Hubungan <span class="hl-blue">AI, Machine Learning &amp; Deep Learning</span>',
+            question_html="Di Bab 1 kita melihat hubungan ketiga istilah besar kecerdasan buatan. Urutan mana yang <strong>paling tepat</strong> dari bidang paling luas ke paling khusus?",
+            choices=[
+                "<strong>A.</strong> Machine Learning (ML) ⊃ Artificial Intelligence (AI) ⊃ Deep Learning (DL)",
+                "<strong>B.</strong> Artificial Intelligence (AI) ⊃ Machine Learning (ML) ⊃ Deep Learning (DL)",
+                "<strong>C.</strong> Deep Learning (DL) ⊃ Machine Learning (ML) ⊃ Artificial Intelligence (AI)",
+            ],
+            answer_html=(
+                "<strong>Jawaban: B — AI ⊃ ML ⊃ DL!</strong><br/>"
+                "• <strong>Mengapa tepat:</strong> <strong>AI</strong> adalah payung terbesar (semua mesin cerdas), <strong>ML</strong> adalah bagian AI yang belajar pola dari data, dan <strong>DL</strong> adalah cabang khusus ML yang memakai <strong>Neural Network</strong> untuk mengekstrak fitur otomatis dari piksel.<br/>"
+                "• <strong>Kenapa A &amp; C keliru:</strong> AI bukan bagian kecil dari ML/DL — sistem aturan klasik (<em>if-else</em>) tetap termasuk AI walau bukan ML maupun DL."
+            ),
+            vis_q_html="""
+              <svg viewBox="0 0 360 235" style="width:100%; max-width:350px; margin:0 auto; display:block;">
+                <ellipse cx="180" cy="118" rx="164" ry="108" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.5" stroke-dasharray="6 4"/>
+                <ellipse cx="180" cy="138" rx="116" ry="76" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.5" stroke-dasharray="6 4"/>
+                <ellipse cx="180" cy="160" rx="66" ry="42" fill="#E6F4EA" stroke="#34A853" stroke-width="2.5"/>
+                <text x="180" y="42" text-anchor="middle" font-family="Poppins" font-size="13.5" font-weight="800" fill="#1A73E8">Lingkaran Luar = ?</text>
+                <text x="180" y="92" text-anchor="middle" font-family="Poppins" font-size="13" font-weight="800" fill="#C5221F">Tengah = ?</text>
+                <text x="180" y="166" text-anchor="middle" font-family="Poppins" font-size="15" font-weight="800" fill="#137333">Inti = ?</text>
+              </svg>
+              <div style="font-size:12px; color:#5F6368; margin-top:4px;">Klik opsi <strong>A / B / C</strong> di kiri dulu, lalu buka jawabannya!</div>
+            """,
+            vis_a_html="""
+              <svg viewBox="0 0 360 235" style="width:100%; max-width:350px; margin:0 auto; display:block;">
+                <ellipse cx="180" cy="118" rx="166" ry="110" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.6"/>
+                <text x="180" y="36" text-anchor="middle" font-family="Poppins" font-size="12.5" font-weight="800" fill="#1A73E8">AI (Artificial Intelligence)</text>
+                <text x="180" y="51" text-anchor="middle" font-family="Roboto" font-size="9.5" fill="#3C4043">Payung besar: aturan klasik hingga robot</text>
+                <ellipse cx="180" cy="142" rx="124" ry="78" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.6"/>
+                <text x="180" y="88" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="800" fill="#C5221F">ML (Machine Learning)</text>
+                <text x="180" y="102" text-anchor="middle" font-family="Roboto" font-size="9.3" fill="#3C4043">Belajar pola langsung dari data</text>
+                <ellipse cx="180" cy="166" rx="78" ry="46" fill="#E6F4EA" stroke="#34A853" stroke-width="2.8"/>
+                <text x="180" y="156" text-anchor="middle" font-family="Poppins" font-size="12.5" font-weight="800" fill="#137333">Deep Learning</text>
+                <text x="180" y="171" text-anchor="middle" font-family="Roboto" font-size="9.2" fill="#137333">Neural Network</text>
+                <text x="180" y="185" text-anchor="middle" font-family="Roboto" font-size="9.2" font-weight="700" fill="#137333">★ Proyek Frozen</text>
+              </svg>
+              <div style="display:flex; justify-content:center; gap:7px; margin-top:6px; align-items:center;">
+                <img src="assets/P02/thumb_anna.jpg" style="width:32px; height:32px; border-radius:8px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:32px; height:32px; border-radius:8px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:32px; height:32px; border-radius:8px; object-fit:cover; border:2px solid #34A853;"/>
+                <span style="font-size:11px; font-weight:700; color:#137333;">Klasifikasi piksel Frozen = DL ⊂ ML ⊂ AI</span>
+              </div>
+            """,
+            notes="Alokasi waktu: 1 menit. Kuis 1/5 (Bab 1): minta peserta mengklik pilihan A/B/C terlebih dahulu sebelum membuka diagram Venn AI ⊃ ML ⊃ DL beserta penjelasannya.",
+            bar_color="blue",
+            correct_choice="B",
+        ),
+        _qa_slide(
+            qa_id="quiz-p02-2",
+            qa_num=2,
+            quiz_progress_idx=2,
+            data_title="Kuis 2/5 — Image Classification vs Object Detection",
+            kicker="EVALUASI CEPAT · KUIS 2 / 5 (BAB 2)",
+            title_html='Beda <span class="hl-red">Image Classification</span> &amp; <span class="hl-blue">Object Detection</span>',
+            question_html="Apa perbedaan utama antara <strong>Image Classification</strong> (tugas proyek Frozen kita) dengan <strong>Object Detection</strong>?",
+            choices=[
+                "<strong>A.</strong> Object Detection hanya memberi 1 label kategori untuk seluruh foto tanpa posisi",
+                "<strong>B.</strong> Image Classification memberi 1 label untuk seluruh foto; Object Detection mencari banyak objek sekaligus beserta kotak koordinat (<em>bounding box</em>)",
+                "<strong>C.</strong> Keduanya menghasilkan keluaran yang sama persis, hanya berbeda bahasa pemrograman",
+            ],
+            answer_html=(
+                "<strong>Jawaban: B!</strong><br/>"
+                "• <strong>Image Classification:</strong> Menjawab <em>&ldquo;Ini foto siapa?&rdquo;</em> → keluaran <strong>1 label kelas + probabilitas</strong> untuk keseluruhan foto (persis proyek 5 karakter Frozen kita).<br/>"
+                "• <strong>Object Detection:</strong> Menjawab <em>&ldquo;Ada apa saja &amp; di mana posisinya?&rdquo;</em> → keluaran banyak <strong>kotak <code>(x, y, w, h)</code> + label</strong> tiap objek.<br/>"
+                "• <strong>Kenapa A &amp; C keliru:</strong> Opsi A justru terbalik definisinya, sedangkan keluaran keduanya berbeda struktur."
+            ),
+            vis_q_html="""
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+                <div style="background:#FFFFFF; border:1.5px dashed #4285F4; border-radius:11px; padding:8px;">
+                  <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:132px; object-fit:cover; border-radius:8px;"/>
+                  <div style="font-family:var(--font-title); font-size:11px; font-weight:700; color:#1A73E8; margin-top:6px;">Kasus 1: Foto tunggal</div>
+                  <div style="font-size:10.5px; color:#5F6368;">Keluaran: ?</div>
+                </div>
+                <div style="background:#FFFFFF; border:1.5px dashed #EA4335; border-radius:11px; padding:8px;">
+                  <img src="assets/P02/thumb_olaf_ramai.jpg" style="width:100%; height:132px; object-fit:cover; border-radius:8px;"/>
+                  <div style="font-family:var(--font-title); font-size:11px; font-weight:700; color:#C5221F; margin-top:6px;">Kasus 2: Banyak benda</div>
+                  <div style="font-size:10.5px; color:#5F6368;">Keluaran: ?</div>
+                </div>
+              </div>
+              <div style="font-size:11.6px; color:#5F6368; margin-top:8px;">Bandingkan keluaran kedua tugas Computer Vision ini!</div>
+            """,
+            vis_a_html="""
+              <div style="display:flex; flex-direction:column; gap:9px; width:100%;">
+                <div style="display:grid; grid-template-columns:1fr 1.35fr; gap:9px; align-items:stretch;">
+                  <div style="background:#E8F0FE; border:1.5px solid #4285F4; border-radius:11px; padding:7px; display:flex; flex-direction:column; justify-content:space-between;">
+                    <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:118px; object-fit:cover; border-radius:7px;"/>
+                    <div style="margin-top:5px;">
+                      <div style="font-family:var(--font-title); font-size:10.2px; font-weight:800; color:#1A73E8;">IMAGE CLASSIFICATION</div>
+                      <div style="font-size:10px; color:#202124; background:#FFFFFF; border-radius:6px; padding:2px 6px; margin-top:3px; font-weight:700;">1 Label: ELSA (94%)</div>
+                    </div>
+                  </div>
+                  <div style="background:#FCE8E6; border:1.5px solid #EA4335; border-radius:11px; padding:7px; display:flex; flex-direction:column; justify-content:space-between;">
+                    <img src="assets/P02/02b_object_detection_demo.png" style="width:100%; height:118px; object-fit:cover; border-radius:7px;"/>
+                    <div style="margin-top:5px;">
+                      <div style="font-family:var(--font-title); font-size:10.2px; font-weight:800; color:#C5221F;">OBJECT DETECTION</div>
+                      <div style="font-size:10px; color:#202124; background:#FFFFFF; border-radius:6px; padding:2px 6px; margin-top:3px; font-weight:700;">Banyak Kotak + Label</div>
+                    </div>
+                  </div>
+                </div>
+                <div style="background:#E6F4EA; border:1px solid #A8DAB5; border-radius:8px; padding:6px 10px; font-size:11px; color:#137333; font-weight:600;">
+                  ✓ Proyek Frozen kita = <strong>Image Classification (5 Kelas)</strong>
+                </div>
+              </div>
+            """,
+            notes="Alokasi waktu: 1 menit. Kuis 2/5 (Bab 2): klik opsi lalu tunjukkan ilustrasi nyata berdampingan antara Classification (1 label Elsa) dan Object Detection (banyak bounding box).",
+            bar_color="red",
+            correct_choice="B",
+        ),
+        _qa_slide(
+            qa_id="quiz-p02-3",
+            qa_num=3,
+            quiz_progress_idx=3,
+            data_title="Kuis 3/5 — Menghitung Jumlah Neuron Input Layer",
+            kicker="EVALUASI CEPAT · KUIS 3 / 5 (BAB 3 · TAHAP 2)",
+            title_html='Menghitung <span class="hl-green">Neuron di Input Layer</span>',
+            question_html="Jika sebuah foto berwarna RGB berukuran <strong><code>100 × 100 × 3</code></strong> diluruskan (<em>Flatten</em>) masuk ke Neural Network, berapa jumlah neuron di <strong>Input Layer</strong>?",
+            choices=[
+                "<strong>A.</strong> 10.000 neuron (hanya mengalikan tinggi × lebar = 100 × 100)",
+                "<strong>B.</strong> 30.000 neuron (mengalikan tinggi × lebar × 3 channel RGB = 100 × 100 × 3)",
+                "<strong>C.</strong> 100.000 neuron (karena tiap piksel dikali 10 secara otomatis)",
+            ],
+            answer_html=(
+                "<strong>Jawaban: B — 30.000 neuron!</strong><br/>"
+                "• <strong>Rumus pasti:</strong> <code>Tinggi × Lebar × Channel = 100 × 100 × 3 = 30.000</code> neuron penerima angka piksel.<br/>"
+                "• <strong>Kenapa A keliru:</strong> <code>10.000</code> hanya cukup untuk gambar hitam-putih (<em>Grayscale</em>, 1 channel) — foto berwarna wajib menyimpan <strong>3 lapisan (R, G, B)</strong>.<br/>"
+                "• <strong>Kaitan proyek Frozen:</strong> Untuk ukuran penuh <code>224×224×3</code>, jumlahnya <code>150.528</code> neuron!"
+            ),
+            vis_q_html="""
+              <svg viewBox="0 0 330 225" style="width:100%; max-width:320px; margin:0 auto; display:block;">
+                <rect x="40" y="34" width="110" height="110" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.4"/>
+                <rect x="26" y="48" width="110" height="110" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2.4"/>
+                <rect x="12" y="62" width="110" height="110" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.4"/>
+                <text x="67" y="114" text-anchor="middle" font-family="Poppins" font-size="14" font-weight="800" fill="#C5221F">100 × 100</text>
+                <text x="67" y="132" text-anchor="middle" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#202124">× 3 (R, G, B)</text>
+                <path d="M162 110 L212 110" stroke="#5F6368" stroke-width="3" marker-end="url(#arrq3)"/>
+                <defs><marker id="arrq3" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#5F6368"/></marker></defs>
+                <text x="187" y="98" text-anchor="middle" font-family="Roboto Mono" font-size="10" font-weight="700" fill="#1A73E8">Flatten</text>
+                <rect x="224" y="24" width="88" height="172" rx="14" fill="#F8F9FA" stroke="#DADCE0" stroke-width="2.2" stroke-dasharray="5 4"/>
+                <text x="268" y="108" text-anchor="middle" font-family="Poppins" font-size="22" font-weight="800" fill="#137333">?</text>
+                <text x="268" y="128" text-anchor="middle" font-family="Roboto" font-size="10.5" font-weight="700" fill="#5F6368">Neuron Input</text>
+              </svg>
+              <div style="font-size:11.6px; color:#5F6368;">Ingat: foto RGB punya 3 lapis warna — jangan lupa dikali 3!</div>
+            """,
+            vis_a_html="""
+              <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:6px;">
+                  <div style="background:#FCE8E6; border:1.5px solid #EA4335; border-radius:9px; padding:7px 5px;">
+                    <div style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#C5221F;">Channel R</div>
+                    <div style="font-family:var(--font-code); font-size:12.5px; font-weight:800; color:#202124;">10.000</div>
+                  </div>
+                  <div style="background:#E6F4EA; border:1.5px solid #34A853; border-radius:9px; padding:7px 5px;">
+                    <div style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#137333;">Channel G</div>
+                    <div style="font-family:var(--font-code); font-size:12.5px; font-weight:800; color:#202124;">10.000</div>
+                  </div>
+                  <div style="background:#E8F0FE; border:1.5px solid #4285F4; border-radius:9px; padding:7px 5px;">
+                    <div style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#1A73E8;">Channel B</div>
+                    <div style="font-family:var(--font-code); font-size:12.5px; font-weight:800; color:#202124;">10.000</div>
+                  </div>
+                </div>
+                <div style="background:#E6F4EA; border:2px solid #34A853; border-radius:11px; padding:8px 10px;">
+                  <div style="font-family:var(--font-code); font-size:11.5px; color:#137333; font-weight:700;">100 × 100 × 3 =</div>
+                  <div style="font-family:var(--font-title); font-size:24px; font-weight:800; color:#137333; line-height:1.15;">30.000 Neuron Input ✓</div>
+                </div>
+                <img src="assets/P02/ho_step1_pixel_grid.png" style="width:100%; max-height:105px; object-fit:contain; border-radius:8px; border:1px solid #E0E3E7; background:#FFF; padding:3px;"/>
+                <div style="font-size:10.4px; color:#5F6368;">Skala proyek Frozen (<code>224×224×3</code>) → <strong>150.528 neuron</strong>!</div>
+              </div>
+            """,
+            notes="Alokasi waktu: 1 menit. Kuis 3/5 (Bab 3 Tahap 2): tekankan kenapa RGB harus dikali 3 (10.000 R + 10.000 G + 10.000 B = 30.000 neuron input).",
+            bar_color="green",
+            correct_choice="B",
+        ),
+        _qa_slide(
+            qa_id="quiz-p02-4",
+            qa_num=4,
+            quiz_progress_idx=4,
+            data_title="Kuis 4/5 — Peran Softmax di Output Layer",
+            kicker="EVALUASI CEPAT · KUIS 4 / 5 (BAB 3 · TAHAP 4)",
+            title_html='Mengapa Output Layer Memakai <span class="hl-yellow">Softmax</span>?',
+            question_html="Di <strong>Output Layer</strong> klasifikasi <strong>5 karakter Frozen</strong> (<em>Anna, Elsa, Kristoff, Olaf, Sven</em>), mengapa kita memasang fungsi aktivasi <strong><code>Softmax</code></strong>?",
+            choices=[
+                "<strong>A.</strong> Mengubah 5 skor mentah (<code>z</code>) menjadi probabilitas <code>0–100%</code> yang jumlah totalnya tepat <code>100%</code>",
+                "<strong>B.</strong> Mengubah semua skor positif menjadi angka negatif agar komputasi lebih ringan",
+                "<strong>C.</strong> Menghapus latar belakang foto secara otomatis sebelum gambar dibaca neuron",
+            ],
+            answer_html=(
+                "<strong>Jawaban: A!</strong><br/>"
+                "• <strong>Mengapa tepat:</strong> Skor mentah <code>z = Σ(x·w) + b</code> bisa bernilai bebas (minus atau besar tak terbatas). <strong>Softmax</strong> (<code>e^z / Σe^z</code>) menormalkan kelima skor menjadi <strong>persentase keyakinan (0–100%) yang selalu berjumlah 100%</strong> sehingga mudah dibandingkan &amp; dipilih lewat <code>Argmax</code>.<br/>"
+                "• <strong>Kenapa B &amp; C keliru:</strong> Softmax justru menghasilkan nilai positif <code>(0, 1)</code>, dan tidak pernah mengedit piksel latar foto."
+            ),
+            vis_q_html="""
+              <svg viewBox="0 0 330 220" style="width:100%; max-width:320px; margin:0 auto; display:block;">
+                <rect x="8" y="18" width="96" height="184" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
+                <text x="56" y="38" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="800" fill="#B06000">5 Skor Mentah z</text>
+                <text x="56" y="68" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="700" fill="#202124">Anna: +0.4</text>
+                <text x="56" y="96" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="700" fill="#137333">Elsa: +2.3</text>
+                <text x="56" y="124" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="700" fill="#202124">Kris: +0.1</text>
+                <text x="56" y="152" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="700" fill="#C5221F">Olaf: -0.2</text>
+                <text x="56" y="180" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="700" fill="#202124">Sven: +0.2</text>
+                <path d="M108 110 L134 110" stroke="#5F6368" stroke-width="2.4"/>
+                <rect x="136" y="76" width="84" height="68" rx="12" fill="#202124"/>
+                <text x="178" y="106" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="800" fill="#FBBC04">Softmax</text>
+                <text x="178" y="124" text-anchor="middle" font-family="Roboto Mono" font-size="9.5" fill="#E8EAED">Fungsi?</text>
+                <path d="M222 110 L248 110" stroke="#5F6368" stroke-width="2.4"/>
+                <rect x="250" y="54" width="72" height="112" rx="11" fill="#F8F9FA" stroke="#DADCE0" stroke-width="2" stroke-dasharray="5 4"/>
+                <text x="286" y="116" text-anchor="middle" font-family="Poppins" font-size="22" font-weight="800" fill="#1A73E8">???</text>
+              </svg>
+              <div style="font-size:11.6px; color:#5F6368;">Apa yang dihasilkan Softmax dari 5 skor mentah <code>z</code> di atas?</div>
+            """,
+            vis_a_html="""
+              <div style="display:flex; flex-direction:column; gap:6px; width:100%; text-align:left;">
+                <div style="font-family:var(--font-title); font-size:11px; font-weight:800; color:#1A73E8; text-align:center;">Skor z → Softmax (e^z / Σe^z) → Probabilitas 100%</div>
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <img src="assets/P02/thumb_anna.jpg" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"/>
+                  <span style="width:52px; font-size:11px; font-weight:700;">Anna</span>
+                  <div style="flex:1; height:12px; background:#F1F3F4; border-radius:999px; overflow:hidden;"><div style="width:10.2%; height:100%; background:#4285F4;"></div></div>
+                  <span style="width:38px; font-family:var(--font-code); font-size:10.5px; text-align:right;">10.2%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px; background:#E6F4EA; padding:4px 6px; border-radius:9px; border:1.5px solid #34A853;">
+                  <img src="assets/P02/thumb_elsa.jpg" style="width:26px; height:26px; border-radius:50%; object-fit:cover; border:2px solid #34A853;"/>
+                  <span style="width:52px; font-size:11.5px; font-weight:800; color:#137333;">Elsa ★</span>
+                  <div style="flex:1; height:13px; background:#FFFFFF; border-radius:999px; overflow:hidden;"><div style="width:68.3%; height:100%; background:#34A853;"></div></div>
+                  <span style="width:38px; font-family:var(--font-code); font-size:11px; font-weight:800; color:#137333; text-align:right;">68.3%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <img src="assets/P02/thumb_kristoff.jpg" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"/>
+                  <span style="width:52px; font-size:11px; font-weight:700;">Kristoff</span>
+                  <div style="flex:1; height:12px; background:#F1F3F4; border-radius:999px; overflow:hidden;"><div style="width:7.6%; height:100%; background:#4285F4;"></div></div>
+                  <span style="width:38px; font-family:var(--font-code); font-size:10.5px; text-align:right;">7.6%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <img src="assets/P02/thumb_olaf.jpg" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"/>
+                  <span style="width:52px; font-size:11px; font-weight:700;">Olaf</span>
+                  <div style="flex:1; height:12px; background:#F1F3F4; border-radius:999px; overflow:hidden;"><div style="width:5.6%; height:100%; background:#4285F4;"></div></div>
+                  <span style="width:38px; font-family:var(--font-code); font-size:10.5px; text-align:right;">5.6%</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:7px;">
+                  <img src="assets/P02/thumb_sven.jpg" style="width:24px; height:24px; border-radius:50%; object-fit:cover;"/>
+                  <span style="width:52px; font-size:11px; font-weight:700;">Sven</span>
+                  <div style="flex:1; height:12px; background:#F1F3F4; border-radius:999px; overflow:hidden;"><div style="width:8.4%; height:100%; background:#4285F4;"></div></div>
+                  <span style="width:38px; font-family:var(--font-code); font-size:10.5px; text-align:right;">8.4%</span>
+                </div>
+                <div style="margin-top:4px; background:#E8F0FE; border:1px solid #C6DAFC; border-radius:8px; padding:6px 9px; text-align:center; font-size:11px; font-weight:700; color:#1A73E8;">
+                  Total = 100.0% · Argmax memilih <strong>ELSA (68.3%) ✓</strong>
+                </div>
+              </div>
+            """,
+            notes="Alokasi waktu: 1 menit. Kuis 4/5 (Bab 3 Tahap 4): tunjukkan visual konversi skor mentah z (termasuk Olaf -0.2) menjadi 5 bar probabilitas positif yang jumlahnya tepat 100%.",
+            bar_color="yellow",
+            correct_choice="A",
+        ),
+        _qa_slide(
+            qa_id="quiz-p02-5",
+            qa_num=5,
+            quiz_progress_idx=5,
+            data_title="Kuis 5/5 — Backpropagation & Gradient Descent",
+            kicker="EVALUASI CEPAT · KUIS 5 / 5 (BAB 3 · TAHAP 5)",
+            title_html='Proses Koreksi Bobot: <span class="hl-blue">Backprop &amp; Gradient Descent</span>',
+            question_html="Saat simulasi training Epoch 1 → Epoch 8 di Slide 29, <em>Mean Loss</em> turun dari <strong><code>1.70 → 0.21</code></strong>. Pasangan proses apa yang mengoreksi bobot <strong><code>W &amp; b</code></strong> agar tebakan makin akurat?",
+            choices=[
+                "<strong>A.</strong> Flatten + Argmax (meluruskan piksel lalu memilih skor tertinggi)",
+                "<strong>B.</strong> Backpropagation + Gradient Descent (melacak sumber error mundur lalu menggeser <code>W &amp; b</code> menuruni bukit <em>Loss</em>)",
+                "<strong>C.</strong> Resize + Normalisasi (mengecilkan dimensi foto dan membagi piksel dengan 255)",
+            ],
+            answer_html=(
+                "<strong>Jawaban: B — Backpropagation + Gradient Descent!</strong><br/>"
+                "• <strong>Backpropagation:</strong> Berjalan mundur dari nilai <em>Loss</em> untuk menghitung seberapa besar andil tiap bobot <code>W</code> dan bias <code>b</code> terhadap kesalahan.<br/>"
+                "• <strong>Gradient Descent:</strong> Menggeser nilai <code>W &amp; b</code> sedikit demi sedikit sebesar <em>Learning Rate</em> menuju dasar lembah <em>Loss</em>.<br/>"
+                "• <strong>Kenapa A &amp; C keliru:</strong> <em>Resize, Normalisasi, Flatten,</em> dan <em>Argmax</em> hanya memproses data di jalur maju — tidak pernah memperbarui bobot!"
+            ),
+            vis_q_html="""
+              <svg viewBox="0 0 330 215" style="width:100%; max-width:320px; margin:0 auto; display:block;">
+                <rect x="14" y="14" width="302" height="140" rx="12" fill="#FFFFFF" stroke="#E0E3E7" stroke-width="1.8"/>
+                <text x="165" y="34" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="800" fill="#202124">Kurva Mean Loss Turun (E1 → E8)</text>
+                <polyline points="42,58 78,76 114,96 150,112 186,123 222,131 258,137 290,141" fill="none" stroke="#EA4335" stroke-width="3.2" stroke-linecap="round"/>
+                <circle cx="42" cy="58" r="5" fill="#EA4335"/>
+                <text x="52" y="54" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#C5221F">E1: 1.70</text>
+                <circle cx="290" cy="141" r="5.5" fill="#34A853"/>
+                <text x="234" y="128" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#137333">E8: 0.21 ✓</text>
+                <rect x="28" y="166" width="274" height="36" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="1.6" stroke-dasharray="5 3"/>
+                <text x="165" y="188" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="800" fill="#C5221F">↺ Proses apa yang mengoreksi W &amp; b?</text>
+              </svg>
+              <div style="font-size:11.6px; color:#5F6368;">Kuis terakhir sebelum Kamus Istilah &amp; Hands-On!</div>
+            """,
+            vis_a_html="""
+              <div style="display:flex; flex-direction:column; gap:8px; width:100%;">
+                <img src="assets/P02/05_loss_gradient_descent_overview.png" style="width:100%; max-height:152px; object-fit:contain; border-radius:9px; border:1px solid #E0E3E7; background:#FFF; padding:3px;"/>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px; text-align:left;">
+                  <div style="background:#FCE8E6; border:1.4px solid #EA4335; border-radius:9px; padding:7px 9px;">
+                    <div style="font-family:var(--font-title); font-size:10.4px; font-weight:800; color:#C5221F;">1. Backpropagation</div>
+                    <div style="font-size:10px; color:#3C4043; line-height:1.3; margin-top:2px;">Lacak mundur bobot <code>W, b</code> mana yang memicu <em>Loss</em>.</div>
+                  </div>
+                  <div style="background:#E8F0FE; border:1.4px solid #4285F4; border-radius:9px; padding:7px 9px;">
+                    <div style="font-family:var(--font-title); font-size:10.4px; font-weight:800; color:#1A73E8;">2. Gradient Descent</div>
+                    <div style="font-size:10px; color:#3C4043; line-height:1.3; margin-top:2px;">Geser <code>W, b</code> menuruni bukit <em>Loss</em> tiap <em>Epoch</em>!</div>
+                  </div>
+                </div>
+                <div style="background:#E6F4EA; border:1px solid #A8DAB5; border-radius:8px; padding:5px 9px; font-size:10.8px; color:#137333; font-weight:700;">
+                  🎉 5/5 Kuis Tuntas — lanjut Kamus Istilah &amp; Hands-On!
+                </div>
+              </div>
+            """,
+            notes="Alokasi waktu: 1 menit. Kuis 5/5 (Bab 3 Tahap 5): tutup rangkaian 5 kuis dengan ilustrasi kurva Loss + Gradient Descent menuruni bukit sebelum masuk ke Kamus Istilah.",
+            bar_color="blue",
+            correct_choice="B",
+        ),
+    ]
+    _quiz_html = "\n".join(_quiz_slides)
 
     # Slide 42: Grand Finale Dark Slide (zero premature Hidden/MLP leakage + balanced top alignment + finale strip)
     _summary_html = f"""
@@ -3389,7 +3811,7 @@ Skala 224x224x3       :    752,645 param (Slide 29)""",
       </div>
       <div class="finale-banner">
         <div style="font-size:12.6px; color:#E8EAED;">
-          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi belajar mandiri: <strong style="color:#FDD663;">Slide 33–34</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
+          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 37–38</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
         </div>
         <div style="font-size:12px; font-style:italic; color:#9AA0A6; white-space:nowrap;">&ldquo;Memahami 1 neuron dengan jernih adalah kunci memahami jaringan jutaan parameter.&rdquo;</div>
       </div>
@@ -3398,145 +3820,137 @@ Skala 224x224x3       :    752,645 param (Slide 29)""",
 """
 
     _refs_html = f"""
-    <!-- REFERENSI BELAJAR MANDIRI (1/2) — 0 MENIT -->
-    <section class="slide" data-title="Referensi Belajar Mandiri (1/2)" data-notes="Alokasi waktu: 0 menit. Referensi belajar mandiri bagian 1 (sumber sesuai docs/PLAN.md; sumber belum diverifikasi ulang diberi label [CEK LINK]).">
-      <div class="kicker">REFERENSI BELAJAR · BAGIAN 1</div>
-      <h2>Sumber Belajar: <span class="hl-blue">Neural Network &amp; Visualisasi Dasar</span></h2>
-      <div class="grid-2" style="gap:11px;">
-        <div class="ref-list">
-          <a class="ref-item featured" href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">
+    <!-- REFERENSI MATERI (1/2) — BAB 1 & BAB 2 (0 MENIT) -->
+    <section class="slide" data-title="Referensi Materi (1/2) — Bab 1 &amp; Bab 2" data-notes="Alokasi waktu: 0 menit. Referensi materi bagian 1 khusus untuk Bab 1 (AI/ML/DL) dan Bab 2 (4 Tugas Computer Vision) sesuai docs/PLAN.md; sumber belum diverifikasi ulang diberi label [CEK LINK].">
+      <div class="kicker">REFERENSI MATERI · BAGIAN 1 (BAB 1 &amp; BAB 2)</div>
+      <h2>Referensi Materi: <span class="hl-blue">AI/ML/DL &amp; Tugas Computer Vision</span></h2>
+      <div class="ref-grid-full">
+        <a class="ref-card-rich featured" href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num">1</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">3Blue1Brown — But what is a Neural Network?</span><span class="ref-tag must">Wajib</span></div>
-              <div class="ref-desc">Visual paling jernih tentang piksel gambar masuk ke neuron, layer, weight, dan bias.</div>
-              <div class="ref-url">youtube.com/watch?v=aircAruvnKk</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank" rel="noopener">
+            <div class="ref-card-head"><span class="ref-title">Google Machine Learning Crash Course [CEK LINK]</span><span class="ref-tag must">Bab 1 · Inti</span></div>
+          </div>
+          <div class="ref-desc">Pengantar terstruktur ramah pemula tentang konsep AI, Machine Learning, fitur data, dan cara model belajar dari pasangan <code>Data + Label</code>.</div>
+          <div class="ref-card-foot"><span class="ref-url">developers.google.com/machine-learning/crash-course ↗</span><span class="ref-ctx-pill">Bab 1 · AI, ML &amp; Fitur</span></div>
+        </a>
+        <a class="ref-card-rich acc-red" href="https://www.coursera.org/learn/convolutional-neural-networks" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num red">4</div>
+            <div class="ref-card-head"><span class="ref-title">Coursera (DeepLearning.AI) — Computer Vision Week 1</span><span class="ref-tag">Bab 2 · Video</span></div>
+          </div>
+          <div class="ref-desc">Pengantar visual tugas Computer Vision pada foto nyata: membedakan <em>Image Classification</em>, deteksi objek, hingga cara komputer melihat tepi gambar.</div>
+          <div class="ref-card-foot"><span class="ref-url">coursera.org/learn/convolutional-neural-networks ↗</span><span class="ref-ctx-pill">Bab 2 · 4 Tugas CV (S12–S16)</span></div>
+        </a>
+        <a class="ref-card-rich acc-blue" href="https://www.coursera.org/specializations/deep-learning" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num">2</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">3Blue1Brown — Playlist Neural Networks (Bab 1–4)</span><span class="ref-tag">Video</span></div>
-              <div class="ref-desc">Seri lengkap: struktur layer, Gradient Descent, hingga intuisi Backpropagation.</div>
-              <div class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">
-            <div class="ref-num green">3</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">3Blue1Brown — Versi Tulis Neural Networks</span><span class="ref-tag doc">Artikel</span></div>
-              <div class="ref-desc">Ringkasan interaktif berbentuk bacaan jika ingin mengulang pelan-pelan tanpa video.</div>
-              <div class="ref-url">3blue1brown.com/lessons/neural-networks</div>
-            </div>
-          </a>
-        </div>
-        <div class="ref-list">
-          <a class="ref-item" href="https://playground.tensorflow.org/" target="_blank" rel="noopener">
-            <div class="ref-num yellow">4</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">TensorFlow Playground [CEK LINK]</span><span class="ref-tag code">Sandbox</span></div>
-              <div class="ref-desc">Eksperimen langsung di browser: atur neuron, bobot, fungsi aktivasi, &amp; learning rate.</div>
-              <div class="ref-url">playground.tensorflow.org</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://developers.google.com/machine-learning/crash-course" target="_blank" rel="noopener">
+            <div class="ref-card-head"><span class="ref-title">Coursera — Deep Learning Specialization Course 1 [CEK LINK]</span><span class="ref-tag doc">Kursus</span></div>
+          </div>
+          <div class="ref-desc">Fondasi Neural Networks &amp; Deep Learning dari nol: mengapa pendekatan aturan manual kalah fleksibel dibanding belajar fitur otomatis.</div>
+          <div class="ref-card-foot"><span class="ref-url">coursera.org/specializations/deep-learning ↗</span><span class="ref-ctx-pill">Bab 1 · ML vs DL (S07–S09)</span></div>
+        </a>
+        <a class="ref-card-rich acc-red" href="https://cs231n.github.io/classification/" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num red">5</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">Google Machine Learning Crash Course [CEK LINK]</span><span class="ref-tag doc">Kursus</span></div>
-              <div class="ref-desc">Pengantar konsep ML, Loss, Gradient Descent, dan Neural Network ramah pemula.</div>
-              <div class="ref-url">developers.google.com/machine-learning/crash-course</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://keras.io/guides/sequential_model/" target="_blank" rel="noopener">
+            <div class="ref-card-head"><span class="ref-title">Stanford CS231n — Image Classification Notes [CEK LINK]</span><span class="ref-tag doc">Catatan</span></div>
+          </div>
+          <div class="ref-desc">Catatan kuliah visual yang membedah tantangan nyata <em>Image Classification</em> (latar ramai, pencahayaan, sudut kamera) dari piksel ke skor kelas.</div>
+          <div class="ref-card-foot"><span class="ref-url">cs231n.github.io/classification/ ↗</span><span class="ref-ctx-pill">Bab 2 · Classification (S13)</span></div>
+        </a>
+        <a class="ref-card-rich acc-yellow" href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num yellow">3</div>
+            <div class="ref-card-head"><span class="ref-title">StatQuest — Machine Learning &amp; Neural Networks [CEK LINK]</span><span class="ref-tag">Video</span></div>
+          </div>
+          <div class="ref-desc">Penjelasan visual super jelas langkah demi langkah tentang <em>Supervised Learning</em>, klasifikasi multi-kelas, dan intuisi dasar Neural Network.</div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/@statquest ↗</span><span class="ref-ctx-pill">Bab 1 &amp; Bab 3 · Intuitif</span></div>
+        </a>
+        <a class="ref-card-rich acc-green" href="https://pillow.readthedocs.io/" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num green">6</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">Keras Official — The Sequential Model Guide [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
-              <div class="ref-desc">Panduan resmi menyusun layer <code>Sequential</code>, <code>Flatten</code>, dan <code>Dense</code> di Keras 3.</div>
-              <div class="ref-url">keras.io/guides/sequential_model/</div>
-            </div>
-          </a>
-        </div>
+            <div class="ref-card-head"><span class="ref-title">Dokumentasi Pillow (PIL) — Pengolahan Foto &amp; Piksel [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
+          </div>
+          <div class="ref-desc">Rujukan resmi membuka foto, mengubah ukuran (<em>resize</em>), membaca kanal <code>RGB</code>, dan mengubah gambar ke array NumPy untuk input Neural Network.</div>
+          <div class="ref-card-foot"><span class="ref-url">pillow.readthedocs.io ↗</span><span class="ref-ctx-pill">Recap &amp; Hands-On Tahap 1</span></div>
+        </a>
       </div>
       <div class="ref-route-bar">
         <div class="ref-route-head">
-          <span>🧭 Rute Belajar Mandiri Rekomendasi (Sesudah Kelas · ±45 Menit)</span>
+          <span>📚 Peta Referensi Materi Bab 1 &amp; Bab 2 (Sesuai Silabus P02)</span>
           <span class="pill blue" style="font-size:9.6px; padding:2px 8px;">Opsional · Klik kartu untuk membuka</span>
         </div>
         <div class="ref-route-grid">
-          <div class="ref-step-box"><strong style="color:#1A73E8;">1. Tonton #1 (±19 menit):</strong> Visualisasi 3Blue1Brown paling jelas memperkuat bayangan piksel → neuron → Softmax.</div>
-          <div class="ref-step-box"><strong style="color:#B06000;">2. Coba #4 (±10 menit):</strong> Mainkan slider bobot &amp; <em>Learning Rate</em> di browser tanpa menulis kode sama sekali.</div>
-          <div class="ref-step-box"><strong style="color:#137333;">3. Baca #6 (±15 menit):</strong> Referensi cepat untuk sintaks <code>Sequential([Flatten(), Dense(...)])</code> di Hands-On!</div>
+          <div class="ref-step-box"><strong style="color:#1A73E8;">Bab 1 (#1, #2, #3):</strong> Memperkuat peta <code>AI ⊃ ML ⊃ DL</code>, cara kerja <em>Supervised Learning</em>, &amp; beda ML vs DL.</div>
+          <div class="ref-step-box"><strong style="color:#C5221F;">Bab 2 (#4, #5):</strong> Memperdalam 4 tugas Computer Vision &amp; tantangan foto polos vs ramai pada <em>Image Classification</em>.</div>
+          <div class="ref-step-box"><strong style="color:#137333;">Hands-On (#6):</strong> Panduan cepat membuka, <em>resize</em>, &amp; membaca nilai piksel RGB foto Frozen di Python.</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- REFERENSI BELAJAR MANDIRI (2/2) — 0 MENIT -->
-    <section class="slide" data-title="Referensi Belajar Mandiri (2/2)" data-notes="Alokasi waktu: 0 menit. Referensi belajar mandiri bagian 2 untuk persiapan Arsitektur CNN (P03) dan MobileNetV2 (P04), seluruhnya merujuk docs/PLAN.md.">
-      <div class="kicker">REFERENSI BELAJAR · BAGIAN 2</div>
-      <h2>Sumber Belajar: <span class="hl-green">Computer Vision, CNN &amp; MobileNetV2</span></h2>
-      <div class="grid-2" style="gap:11px;">
-        <div class="ref-list">
-          <a class="ref-item featured" href="https://www.coursera.org/learn/convolutional-neural-networks" target="_blank" rel="noopener">
+    <!-- REFERENSI MATERI (2/2) — BAB 3 & HANDS-ON (0 MENIT) -->
+    <section class="slide" data-title="Referensi Materi (2/2) — Bab 3 Neural Network" data-notes="Alokasi waktu: 0 menit. Referensi materi bagian 2 khusus untuk Bab 3 (Neuron, Flatten, Weight+Bias, ReLU, Softmax, Loss, Backpropagation, Gradient Descent & Keras Sequential) sesuai docs/PLAN.md.">
+      <div class="kicker">REFERENSI MATERI · BAGIAN 2 (BAB 3 · NEURAL NETWORK)</div>
+      <h2>Referensi Materi: <span class="hl-green">Teori Neural Network &amp; Praktik Keras</span></h2>
+      <div class="ref-grid-full">
+        <a class="ref-card-rich featured" href="https://www.youtube.com/watch?v=aircAruvnKk" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num">7</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">Coursera (DeepLearning.AI) — Convolutional Neural Networks</span><span class="ref-tag must">Preview P03</span></div>
-              <div class="ref-desc">Week 1 membahas dasar konvolusi 2D dan fondasi tugas Computer Vision.</div>
-              <div class="ref-url">coursera.org/learn/convolutional-neural-networks</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://poloclub.github.io/cnn-explainer/" target="_blank" rel="noopener">
-            <div class="ref-num yellow">8</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">CNN Explainer (Visual Interaktif) [CEK LINK]</span><span class="ref-tag code">Interaktif</span></div>
-              <div class="ref-desc">Melihat alur gambar nyata masuk ke filter CNN hingga Softmax secara langsung.</div>
-              <div class="ref-url">poloclub.github.io/cnn-explainer/</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://cs231n.github.io/" target="_blank" rel="noopener">
-            <div class="ref-num red">9</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">Stanford CS231n — Lecture Notes [CEK LINK]</span><span class="ref-tag doc">Opsional</span></div>
-              <div class="ref-desc">Catatan mendalam mengenai Neural Networks dan Convolutional Networks untuk CV.</div>
-              <div class="ref-url">cs231n.github.io</div>
-            </div>
-          </a>
-        </div>
-        <div class="ref-list">
-          <a class="ref-item" href="https://arxiv.org/abs/1512.03385" target="_blank" rel="noopener">
-            <div class="ref-num">10</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">He dkk. — Deep Residual Learning (ResNet) [CEK LINK]</span><span class="ref-tag doc">Paper</span></div>
-              <div class="ref-desc">Paper asli ide <em>skip connection</em> yang memungkinkan jaringan CNN sangat dalam.</div>
-              <div class="ref-url">arxiv.org/abs/1512.03385</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://arxiv.org/abs/1801.04381" target="_blank" rel="noopener">
+            <div class="ref-card-head"><span class="ref-title">3Blue1Brown — But what is a Neural Network?</span><span class="ref-tag must">Wajib</span></div>
+          </div>
+          <div class="ref-desc">Visual paling jernih untuk melihat langsung bagaimana piksel gambar masuk ke <em>Input Layer</em>, dikali bobot (<em>weight</em>), ditambah <em>bias</em>, hingga prediksi!</div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/watch?v=aircAruvnKk ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 1–4 (S20–S27)</span></div>
+        </a>
+        <a class="ref-card-rich acc-yellow" href="https://playground.tensorflow.org/" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num yellow">10</div>
+            <div class="ref-card-head"><span class="ref-title">TensorFlow Playground [CEK LINK]</span><span class="ref-tag code">Sandbox</span></div>
+          </div>
+          <div class="ref-desc">Eksperimen interaktif langsung di browser tanpa coding: ubah bobot, fungsi aktivasi (<code>ReLU</code>), dan <em>Learning Rate</em> sambil melihat efeknya live!</div>
+          <div class="ref-card-foot"><span class="ref-url">playground.tensorflow.org ↗</span><span class="ref-ctx-pill">Bab 3 · Eksperimen W, b &amp; LR</span></div>
+        </a>
+        <a class="ref-card-rich acc-blue" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num">8</div>
+            <div class="ref-card-head"><span class="ref-title">3Blue1Brown — Playlist Neural Networks (Bab 1–4)</span><span class="ref-tag">Video</span></div>
+          </div>
+          <div class="ref-desc">Seri lengkap 4 episode: membedah <em>Loss Function</em>, cara kerja <em>Gradient Descent</em> menuruni lembah error, hingga intuisi <em>Backpropagation</em>.</div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_... ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 5 (S28–S29)</span></div>
+        </a>
+        <a class="ref-card-rich acc-green" href="https://keras.io/guides/sequential_model/" target="_blank" rel="noopener">
+          <div class="ref-card-top">
             <div class="ref-num green">11</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">Sandler dkk. — MobileNetV2 (CVPR 2018)</span><span class="ref-tag doc">Paper Proyek</span></div>
-              <div class="ref-desc">Paper resmi arsitektur ringan <strong>MobileNetV2</strong> yang menjadi model utama proyek kita.</div>
-              <div class="ref-url">arxiv.org/abs/1801.04381</div>
-            </div>
-          </a>
-          <a class="ref-item" href="https://www.tensorflow.org/tutorials/images/transfer_learning?hl=id" target="_blank" rel="noopener">
-            <div class="ref-num green">12</div>
-            <div class="ref-content">
-              <div class="ref-head"><span class="ref-title">TensorFlow — Transfer Learning &amp; Fine-Tuning (ID)</span><span class="ref-tag code">Preview P04</span></div>
-              <div class="ref-desc">Tutorial resmi berbahasa Indonesia memakai MobileNetV2 pada dataset foto kustom.</div>
-              <div class="ref-url">tensorflow.org/tutorials/images/transfer_learning?hl=id</div>
-            </div>
-          </a>
-        </div>
+            <div class="ref-card-head"><span class="ref-title">Keras Official — The Sequential Model Guide [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
+          </div>
+          <div class="ref-desc">Panduan resmi menyusun layer <code>Sequential</code>, <code>Flatten</code>, dan <code>Dense(..., activation="softmax")</code> di Keras 3 beserta cara membaca <code>summary()</code>.</div>
+          <div class="ref-card-foot"><span class="ref-url">keras.io/guides/sequential_model/ ↗</span><span class="ref-ctx-pill">Hands-On Tahap 4–5 (S43–S45)</span></div>
+        </a>
+        <a class="ref-card-rich acc-green" href="https://3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num green">9</div>
+            <div class="ref-card-head"><span class="ref-title">3Blue1Brown — Versi Tulis Neural Networks</span><span class="ref-tag doc">Artikel</span></div>
+          </div>
+          <div class="ref-desc">Ringkasan interaktif berbentuk bacaan bergambar — cocok jika ingin mengulang konsep <em>Forward Pass</em>, <em>Weight</em>, &amp; <em>Loss</em> pelan-pelan tanpa video.</div>
+          <div class="ref-card-foot"><span class="ref-url">3blue1brown.com/lessons/neural-networks ↗</span><span class="ref-ctx-pill">Bab 3 · Bacaan Santai</span></div>
+        </a>
+        <a class="ref-card-rich acc-blue" href="https://arxiv.org/abs/1412.6980" target="_blank" rel="noopener">
+          <div class="ref-card-top">
+            <div class="ref-num">12</div>
+            <div class="ref-card-head"><span class="ref-title">Kingma &amp; Ba — Adam Optimizer (arXiv 1412.6980) [CEK LINK]</span><span class="ref-tag doc">Paper</span></div>
+          </div>
+          <div class="ref-desc">Paper asli optimizer <strong>Adam</strong> (pengembangan adaptif dari <em>Gradient Descent</em>) yang kita pakai langsung saat <code>compile()</code> di Hands-On Tahap 4!</div>
+          <div class="ref-card-foot"><span class="ref-url">arxiv.org/abs/1412.6980 ↗</span><span class="ref-ctx-pill">Bab 3 &amp; Hands-On · Optimizer</span></div>
+        </a>
       </div>
       <div class="ref-route-bar" style="background:#E6F4EA; border-color:#A8DAB5;">
         <div class="ref-route-head">
-          <span style="color:#137333;">🌉 Jembatan Referensi ke Pertemuan Berikutnya (P03 &amp; P04)</span>
-          <span class="pill green" style="font-size:9.6px; padding:2px 8px;">Disimpan untuk bacaan lanjutan</span>
+          <span style="color:#137333;">🧭 Rute Belajar Mandiri Rekomendasi Bab 3 (Sesudah Kelas · ±45 Menit)</span>
+          <span class="pill green" style="font-size:9.6px; padding:2px 8px;">Opsional · 100% Selaras Bab 3 &amp; Hands-On</span>
         </div>
         <div class="ref-route-grid">
-          <div class="ref-step-box"><strong>Preview P03 (#7, #8, #9):</strong> Kenapa foto 2D lebih cocok pakai filter geser <strong>CNN</strong> daripada sekadar 1-layer <em>Flatten</em>.</div>
-          <div class="ref-step-box"><strong>Preview P04 (#10, #11, #12):</strong> Cara memakai bobot terlatih <strong>MobileNetV2</strong> untuk klasifikasi dataset Frozen!</div>
-          <div class="ref-step-box"><strong>Catatan Kredibilitas:</strong> Tautan asli dari silabus; sumber berlabel <code>[CEK LINK]</code> dapat ditandai jika berubah nanti.</div>
+          <div class="ref-step-box"><strong style="color:#1A73E8;">1. Tonton #7 (±19 menit):</strong> Visualisasi 3Blue1Brown paling jernih memperkuat bayangan piksel → neuron → Softmax.</div>
+          <div class="ref-step-box"><strong style="color:#B06000;">2. Coba #10 (±10 menit):</strong> Mainkan slider bobot, <code>ReLU</code>, &amp; <em>Learning Rate</em> di browser tanpa menulis kode sama sekali.</div>
+          <div class="ref-step-box"><strong style="color:#137333;">3. Baca #11 (±15 menit):</strong> Referensi cepat untuk sintaks <code>Sequential([Flatten(), Dense(...)])</code> di Hands-On!</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -9440,14 +9854,27 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       _updateQuizScore();
     }}
 
+    let _glossCh = 'all';
+    let _glossQuery = '';
+    function _applyGlossaryFilter() {{
+      const q = (_glossQuery || '').trim().toLowerCase();
+      document.querySelectorAll('.dict-row').forEach((row) => {{
+        const chOk = _glossCh === 'all' || row.dataset.ch === _glossCh;
+        const txt = ((row.dataset.search || '') + ' ' + (row.textContent || '')).toLowerCase();
+        const qOk = !q || txt.includes(q);
+        row.classList.toggle('ch-dim', !(chOk && qOk));
+      }});
+    }}
     function filterGlossary(ch, btn) {{
+      _glossCh = ch;
       document.querySelectorAll('.gloss-fbtn').forEach((b) => {{
         b.classList.toggle('active', b.dataset.ch === ch);
       }});
-      document.querySelectorAll('.gloss-card').forEach((card) => {{
-        const match = ch === 'all' || card.dataset.ch === ch;
-        card.classList.toggle('ch-dim', !match);
-      }});
+      _applyGlossaryFilter();
+    }}
+    function searchGlossary(val) {{
+      _glossQuery = val || '';
+      _applyGlossaryFilter();
     }}
 
     function copyHandsOnCode(btn, codeId) {{

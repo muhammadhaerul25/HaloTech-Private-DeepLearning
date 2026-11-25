@@ -249,11 +249,12 @@ _ALL_SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "• **Catatan Referensi:** Arahkan peserta ke Slide 58–59 untuk tautan video 3Blue1Brown & sumber resmi belajar mandiri.",
     ],
     58: [
-        "**Tujuan Slide (0 menit — Referensi Mandiri 1/2):** 6 tautan rujukan utama Neural Network & ML dasar sesuai `docs/PLAN.md` (sumber belum diverifikasi ulang diberi label `[CEK LINK]`).",
-        "• **Catatan Penggunaan:** Tidak perlu dibahas panjang di kelas; rekomendasikan video 3Blue1Brown #1 sebagai tontonan opsional terbaik di rumah.",
+        "**Tujuan Slide (0 menit — Referensi Materi 1/2 · Bab 1 & Bab 2):** 6 tautan rujukan resmi dari `docs/PLAN.md` khusus untuk memperdalam **Bab 1 (AI/ML/DL)** dan **Bab 2 (4 Tugas Computer Vision & Pengolahan Foto)** (`[CEK LINK]` untuk tautan belum diverifikasi ulang).",
+        "• **Catatan Penggunaan:** Tidak perlu dibahas panjang di kelas; peserta bisa membuka tautan sesuai bab yang ingin diulang di rumah.",
     ],
     59: [
-        "**Tujuan Slide (0 menit — Referensi Mandiri 2/2):** 6 tautan rujukan Computer Vision, CNN Explainer, ResNet, dan MobileNetV2 sesuai `docs/PLAN.md` sebagai jembatan menuju P03 dan P04.",
+        "**Tujuan Slide (0 menit — Referensi Materi 2/2 · Bab 3 & Hands-On):** 6 tautan rujukan resmi dari `docs/PLAN.md` khusus untuk **Bab 3 (Neuron, Flatten, Weight+Bias, ReLU, Softmax, Loss, Backprop, Gradient Descent)** dan praktik **Keras Sequential + Adam**.",
+        "• **Rekomendasi Utama:** Video 3Blue1Brown #7, TensorFlow Playground #10, dan Keras Sequential Guide #11.",
     ],
 }
 
@@ -307,53 +308,76 @@ if HIDE_SLIDES_28_40:
             _notes[0] = _notes[0].replace("Q&A #6", "Q&A #4")
         elif _orig_idx == 46 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (1 menit — Cover Hands-On):** Pembuka sesi praktik langsung **Hands-On: Praktik Neural Network** pada dataset foto Disney Frozen (`143` foto).",
-                "• **Catatan Instruktur:** Ajak peserta membuka `materials/P02/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal dan arahkan sekilas ke 6 langkah di strip bawah.",
+                "**Tujuan Slide (1 menit — Cover Hands-On Visual-First):** Pembuka sesi praktik langsung **Hands-On: Praktik Neural Network** pada dataset foto Disney Frozen (`143` foto), dipecah menjadi mikro-task **Tahap 1 → Tahap 5.4** selaras Bab 3.",
+                "• **Catatan Instruktur:** Ajak peserta membuka `materials/P02/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal. Jelaskan bahwa kode grafik sudah dirapikan ke *Alat Visualisasi Siap Pakai* sehingga setiap sel kerja cuma 3–6 baris dan langsung menampilkan gambar output nyata!",
             ]
         elif _orig_idx == 47 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (9.5 menit — Hands-On Langkah 1):** Mendampingi peserta menjalankan Setup 3 tahap dan membaca `metadata.csv` foto Frozen secara dinamis (`143` foto: polos vs ramai).",
-                "• **Panduan Praktik:** Pastikan `SEED = 42` terkunci, `DATA_DIR` mengarah ke `data/frozen_v1`, dan output tabel crosstab cocok dengan panel **Expected Output** kanan.",
+                "**Tujuan Slide (9.5 menit — Hands-On Tahap 0 & Tahap 1):** Menjalankan Setup + Alat Visualisasi + Galeri Frozen (Tahap 0), lalu membimbing peserta mengerjakan **Tahap 1.1 (`# TODO 1`: `/ 255.0`)** dan **Tahap 1.2 (`# TODO 2`: `foto_mini[4, 2]`)**.",
+                "• **Panduan Praktik:** Sorot visual 3 panel yang muncul: foto asli Elsa → grid `8×8` kotak angka `0.0–1.0` → zoom piksel gaun biru `[4, 2]` dengan kanal Biru (`B`) paling tinggi!",
             ]
         elif _orig_idx == 48 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (9.5 menit — Hands-On Langkah 2):** Mendampingi peserta melakukan `.flatten()` foto Elsa dan mengerjakan `# TODO 1` (`12.288` neuron) serta `# TODO 2` (`150.528` neuron → `752.645` parameter `W + b`).",
-                "• **Panduan Praktik:** Cocokkan angka `752.645` langsung dengan diagram Slide 29 agar teori dan kode terasa 100% menyatu!",
+                "**Tujuan Slide (9.5 menit — Hands-On Tahap 2):** Membimbing peserta mengerjakan **Tahap 2.1 (`# TODO 3`: `.flatten()`)** dan **Tahap 2.2 (`# TODO 4`: `150.528` neuron → `752.645` parameter)**.",
+                "• **Momen Klik:** Tunjuk gambar **Pita 1D 64 Piksel Warna (`B1..B8`)**: warna biru gaun Elsa di baris `B4–B5` benar-benar terlihat pindah menjadi garis lurus di tengah pita 1D!",
             ]
         elif _orig_idx == 49 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (10 menit — Hands-On Langkah 3):** Mendampingi peserta mengerjakan `# TODO 3` (1 Neuron `W·x + b` + ReLU) dan `# TODO 4` (`softmax_manual`, `Argmax`, & `Loss`) pada 4 piksel nyata Elsa (`ELSA 85.5% | Loss = 0.16`).",
-                "• **Tips Mengajar:** Biarkan peserta mencoba mengetik sendiri dulu 2 menit sebelum membuka kotak `<details>` Hint.",
+                "**Tujuan Slide (10 menit — Hands-On Tahap 3):** Membimbing **Tahap 3.1 (`# TODO 5`: rumus kali-tambah biasa `r*w_r + g*w_g + b*w_b + bias`)**, **Tahap 3.2 (`# TODO 6`: `ReLU`)**, dan **Tahap 3.3 (eksperimen bebas `Softmax`)**.",
+                "• **Tips Mengajar:** Tidak ada rumus `np.dot` atau `exp` rumit — biarkan peserta bermain mengubah angka `skor_olaf` di Tahap 3.3 untuk melihat foto & bar pemenang `Argmax` berpindah seketika!",
             ]
         elif _orig_idx == 50 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (10 menit — Hands-On Langkah 4):** Mendampingi peserta memuat `143` foto Frozen ukuran `64×64×3` dan mengerjakan `# TODO 5` membangun **Neural Network 1-Layer** (`Input → Flatten → Dense(5, softmax)`).",
-                "• **Catatan Penting:** Tegaskan bahwa model 1-layer ini sama persis dengan diagram Slide 29 — dan menjadi fondasi sebelum naik ke arsitektur berlapis & CNN di P03!",
+                "**Tujuan Slide (10 menit — Hands-On Tahap 4):** Memuat `143` foto Frozen `64×64×3` (Tahap 4.1), merakit 2 layer Keras di **Tahap 4.2 (`# TODO 7`: `Flatten()` + `Dense(5, softmax)`)** & mencocokkan `61.445` di `summary()`, lalu menjalankan **Tahap 4.3 (Model Bayi Epoch 0)**.",
+                "• **Catatan Penting:** Melihat *Model Bayi* menebak ngawur (~20% rata semua) di Epoch 0 adalah momen penting agar peserta langsung paham mengapa proses training (`model.fit`) dibutuhkan!",
             ]
         elif _orig_idx == 51 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (10 menit — Hands-On Langkah 5):** Mendampingi peserta mengerjakan `# TODO 6` menjalankan `model_nn.fit()` (8 epoch: `Loss 3.39 → 1.44`, `Acc 20.3% → 44.8%`) dan menyimpan `results/p02_nn_loss_curve.png`.",
-                "• **Panduan Diskusi:** Amati kurva Loss yang turun stabil, lalu diskusikan dengan jujur mengapa model 1-layer mulai kesulitan pada latar ramai — pembagian split anti-leakage akan dibahas di P05.",
+                "**Tujuan Slide (10 menit — Hands-On Tahap 5.1 & 5.2):** Membimbing **Tahap 5.1 (`# TODO 8`: `model_nn.fit` 20 epoch)** dan **Tahap 5.2 (plot kurva Loss turun & Akurasi naik)** yang tersimpan ke `results/p02_nn_loss_curve.png`.",
+                "• **Panduan Diskusi:** Sorot kurva Loss yang turun stabil (`2.41 → 1.04`) dan Akurasi yang naik ke `65.7%`, lalu ingatkan bahwa pembagian data *train/val/test* bebas *leakage* (Group Split) akan dipelajari khusus di **P05**.",
             ]
         elif _orig_idx == 52 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (9 menit — Hands-On Langkah 6):** Mendampingi peserta membaca `model_nn.summary()` (`61.445` parameter), membuktikannya di `# TODO 7` (`12.288 × 5 + 5`), lalu menguji `# TODO 8` (eksperimen opsional 3 nilai *Learning Rate*).",
-                "• **Momen Aha:** Pastikan peserta melihat `assert n_weight + n_bias == model_nn.count_params()` lolos 100% dan menyambungkannya dengan angka `752.645` pada resolusi `224×224×3`.",
+                "**Tujuan Slide (9 menit — Hands-On Tahap 5.3, 5.4 & Bonus):** Menjalankan **Tahap 5.3 (Before vs After: 2/5 → 4/5 karakter tepat ✓)**, **Tahap 5.4 (Intip Peta Fokus Bobot `ΔW`)**, serta eksperimen opsional mengubah 1 angka `LEARNING_RATE_COBA`.",
+                "• **Momen Aha & Jembatan P03:** Tunjuk area kuning menyala di tengah heatmap `ΔW`: model 1-layer hanya mengingat posisi piksel tengah sehingga mulai bingung pada karakter mirip atau latar ramai — inilah jembatan sempurna menuju **CNN di P03**!",
             ]
         elif _orig_idx == 54 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (2 menit — Kamus Istilah):** Mengulas 12 istilah asli Bab 1–3 yang kini dikelompokkan berdasarkan warna bab (`Bab 1` Biru, `Bab 2` Merah, `Bab 3` Hijau/Kuning).",
-                "• **Panduan Interaktif:** Gunakan tombol filter **`Semua` / `Bab 1` / `Bab 2` / `Bab 3`** di pojok kanan atas untuk menyorot kelompok konsep tertentu jika ada pertanyaan dari peserta.",
+                "**Tujuan Slide (2 menit — Kamus Istilah):** Mengulas 12 istilah asli Bab 1–3 dalam format **2-Column Grouped Dictionary List** (Kiri: Bab 1 & Bab 2 · Kanan: Bab 3).",
+                "• **Panduan Interaktif:** Gunakan kotak **`Cari istilah...`**, tombol filter **`Semua` / `Bab 1` / `Bab 2` / `Bab 3`**, atau klik kode slide (`S08 ↗`–`S29 ↗`) untuk langsung melompat ke visual konsepnya.",
             ]
         elif _orig_idx == 55 and HIDE_BAB4_ARCH:
-            _notes = [
-                "**Tujuan Slide (5 menit — Kuis Interaktif 5 Soal):** Menguji pemahaman Bab 1–3 secara aktif sebelum masuk praktik notebook.",
-                "• **Panduan Interaktif:** Minta peserta mengklik langsung salah satu chip pilihan di setiap kartu soal hingga panel **`Skor: 0 / 5`** bertambah hijau/merah, lalu klik **`Lihat Penjelasan`** atau **`Buka Semua`** untuk membahas alasan setiap jawaban.",
+            # 5 Slide Kuis Terpisah (Slide 31–35, masing-masing 1 menit = 5 menit total!)
+            _quiz_notes_5 = [
+                [
+                    "**Tujuan Slide (1 menit — Kuis 1/5 · Bab 1):** Menguji pemahaman hierarki **AI ⊃ ML ⊃ DL** lewat pilihan klik interaktif + diagram Venn berilustrasi.",
+                    "• **Panduan Interaktif:** Minta peserta mengklik pilihan A/B/C terlebih dahulu (hijau/merah langsung muncul), lalu klik **Lihat Jawaban & Penjelasan** agar diagram Venn AI → ML → DL dengan contoh Frozen tampil di kanan.",
+                ],
+                [
+                    "**Tujuan Slide (1 menit — Kuis 2/5 · Bab 2):** Menguji perbedaan **Image Classification** (1 label/foto) vs **Object Detection** (banyak kotak koordinat + label).",
+                    "• **Panduan Interaktif:** Setelah peserta memilih opsi, buka jawaban untuk menunjukkan ilustrasi foto Frozen nyata berdampingan antara Classification (`ELSA 94%`) dan Detection (`banyak bounding box`).",
+                ],
+                [
+                    "**Tujuan Slide (1 menit — Kuis 3/5 · Bab 3 Tahap 2):** Menguji rumus jumlah neuron **Input Layer** pada foto RGB (`100 × 100 × 3 = 30.000`).",
+                    "• **Panduan Interaktif:** Ingatkan jebakan umum pemula (lupa mengalikan 3 channel RGB sehingga menjawab 10.000). Sambungkan hasilnya ke skala penuh proyek Frozen (`224×224×3 = 150.528`).",
+                ],
+                [
+                    "**Tujuan Slide (1 menit — Kuis 4/5 · Bab 3 Tahap 4):** Menguji peran **Softmax** di *Output Layer* 5 karakter Frozen (mengubah skor mentah bebas menjadi probabilitas total `100%`).",
+                    "• **Panduan Interaktif:** Setelah membuka jawaban, tunjuk 5 bar probabilitas berikon karakter Frozen di kanan (`Elsa 68.3% ★`, total tepat `100.0%`).",
+                ],
+                [
+                    "**Tujuan Slide (1 menit — Kuis 5/5 · Bab 3 Tahap 5):** Menguji pasangan proses koreksi bobot **Backpropagation + Gradient Descent** yang menurunkan *Mean Loss* `1.70 → 0.21`.",
+                    "• **Panduan Interaktif:** Setelah membuka jawaban, tunjuk ilustrasi *Loss & Gradient Descent* di kanan lalu beri transisi semangat menuju **Kamus Istilah (Slide 36)** dan **Hands-On**!",
+                ],
             ]
+            for _qn in _quiz_notes_5:
+                SLIDE_EXPLANATIONS[_new_idx] = _qn
+                _new_idx += 1
+            continue
         elif _orig_idx == 56 and HIDE_BAB4_ARCH:
             _notes = [
                 "**Tujuan Slide (3 menit — Grand Finale 3 Poin Utama):** Mengunci seluruh sesi **P02 — Teori Neural Network** dalam 3 pilar rapi di slide gelap beserta jembatan menuju **P03 (Arsitektur Neural Network & Konvolusi CNN)**.",
-                "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) 5 Tahap runtut 1 Piksel → Flatten → Weight+Bias → Softmax → Backprop; (03) Neural Network 1-Layer terbukti di Keras (`61.445` / `752.645` param) sebagai jembatan alami menuju **P03 (Arsitektur & CNN)**. Ingatkan pula Slide 33–34 untuk belajar mandiri.",
+                "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) 5 Tahap runtut 1 Piksel → Flatten → Weight+Bias → Softmax → Backprop; (03) Neural Network 1-Layer terbukti di Keras (`61.445` / `752.645` param) sebagai jembatan alami menuju **P03 (Arsitektur & CNN)**. Ingatkan pula Slide 37–38 untuk belajar mandiri.",
             ]
         elif _orig_idx == 57:
             _notes[0] = (

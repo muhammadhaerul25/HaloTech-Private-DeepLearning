@@ -3045,5 +3045,31 @@
         ]
       }
     ]
+  },
+  "handson_metrics": {
+    "elsa_px_pos": [
+      4,
+      2
+    ],
+    "elsa_px_rgb": [
+      0.52,
+      0.53,
+      0.6
+    ],
+    "neuron_z": 0.37,
+    "wall_z": -0.15,
+    "softmax_loss_demo": 0.38,
+    "epochs": 20,
+    "epoch0_loss": 1.71,
+    "epoch0_acc_pct": 24.5,
+    "epoch1_loss": 3.03,
+    "epoch1_acc_pct": 16.8,
+    "epoch_end_loss": 1.11,
+    "epoch_end_acc_pct": 61.5,
+    "all_polos_acc_pct": 61.8,
+    "all_ramai_acc_pct": 92.7,
+    "sample_e0_correct": 2,
+    "sample_end_correct": 3,
+    "sample_ramai_correct": 5
   }
 }

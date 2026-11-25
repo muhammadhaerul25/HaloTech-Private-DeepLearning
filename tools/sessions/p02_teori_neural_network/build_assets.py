@@ -721,12 +721,332 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     plt.close(fig)
 
 
+def generate_handson_visuals(data: dict, elsa_thumb: Image.Image) -> dict:
+    """Generate 6 crisp, real Matplotlib visual previews for Hands-On Slides 40-45 (Bab 3 Tahap 1-5)."""
+    import os
+    os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+    from PIL import ImageOps
+    import tensorflow as tf
+
+    np.random.seed(SEED)
+    tf.keras.utils.set_random_seed(SEED)
+
+    # Load all Frozen photos deterministically (sorted by file, EXIF-safe, 64x64 RGB, 0.0-1.0)
+    meta_df = pd.read_csv(FROZEN_DIR / "metadata.csv").sort_values("file").reset_index(drop=True)
+    label_to_idx = {k: i for i, k in enumerate(CLASSES)}
+    SMALL = 64
+    X_all, y_all, cond_all = [], [], []
+    sample_polos_idx, sample_ramai_idx = {}, {}
+    for _, row in meta_df.iterrows():
+        with Image.open(FROZEN_DIR / row["file"]) as im:
+            im_ok = ImageOps.exif_transpose(im).convert("RGB").resize((SMALL, SMALL), Image.Resampling.LANCZOS)
+            arr = np.array(im_ok, dtype=np.float32) / 255.0
+        X_all.append(arr)
+        y_all.append(label_to_idx[row["kelas"]])
+        cond_all.append(row["kondisi"])
+        if row["kondisi"] == "polos" and row["kelas"] not in sample_polos_idx:
+            sample_polos_idx[row["kelas"]] = len(X_all) - 1
+        if row["kondisi"] == "ramai" and row["kelas"] not in sample_ramai_idx:
+            sample_ramai_idx[row["kelas"]] = len(X_all) - 1
+
+    X_all = np.array(X_all, dtype=np.float32)
+    y_all = np.array(y_all, dtype=np.int32)
+    cond_all = np.array(cond_all)
+    samp_indices = [sample_polos_idx[k] for k in CLASSES]
+    ramai_indices = [sample_ramai_idx[k] for k in CLASSES]
+
+    # Use real cropped Elsa thumb for super crisp 8x8 pixel & flatten visuals
+    elsa_mini = np.array(elsa_thumb.resize((8, 8), Image.Resampling.BILINEAR), dtype=np.float32) / 255.0
+    pr, pc = 4, 2  # Directly on Elsa's blue dress!
+    px_rgb = elsa_mini[pr, pc]
+    wall_rgb = elsa_mini[0, 0]
+    r_v, g_v, b_v = float(px_rgb[0]), float(px_rgb[1]), float(px_rgb[2])
+    wr_v, wg_v, wb_v = float(wall_rgb[0]), float(wall_rgb[1]), float(wall_rgb[2])
+
+    # ------------------------------------------------------------------
+    # HO-1: Tahap 1 (1.1 & 1.2) — Foto Asli -> Grid 8x8 Angka -> Zoom 1 Piksel RGB
+    # ------------------------------------------------------------------
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(8.8, 3.1), dpi=180, gridspec_kw={"width_ratios": [1.0, 1.15, 1.18]})
+    ax1.imshow(elsa_thumb)
+    step_e = elsa_thumb.size[0] / 8.0
+    ax1.add_patch(patches.Rectangle((pc * step_e, pr * step_e), step_e, step_e, lw=2.6, edgecolor=COLORS["red"], facecolor="none"))
+    ax1.set_title(f"1. Foto Asli Elsa\n(kotak merah = [{pr}, {pc}] gaun)", fontsize=9.0, fontweight="bold", color=COLORS["dark"])
+    ax1.axis("off")
+
+    ax2.imshow(elsa_mini, interpolation="nearest")
+    for rr in range(8):
+        for cc in range(8):
+            lum = 0.299 * elsa_mini[rr, cc, 0] + 0.587 * elsa_mini[rr, cc, 1] + 0.114 * elsa_mini[rr, cc, 2]
+            txt_col = "#FFFFFF" if lum < 0.54 else "#202124"
+            ax2.text(cc, rr, f"{lum:.1f}", ha="center", va="center", fontsize=6.5, fontweight="bold", color=txt_col)
+    ax2.add_patch(patches.Rectangle((pc - 0.5, pr - 0.5), 1, 1, lw=2.6, edgecolor=COLORS["red"], facecolor="none"))
+    ax2.set_xticks(range(8)); ax2.set_yticks(range(8))
+    ax2.tick_params(labelsize=6.4, length=0)
+    ax2.set_title("2. Grid 8×8 (Angka = kecerahan)\nTiap kotak berisi 3 angka R, G, B", fontsize=8.8, fontweight="bold", color=COLORS["blue_dark"])
+
+    bars = ax3.bar(["R", "G", "B"], [r_v, g_v, b_v], color=[COLORS["red"], COLORS["green"], COLORS["blue"]], width=0.48, edgecolor="#202124", lw=0.8)
+    for bar, val in zip(bars, [r_v, g_v, b_v]):
+        ax3.text(bar.get_x() + bar.get_width() / 2, val + 0.035, f"{val:.2f}", ha="center", va="bottom", fontsize=8.8, fontweight="bold", color=COLORS["dark"])
+    swatch = patches.FancyBboxPatch((0.05, 0.79), 0.24, 0.16, boxstyle="round,pad=0.02", transform=ax3.transAxes, facecolor=px_rgb, edgecolor="#202124", lw=1.4)
+    ax3.add_patch(swatch)
+    ax3.text(0.33, 0.87, f"Warna asli [{pr}, {pc}]\nRGB = [{r_v:.2f}, {g_v:.2f}, {b_v:.2f}]", transform=ax3.transAxes, ha="left", va="center", fontsize=6.9, fontweight="bold", color=COLORS["dark"])
+    ax3.set_ylim(0, 1.15)
+    ax3.set_ylabel("Nilai (0.0 – 1.0)", fontsize=8)
+    ax3.set_title(f"3. Zoom Piksel [{pr}, {pc}]\nBiru (B) paling dominan!", fontsize=8.8, fontweight="bold", color="#137333")
+    ax3.grid(axis="y", linestyle="--", alpha=0.35)
+    ax3.spines["top"].set_visible(False); ax3.spines["right"].set_visible(False)
+
+    fig.tight_layout(pad=0.9)
+    fig.savefig(ASSETS_DIR / "ho_step1_pixel_grid.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    # ------------------------------------------------------------------
+    # HO-2: Tahap 2 (2.1 & 2.2) — Visual 2D -> Pita 1D Flatten (P1..P64 = x1..x192) + Skala Parameter
+    # ------------------------------------------------------------------
+    fig = plt.figure(figsize=(8.8, 3.25), dpi=180)
+    gs = fig.add_gridspec(2, 2, height_ratios=[1.25, 1.0], width_ratios=[1.0, 2.55], hspace=0.55, wspace=0.22)
+    ax_2d = fig.add_subplot(gs[0, 0])
+    ax_1d = fig.add_subplot(gs[0, 1])
+    ax_sc = fig.add_subplot(gs[1, :])
+
+    ax_2d.imshow(elsa_mini, interpolation="nearest")
+    for rr in range(8):
+        ax_2d.axhline(rr - 0.5, color="#FFFFFF", lw=0.7, alpha=0.85)
+    ax_2d.set_yticks(range(8))
+    ax_2d.set_yticklabels([f"B{i+1}" for i in range(8)], fontsize=6.2, fontweight="bold", color=COLORS["blue_dark"])
+    ax_2d.set_xticks([])
+    ax_2d.set_title("2D: 8×8 Piksel", fontsize=8.8, fontweight="bold", color=COLORS["dark"])
+
+    strip_rgb = elsa_mini.reshape(1, 64, 3)
+    ax_1d.imshow(strip_rgb, aspect="auto", interpolation="nearest")
+    for b_idx in range(1, 8):
+        ax_1d.axvline(b_idx * 8 - 0.5, color="#FFFFFF", lw=1.4)
+    for b_idx in range(8):
+        ax_1d.text(b_idx * 8 + 3.5, 0.0, f"B{b_idx+1}", ha="center", va="center", fontsize=7.6, fontweight="bold", color="#FFFFFF",
+                   bbox=dict(boxstyle="round,pad=0.14", facecolor="#202124", edgecolor="none", alpha=0.68))
+    ax_1d.set_yticks([])
+    ax_1d.set_xticks([0, 15, 31, 47, 63])
+    ax_1d.set_xticklabels(["P1 (x1–3)", "P16", "P32", "P48", "P64 (x190–192)"], fontsize=6.9, fontweight="bold")
+    ax_1d.set_title("Sesudah Flatten() → 64 Piksel Warna × 3 RGB = 192 Neuron Input", fontsize=8.6, fontweight="bold", color="#137333")
+
+    labels_sc = ["Mini 8×8×3\n(192 neuron)", "Hands-On 64×64×3\n(12.288 neuron)", "Penuh 224×224×3\n(150.528 neuron)"]
+    vals_sc = [192 * 5 + 5, 12288 * 5 + 5, 150528 * 5 + 5]
+    cols_sc = [COLORS["green"], COLORS["blue"], COLORS["red"]]
+    y_pos = np.arange(len(labels_sc))
+    bh = ax_sc.barh(y_pos, vals_sc, color=cols_sc, height=0.58, edgecolor="#202124", lw=0.6)
+    ax_sc.set_xscale("log")
+    ax_sc.set_xlim(100, 28_000_000)
+    ax_sc.set_yticks(y_pos); ax_sc.set_yticklabels(labels_sc, fontsize=7.6, fontweight="bold")
+    ax_sc.invert_yaxis()
+    for b_bar, vv in zip(bh, vals_sc):
+        ax_sc.text(vv * 1.22, b_bar.get_y() + b_bar.get_height() / 2, f"{vv:,} param (W+b)".replace(",", "."), va="center", fontsize=8.1, fontweight="bold", color=COLORS["dark"])
+    ax_sc.set_title("Perbandingan Total Parameter (Input × 5 Kelas + 5 Bias) — Skala Log", fontsize=8.6, fontweight="bold", color=COLORS["dark"])
+    ax_sc.grid(axis="x", linestyle="--", alpha=0.3)
+    ax_sc.spines["top"].set_visible(False); ax_sc.spines["right"].set_visible(False)
+
+    fig.subplots_adjust(left=0.17, right=0.95, top=0.90, bottom=0.11)
+    fig.savefig(ASSETS_DIR / "ho_step2_flatten_strip.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    # ------------------------------------------------------------------
+    # HO-3: Tahap 3 (3.1, 3.2, 3.3) — Zero-Sum Blue Detector (Gaun > 0 vs Dinding < 0!) + ReLU + Softmax & Loss!
+    # ------------------------------------------------------------------
+    w_r, w_g, w_b, b_val = -3.0, -2.0, 5.0, -0.05
+    c_r, c_g, c_b = r_v * w_r, g_v * w_g, b_v * w_b
+    z_neuron = c_r + c_g + c_b + b_val
+    z_wall = (wr_v * w_r) + (wg_v * w_g) + (wb_v * w_b) + b_val
+
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(8.8, 3.05), dpi=180)
+    parts = [c_r, c_g, c_b, b_val, z_neuron]
+    p_lbls = ["R·wR", "G·wG", "B·wB", "Bias", "z Gaun"]
+    p_cols = [COLORS["red"] if v < 0 else COLORS["green"] for v in parts[:-1]] + [COLORS["blue"]]
+    b1 = ax1.bar(p_lbls, parts, color=p_cols, width=0.56, edgecolor="#202124", lw=0.7)
+    ax1.axhline(0, color="#202124", lw=0.9)
+    for bar, v in zip(b1, parts):
+        ax1.text(bar.get_x() + bar.get_width() / 2, v + (0.06 if v >= 0 else -0.07), f"{v:+.2f}", ha="center", va="bottom" if v >= 0 else "top", fontsize=7.4, fontweight="bold")
+    ax1.set_ylim(min(parts) - 0.65, max(parts) + 1.25)
+    ax1.text(0.97, 0.96, f"Dinding [0,0] → z = {z_wall:+.2f}", transform=ax1.transAxes, ha="right", va="top",
+             fontsize=6.9, fontweight="bold", color=COLORS["muted"],
+             bbox=dict(boxstyle="round,pad=0.22", facecolor="#F8F9FA", edgecolor="#DADCE0"))
+    ax1.set_title("3.1 Timbangan 1 Neuron\nz = r·wR + g·wG + b·wB + bias", fontsize=8.4, fontweight="bold", color=COLORS["dark"])
+    ax1.tick_params(labelsize=7.2); ax1.grid(axis="y", linestyle="--", alpha=0.3)
+    ax1.spines["top"].set_visible(False); ax1.spines["right"].set_visible(False)
+
+    skor_ex = np.array([-1.2, -0.4, 0.0, 0.8, 2.1])
+    relu_ex = np.maximum(0.0, skor_ex)
+    xx = np.arange(len(skor_ex))
+    ax2.bar(xx - 0.18, skor_ex, width=0.34, color="#DADCE0", edgecolor="#5F6368", label="Sebelum")
+    ax2.bar(xx + 0.18, relu_ex, width=0.34, color=COLORS["green"], edgecolor="#137333", label="Sesudah ReLU")
+    ax2.axhline(0, color="#202124", lw=0.9)
+    ax2.set_xticks(xx); ax2.set_xticklabels([f"{v:+.1f}" for v in skor_ex], fontsize=7.4)
+    ax2.set_ylim(-1.6, 2.6)
+    ax2.set_title("3.2 ReLU: Minus → 0\nPositif tetap menyala", fontsize=8.4, fontweight="bold", color="#137333")
+    ax2.legend(fontsize=6.9, loc="upper left", framealpha=0.9)
+    ax2.grid(axis="y", linestyle="--", alpha=0.3)
+    ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
+
+    z5 = np.array([0.4, 2.3, 0.1, -0.2, 0.2])
+    ez = np.exp(z5 - np.max(z5))
+    pr5_prob = ez / np.sum(ez)
+    pr5 = pr5_prob * 100.0
+    loss_elsa_demo = float(-np.log(pr5_prob[1]))
+    c_names = [c.capitalize() for c in CLASSES]
+    bar_cols = [COLORS["green"] if i == int(np.argmax(pr5)) else COLORS["blue"] for i in range(5)]
+    b3 = ax3.barh(c_names, pr5, color=bar_cols, height=0.56, edgecolor="#202124", lw=0.6)
+    ax3.invert_yaxis(); ax3.set_xlim(0, 102)
+    for bar, v in zip(b3, pr5):
+        ax3.text(v + 2, bar.get_y() + bar.get_height() / 2, f"{v:.1f}%", va="center", fontsize=7.6, fontweight="bold")
+    ax3.text(0.97, 0.06, f"Loss (−ln P) = {loss_elsa_demo:.2f}", transform=ax3.transAxes, ha="right", va="bottom",
+             fontsize=7.2, fontweight="bold", color="#137333",
+             bbox=dict(boxstyle="round,pad=0.25", facecolor="#E6F4EA", edgecolor=COLORS["green"]))
+    ax3.set_title("3.3 Softmax (100%) & Loss\nArgmax = ELSA ✓", fontsize=8.4, fontweight="bold", color=COLORS["blue_dark"])
+    ax3.tick_params(labelsize=7.6); ax3.grid(axis="x", linestyle="--", alpha=0.3)
+    ax3.spines["top"].set_visible(False); ax3.spines["right"].set_visible(False)
+
+    fig.tight_layout(pad=0.9)
+    fig.savefig(ASSETS_DIR / "ho_step3_neuron_relu_softmax.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    # ------------------------------------------------------------------
+    # Build & evaluate REAL 1-Layer Keras model (Epoch 0 Baby -> Epoch 20 Trained)
+    # ------------------------------------------------------------------
+    tf.keras.utils.set_random_seed(SEED)
+    model = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(SMALL, SMALL, 3)),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(len(CLASSES), activation="softmax"),
+    ])
+    model.compile(
+        optimizer=tf.keras.optimizers.Adam(learning_rate=0.0005),
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"],
+    )
+    W_init = model.layers[-1].get_weights()[0].copy()
+    loss_e0, acc_e0 = model.evaluate(X_all, y_all, verbose=0)
+    probs_e0 = model.predict(X_all[samp_indices], verbose=0)
+
+    # HO-4: Tahap 4 — Tebakan "Model Bayi" (Epoch 0, Bobot Acak!)
+    fig, axes = plt.subplots(2, 5, figsize=(8.8, 3.1), dpi=180, gridspec_kw={"height_ratios": [1.25, 1.0], "hspace": 0.36, "wspace": 0.25})
+    short_lbl = ["A", "E", "K", "O", "S"]
+    for i, idx_s in enumerate(samp_indices):
+        axes[0, i].imshow(X_all[idx_s])
+        pred_i = int(np.argmax(probs_e0[i]))
+        ok = pred_i == y_all[idx_s]
+        t_col = "#137333" if ok else "#C5221F"
+        for sp in axes[0, i].spines.values():
+            sp.set_edgecolor(t_col); sp.set_linewidth(2.0)
+        axes[0, i].set_xticks([]); axes[0, i].set_yticks([])
+        axes[0, i].set_title(f"Asli: {CLASSES[i].capitalize()}\nTebak: {CLASSES[pred_i].capitalize()} {'✓' if ok else '✗'}", fontsize=7.5, fontweight="bold", color=t_col)
+        b_col = [COLORS["green"] if j == y_all[idx_s] else "#BDC1C6" for j in range(5)]
+        axes[1, i].bar(short_lbl, probs_e0[i] * 100.0, color=b_col, width=0.65)
+        axes[1, i].axhline(20, color="#9AA0A6", lw=0.8, linestyle="--")
+        axes[1, i].set_ylim(0, 100); axes[1, i].tick_params(labelsize=6.8)
+        axes[1, i].spines["top"].set_visible(False); axes[1, i].spines["right"].set_visible(False)
+        if i == 0:
+            axes[1, i].set_ylabel("Prob %", fontsize=7.2)
+    fig.suptitle(f"Epoch 0 (Model Bayi / Bobot Acak) · 61.445 Parameter · Loss = {loss_e0:.2f} · Akurasi = {acc_e0*100:.1f}%", fontsize=9.1, fontweight="bold", color="#C5221F", y=0.98)
+    fig.subplots_adjust(left=0.07, right=0.98, top=0.80, bottom=0.10)
+    fig.savefig(ASSETS_DIR / "ho_step4_baby_model.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    # Train 20 real epochs (monotonic curve E1 -> E20 & clear weight silhouettes!)
+    n_ep = 20
+    hist = model.fit(X_all, y_all, epochs=n_ep, batch_size=16, verbose=0)
+    losses = [float(v) for v in hist.history["loss"]]
+    accs = [float(v) * 100.0 for v in hist.history["accuracy"]]
+    probs_e20 = model.predict(X_all[samp_indices], verbose=0)
+    probs_ramai = model.predict(X_all[ramai_indices], verbose=0)
+    _, acc_polos_all = model.evaluate(X_all[cond_all == "polos"], y_all[cond_all == "polos"], verbose=0)
+    _, acc_ramai_all = model.evaluate(X_all[cond_all == "ramai"], y_all[cond_all == "ramai"], verbose=0)
+
+    # HO-5: Tahap 5.1 & 5.2 — Kurva Training Loss & Accuracy (20 Epoch Nyata)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8.8, 3.05), dpi=180)
+    ep = list(range(1, n_ep + 1))
+    ax1.plot(ep, losses, marker="o", color=COLORS["red"], lw=2.2, markersize=4.5)
+    ax1.fill_between(ep, losses, min(losses) * 0.85, color=COLORS["red"], alpha=0.10)
+    ax1.annotate(f"E1: {losses[0]:.2f}", (1, losses[0]), textcoords="offset points", xytext=(9, -3), fontsize=8.0, fontweight="bold", color="#C5221F",
+                 bbox=dict(boxstyle="round,pad=0.2", facecolor="#FCE8E6", edgecolor=COLORS["red"], lw=0.8))
+    ax1.annotate(f"E{n_ep}: {losses[-1]:.2f}", (n_ep, losses[-1]), textcoords="offset points", xytext=(-58, 16), fontsize=8.2, fontweight="bold", color="#137333",
+                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9))
+    ax1.set_title(f"Kurva Loss Turun Mulus (Epoch 1 → {n_ep})", fontsize=9.2, fontweight="bold", color=COLORS["dark"])
+    ax1.set_xlabel("Epoch", fontsize=8); ax1.set_ylabel("Cross-Entropy Loss", fontsize=8)
+    ax1.set_xticks([1, 5, 10, 15, 20]); ax1.grid(True, linestyle="--", alpha=0.35)
+    ax1.spines["top"].set_visible(False); ax1.spines["right"].set_visible(False)
+
+    ax2.plot(ep, accs, marker="s", color=COLORS["green"], lw=2.2, markersize=4.5)
+    ax2.fill_between(ep, accs, 0, color=COLORS["green"], alpha=0.10)
+    ax2.annotate(f"E1: {accs[0]:.1f}%", (1, accs[0]), textcoords="offset points", xytext=(9, -15), fontsize=8.0, fontweight="bold", color=COLORS["muted"],
+                 bbox=dict(boxstyle="round,pad=0.2", facecolor="#F8F9FA", edgecolor="#DADCE0", lw=0.8))
+    ax2.annotate(f"E{n_ep}: {accs[-1]:.1f}%", (n_ep, accs[-1]), textcoords="offset points", xytext=(-64, 12), fontsize=8.2, fontweight="bold", color="#137333",
+                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9))
+    ax2.set_title(f"Kurva Akurasi Naik (Epoch 1 → {n_ep})", fontsize=9.2, fontweight="bold", color=COLORS["dark"])
+    ax2.set_xlabel("Epoch", fontsize=8); ax2.set_ylabel("Akurasi (%)", fontsize=8)
+    ax2.set_xticks([1, 5, 10, 15, 20]); ax2.set_ylim(0, min(105, max(85, max(accs) + 20)))
+    ax2.grid(True, linestyle="--", alpha=0.35)
+    ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
+
+    fig.tight_layout(pad=1.0)
+    fig.savefig(ASSETS_DIR / "ho_step5_loss_curve.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    # HO-6: Tahap 5.3 & 5.4 — Tebakan Sesudah Belajar (Epoch 20) + Peta Perubahan Bobot ΔW (64x64)!
+    W_delta = model.layers[-1].get_weights()[0] - W_init  # Pure learned pattern without init static!
+    fig, axes = plt.subplots(2, 5, figsize=(8.8, 3.15), dpi=180, gridspec_kw={"height_ratios": [1.15, 1.05], "hspace": 0.42, "wspace": 0.22})
+    for i, idx_s in enumerate(samp_indices):
+        axes[0, i].imshow(X_all[idx_s])
+        pred_i = int(np.argmax(probs_e20[i]))
+        conf = probs_e20[i, pred_i] * 100.0
+        ok = pred_i == y_all[idx_s]
+        t_col = "#137333" if ok else "#C5221F"
+        for sp in axes[0, i].spines.values():
+            sp.set_edgecolor(t_col); sp.set_linewidth(2.0)
+        axes[0, i].set_xticks([]); axes[0, i].set_yticks([])
+        axes[0, i].set_title(f"{CLASSES[i].capitalize()} → {CLASSES[pred_i].capitalize()} ({conf:.0f}%) {'✓' if ok else '✗'}", fontsize=7.3, fontweight="bold", color=t_col)
+
+        w_img = W_delta[:, i].reshape(SMALL, SMALL, 3)
+        w_mag = np.mean(np.abs(w_img), axis=2)  # Where neuron focuses most strongly!
+        w_hi = max(float(np.percentile(w_mag, 98)), 1e-6)
+        axes[1, i].imshow(np.clip(w_mag / w_hi, 0.0, 1.0), cmap="inferno")
+        axes[1, i].set_xticks([]); axes[1, i].set_yticks([])
+        axes[1, i].set_title(f"Fokus Bobot ΔW: {CLASSES[i].capitalize()}", fontsize=7.2, fontweight="bold", color=COLORS["blue_dark"])
+
+    fig.suptitle(f"Sesudah Belajar (Epoch {n_ep} · Loss {losses[-1]:.2f} · Akurasi {accs[-1]:.1f}%) & Peta Fokus Bobot ΔW", fontsize=8.9, fontweight="bold", color="#137333", y=0.98)
+    fig.subplots_adjust(left=0.03, right=0.97, top=0.82, bottom=0.04)
+    fig.savefig(ASSETS_DIR / "ho_step6_predict_and_weights.png", dpi=180, facecolor="#FFFFFF")
+    plt.close(fig)
+
+    ho_metrics = {
+        "elsa_px_pos": [pr, pc],
+        "elsa_px_rgb": [round(r_v, 2), round(g_v, 2), round(b_v, 2)],
+        "neuron_z": round(z_neuron, 2),
+        "wall_z": round(z_wall, 2),
+        "softmax_loss_demo": round(loss_elsa_demo, 2),
+        "epochs": n_ep,
+        "epoch0_loss": round(float(loss_e0), 2),
+        "epoch0_acc_pct": round(float(acc_e0) * 100.0, 1),
+        "epoch1_loss": round(losses[0], 2),
+        "epoch1_acc_pct": round(accs[0], 1),
+        "epoch_end_loss": round(losses[-1], 2),
+        "epoch_end_acc_pct": round(accs[-1], 1),
+        "all_polos_acc_pct": round(float(acc_polos_all) * 100.0, 1),
+        "all_ramai_acc_pct": round(float(acc_ramai_all) * 100.0, 1),
+        "sample_e0_correct": int(sum(int(np.argmax(probs_e0[i])) == y_all[samp_indices[i]] for i in range(5))),
+        "sample_end_correct": int(sum(int(np.argmax(probs_e20[i])) == y_all[samp_indices[i]] for i in range(5))),
+        "sample_ramai_correct": int(sum(int(np.argmax(probs_ramai[i])) == y_all[ramai_indices[i]] for i in range(5))),
+    }
+    data["handson_metrics"] = ho_metrics
+    (ASSETS_DIR / "p02_data.json").write_text(json.dumps(data, indent=2, ensure_ascii=False), encoding="utf-8")
+    return ho_metrics
+
+
 def main() -> None:
     data, elsa_thumb = generate_thumbnails_and_stats()
     generate_charts(data, elsa_thumb)
+    ho_m = generate_handson_visuals(data, elsa_thumb)
     print(f"✅ Aset visual & JSON P02 (Teori Neural Network) selesai dibuat di: {ASSETS_DIR}")
     print(f"   Dataset Frozen v1: {data['total_images']} foto ({data['polos_count']} polos, {data['ramai_count']} ramai)")
     print(f"   Mini 4-pixel forward pass x={data['mini_forward_pass']['x']} -> probs={data['mini_forward_pass']['probs']}")
+    print(f"   Hands-On real Keras 1-Layer: E0 loss={ho_m['epoch0_loss']} ({ho_m['epoch0_acc_pct']}%) -> E{ho_m['epochs']} loss={ho_m['epoch_end_loss']} ({ho_m['epoch_end_acc_pct']}%) | sample {ho_m['sample_e0_correct']}/5 -> {ho_m['sample_end_correct']}/5")
 
 
 if __name__ == "__main__":
