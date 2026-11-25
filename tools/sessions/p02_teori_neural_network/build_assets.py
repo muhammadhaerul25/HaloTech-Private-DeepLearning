@@ -1,6 +1,6 @@
 """Generate deterministic visual assets & real Frozen v1 data JSON for P02: Teori Neural Network.
 
-Outputs saved to `materials/p02_teori_neural_network/assets/P02/`:
+Outputs saved to `materials/P02/assets/P02/`:
 - Real Frozen v1 thumbnails (`thumb_anna.jpg`, `thumb_elsa.jpg`, `thumb_kristoff.jpg`,
   `thumb_olaf.jpg`, `thumb_sven.jpg`, `thumb_elsa_ramai.jpg`, `thumb_olaf_ramai.jpg`, `thumb_anna_ramai.jpg`)
 - `01_frozen_gallery_5classes.png` (Real 2x5 polos vs ramai Frozen figurine showcase)

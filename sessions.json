@@ -34,11 +34,11 @@
       "duration": "120 menit",
       "status": "available",
       "links": {
-        "slidesHtml": "materials/p02_teori_neural_network/p02_teori_neural_network.html",
-        "slidesPdf": "materials/p02_teori_neural_network/p02_teori_neural_network.pdf",
-        "slidesPptx": "materials/p02_teori_neural_network/p02_teori_neural_network.pptx",
-        "notebook": "materials/p02_teori_neural_network/p02_teori_neural_network.ipynb",
-        "solution": "materials/p02_teori_neural_network/solutions/p02_teori_neural_network.ipynb"
+        "slidesHtml": "materials/P02/p02_teori_neural_network.html",
+        "slidesPdf": "materials/P02/p02_teori_neural_network.pdf",
+        "slidesPptx": "materials/P02/p02_teori_neural_network.pptx",
+        "notebook": "materials/P02/p02_teori_neural_network.ipynb",
+        "solution": "materials/P02/solutions/p02_teori_neural_network.ipynb"
       }
     },
     {

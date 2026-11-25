@@ -3033,7 +3033,7 @@ def build_slides_html(data: dict) -> str:
     _break_slide = (
         f"""
     <!-- COVER HANDS-ON -->
-    <section class="slide bg-blue" data-title="Cover — Hands-On Praktik Neural Network" data-notes="Alokasi waktu: 1 menit. Cover pembuka sesi praktik Hands-On. Ajak peserta membuka materials/p02_teori_neural_network/p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal dan pastikan folder data/frozen_v1/ siap diakses.">
+    <section class="slide bg-blue" data-title="Cover — Hands-On Praktik Neural Network" data-notes="Alokasi waktu: 1 menit. Cover pembuka sesi praktik Hands-On. Ajak peserta membuka materials/P02/p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal dan pastikan folder data/frozen_v1/ siap diakses.">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="848" cy="116" r="82" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="18"/>
         <circle cx="848" cy="116" r="44" fill="rgba(255,255,255,0.10)"/>
@@ -3067,7 +3067,7 @@ def build_slides_html(data: dict) -> str:
             description="Minum air, regangkan mata & tangan sejenak. Setelah jeda, kita buka notebook p02_teori_neural_network.ipynb dan praktik 6 langkah santai pada foto Frozen!",
             footer_label=FOOTER,
             data_title="Istirahat 5 Menit & Masuk Bab 5",
-            notes="Alokasi waktu: 5 menit. Siapkan browser Google Colab atau Jupyter lokal untuk membuka materials/p02_teori_neural_network/p02_teori_neural_network.ipynb.",
+            notes="Alokasi waktu: 5 menit. Siapkan browser Google Colab atau Jupyter lokal untuk membuka materials/P02/p02_teori_neural_network.ipynb.",
         )
     )
 

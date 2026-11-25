@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dl-course-pwa-v10';
+const CACHE_NAME = 'dl-course-pwa-v11';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
@@ -7,7 +7,7 @@ const PRECACHE_ASSETS = [
   './materials/P01/P01_understanding_images_processing_eda.html',
   './materials/P01/assets/P01/icon-192.png',
   './materials/P01/assets/P01/icon-512.png',
-  './materials/p02_teori_neural_network/p02_teori_neural_network.html'
+  './materials/P02/p02_teori_neural_network.html'
 ];
 
 self.addEventListener('install', (event) => {

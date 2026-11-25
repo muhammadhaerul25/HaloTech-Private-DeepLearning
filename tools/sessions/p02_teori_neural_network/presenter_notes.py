@@ -6,7 +6,7 @@ Standar penulisan:
   Weight, Bias, ReLU, Softmax, Forward Pass, Loss, Gradient Descent, Backpropagation, Epoch,
   MLP, CNN, ResNet, MobileNetV2) dengan penjelasan bahasa Indonesia sehari-hari.
 - Dipakai oleh `tools/core/exporter.py` untuk Speaker Notes PPTX (100% slide) dan
-  `materials/p02_teori_neural_network/p02_teori_neural_network_presenter_script.pdf` (A4 Portrait, 1 slide = 1 halaman).
+  `materials/P02/p02_teori_neural_network_presenter_script.pdf` (A4 Portrait, 1 slide = 1 halaman).
 """
 
 from __future__ import annotations
@@ -202,7 +202,7 @@ _ALL_SLIDE_EXPLANATIONS: dict[int, list[str]] = {
     ],
     46: [
         "**Tujuan Slide (5 menit):** Jeda istirahat wajib 5 menit sebelum masuk ke sesi praktik **Hands-On Notebook**.",
-        "• **Catatan Instruktur:** Ajak peserta minum air & istirahatkan mata. Pastikan file `materials/p02_teori_neural_network/p02_teori_neural_network.ipynb` dan folder `data/frozen_v1/` siap dibuka.",
+        "• **Catatan Instruktur:** Ajak peserta minum air & istirahatkan mata. Pastikan file `materials/P02/p02_teori_neural_network.ipynb` dan folder `data/frozen_v1/` siap dibuka.",
     ],
     47: [
         "**Tujuan Slide (6 menit — Hands-On Langkah 1):** Mendampingi peserta menjalankan Setup 3 tahap dan membaca `metadata.csv` foto Frozen secara dinamis.",
@@ -308,7 +308,7 @@ if HIDE_SLIDES_28_40:
         elif _orig_idx == 46 and HIDE_BAB4_ARCH:
             _notes = [
                 "**Tujuan Slide (1 menit — Cover Hands-On):** Pembuka sesi praktik langsung **Hands-On: Praktik Neural Network** pada dataset foto Disney Frozen (`143` foto).",
-                "• **Catatan Instruktur:** Ajak peserta membuka `materials/p02_teori_neural_network/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal dan arahkan sekilas ke 6 langkah di strip bawah.",
+                "• **Catatan Instruktur:** Ajak peserta membuka `materials/P02/p02_teori_neural_network.ipynb` di Google Colab atau Jupyter lokal dan arahkan sekilas ke 6 langkah di strip bawah.",
             ]
         elif _orig_idx == 47 and HIDE_BAB4_ARCH:
             _notes = [

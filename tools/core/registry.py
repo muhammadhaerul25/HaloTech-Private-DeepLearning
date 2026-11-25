@@ -27,12 +27,17 @@ class SessionConfig:
     plan_ref: str            # Reference to docs/PLAN.md section
     duration_minutes: float = 120.0
     is_legacy_p01: bool = False
-    folder_name: str = ""    # Optional custom folder name (defaults to id, e.g. "p02_teori_neural_network")
+    folder_name: str = ""    # Optional custom materials folder name (defaults to id, e.g. "P02")
+    code_folder_name: str = ""  # Optional custom tools/sessions folder name (defaults to folder_name or id)
     file_stem: str = ""      # Optional custom file stem (defaults to "{id}_{file_slug}")
 
     @property
     def dir_name(self) -> str:
         return self.folder_name or self.id
+
+    @property
+    def code_dir_name(self) -> str:
+        return self.code_folder_name or self.dir_name
 
     @property
     def stem(self) -> str:
@@ -52,7 +57,7 @@ class SessionConfig:
 
     @property
     def code_dir(self) -> Path:
-        return SESSIONS_CODE_DIR / self.dir_name
+        return SESSIONS_CODE_DIR / self.code_dir_name
 
     @property
     def html_path(self) -> Path:
@@ -126,7 +131,8 @@ SESSIONS: dict[str, SessionConfig] = {
         color="#EA4335",
         tint="#FCE8E6",
         plan_ref="P5-P6 (Redesign)",
-        folder_name="p02_teori_neural_network",
+        folder_name="P02",
+        code_folder_name="p02_teori_neural_network",
         file_stem="p02_teori_neural_network",
     ),
     "P03": SessionConfig(
