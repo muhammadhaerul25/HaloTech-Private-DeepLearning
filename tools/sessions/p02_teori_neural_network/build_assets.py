@@ -1,6 +1,6 @@
-"""Generate deterministic visual assets & real Frozen v1 data JSON for P02: Computer Vision 101.
+"""Generate deterministic visual assets & real Frozen v1 data JSON for P02: Teori Neural Network.
 
-Outputs saved to `materials/P02/assets/P02/`:
+Outputs saved to `materials/p02_teori_neural_network/assets/P02/`:
 - Real Frozen v1 thumbnails (`thumb_anna.jpg`, `thumb_elsa.jpg`, `thumb_kristoff.jpg`,
   `thumb_olaf.jpg`, `thumb_sven.jpg`, `thumb_elsa_ramai.jpg`, `thumb_olaf_ramai.jpg`, `thumb_anna_ramai.jpg`)
 - `01_frozen_gallery_5classes.png` (Real 2x5 polos vs ramai Frozen figurine showcase)
@@ -248,80 +248,135 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "grid": elsa_grid_8x8,
     }
 
-    # Real 5-class Frozen training math demo (6 pure pixel features > 5 Output classes for true funnel proportion!)
-    tm_features = []
+    # Real 5-class Frozen training math demo on FULL 224x224x3 = 150,528 real pixels
+    # (100% consistent with Input Layer neuron count & full RGB triplets on Slide 22–25!)
+    X_full_list = []
+    sample6_x = []
     for kls in CLASSES:
         with Image.open(ASSETS_DIR / f"thumb_{kls}.jpg") as im_tm:
-            arr_tm = np.array(im_tm.convert("RGB"))
-        y_lim_tm = 170 if kls != "olaf" else 118
-        d_thr_tm = 22.0 if kls != "olaf" else 17.0
-        mask_tm, _ = _extract_figurine_mask(arr_tm, y_max=y_lim_tm, dist_thresh=d_thr_tm)
-        fg_tm = arr_tm[mask_tm > 0].astype(np.float32) / 255.0
-        rgb_tm = fg_tm.mean(axis=0)
-        ys_tm, xs_tm = np.where(mask_tm > 0)
-        y_split_tm = np.percentile(ys_tm, 45)
-        top_rgb_tm = arr_tm[ys_tm[ys_tm <= y_split_tm], xs_tm[ys_tm <= y_split_tm]].astype(np.float32) / 255.0
-        bot_rgb_tm = arr_tm[ys_tm[ys_tm > y_split_tm], xs_tm[ys_tm > y_split_tm]].astype(np.float32) / 255.0
-        top_bright_tm = float(top_rgb_tm.mean())
-        bot_bright_tm = float(bot_rgb_tm.mean())
-        contrast_tm = float(fg_tm.mean(axis=1).std()) * 3.0
-        tm_features.append(
+            im_224 = im_tm.convert("RGB").resize((224, 224), Image.Resampling.LANCZOS)
+            flat_tm = np.array(im_224, dtype=np.float64).reshape(-1) / 255.0  # exact 150,528 pixels!
+        X_full_list.append(flat_tm)
+        sample6_x.append(
             [
-                round(float(rgb_tm[0]), 2),
-                round(float(rgb_tm[1]), 2),
-                round(float(rgb_tm[2]), 2),
-                round(top_bright_tm, 2),
-                round(bot_bright_tm, 2),
-                round(contrast_tm, 2),
+                round(float(flat_tm[0]), 2),
+                round(float(flat_tm[1]), 2),
+                round(float(flat_tm[2]), 2),
+                round(float(flat_tm[-3]), 2),
+                round(float(flat_tm[-2]), 2),
+                round(float(flat_tm[-1]), 2),
             ]
         )
-    X_tm = np.array(tm_features, dtype=np.float64)
-    rng_tm = np.random.default_rng(42)
-    W0_tm = np.round(rng_tm.uniform(-0.4, 0.4, size=(6, 5)), 1)
-    b0_tm = np.round(rng_tm.uniform(-0.2, 0.2, size=(5,)), 1)
-    W_tm, b_tm = np.zeros((6, 5), dtype=np.float64), np.zeros((5,), dtype=np.float64)
+    X_full = np.stack(X_full_list, axis=0)  # (5, 150528)
+    n_pix_total = int(X_full.shape[1])       # 150,528
+    sample_idx = [0, 1, 2, n_pix_total - 3, n_pix_total - 2, n_pix_total - 1]
+    n_pix_mid = n_pix_total - len(sample_idx)  # 150,522
+
+    rng_tm = np.random.default_rng(7)
+    W0_full = rng_tm.normal(0.0, 0.0025, size=(n_pix_total, 5))
+    b0_tm = np.round(rng_tm.uniform(-0.25, 0.25, size=(5,)), 2)
+
+    W_full = np.zeros((n_pix_total, 5), dtype=np.float64)
+    b_tm = np.zeros((5,), dtype=np.float64)
     Y_tm = np.eye(5)
-    l2_tm = 0.0005
-    for _ in range(5000):
-        lg_tm = X_tm @ W_tm + b_tm
+    for _ in range(600):
+        lg_tm = X_full @ W_full + b_tm
         lg_tm -= lg_tm.max(axis=1, keepdims=True)
         pr_tm = np.exp(lg_tm) / np.exp(lg_tm).sum(axis=1, keepdims=True)
         dZ_tm = (pr_tm - Y_tm) / 5.0
-        W_tm -= 2.5 * (X_tm.T @ dZ_tm + l2_tm * W_tm)
-        b_tm -= 2.5 * dZ_tm.sum(axis=0)
-    # Round to exact 1 decimal so displayed SVG weights, Kotak A math, & unshifted Softmax match 100% on any calculator!
-    W_tm = np.round(W_tm, 1)
-    b_tm = np.round(b_tm, 1)
+        W_full -= 0.00018 * (X_full.T @ dZ_tm + 45.0 * W_full)
+        b_tm -= 3.5 * dZ_tm.sum(axis=0)
+    b_tm = np.round(b_tm, 2)
 
-    # Real 1-neuron binary Elsa detector on the 4 core pixel features (balanced 1-vs-Rest Logistic Regression)
-    # Used for Slide 25 (Weight & Bias) & Slide 26 (ReLU & Sigmoid) so ONLY Elsa activates (>0 / >50%)!
-    X_bin = X_tm[:, :4]
-    y_bin = np.array([0.0, 1.0, 0.0, 0.0, 0.0], dtype=np.float64)
-    sw_bin = np.array([1.0, 4.0, 1.0, 1.0, 1.0], dtype=np.float64)
-    w_bin = np.zeros((4,), dtype=np.float64)
-    b_bin = 0.0
-    for _ in range(10000):
-        z_bin = X_bin @ w_bin + b_bin
-        p_bin = 1.0 / (1.0 + np.exp(-z_bin))
-        dz_bin = sw_bin * (p_bin - y_bin) / sw_bin.sum()
-        w_bin -= 4.0 * (X_bin.T @ dz_bin + 0.00015 * w_bin)
-        b_bin -= 4.0 * float(dz_bin.sum())
-    w_bin = np.round(w_bin, 1)
-    b_bin = round(float(b_bin), 1)
+    def _pack_weights(W_mat: np.ndarray) -> tuple[list[list[float]], list[list[float]]]:
+        w_samp = [[round(float(W_mat[m, c]), 4) for c in range(5)] for m in sample_idx]
+        mid_sums = []
+        for i_ph in range(5):
+            row_mids = []
+            for c in range(5):
+                tot_wx = float(X_full[i_ph] @ W_mat[:, c])
+                samp_wx = sum(sample6_x[i_ph][k_s] * w_samp[k_s][c] for k_s in range(len(sample_idx)))
+                row_mids.append(round(tot_wx - samp_wx, 2))
+            mid_sums.append(row_mids)
+        return w_samp, mid_sums
+
+    W0_samp, mid0_sums = _pack_weights(W0_full)
+    W_samp, mid_sums = _pack_weights(W_full)
 
     training_math_demo = {
-        "feature_names": ["Merah (R)", "Hijau (G)", "Biru (B)", "Piksel Atas", "Piksel Bawah", "Kontras"],
+        "n_input": n_pix_total,
+        "n_mid": n_pix_mid,
+        "sample_ids": ["x1", "x2", "x3", "x150.526", "x150.527", "x150.528"],
+        "sample_names": ["Piksel 1 (R)", "Piksel 1 (G)", "Piksel 1 (B)", "Piksel akhir (R)", "Piksel akhir (G)", "Piksel akhir (B)"],
         "classes": [c.capitalize() for c in CLASSES],
         "thumbs": [f"assets/P02/thumb_{c}.jpg" for c in CLASSES],
-        "X": tm_features,
-        "W0": [[round(float(v), 1) for v in row] for row in W0_tm],
-        "b0": [round(float(v), 1) for v in b0_tm],
-        "W_trained": [[round(float(v), 1) for v in row] for row in W_tm],
-        "b_trained": [round(float(v), 1) for v in b_tm],
-        "elsa_binary": {
-            "w": [round(float(v), 1) for v in w_bin],
-            "b": b_bin,
-        },
+        "X_sample": sample6_x,
+        "W0_sample": W0_samp,
+        "mid0": mid0_sums,
+        "b0": [round(float(v), 2) for v in b0_tm],
+        "W_sample": W_samp,
+        "mid_trained": mid_sums,
+        "b_trained": [round(float(v), 2) for v in b_tm],
+    }
+
+    # Real 1-Layer Full Neural Network (150,528 Input -> 5 Output Softmax = 752,645 params — ZERO Hidden Layer!)
+    # for Ultimate Slide 29: tracks ALL 5 characters across ALL 8 Epochs so students can watch full training progress!
+    Xc_1l = (X_full - 0.5).astype(np.float64)
+    Y_1l = np.eye(5, dtype=np.float64)
+    rng_1l = np.random.default_rng(7)
+    W_1l = rng_1l.normal(0.0, 0.0028, size=(n_pix_total, 5)).astype(np.float64)
+    b_1l = rng_1l.normal(0.0, 0.25, size=(5,)).astype(np.float64)
+    lr_w_1l, lr_b_1l = 0.00026, 0.25
+
+    full_nn_epochs = []
+    for ep_i in range(1, 9):
+        wx_e = Xc_1l @ W_1l
+        z_e = wx_e + b_1l
+        z_s = z_e - z_e.max(axis=1, keepdims=True)
+        ex_e = np.exp(z_s)
+        pr_e = ex_e / ex_e.sum(axis=1, keepdims=True)
+        ep_rows = []
+        for ph_i in range(5):
+            probs_ph = [round(float(pr_e[ph_i, c]) * 100.0, 1) for c in range(5)]
+            wx_ph = [round(float(wx_e[ph_i, c]), 2) for c in range(5)]
+            b_ph = [round(float(b_1l[c]), 2) for c in range(5)]
+            z_ph = [round(float(z_e[ph_i, c]), 2) for c in range(5)]
+            p_true_f = max(float(pr_e[ph_i, ph_i]), 1e-6)
+            loss_ph = round(float(-np.log(p_true_f)), 2)
+            ep_rows.append(
+                {
+                    "wx": wx_ph,
+                    "b": b_ph,
+                    "z": z_ph,
+                    "probs": probs_ph,
+                    "pred": int(np.argmax(pr_e[ph_i])),
+                    "loss": loss_ph,
+                    "ok": bool(int(np.argmax(pr_e[ph_i])) == ph_i),
+                }
+            )
+        avg_loss = round(float(np.mean([r["loss"] for r in ep_rows])), 2)
+        acc_cnt = sum(1 for r in ep_rows if r["ok"])
+        full_nn_epochs.append({"epoch": ep_i, "avg_loss": avg_loss, "acc": acc_cnt, "photos": ep_rows})
+
+        # 1 full epoch of real gradient descent updates across all 5 Frozen photos (Anna -> Elsa -> Kristoff -> Olaf -> Sven)
+        for ph_step in range(5):
+            xi = Xc_1l[ph_step : ph_step + 1]
+            yi = Y_1l[ph_step : ph_step + 1]
+            zi = xi @ W_1l + b_1l
+            zi -= zi.max(axis=1, keepdims=True)
+            pi = np.exp(zi) / np.exp(zi).sum(axis=1, keepdims=True)
+            dZ = pi - yi
+            W_1l -= lr_w_1l * (xi.T @ dZ + 0.02 * W_1l)
+            b_1l -= lr_b_1l * dZ[0]
+
+    full_nn_demo = {
+        "n_input": n_pix_total,
+        "n_output": 5,
+        "total_params": n_pix_total * 5 + 5,  # 752,645 (150,528 x 5 + 5 bias)
+        "classes": [c.capitalize() for c in CLASSES],
+        "thumbs": [f"assets/P02/thumb_{c}.jpg" for c in CLASSES],
+        "X_sample": sample6_x,
+        "epochs": full_nn_epochs,
     }
 
     p02_data = {
@@ -336,6 +391,7 @@ def generate_thumbnails_and_stats() -> tuple[dict, Image.Image]:
         "flatten_4x4": flatten_4x4,
         "elsa_rgb_ends": elsa_rgb_ends,
         "training_math_demo": training_math_demo,
+        "full_nn_demo": full_nn_demo,
     }
     (ASSETS_DIR / "p02_data.json").write_text(json.dumps(p02_data, indent=2, ensure_ascii=False), encoding="utf-8")
     return p02_data, elsa_thumb_img
@@ -668,7 +724,7 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
 def main() -> None:
     data, elsa_thumb = generate_thumbnails_and_stats()
     generate_charts(data, elsa_thumb)
-    print(f"✅ Aset visual & JSON P02 (Computer Vision 101) selesai dibuat di: {ASSETS_DIR}")
+    print(f"✅ Aset visual & JSON P02 (Teori Neural Network) selesai dibuat di: {ASSETS_DIR}")
     print(f"   Dataset Frozen v1: {data['total_images']} foto ({data['polos_count']} polos, {data['ramai_count']} ramai)")
     print(f"   Mini 4-pixel forward pass x={data['mini_forward_pass']['x']} -> probs={data['mini_forward_pass']['probs']}")
 

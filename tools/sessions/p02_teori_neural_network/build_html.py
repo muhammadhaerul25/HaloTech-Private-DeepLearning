@@ -1,4 +1,4 @@
-"""Generate 59-slide interactive HTML5 deck (SSOT) for P02: Computer Vision 101.
+"""Generate 59-slide interactive HTML5 deck (SSOT) for P02: Teori Neural Network.
 
 Structure (exact 120.0 minutes across 59 slides):
 - Pembuka (01–06 · 6.0m): Cover, Peta 5 Bab, Alur 120 Menit, Tujuan 3 Kartu, Recap P01, Pemanasan Q&A
@@ -13,6 +13,7 @@ Structure (exact 120.0 minutes across 59 slides):
 from __future__ import annotations
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -25,6 +26,14 @@ from core.registry import get_session  # noqa: E402
 SESSION = get_session("P02")
 ASSETS_DIR = SESSION.assets_dir
 FOOTER = SESSION.short_title
+
+# Toggle sementara untuk menyembunyikan Slide 28–40 lama (Bab 3C–3E: Koneksi 1-ke-5,
+# Hidden Layer, Forward Pass 4px, Loss/GD/Backprop, Q&A #4–#5) tanpa menghapus kodenya.
+# Ubah ke False kapan saja untuk memunculkan kembali seluruh 59 slide.
+HIDE_SLIDES_28_40 = True
+# Bab 4 (Arsitektur Neural Network untuk CV) dipindahkan ke P03; tetap disimpan
+# utuh di kode agar mudah diadaptasi saat membangun P03.
+HIDE_BAB4_ARCH = True
 
 EXTRA_CSS = """
     .sim-bar { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
@@ -116,6 +125,77 @@ EXTRA_CSS = """
     .wb-srow { display: grid; grid-template-columns: 112px 1fr 48px; gap: 6px; align-items: center; font-size: 10.6px; }
     .wb-srow input[type="range"] { width: 100%; margin: 0; accent-color: #1A73E8; cursor: pointer; }
     .wb-srow.bias-row input[type="range"] { accent-color: #E37400; }
+    /* Unified Synchronized Explanation-Card Choreography across ALL animated slides (S20-S28) */
+    @keyframes syncCardPulse {
+      0%, 100% { filter: brightness(1.00); }
+      50%      { filter: brightness(1.03); }
+    }
+    .sync-card {
+      position: relative;
+      transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.18s cubic-bezier(0.22, 1, 0.36, 1),
+                  opacity 0.16s ease,
+                  border-color 0.16s ease;
+      will-change: transform, box-shadow, opacity;
+    }
+    @media print {
+      .sync-card, .sync-card::after, .sync-bullet { transition: none !important; animation: none !important; }
+    }
+    .sync-card .card-top-bar { transition: height 0.24s ease; }
+    .sync-card.sync-dim { opacity: 0.48; transform: translateY(0) scale(0.992); }
+    .sync-card.sync-on {
+      opacity: 1 !important;
+      transform: translateY(-3.5px) scale(1.012);
+      z-index: 4;
+      animation: syncCardPulse 1.5s ease-in-out infinite;
+    }
+    .sync-card.sync-on .card-top-bar { height: 5.5px; }
+    .sync-card.sync-blue   { box-shadow: 0 0 0 2.5px rgba(66,133,244,0.72), 0 8px 18px rgba(66,133,244,0.22) !important; border-color: #4285F4 !important; }
+    .sync-card.sync-yellow { box-shadow: 0 0 0 2.5px rgba(251,188,4,0.84), 0 8px 18px rgba(227,116,0,0.22) !important; border-color: #FBBC04 !important; }
+    .sync-card.sync-green  { box-shadow: 0 0 0 2.5px rgba(52,168,83,0.72), 0 8px 18px rgba(52,168,83,0.22) !important; border-color: #34A853 !important; }
+    .sync-card.sync-red    { box-shadow: 0 0 0 2.5px rgba(234,67,53,0.72), 0 8px 18px rgba(234,67,53,0.22) !important; border-color: #EA4335 !important; }
+    .sync-card::after {
+      content: '● AKTIF';
+      position: absolute;
+      top: 6px;
+      right: 7px;
+      font-family: var(--font-title);
+      font-size: 7.4px;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      padding: 1.5px 5.5px;
+      border-radius: 999px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+      pointer-events: none;
+    }
+    .sync-card.sync-on::after { opacity: 1; transform: scale(1); }
+    .sync-card.sync-no-badge::after { display: none; }
+    .sync-card.sync-blue::after   { background: #4285F4; color: #FFFFFF; }
+    .sync-card.sync-yellow::after { background: #FBBC04; color: #202124; }
+    .sync-card.sync-green::after  { background: #34A853; color: #FFFFFF; }
+    .sync-card.sync-red::after    { background: #EA4335; color: #FFFFFF; }
+    .sync-card.sync-on .card-title { padding-right: 44px; }
+    .sync-bullet {
+      transition: background 0.24s ease, box-shadow 0.24s ease, transform 0.24s ease, opacity 0.24s ease;
+      border-radius: 7px;
+      padding: 2.5px 6px;
+      margin: 0 -6px;
+    }
+    .sync-bullet.sync-dim { opacity: 0.45; }
+    .sync-bullet.sync-on  { background: #FFFFFF; opacity: 1; transform: translateX(3px); }
+    .sync-bullet.sync-blue.sync-on   { box-shadow: 0 0 0 1.8px rgba(66,133,244,0.62), 0 3px 8px rgba(66,133,244,0.16); }
+    .sync-bullet.sync-green.sync-on  { box-shadow: 0 0 0 1.8px rgba(52,168,83,0.62), 0 3px 8px rgba(52,168,83,0.16); }
+    .sync-bullet.sync-red.sync-on    { box-shadow: 0 0 0 1.8px rgba(234,67,53,0.62), 0 3px 8px rgba(234,67,53,0.16); }
+    .sync-bullet.sync-yellow.sync-on { box-shadow: 0 0 0 1.8px rgba(251,188,4,0.75), 0 3px 8px rgba(227,116,0,0.16); }
+    /* Ultimate Slide 29: Full End-to-End Neural Network Controls */
+    .fnn-char-btn { display: inline-flex; align-items: center; gap: 4px; padding: 2.5px 7px 2.5px 3px; border-radius: 999px; border: 1.5px solid #DADCE0; background: #FFFFFF; font-family: var(--font-title); font-size: 9.6px; font-weight: 700; color: #3C4043; cursor: pointer; transition: all 0.16s ease; }
+    .fnn-char-btn:hover { border-color: #4285F4; background: #F8FAFF; }
+    .fnn-char-btn.active { border-color: #1A73E8; background: #E8F0FE; color: #1A73E8; box-shadow: 0 2px 6px rgba(26,115,232,0.18); }
+    .fnn-char-btn img { width: 18px; height: 18px; border-radius: 50%; object-fit: cover; border: 1.5px solid #DADCE0; }
+    .fnn-char-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.12); }
+    .fnn-stage-card { cursor: pointer; }
 """
 
 
@@ -132,8 +212,22 @@ def _qa_slide(
     vis_a_html: str,
     notes: str,
     bar_color: str = "blue",
+    correct_choice: str | None = None,
 ) -> str:
-    choices_html = "\n            ".join(f'<div class="qa-choice">{c}</div>' for c in choices)
+    if correct_choice is None:
+        m_ans = re.search(r"Jawaban:\s*([A-Z])\b", answer_html)
+        assert m_ans, f"Tidak menemukan huruf jawaban pada {qa_id}: {answer_html[:60]}"
+        correct_choice = m_ans.group(1).upper()
+    choice_divs = []
+    for idx_c, c in enumerate(choices):
+        letter = chr(ord("A") + idx_c)
+        is_ok = "true" if letter == correct_choice.upper() else "false"
+        choice_divs.append(
+            f'<div class="qa-choice clickable" data-qa="{qa_id}" data-correct="{is_ok}" '
+            f'onclick="pickQAChoice(this, \'{qa_id}\')" role="button" tabindex="0">'
+            f'<span>{c}</span><span class="qa-choice-badge"></span></div>'
+        )
+    choices_html = "\n            ".join(choice_divs)
     return f"""
     <section class="slide" data-title="Tanya-Jawab #{qa_num}" data-notes="{notes}">
       <div class="kicker">{kicker}</div>
@@ -188,12 +282,12 @@ def _handson_step_slide(
         </div>
         <div class="card" style="background:#181A1F; border-color:#3C4043; padding:14px 16px; justify-content:space-between;">
           <div style="display:flex; align-items:center; justify-content:space-between;">
-            <span class="pill dark" style="font-size:11px;">P02_computer_vision_101.ipynb</span>
+            <span class="pill dark" style="font-size:11px;">p02_teori_neural_network.ipynb</span>
             <span style="font-family:var(--font-code); font-size:11px; color:#9AA0A6;">Python · NumPy / Keras</span>
           </div>
           <pre class="code" style="margin:0; flex:1; border:none; background:#181A1F; padding:10px 2px; font-size:12px;"><code>{code_snippet}</code></pre>
           <div style="font-size:11.5px; color:#BDC1C6; border-top:1px solid #303134; padding-top:8px;">
-            Jalankan sel satu per satu (<code>Shift + Enter</code>) dan cocokkan hasilnya dengan teori Bab 1–4.
+            Jalankan sel satu per satu (<code>Shift + Enter</code>) dan cocokkan hasilnya dengan teori {"Bab 1–3" if HIDE_BAB4_ARCH else "Bab 1–4"}.
           </div>
         </div>
       </div>
@@ -223,7 +317,7 @@ def build_slides_html(data: dict) -> str:
     s.append(
         f"""
     <!-- 01: COVER -->
-    <section class="slide active" data-title="Cover — Computer Vision 101" data-notes="Alokasi waktu: 1 menit. Selamat datang di P02 Computer Vision 101! Dari peta besar AI, ML, dan DL, lalu 4 jenis tugas Computer Vision, sampai membedah Neural Network dari satu neuron hingga arsitektur visi komputer modern." style="background: radial-gradient(circle at 82% 46%, rgba(234,67,53,0.12) 0%, rgba(66,133,244,0.10) 35%, rgba(251,188,4,0.08) 60%, #FFFFFF 100%); justify-content: space-between;">
+    <section class="slide active" data-title="Cover — Teori Neural Network" data-notes="Alokasi waktu: 1 menit. Selamat datang di P02 Teori Neural Network! Kita mulai dari peta AI, ML, dan DL beserta 4 tugas Computer Vision, lalu membedah cara kerja Neural Network dari 1 piksel sampai Backpropagation secara menyeluruh." style="background: radial-gradient(circle at 82% 46%, rgba(234,67,53,0.12) 0%, rgba(66,133,244,0.10) 35%, rgba(251,188,4,0.08) 60%, #FFFFFF 100%); justify-content: space-between;">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="885" cy="72" r="24" fill="#FCE8E6" stroke="#EA4335" stroke-width="2" opacity="0.85"/>
         <rect x="640" y="54" width="22" height="22" rx="7" transform="rotate(18 651 65)" fill="#E8F0FE" stroke="#4285F4" stroke-width="2" opacity="0.8"/>
@@ -247,13 +341,13 @@ def build_slides_html(data: dict) -> str:
       <div style="position:relative; z-index:1; display:grid; grid-template-columns: 1.24fr 1fr; align-items:center; gap:24px; margin:auto 0;">
         <div>
           <h1 style="font-family:var(--font-title); font-size:42px; font-weight:700; line-height:1.1; color:#202124; margin:0; letter-spacing:-0.6px;">
-            P02 — Computer<br />
-            <span style="display:inline-block; padding-top:2px; background:linear-gradient(90deg, #EA4335 0%, #4285F4 55%, #34A853 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Vision 101</span>
+            P02 — Teori<br />
+            <span style="display:inline-block; padding-top:2px; background:linear-gradient(90deg, #EA4335 0%, #4285F4 55%, #34A853 100%); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Neural Network</span>
           </h1>
           <div style="height:4px; width:100%; max-width:520px; border-radius:999px; margin:10px 0 12px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%);"></div>
-          <div style="font-size:16.2px; font-weight:500; color:#5F6368; line-height:1.42;">
-            Dari Peta Besar <strong>AI · ML · DL</strong> &amp; Tugas Computer Vision,<br />
-            hingga Bedah <strong>Neural Network</strong> dari 1 Neuron sampai Arsitektur Modern
+          <div style="font-size:15.8px; font-weight:500; color:#5F6368; line-height:1.45;">
+            Memahami <strong>AI · ML · DL</strong> &amp; 4 Tugas <em>Computer Vision</em>,<br />
+            hingga Cara Kerja <strong>Neural Network</strong> dari 1 Piksel sampai <em>Backpropagation</em>
           </div>
           <div style="margin-top:14px; display:inline-flex; align-items:center; gap:8px; background:#FFFFFF; border:1.5px solid #E0E3E7; border-radius:999px; padding:5px 14px 5px 7px; box-shadow:0 3px 10px rgba(234,67,53,0.08);">
             <span style="width:24px; height:24px; border-radius:50%; background:linear-gradient(135deg, #EA4335, #4285F4); color:#FFFFFF; font-family:var(--font-title); font-size:11px; font-weight:700; display:inline-flex; align-items:center; justify-content:center;">MH</span>
@@ -329,14 +423,14 @@ def build_slides_html(data: dict) -> str:
         <span class="pill blue" style="font-size:10.5px; padding:4px 10px;">AI vs ML vs DL</span>
         <span class="pill red" style="font-size:10.5px; padding:4px 10px;">4 CV Tasks</span>
         <span class="pill green" style="font-size:10.5px; padding:4px 10px;">Neuron → Layer → Network</span>
-        <span class="pill yellow" style="font-size:10.5px; padding:4px 10px;">Arsitektur CV</span>
+        <span class="pill yellow" style="font-size:10.5px; padding:4px 10px;">{"Backpropagation" if HIDE_BAB4_ARCH else "Arsitektur CV"}</span>
         <span class="pill solid-blue" style="font-size:10.5px; padding:4px 12px;">NumPy</span>
         <span class="pill" style="background:#EA4335; color:#FFFFFF; font-size:10.5px; padding:4px 12px;">Keras</span>
       </div>
     </section>
 
     <!-- 02: AGENDA & LEARNING GOALS (GABUNGAN PETA + ALUR 120M + TUJUAN) -->
-    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 5 bab, pembagian durasi 120 menit, dan 3 target belajar utama agar peserta langsung paham arah sesi tanpa pengulangan.">
+    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 3 bab teori, kuis, kamus &amp; referensi, serta sesi hands-on dalam 120 menit beserta 3 target belajar utama.">
       <div class="kicker">SESSION OVERVIEW · 120 MENIT</div>
       <h2>Agenda &amp; <span class="hl-blue">Learning Goals</span></h2>
       <div class="split-60-40" style="align-items:stretch;">
@@ -345,7 +439,7 @@ def build_slides_html(data: dict) -> str:
             <div class="step-num">01</div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">AI vs Machine Learning vs Deep Learning</span>
+                <span class="step-title">Bab 1: AI vs Machine Learning vs Deep Learning</span>
                 <span class="pill blue" style="font-size:10px; padding:2px 8px;">~9 menit</span>
               </div>
               <div class="step-desc">Bukan AI vs AI Klasik vs AI Modern, paradigma belajar ML, dan beda spesifik ML vs DL.</div>
@@ -355,8 +449,8 @@ def build_slides_html(data: dict) -> str:
             <div class="step-num red">02</div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">Task Computer Vision</span>
-                <span class="pill red" style="font-size:10px; padding:2px 8px;">~10 menit</span>
+                <span class="step-title">Bab 2: 4 Tugas Utama Computer Vision</span>
+                <span class="pill red" style="font-size:10px; padding:2px 8px;">~9,5 menit</span>
               </div>
               <div class="step-desc"><em>Classification, Object Detection, Semantic &amp; Instance Segmentation,</em> &amp; <em>Object Tracking</em>.</div>
             </div>
@@ -365,30 +459,30 @@ def build_slides_html(data: dict) -> str:
             <div class="step-num green">03</div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">Neural Network: Terkecil → Terbesar</span>
-                <span class="pill green" style="font-size:10px; padding:2px 8px;">~27 menit</span>
+                <span class="step-title">Bab 3: Bedah Total Neural Network (Tahap 1–5)</span>
+                <span class="pill green" style="font-size:10px; padding:2px 8px;">{"~26 menit" if HIDE_BAB4_ARCH else ("~22 menit" if HIDE_SLIDES_28_40 else "~27 menit")}</span>
               </div>
-              <div class="step-desc">1 Neuron → Input/Output/Hidden Layer → Forward Pass → intuisi <em>Loss &amp; Gradient Descent</em>.</div>
+              <div class="step-desc">1 Piksel → 1 Neuron → <em>Flatten</em> → <em>Weight &amp; Bias</em> → <em>Activation</em> → <em>Output</em> → <em>Backprop</em> &amp; Simulasi Full NN.</div>
             </div>
           </div>
           <div class="step-item" style="padding:8px 12px;">
-            <div class="step-num yellow">04</div>
+            <div class="step-num yellow">Q</div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">Arsitektur Neural Network untuk CV</span>
-                <span class="pill yellow" style="font-size:10px; padding:2px 8px;">~6 menit</span>
+                <span class="step-title">Kuis 5 Soal, Kamus Istilah &amp; Referensi</span>
+                <span class="pill yellow" style="font-size:10px; padding:2px 8px;">~7,5 menit</span>
               </div>
-              <div class="step-desc">Batasan MLP pada foto &amp; peta arsitektur visi komputer modern menuju P03–P04.</div>
+              <div class="step-desc">Evaluasi cepat konsep Bab 1–3, ringkasan 12 istilah kunci, dan tautan sumber belajar mandiri.</div>
             </div>
           </div>
           <div class="step-item" style="padding:8px 12px;">
-            <div class="step-num">05</div>
+            <div class="step-num">HO</div>
             <div>
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">Istirahat, Hands-On Notebook &amp; Kuis</span>
-                <span class="pill dark" style="font-size:10px; padding:2px 8px;">5m + 57m</span>
+                <span class="step-title">Hands-On Notebook &amp; Rangkuman Penutup</span>
+                <span class="pill dark" style="font-size:10px; padding:2px 8px;">~62 menit</span>
               </div>
-              <div class="step-desc">Istirahat 5m → 6 langkah praktik (42m) → Mini-Challenge (5m) → Kamus &amp; Kuis 5 soal (10m).</div>
+              <div class="step-desc">6 langkah praktik NumPy &amp; Keras pada foto Frozen (59m) → 3 Poin Utama Hari Ini (3m).</div>
             </div>
           </div>
         </div>
@@ -404,13 +498,13 @@ def build_slides_html(data: dict) -> str:
               <strong>1. Peta AI &amp; Task CV:</strong> Tepat membedakan AI/ML/DL dan memilih <em>Image Classification</em> untuk proyek Frozen.
             </div>
             <div class="mini-box" style="background:var(--tint-green); border-color:#A8DAB5;">
-              <strong>2. Bedah Neural Network:</strong> Paham alur 1 Neuron → Layer → Forward Pass dan bisa mencocokkan parameter dengan <code>model.summary()</code>.
+              <strong>2. Bedah Neural Network:</strong> Paham alur 1 Piksel → <em>Input/Hidden/Output Layer</em> → <em>Forward Pass</em> → <em>Loss</em> &amp; <em>Backpropagation</em>.
             </div>
             <div class="mini-box" style="background:var(--tint-red); border-color:#F6AEA9;">
-              <strong>3. Alasan Pindah ke CNN:</strong> Melihat langsung ledakan <strong>19,27 juta bobot</strong> pada MLP sebagai jembatan logis ke P03!
+              <strong>3. Bukti di Kode Nyata:</strong> Membangun MLP kecil di NumPy &amp; Keras lalu mencocokkan <code>model.summary()</code> dengan hitungan tangan — siap menuju P03!
             </div>
           </div>
-          <div class="callout"><strong>Ritme 120 Menit:</strong> ~58m pembuka &amp; teori interaktif → <strong>5m istirahat</strong> → 57m praktik, challenge &amp; kuis.</div>
+          <div class="callout"><strong>Ritme 120 Menit:</strong> ~58m pembuka, Bab 1–3, kuis &amp; kamus → <strong>62m</strong> sesi hands-on praktik &amp; rangkuman penutup.</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -1072,12 +1166,16 @@ def build_slides_html(data: dict) -> str:
     s.append(
         make_divider_slide(
             bg_class="bg-green",
-            kicker="BAB 03 · NEURAL NETWORK",
+            kicker="BAB 03 · NEURAL NETWORK (5 TAHAP)" if HIDE_SLIDES_28_40 else "BAB 03 · NEURAL NETWORK",
             title="Bedah Total: Neural Network",
-            description="Kita rakit dari bagian paling kecil (1 Neuron) → Input Layer → Output Layer → hubungan tiap neuron → Hidden Layer → hitungan Forward Pass → cara belajar.",
+            description=(
+                "Tahap 1 (1 Neuron) → Tahap 2 (Input Layer) → Tahap 3 (Input & Output) → Tahap 4 (Cara Hitung 4.1–4.3) → Tahap 5 (Siklus Belajar) → Simulasi Full Neural Network."
+                if HIDE_SLIDES_28_40
+                else "Kita rakit dari bagian paling kecil (1 Neuron) → Input Layer → Output Layer → hubungan tiap neuron → Hidden Layer → hitungan Forward Pass → cara belajar."
+            ),
             footer_label=FOOTER,
             data_title="Bab 3 — Bedah Neural Network",
-            notes="Alokasi waktu: 0.5 menit. Bab 3 adalah bagian inti (27 menit). Kita susun pelan-pelan dari 1 neuron tunggal, lalu kumpulan neuron menjadi layer, sampai jaringan utuh dan cara belajarnya.",
+            notes=f"Alokasi waktu: 0.5 menit. Bab 3 adalah bagian inti ({'23.0' if HIDE_SLIDES_28_40 else '27'} menit). Kita susun pelan-pelan dari 1 neuron tunggal, lalu kumpulan neuron menjadi layer, sampai simulasi perhitungan, siklus belajar, dan simulasi penuh end-to-end.",
         )
     )
 
@@ -1086,9 +1184,9 @@ def build_slides_html(data: dict) -> str:
         f"""
     <!-- 20: DIMULAI DARI 1 NEURON (1 UNIT PEMEGANG 1 ANGKA PIKSEL) -->
     <section class="slide" data-title="Bab 3A: Dimulai dari 1 Neuron — 1 Unit Pemegang 1 Angka" data-notes="Alokasi waktu: 1.5 menit. Mulai dari bagian paling kecil dan paling konkret: 1 Neuron adalah 1 unit penyusun Neural Network yang memegang 1 nilai angka. Tunjuk gambar kanan: foto asli Elsa diperbesar jadi kotak piksel 8×8, lalu 1 kotak piksel (pada gaun Elsa) masuk menjadi tepat 1 lingkaran Neuron.">
-      <div class="kicker">BAB 03 · NEURON</div>
+      <div class="kicker">BAB 03 · TAHAP 1 · 1 NEURON</div>
       <h2>Dimulai dari <span class="hl-green">1 Neuron</span>: 1 Unit Pemegang 1 Angka</h2>
-      <div class="split-40-60" style="grid-template-columns:0.88fr 1.42fr;">
+      <div class="split-40-60" style="grid-template-columns:0.82fr 1.48fr;">
         <div class="card surface" style="justify-content:space-between; gap:10px; padding:16px 18px;">
           <div class="card-top-bar bar-green"></div>
           <div style="display:flex; flex-direction:column; gap:10px;">
@@ -1098,12 +1196,20 @@ def build_slides_html(data: dict) -> str:
             </div>
             <div class="card-body" style="font-size:12.8px; line-height:1.5;">
               <ul style="gap:7px;">
-                <li><strong>Pada gambar:</strong> Foto terdiri dari banyak piksel bernilai <code>0.0–1.0</code>. Setiap <strong>1 nilai piksel</strong> diwakili oleh tepat <strong>1 Neuron</strong>!</li>
-                <li><strong>Catatan akurat:</strong> Di lapisan paling depan, neuron hanya <em>memegang nilai piksel</em>. Di lapisan berikutnya, neuron akan <em>menghitung</em> angkanya dari neuron-neuron sebelumnya.</li>
+                <li id="n1-bul-1" class="sync-bullet"><strong>Pada gambar:</strong> Foto terdiri dari banyak piksel bernilai <code style="white-space:nowrap;">0.0–1.0</code>. Setiap <strong>1 nilai piksel</strong> diwakili oleh tepat <strong>1 Neuron</strong>!</li>
+                <li id="n1-bul-2" class="sync-bullet"><strong>Catatan akurat:</strong> Di lapisan paling depan, neuron hanya <em>memegang nilai piksel</em>. Di lapisan berikutnya, neuron akan <em>menghitung</em> angkanya dari neuron-neuron sebelumnya.</li>
               </ul>
             </div>
+            <div class="mini-box" style="background:#FFFFFF; border-color:#DADCE0; padding:8px 10px; font-size:11.4px;">
+              <div style="font-weight:700; color:#202124; margin-bottom:5px;">Contoh Nilai Angka dalam 1 Neuron Piksel:</div>
+              <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; text-align:center; font-family:var(--font-code); font-size:10.5px;">
+                <div style="background:#202124; color:#FFFFFF; border-radius:7px; padding:4px 3px;"><strong>0.00</strong><div style="font-family:var(--font-body); font-size:9.3px; opacity:0.85;">Hitam gelap</div></div>
+                <div style="background:#535E96; color:#FFFFFF; border-radius:7px; padding:4px 3px;"><strong>0.42</strong><div style="font-family:var(--font-body); font-size:9.3px; opacity:0.95;">Gaun Elsa</div></div>
+                <div style="background:#F8F9FA; color:#202124; border:1px solid #DADCE0; border-radius:7px; padding:4px 3px;"><strong>1.00</strong><div style="font-family:var(--font-body); font-size:9.3px; color:#5F6368;">Putih terang</div></div>
+              </div>
+            </div>
           </div>
-          <div class="callout green" style="font-size:12px;"><strong>Langkah berikutnya:</strong> Karena 1 foto punya banyak piksel, mari kita susun semua neuron piksel tersebut ke bawah!</div>
+          <div class="callout green" style="font-size:12px;"><strong>Lanjut ke Tahap 2.1:</strong> Karena 1 foto punya banyak piksel, mari kita susun semua neuron piksel tersebut ke bawah (<em>Flatten</em>)!</div>
         </div>
         <div class="card" style="justify-content:space-between; gap:8px; padding:12px 14px;">
           <div class="card-top-bar bar-blue"></div>
@@ -1111,59 +1217,65 @@ def build_slides_html(data: dict) -> str:
           <!-- Compact Control Bar -->
           <div class="sim-bar pdf-keep-ui" style="justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:10px; padding:4px 8px; gap:6px;">
             <div style="display:flex; align-items:center; gap:5px;">
-              <button class="btn-ui" id="n1-btn-play" onclick="playN1Anim()" style="padding:3.5px 9px; font-size:10.4px; background:#34A853; border-color:#34A853;">▶ Putar</button>
+              <button class="btn-ui" id="n1-btn-play" onclick="playN1Anim()" style="padding:3.5px 9px; font-size:10.4px; background:#34A853; border-color:#34A853;">▶ Play</button>
               <button class="btn-ui outline" id="n1-btn-next" onclick="nextN1Sample()" style="padding:3.5px 8px; font-size:10.4px; color:#1A73E8; border-color:#C6DAFC;">⏭ Piksel Lain</button>
               <button class="btn-ui outline" id="n1-btn-reset" onclick="resetN1Anim()" style="padding:3.5px 8px; font-size:10.4px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
             </div>
             <span style="font-size:10.2px; color:#5F6368; font-weight:600;">Klik kotak mana saja di grid <code>8×8</code>!</span>
           </div>
 
-          <!-- Interactive 4-Stage Horizontal Visual + 60fps Motion Canvas -->
-          <div id="n1-stage-wrap" style="position:relative; flex:1; min-height:0; display:grid; grid-template-columns:120px 36px 138px 42px 84px 24px 96px; align-items:center; justify-content:space-between; padding:6px 4px;">
+          <!-- Interactive 4-Stage Horizontal Visual + 60fps Motion Canvas (LARGE 1:1 Photo & 8x8 Grid, labels aligned on TOP!) -->
+          <div id="n1-stage-wrap" style="position:relative; flex:1; min-height:0; display:grid; grid-template-columns:174px 32px 174px 38px 88px 20px 104px; align-items:center; justify-content:space-between; padding:4px 4px;">
             <canvas id="n1-motion-canvas" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:20;"></canvas>
 
-            <!-- 1. Foto Asli Elsa -->
-            <div id="n1-st1" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:7px;">
-              <div style="font-family:var(--font-title); font-size:11px; font-weight:700; color:#202124; text-align:center;">1. Foto Asli Elsa</div>
-              <div id="n1-photo-box" style="position:relative; width:116px; height:116px; border-radius:9px; overflow:hidden; border:2.5px solid #4285F4; box-shadow:0 3px 10px rgba(66,133,244,0.14);">
-                <img src="assets/P02/thumb_elsa.jpg" alt="Foto Asli Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+            <!-- 1. Foto Asli Elsa (176x176 — 1:1 with 8x8 Grid!) -->
+            <div id="n1-st1" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:9px;">
+              <div style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#202124; text-align:center; height:18px; line-height:18px; white-space:nowrap;">1. Foto Asli Elsa</div>
+              <div style="height:178px; display:flex; align-items:center; justify-content:center;">
+                <div id="n1-photo-box" style="position:relative; width:172px; height:172px; border-radius:11px; overflow:hidden; border:2.6px solid #4285F4; box-shadow:0 4px 14px rgba(66,133,244,0.16);">
+                  <img src="assets/P02/thumb_elsa.jpg" alt="Foto Asli Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+                </div>
               </div>
-              <div style="font-size:9.4px; color:#5F6368; height:14px;">&nbsp;</div>
+              <div style="font-size:10.2px; color:#5F6368; height:16px; line-height:16px;">&nbsp;</div>
             </div>
 
             <!-- Arrow 1: Zoom Piksel -->
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-              <span style="font-family:var(--font-title); font-size:8.6px; font-weight:700; color:#5F6368; text-align:center; line-height:1.15;">Zoom<br/>Piksel</span>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;">
+              <span style="font-family:var(--font-title); font-size:9.0px; font-weight:700; color:#5F6368; text-align:center; line-height:1.15;">Zoom<br/>Piksel</span>
               <svg viewBox="0 0 34 18" style="width:32px; height:16px;">
-                <line x1="2" y1="9" x2="23" y2="9" stroke="#5F6368" stroke-width="2.6" stroke-linecap="round"/>
+                <line x1="2" y1="9" x2="23" y2="9" stroke="#5F6368" stroke-width="2.8" stroke-linecap="round"/>
                 <polygon points="21,4 32,9 21,14" fill="#5F6368"/>
               </svg>
             </div>
 
-            <!-- 2. Kotak-Kotak Piksel (8x8 Interactive Grid) -->
-            <div id="n1-st2" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:7px;">
-              <div style="font-family:var(--font-title); font-size:10.6px; font-weight:700; color:#202124; text-align:center; white-space:nowrap;">2. Kotak Piksel (8×8)</div>
-              <div id="n1-grid" style="width:136px; height:136px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); gap:1px; background:#FFFFFF; border:2.2px solid #202124; border-radius:5px; overflow:hidden; box-shadow:0 3px 10px rgba(32,33,36,0.12);"></div>
-              <div id="n1-coord-lbl" style="font-family:var(--font-code); font-size:9.2px; font-weight:700; color:#C5221F; height:14px;">Baris 5, Kol 3</div>
+            <!-- 2. Kotak-Kotak Piksel (176x176 Interactive 8x8 Grid — 1:1 with Photo!) -->
+            <div id="n1-st2" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:9px;">
+              <div style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#202124; text-align:center; height:18px; line-height:18px; white-space:nowrap;">2. Kotak Piksel (8×8)</div>
+              <div style="height:178px; display:flex; align-items:center; justify-content:center;">
+                <div id="n1-grid" style="width:172px; height:172px; display:grid; grid-template-columns:repeat(8,1fr); grid-template-rows:repeat(8,1fr); gap:1px; background:#FFFFFF; border:2.4px solid #202124; border-radius:7px; overflow:hidden; box-shadow:0 4px 14px rgba(32,33,36,0.14);"></div>
+              </div>
+              <div id="n1-coord-lbl" style="font-family:var(--font-code); font-size:10.4px; font-weight:700; color:#C5221F; height:16px; line-height:16px;">Baris 5, Kol 3</div>
             </div>
 
             <!-- Arrow 2: Ambil 1 Piksel -->
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-              <span style="font-family:var(--font-title); font-size:8.6px; font-weight:700; color:#EA4335; text-align:center; line-height:1.15;">Ambil<br/>1 Piksel</span>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;">
+              <span style="font-family:var(--font-title); font-size:9.0px; font-weight:700; color:#EA4335; text-align:center; line-height:1.15;">Ambil<br/>1 Piksel</span>
               <svg viewBox="0 0 36 18" style="width:34px; height:16px;">
                 <line x1="2" y1="9" x2="25" y2="9" stroke="#EA4335" stroke-width="2.8" stroke-linecap="round"/>
                 <polygon points="23,4 34,9 23,14" fill="#EA4335"/>
               </svg>
             </div>
 
-            <!-- Magnified 1 Nilai Piksel Card -->
-            <div id="n1-st3" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:7px;">
-              <div style="font-family:var(--font-title); font-size:10.5px; font-weight:700; color:#EA4335; height:15px;">&nbsp;</div>
-              <div id="n1-pix-card" style="width:76px; height:96px; border-radius:14px; background:#6C708F; border:2.6px solid #EA4335; color:#FFFFFF; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; box-shadow:0 4px 12px rgba(234,67,53,0.18);">
-                <div id="n1-pix-val" style="font-family:var(--font-code); font-size:20px; font-weight:700; line-height:1;">0.45</div>
-                <div style="font-size:9.5px; opacity:0.9;">nilai 0–1</div>
+            <!-- 3. Nilai Piksel Card -->
+            <div id="n1-st3" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:9px;">
+              <div style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#EA4335; text-align:center; height:18px; line-height:18px; white-space:nowrap;">3. Nilai Piksel</div>
+              <div style="height:178px; display:flex; align-items:center; justify-content:center;">
+                <div id="n1-pix-card" style="width:86px; height:114px; border-radius:15px; background:#6C708F; border:2.8px solid #EA4335; color:#FFFFFF; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px; box-shadow:0 5px 14px rgba(234,67,53,0.20);">
+                  <div id="n1-pix-val" style="font-family:var(--font-code); font-size:23px; font-weight:700; line-height:1;">0.45</div>
+                  <div style="font-size:10.5px; opacity:0.92;">nilai 0–1</div>
+                </div>
               </div>
-              <div style="font-family:var(--font-title); font-size:10.4px; font-weight:700; color:#EA4335; text-align:center;">1 Nilai Piksel</div>
+              <div style="font-size:10.2px; color:#5F6368; height:16px; line-height:16px;">&nbsp;</div>
             </div>
 
             <!-- Arrow 3: Pixel -> Neuron -->
@@ -1174,23 +1286,22 @@ def build_slides_html(data: dict) -> str:
               </svg>
             </div>
 
-            <!-- 3. 1 Neuron Glowing Circle -->
-            <div id="n1-st4" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:6px;">
-              <div style="height:15px;">&nbsp;</div>
-              <div id="n1-neuron-ring" style="width:90px; height:90px; border-radius:50%; background:#E8F0FE; border:2.2px solid #C6DAFC; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(66,133,244,0.18);">
-                <div id="n1-neuron-core" style="width:72px; height:72px; border-radius:50%; background:#4285F4; border:2.5px solid #FFFFFF; color:#FFFFFF; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
-                  <div id="n1-neuron-idx" style="font-family:var(--font-code); font-size:10.2px; font-weight:700; color:#D2E3FC; line-height:1;">x₁</div>
-                  <div id="n1-neuron-val" style="font-family:var(--font-code); font-size:18px; font-weight:700; line-height:1.05;">0.45</div>
+            <!-- 4. Neuron Glowing Circle -->
+            <div id="n1-st4" class="n1-stage-on" style="display:flex; flex-direction:column; align-items:center; gap:9px;">
+              <div style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#1A73E8; text-align:center; height:18px; line-height:18px; white-space:nowrap;">4. Neuron</div>
+              <div style="height:178px; display:flex; align-items:center; justify-content:center;">
+                <div id="n1-neuron-ring" style="width:102px; height:102px; border-radius:50%; background:#E8F0FE; border:2.4px solid #C6DAFC; display:flex; align-items:center; justify-content:center; box-shadow:0 5px 16px rgba(66,133,244,0.20);">
+                  <div id="n1-neuron-core" style="width:82px; height:82px; border-radius:50%; background:#4285F4; border:2.8px solid #FFFFFF; color:#FFFFFF; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;">
+                    <div id="n1-neuron-idx" style="font-family:var(--font-code); font-size:11.5px; font-weight:700; color:#D2E3FC; line-height:1;">x₁</div>
+                    <div id="n1-neuron-val" style="font-family:var(--font-code); font-size:21px; font-weight:700; line-height:1.05;">0.45</div>
+                  </div>
                 </div>
               </div>
-              <div style="text-align:center; line-height:1.25;">
-                <div style="font-family:var(--font-title); font-size:11px; font-weight:700; color:#1A73E8;">3. 1 Neuron</div>
-                <div style="font-size:9.3px; color:#5F6368;">(pemegang 1 angka)</div>
-              </div>
+              <div style="font-size:10.0px; color:#5F6368; text-align:center; height:16px; line-height:16px; white-space:nowrap;">(pemegang 1 angka)</div>
             </div>
           </div>
 
-          <div id="n1-caption" style="font-size:11.4px; font-weight:700; color:#202124; text-align:center; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:6px 10px;">
+          <div id="n1-caption" class="sync-card sync-no-badge" style="font-size:11.4px; font-weight:700; color:#202124; text-align:center; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:6px 10px;">
             Setiap 1 kotak piksel pada foto Elsa diwakili oleh tepat 1 lingkaran Neuron yang memegang angkanya.
           </div>
         </div>
@@ -1199,34 +1310,39 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 21: ANIMASI INTERAKTIF FLATTEN (KIRI->KANAN, ATAS->BAWAH -> INPUT LAYER) -->
-    <section class="slide" data-title="Bab 3A: Animasi Flatten — Piksel Disusun ke Bawah Menjadi Input Layer" data-notes="Alokasi waktu: 1.5 menit. Klik tombol 'Putar Animasi' (atau '+1 Piksel' pelan-pelan) agar peserta melihat langsung tiap piksel foto Elsa (4×4 = 16 piksel) dipindai dari kiri ke kanan, atas ke bawah, lalu terbang dan bertumpuk vertikal menjadi 1 kolom Input Layer berisi 16 neuron!">
-      <div class="kicker">BAB 03 · FLATTEN &amp; INPUT LAYER</div>
+    <section class="slide" data-title="Bab 3A: Animasi Flatten — Piksel Disusun ke Bawah Menjadi Input Layer" data-notes="Alokasi waktu: 1.5 menit. Klik tombol 'Play' (atau '+1 Piksel' pelan-pelan) agar peserta melihat langsung tiap piksel foto Elsa (4×4 = 16 piksel) dipindai dari kiri ke kanan, atas ke bawah, lalu terbang dan bertumpuk vertikal menjadi 1 kolom Input Layer berisi 16 neuron!">
+      <div class="kicker">BAB 03 · TAHAP 2.1 · FLATTEN → INPUT LAYER</div>
       <h2>Neuron Disusun ke Bawah (<span class="hl-blue">Flatten</span>) = <span class="hl-green">Input Layer</span></h2>
-      <div class="sim-bar pdf-keep-ui" id="flatten-ctrl" style="margin-bottom:6px; justify-content:space-between;">
-        <div style="display:flex; flex-wrap:wrap; gap:6px; align-items:center;">
-          <button class="btn-ui" id="flt-btn-play" onclick="playFlattenAnim()" style="padding:5px 12px; font-size:11.5px;">▶ Putar Animasi</button>
-          <button class="btn-ui outline" id="flt-btn-step" onclick="stepFlattenAnim()" style="padding:5px 11px; font-size:11.5px;">⏭ +1 Piksel</button>
-          <button class="btn-ui outline" id="flt-btn-reset" onclick="resetFlattenAnim()" style="padding:5px 11px; font-size:11.5px;">↺ Reset</button>
-          <button class="btn-ui outline" id="flt-btn-done" onclick="completeFlattenAnim()" style="padding:5px 11px; font-size:11.5px;">✓ Semua (16/16)</button>
+      <div class="sim-bar pdf-keep-ui" id="flatten-ctrl" style="margin-bottom:6px; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:4px 9px; gap:6px;">
+        <div style="display:flex; flex-wrap:wrap; gap:5px; align-items:center;">
+          <button class="btn-ui" id="flt-btn-play" onclick="playFlattenAnim()" style="padding:4px 10px; font-size:10.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
+          <button class="btn-ui outline" id="flt-btn-step" onclick="stepFlattenAnim()" style="padding:4px 9px; font-size:10.6px; color:#137333; border-color:#A8DAB5;">⏭ +1 Piksel</button>
+          <button class="btn-ui outline" id="flt-btn-reset" onclick="resetFlattenAnim()" style="padding:4px 9px; font-size:10.6px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+          <span style="width:1px; height:16px; background:#DADCE0; margin:0 2px;"></span>
+          <button class="btn-ui outline" id="flt-btn-done" onclick="completeFlattenAnim()" style="padding:4px 9px; font-size:10.4px;">✓ Semua (16/16)</button>
         </div>
-        <span class="pill green" id="flatten-status" style="font-size:11px;">Input Layer: 16 / 16 neuron (Selesai!)</span>
+        <span class="pill green" id="flatten-status" style="font-size:10.4px;">Input Layer: 16 / 16 neuron (Selesai!)</span>
       </div>
-      <div style="flex:1; min-height:0; display:grid; grid-template-columns:154px 44px 1fr; gap:6px; align-items:stretch; background:#FFFFFF; border:1.5px solid #C6DAFC; border-radius:14px; padding:8px 12px; margin-bottom:7px;">
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:flex-start; text-align:center; padding:17px 0 6px; gap:18px;">
-          <div style="font-family:var(--font-title); font-size:12.6px; font-weight:700; color:#202124; line-height:1.2;">Foto Elsa (Crop)</div>
-          <div style="position:relative; width:146px; height:146px; border-radius:11px; overflow:hidden; border:2.5px solid #4285F4; box-shadow:0 4px 12px rgba(66,133,244,0.14);">
-            <img src="assets/P02/thumb_elsa_flatten.jpg" alt="Foto Asli Elsa (Crop Figur)" style="width:100%; height:100%; object-fit:cover; display:block;"/>
-            <!-- Subtle 4x4 grid lines matching the 16 pixel blocks -->
-            <div style="position:absolute; inset:0; background-image:linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.55) 1px, transparent 1px); background-size:25% 25%; pointer-events:none;"></div>
+      <div id="flt-stage-wrap" style="position:relative; flex:1; min-height:0; display:grid; grid-template-columns:222px 40px 1fr; gap:6px; align-items:stretch; background:#FFFFFF; border:1.5px solid #C6DAFC; border-radius:14px; padding:8px 12px; margin-bottom:7px;">
+        <canvas id="flt-split-canvas" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:20;"></canvas>
+        <!-- Left column: EXACT 1:1 size & vertical alignment with the 4x4 grid inside #flatten-canvas! -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center;">
+          <div style="display:flex; flex-direction:column; align-items:center; width:218px; height:324px; padding-top:14px; box-sizing:border-box;">
+            <div style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#202124; line-height:16px; height:16px; margin-bottom:14px;">Foto Elsa (Crop)</div>
+            <div id="flt-photo-box" style="position:relative; width:218px; height:218px; border-radius:11px; overflow:hidden; border:2.5px solid #4285F4; box-shadow:0 4px 12px rgba(66,133,244,0.14); flex-shrink:0;">
+              <img id="flt-elsa-img" src="assets/P02/thumb_elsa_flatten.jpg" alt="Foto Asli Elsa (Crop Figur)" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+              <!-- Subtle 4x4 grid lines matching the 16 pixel blocks -->
+              <div style="position:absolute; inset:0; background-image:linear-gradient(to right, rgba(255,255,255,0.55) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.55) 1px, transparent 1px); background-size:25% 25%; pointer-events:none;"></div>
+            </div>
+            <div style="font-size:9.8px; color:#5F6368; line-height:1.3; margin-top:11px;">Dibagi <code>4×4</code> (16 piksel nyata) agar warna asli &amp; urutan pindai jelas.</div>
           </div>
-          <div style="font-size:10px; color:#5F6368; line-height:1.35;">Dibagi <code>4×4</code> (16 piksel nyata) agar warna asli &amp; urutan pindai terlihat jelas.</div>
         </div>
-        <!-- Connecting arrow from Original Elsa Photo -> 4x4 Pixel Grid -->
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px;">
-          <span style="font-family:var(--font-title); font-size:9.8px; font-weight:700; color:#1A73E8; text-align:center; line-height:1.15;">Bagi<br/>4×4</span>
-          <svg viewBox="0 0 44 22" style="width:42px; height:22px;">
-            <line x1="2" y1="11" x2="32" y2="11" stroke="#4285F4" stroke-width="3.2" stroke-linecap="round"/>
-            <polygon points="30,4 42,11 30,18" fill="#4285F4"/>
+        <!-- Connecting arrow centered vertically with the 224x224 Photo & 4x4 Grid -->
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; padding-bottom:18px;">
+          <span style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#1A73E8; text-align:center; line-height:1.15;">Bagi<br/>4×4</span>
+          <svg viewBox="0 0 40 22" style="width:38px; height:20px;">
+            <line x1="2" y1="11" x2="29" y2="11" stroke="#4285F4" stroke-width="3.2" stroke-linecap="round"/>
+            <polygon points="27,4 39,11 27,18" fill="#4285F4"/>
           </svg>
         </div>
         <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center; min-height:0;">
@@ -1234,17 +1350,17 @@ def build_slides_html(data: dict) -> str:
         </div>
       </div>
       <div class="grid-3" style="flex:0 0 auto; gap:10px;">
-        <div class="card tint-blue" style="padding:8px 11px; gap:2px;">
+        <div id="flt-card-1" class="card tint-blue sync-card" style="padding:8px 11px; gap:2px;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title" style="font-size:12.4px; color:#1A73E8;">1. Pindai Kiri → Kanan, Atas → Bawah</div>
           <div style="font-size:11.1px; color:#3C4043; line-height:1.36;">Baris 1 (<code>x₁..x₄</code>), Baris 2 (<code>x₅..x₈</code>), Baris 3 (<code>x₉..x₁₂</code>), lalu Baris 4 (<code>x₁₃..x₁₆</code>).</div>
         </div>
-        <div class="card tint-yellow" style="padding:8px 11px; gap:2px;">
+        <div id="flt-card-2" class="card tint-yellow sync-card" style="padding:8px 11px; gap:2px;">
           <div class="card-top-bar bar-yellow"></div>
           <div class="card-title" style="font-size:12.4px; color:#B06000;">2. Ubah &amp; Susun Bertumpuk (<em>Flatten</em>)</div>
           <div style="font-size:11.1px; color:#3C4043; line-height:1.36;">Setiap kotak piksel menjadi <strong>1 neuron</strong> lalu ditumpuk rapi vertikal dari atas ke bawah.</div>
         </div>
-        <div class="card tint-green" style="padding:8px 11px; gap:2px;">
+        <div id="flt-card-3" class="card tint-green sync-card" style="padding:8px 11px; gap:2px;">
           <div class="card-top-bar bar-green"></div>
           <div class="card-title" style="font-size:12.4px; color:#137333;">3. Terbentuk <em>Input Layer</em></div>
           <div style="font-size:11.1px; color:#3C4043; line-height:1.36;">Kumpulan neuron dalam 1 kolom vertikal disebut <strong>Layer</strong> — lapisan pertama ini adalah <strong>Input Layer</strong>!</div>
@@ -1255,13 +1371,13 @@ def build_slides_html(data: dict) -> str:
 
     <!-- 22: INPUT LAYER SKALA FOTO BERWARNA (RGB) + SIMULATOR #3 (FULL-WIDTH 3-STAGE TRANSFORM) -->
     <section class="slide" data-title="Bab 3A: Berapa Jumlah Neuron di Input Layer Foto Berwarna?" data-notes="Alokasi waktu: 2 menit. Lanjutkan dari contoh mini 4×4 (16 neuron) ke foto Frozen berwarna RGB secara penuh: tunjukkan dimensi Tinggi (H) × Lebar (W) × Channel (C) di foto original Elsa, kurung kurawal total neuron di hasil Flatten 1D, lalu angka piksel 0.0–1.0 di Input Layer. Coba klik ketiga preset Frozen.">
-      <div class="kicker">BAB 03 · INPUT LAYER</div>
-      <h2><span class="hl-blue">Input Layer</span>: <code>Tinggi × Lebar × Channel</code></h2>
+      <div class="kicker">BAB 03 · TAHAP 2.2 · SKALA INPUT LAYER (H×W×C)</div>
+      <h2><span class="hl-blue">Input Layer</span>: <span class="hl-red">Tinggi × Lebar × Channel</span></h2>
 
       <!-- Compact Single-Row Control Bar (Per-Pixel Animation + Frozen Presets + Live Sliders) -->
       <div class="sim-bar pdf-keep-ui" id="in-presets" style="margin-bottom:8px; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:12px; padding:5px 10px; gap:6px;">
         <div style="display:flex; flex-wrap:wrap; gap:5px; align-items:center;">
-          <button class="btn-ui" id="in-btn-play" onclick="playInProcess()" style="padding:4px 9px; font-size:10.6px; background:#34A853; border-color:#34A853;">▶ Putar</button>
+          <button class="btn-ui" id="in-btn-play" onclick="playInProcess()" style="padding:4px 9px; font-size:10.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
           <button class="btn-ui outline" id="in-btn-step" onclick="stepInProcess()" style="padding:4px 8px; font-size:10.6px; color:#137333; border-color:#A8DAB5;">⏭ +1 Piksel</button>
           <button class="btn-ui outline" id="in-btn-reset" onclick="resetInProcessZero()" style="padding:4px 8px; font-size:10.6px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
           <span style="width:1px; height:18px; background:#DADCE0; margin:0 2px;"></span>
@@ -1404,7 +1520,7 @@ def build_slides_html(data: dict) -> str:
           </div>
 
           <!-- Dynamic Vertical Neuron Stack (click any row to trace origin!) -->
-          <div id="in-layer-nodes" style="display:flex; flex-direction:column; justify-content:space-between; gap:5px; width:100%; flex:1; margin:6px 0; background:#FFFFFF; border:1px solid #C6DAFC; border-radius:11px; padding:8px 10px;"></div>
+          <div id="in-layer-nodes" style="display:flex; flex-direction:column; justify-content:space-between; gap:3px; width:100%; flex:1; margin:5px 0; background:#FFFFFF; border:1px solid #C6DAFC; border-radius:11px; padding:6px 9px;"></div>
 
           <div style="font-size:10.3px; color:#1A73E8; font-weight:700; text-align:center;">
             Klik piksel di Foto Elsa atau neuron di atas!
@@ -1412,26 +1528,26 @@ def build_slides_html(data: dict) -> str:
         </div>
       </div>
 
-      <div id="in-live-callout" class="callout" style="margin-top:7px; flex:0 0 auto; font-size:11.8px; padding:7px 12px;">
-        <strong>Aturan cepat:</strong> Pada foto berwarna (<code>RGB = 3</code>), tiap <strong>1 kotak piksel</strong> pecah menjadi <strong>3 neuron</strong> (<code>R, G, B</code>). Klik <strong>▶ Putar</strong>, <strong>⏭ +1 Piksel</strong>, atau klik kotak piksel mana saja pada Foto Elsa!
+      <div id="in-live-callout" class="callout sync-card sync-no-badge" style="margin-top:7px; flex:0 0 auto; font-size:11.8px; padding:7px 12px;">
+        <strong>Aturan cepat:</strong> Pada foto berwarna (<code>RGB = 3</code>), tiap <strong>1 kotak piksel</strong> pecah menjadi <strong>3 neuron</strong> (<code>R, G, B</code>). Klik <strong>▶ Play</strong>, <strong>⏭ +1 Piksel</strong>, atau klik kotak piksel mana saja pada Foto Elsa!
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 23: INPUT & OUTPUT LAYER (INTERACTIVE 60FPS PIXEL-BY-PIXEL & NEURON-BY-NEURON MOTION) -->
-    <section class="slide" data-title="Bab 3B: Input Layer &amp; Output Layer" data-notes="Alokasi waktu: 1.5 menit. Hubungkan Input Layer (150.528 neuron piksel) langsung ke Output Layer di ujung jaringan dengan animasi interaktif pixel-by-pixel, neuron-by-neuron, dan koneksi neuron-by-neuron. Klik Putar Semua, +1 Langkah, atau klik langsung piksel foto / neuron input / neuron output untuk mendemonstrasikan bagaimana 1 neuron input terhubung ke seluruh 5 neuron output.">
-      <div class="kicker">BAB 03 · INPUT &amp; OUTPUT LAYER</div>
+    <section class="slide" data-title="Bab 3B: Input Layer &amp; Output Layer" data-notes="Alokasi waktu: 1.5 menit. Hubungkan Input Layer (150.528 neuron piksel) langsung ke Output Layer di ujung jaringan dengan animasi interaktif pixel-by-pixel, neuron-by-neuron, dan koneksi neuron-by-neuron. Klik Play, +1 Langkah, atau klik langsung piksel foto / neuron input / neuron output untuk mendemonstrasikan bagaimana 1 neuron input terhubung ke seluruh 5 neuron output.">
+      <div class="kicker">BAB 03 · TAHAP 3 · INPUT &amp; OUTPUT LAYER</div>
       <h2><span class="hl-blue">Input Layer</span> &amp; <span class="hl-green">Output Layer</span></h2>
 
       <!-- Compact Single-Row Interactive Control Bar -->
       <div class="sim-bar pdf-keep-ui" style="margin-bottom:6px; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:4px 9px; gap:6px;">
         <div style="display:flex; align-items:center; gap:5px; flex-shrink:0;">
-          <button class="btn-ui" id="io-btn-play" onclick="playIoMotion()" style="padding:3.5px 9px; font-size:10.4px; background:#34A853; border-color:#34A853;">▶ Putar Semua</button>
+          <button class="btn-ui" id="io-btn-play" onclick="playIoMotion()" style="padding:3.5px 9px; font-size:10.4px; background:#34A853; border-color:#34A853;">▶ Play</button>
           <button class="btn-ui outline" id="io-btn-step" onclick="stepIoMotion()" style="padding:3.5px 8px; font-size:10.4px; color:#137333; border-color:#A8DAB5;">⏭ +1 Langkah</button>
           <button class="btn-ui outline" id="io-btn-reset" onclick="resetIoMotionZero()" style="padding:3.5px 8px; font-size:10.4px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
         </div>
         <div id="io-live-status" style="font-size:10.5px; color:#3C4043; font-weight:500; text-align:right; flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-          <strong style="color:#1A73E8;">Interaktif:</strong> Klik <strong>▶ Putar Semua</strong>, <strong>⏭ +1 Langkah</strong>, atau klik langsung <strong>piksel foto / neuron Input / neuron Output</strong>!
+          <strong style="color:#1A73E8;">Interaktif:</strong> Klik <strong>▶ Play</strong>, <strong>⏭ +1 Langkah</strong>, atau klik langsung <strong>piksel foto / neuron Input / neuron Output</strong>!
         </div>
       </div>
 
@@ -1442,7 +1558,7 @@ def build_slides_html(data: dict) -> str:
         <!-- 1. FOTO ORIGINAL (CLICKABLE 8x8 PIXEL GRID!) -->
         <div id="io-stage-1" class="io-stage" style="display:flex; flex-direction:column; align-items:center; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:12px; padding:7px 7px;">
           <div style="font-family:var(--font-title); font-size:11.2px; font-weight:700; color:#202124;">1. Foto Original</div>
-          <div id="io-img-frame" class="in-clickable" onclick="triggerIoPixelClick(event)" title="Klik kotak piksel mana saja untuk melacak alurnya hingga Output Layer!" style="position:relative; width:108px; height:108px; border-radius:10px; overflow:hidden; border:2.5px solid #4285F4; box-shadow:0 3px 10px rgba(66,133,244,0.16);">
+          <div id="io-img-frame" class="in-clickable" onclick="triggerIoPixelClick(event)" title="Klik kotak piksel mana saja untuk melacak alurnya hingga Output Layer!" style="position:relative; width:102px; height:102px; border-radius:10px; overflow:hidden; border:2.5px solid #4285F4; box-shadow:0 3px 10px rgba(66,133,244,0.16);">
             <img src="assets/P02/thumb_elsa.jpg" alt="Foto Original Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
             <div style="position:absolute; inset:0; background-image:linear-gradient(to right, rgba(255,255,255,0.45) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.45) 1px, transparent 1px); background-size:12.5% 12.5%; pointer-events:none;"></div>
           </div>
@@ -1621,22 +1737,22 @@ def build_slides_html(data: dict) -> str:
 
       <!-- 4 NUMBERED EXPLANATION CARDS MATCHING STAGES 1 -> 2 -> 3 -> 4 ABOVE -->
       <div class="grid-4" style="flex:0 0 auto; gap:7px;">
-        <div id="io-card-1" class="card surface io-card" style="padding:6px 9px; gap:2px;">
+        <div id="io-card-1" class="card surface io-card sync-card" style="padding:6px 9px; gap:2px;">
           <div class="card-top-bar" style="background:#5F6368;"></div>
           <div class="card-title" style="font-size:11.4px; color:#202124;">1. Foto Original</div>
           <div style="font-size:10.3px; color:#3C4043; line-height:1.32;">Foto asli Frozen (<code>224×224×3</code>) dipindai piksel demi piksel sebagai <strong>data mentah</strong> awal.</div>
         </div>
-        <div id="io-card-2" class="card tint-blue io-card" style="padding:6px 9px; gap:2px;">
+        <div id="io-card-2" class="card tint-blue io-card sync-card" style="padding:6px 9px; gap:2px;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title" style="font-size:11.4px; color:#1A73E8;">2. Input Layer</div>
           <div style="font-size:10.3px; color:#3C4043; line-height:1.32;">Semua nilai piksel di-<em>flatten</em> jadi <strong>150.528 neuron</strong> — selalu jauh lebih banyak daripada <em>Output Layer</em>.</div>
         </div>
-        <div id="io-card-3" class="card tint-green io-card" style="padding:6px 9px; gap:2px;">
+        <div id="io-card-3" class="card tint-green io-card sync-card" style="padding:6px 9px; gap:2px;">
           <div class="card-top-bar bar-green"></div>
           <div class="card-title" style="font-size:11.4px; color:#137333;">3. Output Layer</div>
           <div style="font-size:10.3px; color:#3C4043; line-height:1.32;">Selalu <strong>1 layer</strong>, jumlah <strong>neuron = jumlah kelas</strong> (5 neuron); tiap neuron input terhubung ke semua 5 output.</div>
         </div>
-        <div id="io-card-4" class="card tint-yellow io-card" style="padding:6px 9px; gap:2px;">
+        <div id="io-card-4" class="card tint-yellow io-card sync-card" style="padding:6px 9px; gap:2px;">
           <div class="card-top-bar bar-yellow"></div>
           <div class="card-title" style="font-size:11.4px; color:#B06000;">4. Hasil Klasifikasi</div>
           <div style="font-size:10.3px; color:#3C4043; line-height:1.32;">Skor 5 neuron diubah jadi persentase (<code>Softmax</code>), lalu <strong>peluang tertinggi</strong> (<strong>Elsa 89%</strong>) dipilih!</div>
@@ -1651,21 +1767,21 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 24: SIMULASI TRAINING MATEMATIS (DATASET 5 KELAS -> INPUT LAYER x WEIGHT + BIAS -> OUTPUT LAYER) -->
-    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: 2 menit. Jawab pertanyaan inti setelah Slide 23: bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Simulasi Training agar peserta melihat tiap gambar masuk ke Input Layer (versi mini 4 fitur piksel murni), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
-      <div class="kicker">BAB 03 · PERHITUNGAN MATEMATIS &amp; TRAINING</div>
+    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else ("3" if HIDE_SLIDES_28_40 else "2")} menit. Jawab pertanyaan inti setelah Slide 23: bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Play agar peserta melihat tiap gambar masuk ke Input Layer utuh 150.528 neuron piksel (224×224×3, tampil x1..x3, elipsis +150.522 piksel lain, x150.526..x150.528), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
+      <div class="kicker">BAB 03 · TAHAP 4 · SIMULASI TRAINING (ALUR UTUH)</div>
       <h2><span class="hl-green">Simulasi Training</span>: Bagaimana Neural Network Mengenali <span class="hl-blue">Gambar</span>?</h2>
 
       <!-- Compact Control Bar -->
       <div class="sim-bar pdf-keep-ui" id="tm-ctrl" style="margin-bottom:6px; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:4px 9px; gap:6px;">
         <div style="display:flex; align-items:center; gap:5px;">
-          <button class="btn-ui" id="tm-btn-train" onclick="playTmSim()" style="padding:3.5px 9px; font-size:10.3px; background:#34A853; border-color:#34A853;">▶ Simulasi Training</button>
+          <button class="btn-ui" id="tm-btn-train" onclick="playTmSim()" style="padding:3.5px 9px; font-size:10.3px; background:#34A853; border-color:#34A853;">▶ Play</button>
           <button class="btn-ui outline" id="tm-btn-step" onclick="stepTmPhase()" style="padding:3.5px 8px; font-size:10.2px; color:#137333; border-color:#A8DAB5;">⏭ +1 Tahap Hitung</button>
           <button class="btn-ui outline" id="tm-btn-reset" onclick="resetTmSim()" style="padding:3.5px 8px; font-size:10.2px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
           <span style="width:1px; height:16px; background:#DADCE0; margin:0 2px;"></span>
           <button class="btn-ui outline" data-tm="before" onclick="setTmMode('before')" style="padding:3.5px 8px; font-size:10.1px;">Sebelum Training (Acak)</button>
           <button class="btn-ui outline" data-tm="after" onclick="setTmMode('after')" style="padding:3.5px 8px; font-size:10.1px;">Sesudah Training (Terlatih)</button>
         </div>
-        <span class="pill blue" id="tm-status-pill" style="font-size:10.0px; padding:3px 10px;">Siap · Pilih Foto / Simulasi</span>
+        <span class="pill blue" id="tm-status-pill" style="font-size:10.0px; padding:3px 10px;">Siap · Pilih Foto / ▶ Play</span>
       </div>
 
       <!-- HERO INTERACTIVE STAGE: 5 LABELED FROZEN PHOTOS -> INPUT x WEIGHT + BIAS -> ACTIVATION (SOFTMAX) -> OUTPUT -->
@@ -1697,33 +1813,33 @@ def build_slides_html(data: dict) -> str:
           <!-- 2-STAGE TRANSPARENT MATHEMATICAL PROCESS: (A) WEIGHT + BIAS -> (B) ACTIVATION FUNCTION (SOFTMAX) -->
           <div style="display:grid; grid-template-columns:1.36fr 16px 1.04fr; gap:5px; align-items:stretch;">
             <div id="tm-math-wb" class="tm-math-card" style="background:#FEF7E0; border:1.5px solid #FDE293; display:flex; flex-direction:column; justify-content:center; gap:2px;">
-              <div style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#B06000;">A. Proses Weight + Bias &nbsp;<code>z = Σ(x·w) + b</code></div>
+              <div style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#B06000;">Tahap 4.1 · Weight + Bias &nbsp;<code>z = Σ(x·w) + b</code></div>
               <div id="tm-math-wb-eq" style="font-family:var(--font-code); font-size:9.2px; color:#202124; line-height:1.32;"></div>
             </div>
             <div style="display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:800; color:#137333;">→</div>
             <div id="tm-math-act" class="tm-math-card" style="background:#E6F4EA; border:1.5px solid #A8DAB5; display:flex; flex-direction:column; justify-content:center; gap:2px;">
-              <div style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#137333;">B. Activation Function (<code>Softmax</code>)</div>
+              <div style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#137333;">Tahap 4.2 · Activation (<code>Softmax</code>)</div>
               <div id="tm-math-act-eq" style="font-family:var(--font-code); font-size:9.2px; color:#202124; line-height:1.32;"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- 3 COMPACT STEP EXPLANATION CARDS -->
+      <!-- 3 COMPACT STEP EXPLANATION CARDS (synced live with animation phases!) -->
       <div class="grid-3" style="flex:0 0 auto; gap:8px;">
-        <div class="card surface" style="padding:5.5px 9px; gap:2px;">
+        <div id="tm-card-1" class="card surface sync-card" style="padding:5.5px 9px; gap:2px;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title" style="font-size:11.4px; color:#1A73E8;">1. Data Berlabel Masuk</div>
           <div style="font-size:10.1px; color:#3C4043; line-height:1.3;">Foto dari 5 kelas + <strong>Label</strong> masuk ke <em>Input Layer</em> membawa nilai piksel nyatanya.</div>
         </div>
-        <div class="card tint-yellow" style="padding:5.5px 9px; gap:2px;">
+        <div id="tm-card-2" class="card tint-yellow sync-card" style="padding:5.5px 9px; gap:2px;">
           <div class="card-top-bar bar-yellow"></div>
-          <div class="card-title" style="font-size:11.4px; color:#B06000;">2. Weight + Bias → Skor <code>z</code></div>
+          <div class="card-title" style="font-size:11.4px; color:#B06000;">2. Weight + Bias → Skor <code>z</code> <span style="font-weight:600; opacity:0.85;">(4.1)</span></div>
           <div style="font-size:10.1px; color:#3C4043; line-height:1.3;">Input dikali <strong>Weight (<code>w</code>)</strong> lalu ditambah <strong>Bias (<code>b</code>)</strong> menghasilkan skor mentah <code>z</code> tiap kelas.</div>
         </div>
-        <div class="card tint-green" style="padding:5.5px 9px; gap:2px;">
+        <div id="tm-card-3" class="card tint-green sync-card" style="padding:5.5px 9px; gap:2px;">
           <div class="card-top-bar bar-green"></div>
-          <div class="card-title" style="font-size:11.4px; color:#137333;">3. Activation Function → Hasil Akhir</div>
+          <div class="card-title" style="font-size:11.4px; color:#137333;">3. Activation → Output Akhir <span style="font-weight:600; opacity:0.85;">(4.2–4.3)</span></div>
           <div style="font-size:10.1px; color:#3C4043; line-height:1.3;"><strong>Softmax</strong> mengubah <code>z</code> jadi probabilitas <code>0–100%</code>; <em>training</em> menguatkan <code>w</code> &amp; <code>b</code> ke kelas benar!</div>
         </div>
       </div>
@@ -1731,14 +1847,14 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 25: WEIGHT & BIAS — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: 2 menit. Bedah khusus komponen pertama dari Slide 24: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
-      <div class="kicker">BAB 03 · WEIGHT &amp; BIAS</div>
+    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen pertama dari Slide 24: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
+      <div class="kicker">BAB 03 · TAHAP 4.1 · WEIGHT &amp; BIAS</div>
       <h2><span class="hl-blue">Weight</span> &amp; <span class="hl-yellow">Bias</span>: Bagaimana Neural Network Menimbang Fitur Gambar</h2>
 
       <div style="display:grid; grid-template-columns:0.88fr 1.32fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
         <!-- LEFT COLUMN: APA ITU, KENAPA PERLU, CARA KERJA -->
         <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
-          <div class="card tint-blue" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="wb-card-1" class="card tint-blue sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-blue"></div>
             <div class="card-title" style="font-size:12.6px; color:#1A73E8;">1. Apa Itu Weight (<code>w</code>) &amp; Bias (<code>b</code>)?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
@@ -1747,7 +1863,7 @@ def build_slides_html(data: dict) -> str:
             </div>
           </div>
 
-          <div class="card tint-yellow" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="wb-card-2" class="card tint-yellow sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-yellow"></div>
             <div class="card-title" style="font-size:12.6px; color:#B06000;">2. Kenapa Keduanya Diperlukan?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
@@ -1756,173 +1872,384 @@ def build_slides_html(data: dict) -> str:
             </div>
           </div>
 
-          <div class="card tint-green" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="wb-card-3" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-green"></div>
             <div class="card-title" style="font-size:12.6px; color:#137333;">3. Bagaimana Cara Kerjanya?</div>
-            <div class="formula-box" style="padding:4px 8px; font-size:11.2px; margin:2px 0; background:#FFFFFF; border-color:#A8DAB5;">z = (x₁·w₁ + x₂·w₂ + x₃·w₃ + x₄·w₄) + b</div>
-            <div style="font-size:10.9px; color:#3C4043; line-height:1.36;">Saat <em>training</em>, mesin menggeser <code>w</code> &amp; <code>b</code> otomatis agar skor <code>z</code> foto target jadi <strong>positif tinggi</strong> dan karakter lain <strong>rendah/negatif</strong>.</div>
+            <div class="formula-box" style="padding:4px 8px; font-size:10.3px; margin:2px 0; background:#FFFFFF; border-color:#A8DAB5;">z = (x₁·w₁ + x₂·w₂ + ... + x₁₅₀.₅₂₈·w₁₅₀.₅₂₈) + b</div>
+            <div style="font-size:10.9px; color:#3C4043; line-height:1.36;">Saat <em>training</em>, tiap karakter punya kombinasi <code>w</code> &amp; <code>b</code> sendiri agar skor <code>z</code> foto target jadi <strong>positif paling tinggi</strong> dibanding 4 karakter lainnya.</div>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: LIVE INTERACTIVE SIMULATION ON 5 REAL FROZEN PHOTOS -->
-        <div class="card" style="padding:10px 13px; gap:7px; justify-content:space-between; border:1.5px solid #C6DAFC; box-shadow:0 4px 14px rgba(66,133,244,0.06);">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#202124;">4. Simulasi pada Dataset Frozen (Neuron Detektor <code>y₂ · Elsa</code>)</span>
-            <span class="pill green" id="wb-badge" style="font-size:9.8px; padding:2.5px 9px;">Elsa Aktif Tertinggi!</span>
+        <!-- RIGHT COLUMN: SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP A (WEIGHT + BIAS -> z) PER CHARACTER -->
+        <div class="card" style="padding:8px 11px; gap:5.5px; justify-content:space-between; border:1.5px solid #C6DAFC; box-shadow:0 4px 14px rgba(66,133,244,0.06);">
+          <!-- CONTINUITY MINI-MAP: EXPLICITLY SHOWS WHERE THIS HAPPENS IN SLIDE 24! -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:3.5px 8px; font-size:9.1px; color:#5F6368;">
+            <strong style="color:#202124; white-space:nowrap;">📍 Posisi di Tahap 4:</strong>
+            <div style="display:flex; align-items:center; gap:3.5px; flex-wrap:nowrap;">
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Input 150.528</span>
+              <span>→</span>
+              <span style="background:#FEF7E0; border:1.5px solid #FBBC04; color:#B06000; font-weight:700; border-radius:5px; padding:1px 6px;">🔍 Tahap 4.1: Weight + Bias → z</span>
+              <span>→</span>
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.2: Activation</span>
+            </div>
           </div>
 
-          <!-- Preset Scenarios (registered in PDF/PPTX expanders!) -->
-          <div class="sim-bar pdf-keep-ui" id="wb-presets" style="gap:5px;">
-            <button class="btn-ui" data-wb="elsa_opt" onclick="setWbPreset('elsa_opt')" style="padding:3.5px 8.5px; font-size:10.1px;">1. Bobot Ideal Elsa</button>
-            <button class="btn-ui outline" data-wb="no_bias" onclick="setWbPreset('no_bias')" style="padding:3.5px 8.5px; font-size:10.1px;">2. Tanpa Bias (b = 0)</button>
-            <button class="btn-ui outline" data-wb="wrong_w" onclick="setWbPreset('wrong_w')" style="padding:3.5px 8.5px; font-size:10.1px;">3. Weight Biru Dibalik</button>
+          <!-- Interactive Control Bar + Experiment Presets (100% synced with Slide 24 numbers!) -->
+          <div class="sim-bar pdf-keep-ui" id="wb-presets" style="gap:4px; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" id="wb-btn-tour" onclick="playWbTour()" style="padding:3px 8px; font-size:9.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
+              <button class="btn-ui outline" id="wb-btn-next" onclick="nextWbChar()" style="padding:3px 7px; font-size:9.5px; color:#137333; border-color:#A8DAB5;">⏭ Berikutnya</button>
+              <button class="btn-ui outline" onclick="setWbPreset('elsa_opt')" style="padding:3px 7.5px; font-size:9.5px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui outline" data-wb="no_bias" onclick="setWbPreset('no_bias')" style="padding:3px 7.5px; font-size:9.5px;">Coba Bias = 0</button>
+              <button class="btn-ui outline" data-wb="wrong_w" onclick="setWbPreset('wrong_w')" style="padding:3px 7.5px; font-size:9.5px;">Coba Balik Weight</button>
+            </div>
           </div>
 
-          <!-- 5 Real Frozen Figurine Chips showing live z score across ALL 5 classes simultaneously! -->
+          <!-- 5 Clickable Real Frozen Character Chips (exact same photos & z scores as Slide 24!) -->
           <div id="wb-ds-chips" class="ds-chip-row"></div>
 
-          <!-- Interactive Weight & Bias Sliders + Tug-of-War Contribution Bars side-by-side -->
-          <div style="display:grid; grid-template-columns:1.05fr 1fr; gap:10px; flex:1; min-height:0; align-items:stretch; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:10px 12px;">
-            <div style="display:flex; flex-direction:column; justify-content:space-between; gap:6px;">
-              <div style="font-family:var(--font-title); font-size:10.4px; font-weight:700; color:#1A73E8;">Geser Weight (<code>w</code>) &amp; Bias (<code>b</code>)</div>
-              <div class="wb-srow"><span>w₁ · Merah (R)</span><input id="wb-w0" type="range" min="-25" max="35" step="0.1" value="-18.6" oninput="updateWb()"/><span class="sim-val" id="wb-vw0" style="font-size:10.6px;">-18.6</span></div>
-              <div class="wb-srow"><span>w₂ · Hijau (G)</span><input id="wb-w1" type="range" min="-25" max="35" step="0.1" value="-2.4" oninput="updateWb()"/><span class="sim-val" id="wb-vw1" style="font-size:10.6px;">-2.4</span></div>
-              <div class="wb-srow"><span>w₃ · Biru (B)</span><input id="wb-w2" type="range" min="-25" max="35" step="0.1" value="32.4" oninput="updateWb()"/><span class="sim-val" id="wb-vw2" style="font-size:10.6px;">+32.4</span></div>
-              <div class="wb-srow"><span>w₄ · Piksel Atas</span><input id="wb-w3" type="range" min="-25" max="35" step="0.1" value="-7.2" oninput="updateWb()"/><span class="sim-val" id="wb-vw3" style="font-size:10.6px;">-7.2</span></div>
-              <div class="wb-srow bias-row" style="border-top:1px dashed #DADCE0; padding-top:5px;"><strong style="color:#B06000;">b · Bias (Ambang)</strong><input id="wb-b" type="range" min="-10" max="6" step="0.1" value="-2.3" oninput="updateWb()"/><span class="sim-val" id="wb-vb" style="font-size:10.6px; color:#B06000;">-2.3</span></div>
+          <!-- LIVE ZOOM-IN NEURON DIAGRAM SVG: SHOWS EXACT CABLES FROM SLIDE 24 ENTERING 1 OUTPUT NEURON! -->
+          <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:4px 6px;">
+            <svg id="wb-zoom-svg" viewBox="0 0 600 218" style="width:100%; height:100%; max-height:218px; display:block;"></svg>
+          </div>
+
+          <!-- 2 FOCUSED LIVE EXPERIMENT SLIDERS (Hero 150.523-Pixel Weight Scale + Bias) -->
+          <div style="display:grid; grid-template-columns:1.12fr 0.88fr; gap:8px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:5px 9px;">
+            <div class="wb-srow" style="grid-template-columns:132px 1fr 46px; font-size:9.5px;">
+              <strong id="wb-hero-lbl" style="color:#137333;">Weight 150.522 Piksel</strong>
+              <input id="wb-hero-w" type="range" min="-1.5" max="1.5" step="0.05" value="1.0" oninput="onWbSliderInput()"/>
+              <span class="sim-val" id="wb-hero-vw" style="font-size:9.6px; color:#137333;">+1.00×</span>
             </div>
-            <div style="display:flex; flex-direction:column; justify-content:space-between; gap:6px; border-left:1px solid #E0E3E7; padding-left:10px;">
-              <div style="font-family:var(--font-title); font-size:10.4px; font-weight:700; color:#202124;">Sumbangan ke Skor <code id="wb-active-lbl">Elsa</code> (<span style="color:#137333;">+</span> vs <span style="color:#C5221F;">−</span>)</div>
-              <div id="wb-contribs" style="display:flex; flex-direction:column; gap:7px; flex:1; justify-content:center;"></div>
+            <div class="wb-srow bias-row" style="grid-template-columns:72px 1fr 44px; font-size:9.5px; border-left:1px solid #DADCE0; padding-left:8px;">
+              <strong id="wb-bias-lbl" style="color:#B06000;">b₂ · Bias</strong>
+              <input id="wb-b" type="range" min="-4.0" max="4.0" step="0.01" value="-1.04" oninput="onWbSliderInput()"/>
+              <span class="sim-val" id="wb-vb" style="font-size:9.6px; color:#B06000;">-1.04</span>
             </div>
           </div>
 
-          <!-- Exact Arithmetic Strip + Live Insight -->
-          <div id="wb-eq-box" style="background:#FEF7E0; border:1px solid #FDE293; border-radius:9px; padding:5px 9px; font-family:var(--font-code); font-size:9.8px; color:#202124; line-height:1.32;"></div>
-          <div class="callout green" id="wb-insight" style="padding:5.5px 10px; font-size:10.8px; line-height:1.34;"></div>
+          <!-- Live Explanation Tying Back to Slide 24 -->
+          <div class="callout green" id="wb-insight" style="padding:4.5px 9px; font-size:10.1px; line-height:1.32;"></div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 26: ACTIVATION FUNCTION — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: 2 menit. Bedah khusus komponen kedua dari Slide 24: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, 100 layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks; sekaligus mengubah skor bebas menjadi rentang bermakna); (3) 3 fungsi utama: ReLU di Hidden Layer, Sigmoid untuk 2 kelas, Softmax untuk multi-kelas. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, dan Softmax!">
-      <div class="kicker">BAB 03 · ACTIVATION FUNCTION</div>
+    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen kedua dari Slide 24: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, 100 layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks; sekaligus mengubah skor bebas menjadi rentang bermakna); (3) 3 fungsi utama: ReLU di Hidden Layer, Sigmoid untuk 2 kelas, Softmax untuk multi-kelas. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, dan Softmax!">
+      <div class="kicker">BAB 03 · TAHAP 4.2 · ACTIVATION FUNCTION</div>
       <h2><span class="hl-red">Activation Function</span>: Dari Skor Mentah Menjadi Aktivasi &amp; Peluang</h2>
 
       <div style="display:grid; grid-template-columns:0.88fr 1.32fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
         <!-- LEFT COLUMN: APA ITU, KENAPA PERLU, CARA KERJA -->
         <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
-          <div class="card tint-red" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="act-card-1" class="card tint-red sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-red"></div>
             <div class="card-title" style="font-size:12.6px; color:#C5221F;">1. Apa Itu Activation Function?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">Fungsi matematika di ujung neuron yang mengubah <strong>skor mentah <code>z</code></strong> (bisa minus atau plus bebas) menjadi <strong>sinyal keluaran aktif</strong> yang berguna bagi lapisan berikutnya atau prediksi akhir.</div>
           </div>
 
-          <div class="card tint-blue" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="act-card-2" class="card tint-blue sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-blue"></div>
             <div class="card-title" style="font-size:12.6px; color:#1A73E8;">2. Kenapa Wajib Ada?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
               <div style="margin-bottom:3px;"><strong>Memecah garis lurus (<em>Non-Linearity</em>):</strong> Tanpa aktivasi, menumpuk 100 <em>Hidden Layer</em> tetap setara 1 garis lurus — mustahil mengenali lekuk wajah, rambut, atau gaun!</div>
-              <div><strong>Menstandarkan output:</strong> Mengubah skor bebas (mis. <code>-1.66, +2.39</code>) menjadi rentang jelas (<code>≥ 0</code> atau <code>0–100%</code>).</div>
+              <div><strong>Menstandarkan output:</strong> Mengubah skor bebas (mis. <code>-0.90, +2.13</code>) menjadi rentang jelas (<code>≥ 0</code> atau <code>0–100%</code>).</div>
             </div>
           </div>
 
-          <div class="card tint-green" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="act-card-3" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-green"></div>
             <div class="card-title" style="font-size:12.6px; color:#137333;">3. Cara Kerja 3 Fungsi Utama</div>
             <div style="font-size:10.9px; color:#3C4043; line-height:1.38; display:flex; flex-direction:column; gap:3px;">
-              <div>• <strong><code>ReLU</code></strong> <em>(Hidden Layer)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
-              <div>• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: kurva-S memeras <code>z</code> ke <code>0–100%</code>.</div>
-              <div>• <strong><code>Softmax</code></strong> <em>(Output Multi-Kelas)</em>: 5 skor kelas → total tepat <code>100%</code>!</div>
+              <div id="act-b-relu" class="sync-bullet">• <strong><code>ReLU</code></strong> <em>(Hidden Layer)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
+              <div id="act-b-sigmoid" class="sync-bullet">• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: kurva-S memeras <code>z</code> ke <code>0–100%</code>.</div>
+              <div id="act-b-softmax" class="sync-bullet">• <strong><code>Softmax</code></strong> <em>(Output Multi-Kelas)</em>: 5 skor kelas → total tepat <code>100%</code>!</div>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: LIVE INTERACTIVE ACTIVATION SIMULATOR ON 5 REAL FROZEN PHOTOS -->
-        <div class="card" style="padding:10px 13px; gap:7px; justify-content:space-between; border:1.5px solid #F6AEA9; box-shadow:0 4px 14px rgba(234,67,53,0.06);">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="font-family:var(--font-title); font-size:12.2px; font-weight:700; color:#202124;">4. Simulasi pada Dataset Frozen (Skor Nyata <code>z</code> → Output)</span>
-            <span class="pill red" id="act-pill" style="font-size:9.8px; padding:2.5px 9px;">ReLU · Hidden Layer</span>
+        <!-- RIGHT COLUMN: SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP B (ACTIVATION FUNCTION) PER CHARACTER -->
+        <div class="card" style="padding:8px 11px; gap:5.5px; justify-content:space-between; border:1.5px solid #A8DAB5; box-shadow:0 4px 14px rgba(52,168,83,0.06);">
+          <!-- CONTINUITY MINI-MAP: EXPLICITLY SHOWS WHERE THIS HAPPENS IN SLIDE 24! -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:3.5px 8px; font-size:9.1px; color:#5F6368;">
+            <strong style="color:#202124; white-space:nowrap;">📍 Posisi di Tahap 4:</strong>
+            <div style="display:flex; align-items:center; gap:3.5px; flex-wrap:nowrap;">
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.1: Weight + Bias → z</span>
+              <span>→</span>
+              <span style="background:#E6F4EA; border:1.5px solid #34A853; color:#137333; font-weight:700; border-radius:5px; padding:1px 6px;">🔍 Tahap 4.2: Activation Function</span>
+              <span>→</span>
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.3: Output Akhir</span>
+            </div>
           </div>
 
-          <!-- 3 Function Tabs (registered in PDF/PPTX expanders!) -->
-          <div class="sim-bar pdf-keep-ui" id="act-tabs" style="gap:5px;">
-            <button class="btn-ui" data-act="relu" onclick="setActTab('relu')" style="padding:3.5px 8.5px; font-size:10.1px;">1. ReLU (Hidden Layer)</button>
-            <button class="btn-ui outline" data-act="sigmoid" onclick="setActTab('sigmoid')" style="padding:3.5px 8.5px; font-size:10.1px;">2. Sigmoid (2 Kelas: Elsa vs Lain)</button>
-            <button class="btn-ui outline" data-act="softmax" onclick="setActTab('softmax')" style="padding:3.5px 8.5px; font-size:10.1px;">3. Softmax (5 Kelas Frozen)</button>
+          <!-- Interactive Auto-Tour + 3 Activation Function Tabs (registered in PDF/PPTX expanders!) -->
+          <div class="sim-bar pdf-keep-ui" id="act-tabs" style="gap:4px; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" id="act-btn-tour" onclick="playActTour()" style="padding:3px 8px; font-size:9.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
+              <button class="btn-ui outline" id="act-btn-next" onclick="nextActChar()" style="padding:3px 7px; font-size:9.5px; color:#137333; border-color:#A8DAB5;">⏭ Berikutnya</button>
+              <button class="btn-ui outline" onclick="resetActZ()" style="padding:3px 7px; font-size:9.5px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" data-act="relu" onclick="setActTab('relu')" style="padding:3px 7.5px; font-size:9.5px;">1. ReLU</button>
+              <button class="btn-ui outline" data-act="sigmoid" onclick="setActTab('sigmoid')" style="padding:3px 7.5px; font-size:9.5px;">2. Sigmoid</button>
+              <button class="btn-ui outline" data-act="softmax" onclick="setActTab('softmax')" style="padding:3px 7.5px; font-size:9.5px;">3. Softmax</button>
+            </div>
           </div>
 
-          <!-- 5 Real Frozen Photo Chips -->
+          <!-- 5 Clickable Real Frozen Character Chips (exact Slide 24/25 z -> Output!) -->
           <div id="act-ds-chips" class="ds-chip-row"></div>
 
-          <!-- Curve View (for ReLU & Sigmoid) -->
-          <div id="act-curve-panel" style="display:flex; flex-direction:column; gap:6px; flex:1; min-height:0; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:8px 10px;">
-            <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center;">
-              <canvas id="act-canvas" width="1080" height="440" style="width:100%; height:100%; max-height:230px; display:block; border-radius:8px; border:1px solid #E0E3E7;"></canvas>
-            </div>
-            <div class="wb-srow" style="grid-template-columns:138px 1fr 122px; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:8px; padding:5px 9px;">
-              <strong style="color:#202124; font-size:10.3px;">Uji Skor Mentah <code>z</code>:</strong>
-              <input id="act-z-slider" type="range" min="-4.0" max="4.0" step="0.1" value="1.8" oninput="onActSlider()"/>
-              <span class="sim-val" id="act-z-readout" style="font-size:10.3px; color:#137333;">z=+1.8 → 1.80</span>
-            </div>
+          <!-- LIVE ZOOM-IN ACTIVATION MACHINE SVG: TAHAP A (z) -> ACTIVATION MACHINE (ReLU/Sigmoid/Softmax) -> OUTPUT! -->
+          <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:4px 6px;">
+            <svg id="act-zoom-svg" viewBox="0 0 600 218" style="width:100%; height:100%; max-height:218px; display:block;"></svg>
           </div>
 
-          <!-- Softmax Multi-Class View (for Softmax tab) -->
-          <div id="act-softmax-panel" style="display:none; flex-direction:column; justify-content:space-between; gap:5px; flex:1; min-height:0; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:8px 10px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; font-size:10.2px;">
-              <strong style="color:#137333;">Transformasi 5 Skor Nyata (<span id="act-sm-photo">Foto Elsa</span>): <code>z → e^z / Σe^z → %</code></strong>
-              <span style="font-family:var(--font-code); font-weight:700; color:#137333;">Total = 100.0%</span>
-            </div>
-            <div id="act-sm-rows" style="display:flex; flex-direction:column; gap:6px; flex:1; justify-content:center;"></div>
+          <!-- Compact Interactive Slider to Test Target Score z Live Across ALL 3 Activation Functions! -->
+          <div style="display:flex; align-items:center; gap:8px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:4.5px 9px;">
+            <strong id="act-z-lbl" style="color:#B06000; font-size:9.6px; white-space:nowrap;">Geser z₂ (Elsa):</strong>
+            <input id="act-z-slider" type="range" min="-4.0" max="4.0" step="0.1" value="2.1" oninput="onActSlider()" style="flex:1; accent-color:#34A853; cursor:pointer; margin:0;"/>
+            <span class="sim-val" id="act-z-readout" style="font-size:9.7px; color:#137333; min-width:96px;">z=+2.13 → 2.13</span>
           </div>
 
           <!-- Bottom Concrete Dataset Takeaway -->
-          <div class="callout green" id="act-callout" style="padding:5.5px 10px; font-size:10.7px; line-height:1.34;"></div>
+          <div class="callout green" id="act-callout" style="padding:4.5px 9px; font-size:10.1px; line-height:1.32;"></div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 27: SOFTMAX + SIMULATOR #5 -->
-    <section class="slide" data-title="Bab 3B: Softmax Mengubah Skor Jadi Probabilitas" data-notes="Alokasi waktu: 1.5 menit. Output mentah dari 5 neuron (logits) bisa positif maupun negatif. Fungsi Softmax mengubahnya menjadi probabilitas 0–100% yang jumlah totalnya selalu tepat 100%. Coba ketiga preset di simulator.">
-      <div class="kicker">BAB 03 · SOFTMAX</div>
-      <h2><span class="hl-green">Softmax</span>: Mengubah 5 Skor Mentah Menjadi Probabilitas 100%</h2>
-      <div class="sim-bar pdf-keep-ui" id="sm-presets" style="margin-bottom:8px;">
-        <button class="btn-ui" data-smp="elsa" onclick="setSmPreset('elsa')">1. Yakin Elsa</button>
-        <button class="btn-ui outline" data-smp="ragu" onclick="setSmPreset('ragu')">2. Ragu Elsa vs Anna</button>
-        <button class="btn-ui outline" data-smp="neg" onclick="setSmPreset('neg')">3. Semua Skor Negatif</button>
+    <!-- 27: OUTPUT AKHIR — ZOOM-IN TAHAP C (ARGMAX, CONFIDENCE, & EVALUASI ERROR) -->
+    <section class="slide" data-title="Bab 3B: Output Akhir — Keputusan Argmax, Confidence &amp; Evaluasi" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "1.5")} menit. Melengkapi trilogi Zoom-In dari Slide 24 (Tahap A Slide 25 -> Tahap B Slide 26 -> Output Akhir Slide 27). Tunjukkan bagaimana 5 probabilitas Softmax diubah menjadi 1 keputusan lewat Argmax, bedakan Confidence Yakin vs Ragu memakai ambang 60%, lalu klik Acak (Belum Latih) agar peserta melihat tebakan salah menghasilkan Error/Loss besar sebagai bahan belajar Training!">
+      <div class="kicker">BAB 03 · TAHAP 4.3 · OUTPUT AKHIR &amp; ERROR</div>
+      <h2><span class="hl-green">Output Akhir</span>: Keputusan <span class="hl-blue">Argmax</span>, <em>Confidence</em> &amp; Cek <em>Error</em></h2>
+
+      <div style="display:grid; grid-template-columns:0.88fr 1.32fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
+        <!-- LEFT COLUMN: APA ITU, KENAPA PERLU, CARA KERJA -->
+        <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
+          <div id="out-card-1" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-green"></div>
+            <div class="card-title" style="font-size:12.6px; color:#137333;">1. Apa Itu Output Akhir (<code>Argmax</code>)?</div>
+            <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">Setelah <strong>Softmax</strong> (Tahap 4.2) mengeluarkan 5 peluang, fungsi <strong><code>Argmax</code></strong> memilih <strong>1 kelas dengan peluang tertinggi</strong> sebagai prediksi akhir model.</div>
+          </div>
+
+          <div id="out-card-2" class="card tint-blue sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-blue"></div>
+            <div class="card-title" style="font-size:12.6px; color:#1A73E8;">2. Kenapa Cek <em>Confidence</em>?</div>
+            <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
+              <div style="margin-bottom:3px;"><strong>Yakin vs Ragu:</strong> Menang dengan <code>77.7%</code> (Elsa) jauh lebih aman daripada menang tipis <code>41.9%</code>!</div>
+              <div>Di aplikasi nyata, kita pasang <strong>Ambang Yakin (<em>Threshold</em>)</strong> — jika di bawah ambang, sistem memberi tanda <em>perlu cek manusia</em>.</div>
+            </div>
+          </div>
+
+          <div id="out-card-3" class="card tint-red sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-red"></div>
+            <div class="card-title" style="font-size:12.6px; color:#C5221F;">3. Evaluasi ke <em>Error / Loss</em></div>
+            <div class="formula-box" style="padding:4px 8px; font-size:10.8px; margin:2px 0; background:#FFFFFF; border-color:#F6AEA9;">Error = 100% − P(Kelas Asli)  |  Loss = −ln(P)</div>
+            <div style="font-size:10.9px; color:#3C4043; line-height:1.36;">Saat <em>training</em>, selisih antara prediksi dan <strong>Label Asli (100%)</strong> dikirim balik untuk memperbaiki <code>Weight</code> &amp; <code>Bias</code>!</div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP C (OUTPUT AKHIR -> ARGMAX -> EVALUASI) -->
+        <div class="card" style="padding:8px 11px; gap:5.5px; justify-content:space-between; border:1.5px solid #A8DAB5; box-shadow:0 4px 14px rgba(52,168,83,0.06);">
+          <!-- CONTINUITY MINI-MAP: COMPLETING THE SLIDE 24 -> 25 -> 26 -> 27 TRILOGY! -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:3.5px 8px; font-size:9.1px; color:#5F6368;">
+            <strong style="color:#202124; white-space:nowrap;">📍 Posisi di Tahap 4:</strong>
+            <div style="display:flex; align-items:center; gap:3.5px; flex-wrap:nowrap;">
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.1</span>
+              <span>→</span>
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.2</span>
+              <span>→</span>
+              <span style="background:#E6F4EA; border:1.5px solid #34A853; color:#137333; font-weight:700; border-radius:5px; padding:1px 6px;">🔍 Tahap 4.3: Output Akhir &amp; Error</span>
+              <span>→</span>
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 5</span>
+            </div>
+          </div>
+
+          <!-- Consistent Control Bar (Play/Stop, Berikutnya, Reset + 3 Evaluation Modes) -->
+          <div class="sim-bar pdf-keep-ui" id="out-presets" style="gap:4px; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" id="out-btn-tour" onclick="playOutTour()" style="padding:3px 8px; font-size:9.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
+              <button class="btn-ui outline" id="out-btn-next" onclick="nextOutChar()" style="padding:3px 7px; font-size:9.5px; color:#137333; border-color:#A8DAB5;">⏭ Berikutnya</button>
+              <button class="btn-ui outline" onclick="resetOutSim()" style="padding:3px 7px; font-size:9.5px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" data-out="trained" onclick="setOutMode('trained')" style="padding:3px 7.5px; font-size:9.5px;">1. Terlatih</button>
+              <button class="btn-ui outline" data-out="ragu" onclick="setOutMode('ragu')" style="padding:3px 7.5px; font-size:9.5px;">2. Ragu (Tipis)</button>
+              <button class="btn-ui outline" data-out="untrained" onclick="setOutMode('untrained')" style="padding:3px 7.5px; font-size:9.5px;">3. Acak (Belum Latih)</button>
+            </div>
+          </div>
+
+          <!-- 5 Clickable Real Frozen Character Chips (exact Slide 24/25/26 probs -> Decision!) -->
+          <div id="out-ds-chips" class="ds-chip-row"></div>
+
+          <!-- LIVE ZOOM-IN OUTPUT DECISION SVG: PROBABILITAS SLIDE 26 -> ARGMAX & CONFIDENCE -> EVALUASI LABEL ASLI! -->
+          <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:4px 6px;">
+            <svg id="out-zoom-svg" viewBox="0 0 600 218" style="width:100%; height:100%; max-height:218px; display:block;"></svg>
+          </div>
+
+          <!-- Interactive Confidence Threshold Slider + Reset -->
+          <div style="display:flex; align-items:center; gap:8px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:4.5px 9px;">
+            <strong style="color:#1A73E8; font-size:9.6px; white-space:nowrap;">Ambang Yakin (<em>Threshold</em>):</strong>
+            <input id="out-thresh-slider" type="range" min="40" max="90" step="5" value="60" oninput="onOutThreshInput()" style="flex:1; accent-color:#1A73E8; cursor:pointer; margin:0;"/>
+            <span class="sim-val" id="out-thresh-readout" style="font-size:9.7px; color:#1A73E8; min-width:54px;">≥ 60%</span>
+          </div>
+
+          <!-- Bottom Concrete Evaluation Takeaway -->
+          <div class="callout green" id="out-callout" style="padding:4.5px 9px; font-size:10.1px; line-height:1.32;"></div>
+        </div>
       </div>
-      <div class="split-40-60">
-        <div class="card surface" style="gap:7px; padding:13px 15px;">
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+"""
+    )
+
+    if HIDE_SLIDES_28_40:
+        s.append(
+            f"""
+    <!-- 28: SIKLUS BELAJAR UTUH (FORWARD PASS -> LOSS -> BACKPROP & GRADIENT DESCENT -> EPOCH) -->
+    <section class="slide" data-title="Bab 3C: Siklus Belajar Utuh — Forward Pass, Loss, Backprop, Gradient Descent &amp; Epoch" data-notes="Alokasi waktu: 2.5 menit. Menyambung langsung dari nilai Error dan Loss pada Slide 27 (foto Olaf belum latih: P=11.3%, Loss=2.18). Tunjukkan 4 tahap belajar berulang yang bekerja otomatis saat memanggil model.fit() di Keras: (1) Forward Pass (aliran maju Slide 24-27), (2) Hitung Loss (ukur kesalahan), (3) Backpropagation & Gradient Descent (lacak mundur bobot penyebab salah lalu geser sebesar Learning Rate), dan (4) Ulangi tiap Epoch hingga Loss turun dari 2.18 menjadi 0.23 dan Olaf dikenali 79.2%!">
+      <div class="kicker">BAB 03 · TAHAP 5 · SIKLUS BELAJAR UTUH (EPOCH)</div>
+      <h2><span class="hl-green">Siklus Belajar Utuh</span>: Dari <span class="hl-red">Loss</span> ke Koreksi Bobot (<span class="hl-blue">Epoch</span>)</h2>
+
+      <div style="display:grid; grid-template-columns:0.86fr 1.34fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
+        <!-- LEFT COLUMN: 3 KARTU KONSEP INTI MENYAMBUNG SLIDE 27 -> HANDS-ON -->
+        <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
+          <div id="tr-card-1" class="card tint-blue sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-blue"></div>
+            <div class="card-title" style="font-size:12.4px; color:#1A73E8;">1. Forward Pass &amp; Loss</div>
+            <div style="font-size:11.0px; color:#3C4043; line-height:1.38;"><strong>Forward Pass</strong> adalah aliran hitung maju (Tahap 4.1–4.3): <code>Foto → W+b → Softmax → Prediksi</code>. Lalu <strong>Loss</strong> mengukur seberapa jauh tebakan dari label asli.</div>
+          </div>
+
+          <div id="tr-card-2" class="card tint-yellow sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-yellow"></div>
+            <div class="card-title" style="font-size:12.4px; color:#B06000;">2. Backpropagation &amp; Gradient Descent</div>
+            <div style="font-size:11.0px; color:#3C4043; line-height:1.38;">
+              <div style="margin-bottom:3px;"><strong>Backpropagation:</strong> melacak mundur dari ujung <em>Loss</em> ke kabel <code>w</code> &amp; <code>b</code> penyebab kesalahan.</div>
+              <div><strong>Gradient Descent:</strong> menggeser bobot sedikit demi sedikit (sebesar <em>Learning Rate</em>) ke arah yang menurunkan <em>Loss</em>.</div>
+            </div>
+          </div>
+
+          <div id="tr-card-3" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-green"></div>
+            <div class="card-title" style="font-size:12.4px; color:#137333;">3. Ulangi Tiap Epoch (<code>model.fit()</code>)</div>
+            <div style="font-size:11.0px; color:#3C4043; line-height:1.38;">1 putaran penuh membaca seluruh foto Frozen = <strong>1 Epoch</strong>. Saat diulang beberapa <em>epoch</em> di Keras, <strong>Loss turun</strong> otomatis tanpa hitung kalkulus manual!</div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: INTERACTIVE 4-STAGE TRAINING CYCLE CONNECTED TO SLIDE 27 OLAF NUMBERS! -->
+        <div class="card" style="padding:8px 11px; gap:5.5px; justify-content:space-between; border:1.5px solid #A8DAB5; box-shadow:0 4px 14px rgba(52,168,83,0.06);">
+          <!-- CONTINUITY STRIP FROM SLIDE 27 -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:3.5px 8px; font-size:9.1px; color:#5F6368;">
+            <strong style="color:#202124; white-space:nowrap;">📍 Sambungan Tahap 4.3:</strong>
+            <div style="display:flex; align-items:center; gap:3.5px; flex-wrap:nowrap;">
+              <span style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:5px; padding:1px 5px;">Tahap 4.3: Output &amp; Error</span>
+              <span>→</span>
+              <span style="background:#E6F4EA; border:1.5px solid #34A853; color:#137333; font-weight:700; border-radius:5px; padding:1px 6px;">🔍 Tahap 5: Siklus Belajar → Loss Turun</span>
+            </div>
+          </div>
+
+          <!-- UNIFORM CONTROL BAR (Play/Stop, +1 Tahap, Reset + 4 Cycle Tabs) -->
+          <div class="sim-bar pdf-keep-ui" id="tr-cycle-tabs" style="gap:4px; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button class="btn-ui" id="tr-btn-play" onclick="playTrCycle()" style="padding:3px 8px; font-size:9.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
+              <button class="btn-ui outline" id="tr-btn-step" onclick="stepTrCycle()" style="padding:3px 7px; font-size:9.5px; color:#137333; border-color:#A8DAB5;">⏭ +1 Tahap</button>
+              <button class="btn-ui outline" onclick="resetTrCycle()" style="padding:3px 7px; font-size:9.5px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:3.5px;">
+              <button class="btn-ui" data-trst="1" onclick="setTrStage(1)" style="padding:3px 6.5px; font-size:9.2px;">1. Forward</button>
+              <button class="btn-ui outline" data-trst="2" onclick="setTrStage(2)" style="padding:3px 6.5px; font-size:9.2px;">2. Loss</button>
+              <button class="btn-ui outline" data-trst="3" onclick="setTrStage(3)" style="padding:3px 6.5px; font-size:9.2px;">3. Backprop+GD</button>
+              <button class="btn-ui outline" data-trst="4" onclick="setTrStage(4)" style="padding:3px 6.5px; font-size:9.2px;">4. Epoch</button>
+            </div>
+          </div>
+
+          <!-- LIVE INTERACTIVE TRAINING CYCLE SVG (CONCRETE OLAF CASE: LOSS 2.18 -> 0.23, P 11.3% -> 79.2%!) -->
+          <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:6px 8px;">
+            <svg id="tr-cycle-svg" viewBox="0 0 600 316" style="width:100%; height:100%; display:block;"></svg>
+          </div>
+
+          <!-- BOTTOM LIVE TAKEAWAY CALLOUT -->
+          <div class="callout green" id="tr-cycle-callout" style="padding:5px 9px; font-size:10.1px; line-height:1.34;"></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+
+    <!-- 29: ULTIMATE BAB 3 — SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 2 -> 3 -> 4 -> 5!) -->
+    <section class="slide" data-title="Bab 3 · Simulasi Full Neural Network (End-to-End Tahap 1–5)" data-notes="Alokasi waktu: {"4" if HIDE_BAB4_ARCH else "3"} menit. Slide puncak (Ultimate) Bab 3 yang menyatukan seluruh 5 tahap dari Slide 20–28 dalam 1 model Neural Network nyata 1-layer (150.528 Input -> 5 Output Softmax = 752.645 parameter, tanpa konsep yang belum diajarkan!) yang dilatih langsung 8 epoch melewati kelima foto figurin Frozen. Demokan: klik tombol biru Full 8 Epoch agar peserta menyaksikan model melatih Anna, Elsa, Kristoff, Olaf, dan Sven secara bergantian dari Epoch 1 (0/5 benar, Mean Loss 1.70) hingga Epoch 8 (5/5 benar yakin, Mean Loss 0.21) lengkap dengan gelombang merah Backpropagation dan kurva Loss yang turun secara real-time! Atau klik 1 Foto / geser slider Epoch 1–8 / klik kartu tahap bawah untuk membedah 1 karakter pelan-pelan. Lalu lanjut ke Kuis 5 Soal di Slide 30.">
+      <div class="kicker">BAB 03 · SIMULASI FULL NEURAL NETWORK (END-TO-END · TAHAP 1–5)</div>
+      <h2>Simulasi <span class="hl-blue">Full Neural Network</span>: Dari Piksel ke <span class="hl-red">Backprop</span> (<span class="hl-green">Tahap 1–5</span>)</h2>
+
+      <!-- UNIFIED CONTROL BAR: Full 8 Epoch (All 5 Chars!), 1 Foto, +1 Tahap, Reset | 5 Frozen Photos w/ Live Status Dots | Epoch 1..8 -->
+      <div class="sim-bar pdf-keep-ui" id="fnn-ctrl" style="margin-bottom:6px; justify-content:space-between; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:11px; padding:4px 8px; gap:5px; flex-wrap:nowrap;">
+        <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+          <button class="btn-ui" id="fnn-btn-full" onclick="playFnnFull()" style="padding:3.5px 8.5px; font-size:9.8px; background:#1A73E8; border-color:#1A73E8;" title="Jalankan training penuh 8 Epoch melewati semua 5 karakter bergantian!">▶ Full 8 Epoch</button>
+          <button class="btn-ui" id="fnn-btn-play" onclick="playFnnSim()" style="padding:3.5px 8px; font-size:9.8px; background:#34A853; border-color:#34A853;" title="Jalankan 5 tahap pelan untuk 1 karakter yang dipilih">▶ 1 Foto</button>
+          <button class="btn-ui outline" id="fnn-btn-step" onclick="stepFnnStage()" style="padding:3.5px 7px; font-size:9.6px; color:#137333; border-color:#A8DAB5;">⏭ +1 Tahap</button>
+          <button class="btn-ui outline" id="fnn-btn-reset" onclick="resetFnnSim()" style="padding:3.5px 6.5px; font-size:9.6px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+        </div>
+        <div id="fnn-char-bar" style="display:flex; align-items:center; gap:3.5px; flex-shrink:0;"></div>
+        <div style="display:flex; align-items:center; gap:5px; background:#FFFFFF; border:1px solid #DADCE0; border-radius:999px; padding:2.5px 8px; flex-shrink:0;">
+          <strong style="font-family:var(--font-title); font-size:9.4px; color:#1A73E8; white-space:nowrap;">Epoch:</strong>
+          <input id="fnn-ep-slider" type="range" min="1" max="8" step="1" value="8" oninput="onFnnEpochSlide()" style="width:62px; accent-color:#1A73E8; cursor:pointer; margin:0;"/>
+          <span id="fnn-ep-pill" style="font-family:var(--font-code); font-size:9.3px; font-weight:700; color:#137333; min-width:96px; text-align:right;">E8/8 · 5/5 · 0.21</span>
+        </div>
+      </div>
+
+      <!-- HERO FULL-WIDTH END-TO-END ARCHITECTURE + 60FPS FORWARD & BACKPROP MOTION OVERLAY -->
+      <div id="fnn-stage-wrap" style="position:relative; flex:1; min-height:0; display:flex; flex-direction:column; justify-content:space-between; background:#FFFFFF; border:1.5px solid #C6DAFC; border-radius:15px; padding:6px 10px 6px; margin-bottom:6px; box-shadow:0 4px 16px rgba(66,133,244,0.07);">
+        <canvas id="fnn-motion-canvas" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:25;"></canvas>
+
+        <!-- Main Interactive 5-Column Panorama SVG (viewBox 1050 x 284) -->
+        <div style="flex:1; min-height:0; display:flex; align-items:center; justify-content:center;">
+          <svg id="fnn-svg" viewBox="0 0 1050 284" style="width:100%; height:100%; max-height:284px; display:block;"></svg>
+        </div>
+
+        <!-- Live Narration Strip Connecting Active Stage -> Real Numbers -->
+        <div id="fnn-narration" style="font-size:10.2px; color:#202124; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4px 10px; line-height:1.32; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+          <span id="fnn-narr-txt"></span>
+          <span id="fnn-narr-meta" style="font-family:var(--font-code); font-size:9.3px; font-weight:700; color:#5F6368; white-space:nowrap;">Total Param (W+b): 752.645</span>
+        </div>
+      </div>
+
+      <!-- 5 CLICKABLE SYNCHRONIZED STAGE CARDS (TAHAP 1 -> TAHAP 2 -> TAHAP 3 -> TAHAP 4 -> TAHAP 5!) -->
+      <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:7px; flex:0 0 auto;">
+        <div id="fnn-card-1" class="card surface sync-card fnn-stage-card" onclick="jumpFnnStage(1)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title" style="font-size:14.5px;">Geser Skor Mentah (<em>Logits</em>)</div>
-          <div class="sim-slider-row"><span>Anna</span><input id="sm-0" type="range" min="-4" max="5" step="0.2" value="0.8" oninput="updateSm()"/><span class="sim-val" id="sm-v0">+0.8</span></div>
-          <div class="sim-slider-row"><span>Elsa</span><input id="sm-1" type="range" min="-4" max="5" step="0.2" value="3.2" oninput="updateSm()"/><span class="sim-val" id="sm-v1">+3.2</span></div>
-          <div class="sim-slider-row"><span>Kristoff</span><input id="sm-2" type="range" min="-4" max="5" step="0.2" value="-0.6" oninput="updateSm()"/><span class="sim-val" id="sm-v2">-0.6</span></div>
-          <div class="sim-slider-row"><span>Olaf</span><input id="sm-3" type="range" min="-4" max="5" step="0.2" value="0.2" oninput="updateSm()"/><span class="sim-val" id="sm-v3">+0.2</span></div>
-          <div class="sim-slider-row"><span>Sven</span><input id="sm-4" type="range" min="-4" max="5" step="0.2" value="-1.0" oninput="updateSm()"/><span class="sim-val" id="sm-v4">-1.0</span></div>
-          <div class="mini-box" style="font-size:11.6px;"><strong>Cara kerja ringkas:</strong> Tiap skor dipangkatkan (<code>eᶻ</code>) agar semua positif, lalu dibagi jumlah totalnya.</div>
+          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">Tahap 1 · Piksel</div>
+          <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Foto <code>224×224×3</code> dibaca jadi angka piksel <code>0.0–1.0</code>.</div>
         </div>
-        <div class="card" style="gap:8px; padding:13px 15px; justify-content:space-between;">
+        <div id="fnn-card-2" class="card tint-blue sync-card fnn-stage-card" onclick="jumpFnnStage(2)" style="padding:5.5px 8px; gap:1.5px;">
+          <div class="card-top-bar bar-blue"></div>
+          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">Tahap 2 · Flatten</div>
+          <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Disusun ke bawah jadi <strong>150.528 neuron</strong> <em>Input Layer</em>.</div>
+        </div>
+        <div id="fnn-card-3" class="card tint-yellow sync-card fnn-stage-card" onclick="jumpFnnStage(3)" style="padding:5.5px 8px; gap:1.5px;">
+          <div class="card-top-bar bar-yellow"></div>
+          <div class="card-title" style="font-size:10.7px; color:#B06000;">Tahap 3 · Weight + Bias</div>
+          <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Hitung <code>z = Σ(x·w) + b</code> untuk <strong>5 skor mentah</strong> kelas.</div>
+        </div>
+        <div id="fnn-card-4" class="card tint-green sync-card fnn-stage-card" onclick="jumpFnnStage(4)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-green"></div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span class="card-title" style="font-size:14.5px;">Hasil Probabilitas Softmax</span>
-            <span class="pill green" id="sm-sum-pill">Total = 100.0%</span>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:7px;">
-            <div class="prob-row"><strong>Anna</strong><div class="prob-track"><div id="sm-b0" class="prob-fill" style="background:#4285F4;"></div></div><span id="sm-e0" style="font-family:var(--font-code); color:#5F6368; text-align:right;">2.2</span><strong id="sm-p0" style="text-align:right;">0%</strong></div>
-            <div class="prob-row"><strong>Elsa</strong><div class="prob-track"><div id="sm-b1" class="prob-fill" style="background:#34A853;"></div></div><span id="sm-e1" style="font-family:var(--font-code); color:#5F6368; text-align:right;">24.5</span><strong id="sm-p1" style="text-align:right;">0%</strong></div>
-            <div class="prob-row"><strong>Kristoff</strong><div class="prob-track"><div id="sm-b2" class="prob-fill" style="background:#FBBC04;"></div></div><span id="sm-e2" style="font-family:var(--font-code); color:#5F6368; text-align:right;">0.5</span><strong id="sm-p2" style="text-align:right;">0%</strong></div>
-            <div class="prob-row"><strong>Olaf</strong><div class="prob-track"><div id="sm-b3" class="prob-fill" style="background:#EA4335;"></div></div><span id="sm-e3" style="font-family:var(--font-code); color:#5F6368; text-align:right;">1.2</span><strong id="sm-p3" style="text-align:right;">0%</strong></div>
-            <div class="prob-row"><strong>Sven</strong><div class="prob-track"><div id="sm-b4" class="prob-fill" style="background:#5F6368;"></div></div><span id="sm-e4" style="font-family:var(--font-code); color:#5F6368; text-align:right;">0.4</span><strong id="sm-p4" style="text-align:right;">0%</strong></div>
-          </div>
-          <div class="callout green" id="sm-winner"></div>
+          <div class="card-title" style="font-size:10.7px; color:#137333;">Tahap 4 · Output</div>
+          <div style="font-size:9.6px; color:#3C4043; line-height:1.28;"><strong>Softmax</strong> ubah skor jadi probabilitas (<code>100%</code>) → <strong>Argmax</strong>.</div>
+        </div>
+        <div id="fnn-card-5" class="card tint-red sync-card fnn-stage-card" onclick="jumpFnnStage(5)" style="padding:5.5px 8px; gap:1.5px;">
+          <div class="card-top-bar bar-red"></div>
+          <div class="card-title" style="font-size:10.7px; color:#C5221F;">Tahap 5 · Backprop</div>
+          <div style="font-size:9.6px; color:#3C4043; line-height:1.28;"><strong>Loss</strong> koreksi balik <code>W, b</code> melewati <strong>5 foto × 8 Epoch</strong>!</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+        )
 
+    if not HIDE_SLIDES_28_40:
+        s.append(
+            f"""
     <!-- 28: SATU NEURON INPUT KE SEMUA NEURON OUTPUT + SIMULATOR #6 -->
     <section class="slide" data-title="Bab 3C: Koneksi 1 Neuron Input ke 5 Neuron Output" data-notes="Alokasi waktu: 1.5 menit. Ini visual inti permintaan desain kita: telusuri tepat 1 neuron dari Input Layer ke seluruh 5 neuron Output Layer. Klik tombol neuron input x1, x2, x3, atau x4 untuk menyorot 5 garis weight miliknya!">
       <div class="kicker">BAB 03 · FULLY CONNECTED LAYER</div>
@@ -2179,32 +2506,32 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 """
-    )
-
-    # 34: Q&A REVEAL #4 (FORWARD PASS)
-    s.append(
-        _qa_slide(
-            qa_id="qa-fp",
-            qa_num=4,
-            kicker="BAB 03 · TANYA-JAWAB #4",
-            title_html='Cek Cepat: <span class="hl-blue">Forward Pass &amp; Jumlah Parameter</span>',
-            question_html="Sebuah jaringan mini punya <strong>4 neuron input</strong>, <strong>2 neuron hidden</strong>, dan <strong>2 neuron output</strong> (seperti contoh Elsa tadi). Berapa total parameter (weight + bias) pada <em>Layer 1</em> (Input → Hidden)?",
-            choices=[
-                "<strong>A.</strong> 6 parameter (4 + 2)",
-                "<strong>B.</strong> 8 parameter (4 × 2, tanpa bias)",
-                "<strong>C.</strong> 10 parameter (4 × 2 weight + 2 bias)",
-            ],
-            answer_html="<strong>Jawaban: C (10 parameter)!</strong> Setiap 4 neuron input terhubung ke 2 neuron hidden = <code>4 × 2 = 8</code> weight, ditambah <code>2</code> bias (1 untuk setiap neuron hidden) → total <strong>10 parameter</strong>!",
-            vis_q_html='<div class="formula-box" style="font-size:15px;">4 Input → 2 Hidden</div><div style="margin-top:10px; font-size:13px; color:#5F6368;">Ingat rumus: <code>(Input × Hidden) + Bias</code>. Jangan lupakan bias!</div>',
-            vis_a_html='<div class="big-num hl-green">10 Parameter</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Rincian:</strong> <code>(4 × 2) + 2 = 10</code> di Layer 1, dan <code>(2 × 2) + 2 = 6</code> di Layer 2 → total jaringan mini = <strong>16 parameter</strong>.</div>',
-            notes="Alokasi waktu: 1 menit. Minta peserta menghitung lisan 4×2+2 sebelum membuka jawaban. Setelah paham Forward Pass, kita masuk ke pertanyaan paling menarik: bagaimana bobot-bobot itu belajar?",
-            bar_color="green",
         )
-    )
 
-    # 35: LOSS FUNCTION (INTUITIF)
-    s.append(
-        f"""
+        # 34: Q&A REVEAL #4 (FORWARD PASS)
+        s.append(
+            _qa_slide(
+                qa_id="qa-fp",
+                qa_num=4,
+                kicker="BAB 03 · TANYA-JAWAB #4",
+                title_html='Cek Cepat: <span class="hl-blue">Forward Pass &amp; Jumlah Parameter</span>',
+                question_html="Sebuah jaringan mini punya <strong>4 neuron input</strong>, <strong>2 neuron hidden</strong>, dan <strong>2 neuron output</strong> (seperti contoh Elsa tadi). Berapa total parameter (weight + bias) pada <em>Layer 1</em> (Input → Hidden)?",
+                choices=[
+                    "<strong>A.</strong> 6 parameter (4 + 2)",
+                    "<strong>B.</strong> 8 parameter (4 × 2, tanpa bias)",
+                    "<strong>C.</strong> 10 parameter (4 × 2 weight + 2 bias)",
+                ],
+                answer_html="<strong>Jawaban: C (10 parameter)!</strong> Setiap 4 neuron input terhubung ke 2 neuron hidden = <code>4 × 2 = 8</code> weight, ditambah <code>2</code> bias (1 untuk setiap neuron hidden) → total <strong>10 parameter</strong>!",
+                vis_q_html='<div class="formula-box" style="font-size:15px;">4 Input → 2 Hidden</div><div style="margin-top:10px; font-size:13px; color:#5F6368;">Ingat rumus: <code>(Input × Hidden) + Bias</code>. Jangan lupakan bias!</div>',
+                vis_a_html='<div class="big-num hl-green">10 Parameter</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Rincian:</strong> <code>(4 × 2) + 2 = 10</code> di Layer 1, dan <code>(2 × 2) + 2 = 6</code> di Layer 2 → total jaringan mini = <strong>16 parameter</strong>.</div>',
+                notes="Alokasi waktu: 1 menit. Minta peserta menghitung lisan 4×2+2 sebelum membuka jawaban. Setelah paham Forward Pass, kita masuk ke pertanyaan paling menarik: bagaimana bobot-bobot itu belajar?",
+                bar_color="green",
+            )
+        )
+
+        # 35: LOSS FUNCTION (INTUITIF)
+        s.append(
+            f"""
     <!-- 35: LOSS — SEBERAPA SALAH TEBAKAN -->
     <section class="slide" data-title="Bab 3E: Loss — Mengukur Seberapa Salah Tebakan AI" data-notes="Alokasi waktu: 1.5 menit. Saat model baru dibuat, semua weight masih acak sehingga tebakannya salah. Loss Function (seperti Cross-Entropy) memberi skor hukuman: makin salah dan makin yakin, makin besar nilai Loss-nya.">
       <div class="kicker">BAB 03 · LOSS FUNCTION</div>
@@ -2360,172 +2687,188 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 """
-    )
-
-    # 40: Q&A REVEAL #5 (BAB 3)
-    s.append(
-        _qa_slide(
-            qa_id="qa-bab3",
-            qa_num=5,
-            kicker="BAB 03 · TANYA-JAWAB #5",
-            title_html='Cek Pemahaman Bab 3: <span class="hl-green">Bagaimana Model Belajar?</span>',
-            question_html="Saat melatih Neural Network di Keras, kita melihat nilai <strong>Loss</strong> perlahan turun dari <code>1.65</code> menjadi <code>0.35</code> seiring bertambahnya <strong>Epoch</strong>. Apa artinya?",
-            choices=[
-                "<strong>A.</strong> Model makin bingung karena angkanya makin kecil",
-                "<strong>B.</strong> Bobot (<em>weight</em> &amp; <em>bias</em>) berhasil dikoreksi oleh Gradient Descent sehingga tebakan model pada data latih makin mendekati label asli",
-                "<strong>C.</strong> Jumlah neuron di Input Layer berkurang otomatis tiap epoch",
-            ],
-            answer_html="<strong>Jawaban: B!</strong> Nilai <strong>Loss</strong> mengukur besar kesalahan — makin kecil Loss, makin dekat prediksi model ke jawaban benar. Jumlah neuron tidak berubah; yang berubah setiap langkah training adalah nilai angka <em>weight</em> dan <em>bias</em>.",
-            vis_q_html='<div class="big-num hl-red">1.65 → 0.35</div><div style="margin-top:8px; font-size:13.5px; color:#5F6368;">Nilai Loss turun seiring Epoch berjalan — kabar baik atau kabar buruk?</div>',
-            vis_a_html='<div class="big-num hl-green">Kabar Baik!</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Loss Menurun = Belajar!</strong> Artinya optimizer (Gradient Descent / Adam) berhasil menuntun bobot turun menuju dasar lembah error.</div>',
-            notes="Alokasi waktu: 1 menit. Menutup Bab 3 dengan mengecek pemahaman arah nilai Loss. Setelah ini kita masuk ke Bab 4 (Teaser Arsitektur CV).",
-            bar_color="green",
         )
-    )
 
-    # =========================================================================
-    # BAB 4: ARSITEKTUR NEURAL NETWORK UNTUK COMPUTER VISION (SLIDE 41–45 · 6.0M)
-    # =========================================================================
-    s.append(
-        make_divider_slide(
-            bg_class="bg-yellow",
-            kicker="BAB 04 · TEASER ARSITEKTUR MODERN",
-            title="Arsitektur Neural Network untuk Computer Vision",
-            description="Mengapa MLP biasa kewalahan menangani foto, dan bagaimana keluarga CNN berevolusi dari LeNet sampai MobileNetV2.",
-            footer_label=FOOTER,
-            data_title="Bab 4 — Arsitektur CV (Teaser)",
-            notes="Alokasi waktu: 0.5 menit. Bab 4 bersifat teaser konseptual agar peserta tahu peta arsitektur CV tanpa harus paham rumus konvolusi dulu (detail konvolusi di P03, detail arsitektur & transfer learning di P04).",
+        # 40: Q&A REVEAL #5 (BAB 3)
+        s.append(
+            _qa_slide(
+                qa_id="qa-bab3",
+                qa_num=5,
+                kicker="BAB 03 · TANYA-JAWAB #5",
+                title_html='Cek Pemahaman Bab 3: <span class="hl-green">Bagaimana Model Belajar?</span>',
+                question_html="Saat melatih Neural Network di Keras, kita melihat nilai <strong>Loss</strong> perlahan turun dari <code>1.65</code> menjadi <code>0.35</code> seiring bertambahnya <strong>Epoch</strong>. Apa artinya?",
+                choices=[
+                    "<strong>A.</strong> Model makin bingung karena angkanya makin kecil",
+                    "<strong>B.</strong> Bobot (<em>weight</em> &amp; <em>bias</em>) berhasil dikoreksi oleh Gradient Descent sehingga tebakan model pada data latih makin mendekati label asli",
+                    "<strong>C.</strong> Jumlah neuron di Input Layer berkurang otomatis tiap epoch",
+                ],
+                answer_html="<strong>Jawaban: B!</strong> Nilai <strong>Loss</strong> mengukur besar kesalahan — makin kecil Loss, makin dekat prediksi model ke jawaban benar. Jumlah neuron tidak berubah; yang berubah setiap langkah training adalah nilai angka <em>weight</em> dan <em>bias</em>.",
+                vis_q_html='<div class="big-num hl-red">1.65 → 0.35</div><div style="margin-top:8px; font-size:13.5px; color:#5F6368;">Nilai Loss turun seiring Epoch berjalan — kabar baik atau kabar buruk?</div>',
+                vis_a_html='<div class="big-num hl-green">Kabar Baik!</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Loss Menurun = Belajar!</strong> Artinya optimizer (Gradient Descent / Adam) berhasil menuntun bobot turun menuju dasar lembah error.</div>',
+                notes="Alokasi waktu: 1 menit. Menutup Bab 3 dengan mengecek pemahaman arah nilai Loss. Setelah ini kita masuk ke Bab 4 (Teaser Arsitektur CV).",
+                bar_color="green",
+            )
         )
-    )
 
-    # 42: MENGAPA MLP TIDAK CUKUP
-    s.append(
-        f"""
-    <!-- 42: MENGAPA MLP TIDAK CUKUP UNTUK GAMBAR -->
-    <section class="slide" data-title="Bab 4: Mengapa MLP Tidak Cukup untuk Gambar?" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan dua alasan kuat dari hasil Bab 3 tadi: (1) ledakan 19,27 juta parameter di 1 layer saja, dan (2) Flatten merusak tetangga piksel 2D sehingga sangat peka jika objek bergeser sedikit.">
-      <div class="kicker">BAB 04 · BATASAN MLP PADA FOTO</div>
-      <h2>Mengapa <span class="hl-red">MLP Biasa</span> Tidak Cukup untuk Gambar?</h2>
-      <div class="img-box" style="height:auto; flex:1; min-height:0; padding:7px;">
-        <img src="assets/P02/06_mlp_vs_cnn_preview.png" alt="Perbandingan MLP Flatten 1D vs CNN Filter 2D pada foto Elsa" style="width:100%; height:100%; max-height:345px; object-fit:contain;"/>
-      </div>
-      <div class="grid-2" style="flex:0 0 auto; margin-top:8px;">
-        <div class="callout red"><strong>Masalah 1 — Boros Parameter:</strong> Foto <code>224×224×3</code> → <code>Dense(128)</code> langsung butuh <strong>19,27 juta parameter</strong> padahal dataset v1 kita baru {total_imgs} foto!</div>
-        <div class="callout green"><strong>Masalah 2 — Peka Posisi:</strong> <em>Flatten</em> memutus tetangga atas-bawah. <strong>CNN</strong> (P03) memakai filter kecil <code>3×3</code> yang bergeser di gambar 2D utuh!</div>
-      </div>
-      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
-    </section>
+    if not HIDE_BAB4_ARCH:
+        # =========================================================================
+        # BAB 4: ARSITEKTUR NEURAL NETWORK UNTUK COMPUTER VISION (SLIDE 41–45 · 6.0M)
+        # =========================================================================
+        s.append(
+            make_divider_slide(
+                bg_class="bg-yellow",
+                kicker="BAB 04 · TEASER ARSITEKTUR MODERN",
+                title="Arsitektur Neural Network untuk Computer Vision",
+                description="Mengapa MLP biasa kewalahan menangani foto, dan bagaimana keluarga CNN berevolusi dari LeNet sampai MobileNetV2.",
+                footer_label=FOOTER,
+                data_title="Bab 4 — Arsitektur CV (Teaser)",
+                notes="Alokasi waktu: 0.5 menit. Bab 4 bersifat teaser konseptual agar peserta tahu peta arsitektur CV tanpa harus paham rumus konvolusi dulu (detail konvolusi di P03, detail arsitektur & transfer learning di P04).",
+            )
+        )
 
-    <!-- 43: PETA ARSITEKTUR + SIMULATOR #10 -->
-    <section class="slide" data-title="Bab 4: Peta Evolusi Arsitektur CV (Simulator)" data-notes="Alokasi waktu: 2 menit. Klik keempat kartu secara berurutan (MLP -> CNN -> ResNet -> MobileNet) untuk menjelaskan ide inti tiap generasi secara konseptual tanpa detail internal yang berat. Detailnya akan dipelajari di P03 dan P04.">
-      <div class="kicker">BAB 04 · EVOLUSI ARSITEKTUR</div>
-      <h2>Evolusi Arsitektur CV: <span class="hl-blue">MLP → CNN → ResNet → MobileNet</span></h2>
-      <div class="sim-bar pdf-keep-ui" id="arch-tabs" style="margin-bottom:10px;">
-        <button class="btn-ui outline" data-arch="mlp" onclick="setArchTab('mlp')">1. MLP (Fully Connected)</button>
-        <button class="btn-ui outline" data-arch="cnn" onclick="setArchTab('cnn')">2. CNN (LeNet / VGG)</button>
-        <button class="btn-ui outline" data-arch="resnet" onclick="setArchTab('resnet')">3. ResNet (Skip Connection)</button>
-        <button class="btn-ui" data-arch="mobilenet" onclick="setArchTab('mobilenet')">4. MobileNetV2 ★ Proyek Kita</button>
-      </div>
-      <div class="split-60-40">
-        <div class="card surface" style="justify-content:space-between;">
-          <div class="card-top-bar bar-green" id="arch-bar"></div>
-          <div>
-            <span class="pill green" id="arch-pill">MOBILENETV2 · RINGAN &amp; CEPAT</span>
-            <div class="card-title" id="arch-title" style="margin-top:8px;">Dirancang Ringan untuk HP &amp; Dataset Kecil</div>
+        # 42: MENGAPA MLP TIDAK CUKUP
+        s.append(
+            f"""
+        <!-- 42: MENGAPA MLP TIDAK CUKUP UNTUK GAMBAR -->
+        <section class="slide" data-title="Bab 4: Mengapa MLP Tidak Cukup untuk Gambar?" data-notes="Alokasi waktu: {"2.5" if HIDE_SLIDES_28_40 else "1.5"} menit. Tunjukkan dua alasan kuat dari hasil Bab 3 tadi: (1) ledakan 19,27 juta parameter di 1 layer saja, dan (2) Flatten merusak tetangga piksel 2D sehingga sangat peka jika objek bergeser sedikit.">
+          <div class="kicker">BAB 04 · BATASAN MLP PADA FOTO</div>
+          <h2>Mengapa <span class="hl-red">MLP Biasa</span> Tidak Cukup untuk Gambar?</h2>
+          <div class="img-box" style="height:auto; flex:1; min-height:0; padding:7px;">
+            <img src="assets/P02/06_mlp_vs_cnn_preview.png" alt="Perbandingan MLP Flatten 1D vs CNN Filter 2D pada foto Elsa" style="width:100%; height:100%; max-height:345px; object-fit:contain;"/>
           </div>
-          <div class="card-body" id="arch-body" style="font-size:13.6px;"></div>
-          <div class="callout green" id="arch-callout"></div>
-        </div>
-        <div class="card" style="justify-content:space-between;">
-          <div class="card-top-bar bar-blue"></div>
-          <div class="card-title">Ringkasan Perbandingan Cepat</div>
-          <table class="io-table" style="font-size:12px;">
-            <thead><tr><th>Keluarga</th><th>Ide Inti</th><th>Status di Kelas</th></tr></thead>
-            <tbody>
-              <tr><td><strong>MLP</strong></td><td>Semua piksel disambung penuh</td><td>Praktik hari ini (P02)</td></tr>
-              <tr><td><strong>CNN Dasar</strong></td><td>Filter 2D geser + hemat bobot</td><td>Bedah tuntas di P03</td></tr>
-              <tr><td><strong>ResNet</strong></td><td><em>Skip Connection</em> agar bisa sangat dalam</td><td>Dibahas di P04</td></tr>
-              <tr style="background:var(--tint-green);"><td><strong>MobileNetV2</strong></td><td>Konvolusi ringan + <em>Transfer Learning</em></td><td><strong>Model Proyek P04–P08!</strong></td></tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
-    </section>
+          <div class="grid-2" style="flex:0 0 auto; margin-top:8px;">
+            <div class="callout red"><strong>Masalah 1 — Boros Parameter:</strong> Foto <code>224×224×3</code> → <code>Dense(128)</code> langsung butuh <strong>19,27 juta parameter</strong> padahal dataset v1 kita baru {total_imgs} foto!</div>
+            <div class="callout green"><strong>Masalah 2 — Peka Posisi:</strong> <em>Flatten</em> memutus tetangga atas-bawah. <strong>CNN</strong> (P03) memakai filter kecil <code>3×3</code> yang bergeser di gambar 2D utuh!</div>
+          </div>
+          <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+        </section>
 
-    <!-- 44: ARSITEKTUR PER TASK & PILIHAN PROYEK -->
-    <section class="slide" data-title="Bab 4: Arsitektur per Task CV &amp; Pilihan MobileNetV2" data-notes="Alokasi waktu: 1 menit. Hubungkan Bab 2 (4 Task CV) dengan Bab 4 (Arsitektur): tiap task punya keluarga arsitektur populer, tetapi semuanya sering memakai CNN backbone yang mirip! Untuk proyek kita dipilih MobileNetV2.">
-      <div class="kicker">BAB 04 · MENGHUBUNGKAN TASK &amp; ARSITEKTUR</div>
-      <h2>Arsitektur Populer per Task &amp; <span class="hl-green">Pilihan Proyek Kita</span></h2>
-      <div class="grid-3" style="margin-bottom:10px;">
-        <div class="card tint-blue">
-          <div class="card-top-bar bar-blue"></div>
-          <span class="pill blue">CLASSIFICATION</span>
-          <div class="card-title">ResNet · MobileNetV2 · EfficientNet</div>
-          <div class="card-body" style="font-size:13px;">Fokus mengekstrak fitur gambar lalu mengakhiri jaringan dengan <code>Dense + Softmax</code> untuk menebak label kelas.</div>
-        </div>
-        <div class="card tint-red">
-          <div class="card-top-bar bar-red"></div>
-          <span class="pill red">OBJECT DETECTION</span>
-          <div class="card-title">YOLO · SSD · Faster R-CNN</div>
-          <div class="card-body" style="font-size:13px;">Memakai <em>CNN backbone</em> untuk mengekstrak fitur, lalu menambahkan <em>detection head</em> untuk memprediksi <em>bounding box</em>.</div>
-        </div>
-        <div class="card tint-green">
-          <div class="card-top-bar bar-green"></div>
-          <span class="pill green">SEGMENTATION</span>
-          <div class="card-title">U-Net · Mask R-CNN</div>
-          <div class="card-body" style="font-size:13px;">Mengekstrak fitur lalu membesarkannya kembali agar bisa memberi label piksel demi piksel (<em>mask</em>).</div>
-        </div>
-      </div>
-      <div class="callout green"><strong>Mengapa proyek Frozen kita memilih MobileNetV2?</strong> (1) Ringan &amp; cepat dilatih di Google Colab gratis, (2) sudah punya bobot terlatih dari jutaan gambar ImageNet (<em>Transfer Learning</em> di P04), dan (3) cocok untuk dataset berukuran kecil–menengah.</div>
-      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
-    </section>
-"""
-    )
+        <!-- 43: PETA ARSITEKTUR + SIMULATOR #10 -->
+        <section class="slide" data-title="Bab 4: Peta Evolusi Arsitektur CV (Simulator)" data-notes="Alokasi waktu: {"2.5" if HIDE_SLIDES_28_40 else "2"} menit. Klik keempat kartu secara berurutan (MLP -> CNN -> ResNet -> MobileNet) untuk menjelaskan ide inti tiap generasi secara konseptual tanpa detail internal yang berat. Detailnya akan dipelajari di P03 dan P04.">
+          <div class="kicker">BAB 04 · EVOLUSI ARSITEKTUR</div>
+          <h2>Evolusi Arsitektur CV: <span class="hl-blue">MLP → CNN → ResNet → MobileNet</span></h2>
+          <div class="sim-bar pdf-keep-ui" id="arch-tabs" style="margin-bottom:10px;">
+            <button class="btn-ui outline" data-arch="mlp" onclick="setArchTab('mlp')">1. MLP (Fully Connected)</button>
+            <button class="btn-ui outline" data-arch="cnn" onclick="setArchTab('cnn')">2. CNN (LeNet / VGG)</button>
+            <button class="btn-ui outline" data-arch="resnet" onclick="setArchTab('resnet')">3. ResNet (Skip Connection)</button>
+            <button class="btn-ui" data-arch="mobilenet" onclick="setArchTab('mobilenet')">4. MobileNetV2 ★ Proyek Kita</button>
+          </div>
+          <div class="split-60-40">
+            <div class="card surface" style="justify-content:space-between;">
+              <div class="card-top-bar bar-green" id="arch-bar"></div>
+              <div>
+                <span class="pill green" id="arch-pill">MOBILENETV2 · RINGAN &amp; CEPAT</span>
+                <div class="card-title" id="arch-title" style="margin-top:8px;">Dirancang Ringan untuk HP &amp; Dataset Kecil</div>
+              </div>
+              <div class="card-body" id="arch-body" style="font-size:13.6px;"></div>
+              <div class="callout green" id="arch-callout"></div>
+            </div>
+            <div class="card" style="justify-content:space-between;">
+              <div class="card-top-bar bar-blue"></div>
+              <div class="card-title">Ringkasan Perbandingan Cepat</div>
+              <table class="io-table" style="font-size:12px;">
+                <thead><tr><th>Keluarga</th><th>Ide Inti</th><th>Status di Kelas</th></tr></thead>
+                <tbody>
+                  <tr><td><strong>MLP</strong></td><td>Semua piksel disambung penuh</td><td>Praktik hari ini (P02)</td></tr>
+                  <tr><td><strong>CNN Dasar</strong></td><td>Filter 2D geser + hemat bobot</td><td>Bedah tuntas di P03</td></tr>
+                  <tr><td><strong>ResNet</strong></td><td><em>Skip Connection</em> agar bisa sangat dalam</td><td>Dibahas di P04</td></tr>
+                  <tr style="background:var(--tint-green);"><td><strong>MobileNetV2</strong></td><td>Konvolusi ringan + <em>Transfer Learning</em></td><td><strong>Model Proyek P04–P08!</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+        </section>
 
-    # 45: Q&A REVEAL #6 (BAB 4)
-    s.append(
-        _qa_slide(
-            qa_id="qa-bab4",
-            qa_num=6,
-            kicker="BAB 04 · TANYA-JAWAB #6",
-            title_html='Jembatan ke P03: <span class="hl-yellow">Kenapa Kita Pindah dari MLP ke CNN?</span>',
-            question_html="Di Hands-On sebentar lagi kita akan mencoba membangun <strong>MLP kecil</strong> di Keras. Mengapa untuk model akhir proyek Frozen kita tidak memakai MLP saja, melainkan berpindah ke <strong>CNN (MobileNetV2)</strong>?",
-            choices=[
-                "<strong>A.</strong> Karena MLP tidak bisa memakai fungsi aktivasi ReLU atau Softmax",
-                "<strong>B.</strong> Karena MLP merusak struktur 2D lewat Flatten dan meledakkan jumlah parameter hingga jutaan",
-                "<strong>C.</strong> Karena Keras tidak mendukung MLP untuk gambar berwarna RGB",
-            ],
-            answer_html="<strong>Jawaban: B!</strong> MLP tetap memakai ReLU dan Softmax (bahkan bagian ujung CNN juga memakai <code>Dense + Softmax</code>!). Namun untuk membaca piksel gambar, <strong>CNN</strong> jauh lebih unggul karena menjaga bentuk 2D dan sangat hemat parameter.",
-            vis_q_html='<div class="big-num hl-red">19,27 Juta</div><div style="margin-top:8px; font-size:13px; color:#5F6368;">Parameter 1 layer MLP pada foto 224×224×3 — apa solusi utamanya?</div>',
-            vis_a_html='<div class="big-num hl-green">CNN (P03)!</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>P02 → P03:</strong> Hari ini kita praktik MLP kecil agar paham fondasi layer &amp; parameter. Pertemuan berikutnya kita bedah konvolusi CNN!</div>',
-            notes="Alokasi waktu: 1 menit. Menutup seluruh sesi teori Bab 1–4. Setelah ini peserta istirahat 5 menit sebelum masuk ke Hands-On Notebook.",
-            bar_color="yellow",
+        <!-- 44: ARSITEKTUR PER TASK & PILIHAN PROYEK -->
+        <section class="slide" data-title="Bab 4: Arsitektur per Task CV &amp; Pilihan MobileNetV2" data-notes="Alokasi waktu: {"1.5" if HIDE_SLIDES_28_40 else "1"} menit. Hubungkan Bab 2 (4 Task CV) dengan Bab 4 (Arsitektur): tiap task punya keluarga arsitektur populer, tetapi semuanya sering memakai CNN backbone yang mirip! Untuk proyek kita dipilih MobileNetV2.">
+          <div class="kicker">BAB 04 · MENGHUBUNGKAN TASK &amp; ARSITEKTUR</div>
+          <h2>Arsitektur Populer per Task &amp; <span class="hl-green">Pilihan Proyek Kita</span></h2>
+          <div class="grid-3" style="margin-bottom:10px;">
+            <div class="card tint-blue">
+              <div class="card-top-bar bar-blue"></div>
+              <span class="pill blue">CLASSIFICATION</span>
+              <div class="card-title">ResNet · MobileNetV2 · EfficientNet</div>
+              <div class="card-body" style="font-size:13px;">Fokus mengekstrak fitur gambar lalu mengakhiri jaringan dengan <code>Dense + Softmax</code> untuk menebak label kelas.</div>
+            </div>
+            <div class="card tint-red">
+              <div class="card-top-bar bar-red"></div>
+              <span class="pill red">OBJECT DETECTION</span>
+              <div class="card-title">YOLO · SSD · Faster R-CNN</div>
+              <div class="card-body" style="font-size:13px;">Memakai <em>CNN backbone</em> untuk mengekstrak fitur, lalu menambahkan <em>detection head</em> untuk memprediksi <em>bounding box</em>.</div>
+            </div>
+            <div class="card tint-green">
+              <div class="card-top-bar bar-green"></div>
+              <span class="pill green">SEGMENTATION</span>
+              <div class="card-title">U-Net · Mask R-CNN</div>
+              <div class="card-body" style="font-size:13px;">Mengekstrak fitur lalu membesarkannya kembali agar bisa memberi label piksel demi piksel (<em>mask</em>).</div>
+            </div>
+          </div>
+          <div class="callout green"><strong>Mengapa proyek Frozen kita memilih MobileNetV2?</strong> (1) Ringan &amp; cepat dilatih di Google Colab gratis, (2) sudah punya bobot terlatih dari jutaan gambar ImageNet (<em>Transfer Learning</em> di P04), dan (3) cocok untuk dataset berukuran kecil–menengah.</div>
+          <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+        </section>
+    """
         )
-    )
 
-    # =========================================================================
-    # ISTIRAHAT (SLIDE 46 · 5.0 MENIT)
-    # =========================================================================
-    s.append(
-        make_divider_slide(
-            bg_class="bg-blue",
-            kicker="BAB 05 · ISTIRAHAT &amp; HANDS-ON",
-            title="Istirahat 5 Menit",
-            description="Minum air, regangkan mata & tangan sejenak. Setelah jeda, kita buka notebook P02_computer_vision_101.ipynb dan praktik 6 langkah santai pada foto Frozen!",
-            footer_label=FOOTER,
-            data_title="Istirahat 5 Menit & Masuk Bab 5",
-            notes="Alokasi waktu: 5 menit. Berikan jeda istirahat penuh 5 menit. Siapkan browser Google Colab atau Jupyter lokal untuk membuka materials/P02/P02_computer_vision_101.ipynb.",
+        # 45: Q&A REVEAL #6 (atau #4 saat Slide 28–40 disembunyikan) (BAB 4)
+        s.append(
+            _qa_slide(
+                qa_id="qa-bab4",
+                qa_num=4 if HIDE_SLIDES_28_40 else 6,
+                kicker="BAB 04 · TANYA-JAWAB #4" if HIDE_SLIDES_28_40 else "BAB 04 · TANYA-JAWAB #6",
+                title_html='Jembatan ke P03: <span class="hl-yellow">Kenapa Kita Pindah dari MLP ke CNN?</span>',
+                question_html="Di Hands-On sebentar lagi kita akan mencoba membangun <strong>MLP kecil</strong> di Keras. Mengapa untuk model akhir proyek Frozen kita tidak memakai MLP saja, melainkan berpindah ke <strong>CNN (MobileNetV2)</strong>?",
+                choices=[
+                    "<strong>A.</strong> Karena MLP tidak bisa memakai fungsi aktivasi ReLU atau Softmax",
+                    "<strong>B.</strong> Karena MLP merusak struktur 2D lewat Flatten dan meledakkan jumlah parameter hingga jutaan",
+                    "<strong>C.</strong> Karena Keras tidak mendukung MLP untuk gambar berwarna RGB",
+                ],
+                answer_html="<strong>Jawaban: B!</strong> MLP tetap memakai ReLU dan Softmax (bahkan bagian ujung CNN juga memakai <code>Dense + Softmax</code>!). Namun untuk membaca piksel gambar, <strong>CNN</strong> jauh lebih unggul karena menjaga bentuk 2D dan sangat hemat parameter.",
+                vis_q_html='<div class="big-num hl-red">19,27 Juta</div><div style="margin-top:8px; font-size:13px; color:#5F6368;">Parameter 1 layer MLP pada foto 224×224×3 — apa solusi utamanya?</div>',
+                vis_a_html='<div class="big-num hl-green">CNN (P03)!</div><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>P02 → P03:</strong> Hari ini kita praktik MLP kecil agar paham fondasi layer &amp; parameter. Pertemuan berikutnya kita bedah konvolusi CNN!</div>',
+                notes="Alokasi waktu: 1 menit. Menutup seluruh sesi teori Bab 1–4. Setelah ini peserta istirahat 5 menit sebelum masuk ke Hands-On Notebook.",
+                bar_color="yellow",
+            )
         )
-    )
+
 
     # =========================================================================
-    # BAB 5: 6 LANGKAH HANDS-ON (SLIDE 47–52 · 38.0 MENIT)
+    # POST-BAB 3: KUIS -> KAMUS -> REFERENSI -> ISTIRAHAT -> HANDS-ON -> PENUTUP
+    # (Saat HIDE_BAB4_ARCH=True, langsung setelah Bab 3 tanpa pembatas Bab 4/5)
     # =========================================================================
-    s.append(
+    _eval_cover_slide = make_divider_slide(
+        bg_class="bg-yellow",
+        kicker="EVALUASI &amp; SUMBER BELAJAR",
+        title="Kuis, Kamus Istilah & Referensi",
+        description="Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 12 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.",
+        footer_label=FOOTER,
+        data_title="Cover — Kuis, Kamus & Referensi",
+        notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal, lanjut Kamus Istilah, dan daftar Referensi Belajar Mandiri.",
+    )
+
+    _break_slide = make_divider_slide(
+        bg_class="bg-blue",
+        kicker="SESI PRAKTIK · NOTEBOOK P02" if HIDE_BAB4_ARCH else "BAB 05 · ISTIRAHAT &amp; HANDS-ON",
+        title="Hands-On: Praktik Neural Network" if HIDE_BAB4_ARCH else "Istirahat 5 Menit",
+        description=(
+            "Saatnya praktik langsung! Buka notebook p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal — kita jalankan 6 langkah NumPy & Keras pada foto Disney Frozen!"
+            if HIDE_BAB4_ARCH
+            else "Minum air, regangkan mata & tangan sejenak. Setelah jeda, kita buka notebook p02_teori_neural_network.ipynb dan praktik 6 langkah santai pada foto Frozen!"
+        ),
+        footer_label=FOOTER,
+        data_title="Cover — Hands-On Praktik Neural Network" if HIDE_BAB4_ARCH else "Istirahat 5 Menit & Masuk Bab 5",
+        notes=(
+            "Alokasi waktu: 1 menit. Cover pembuka sesi praktik Hands-On. Ajak peserta membuka materials/p02_teori_neural_network/p02_teori_neural_network.ipynb di Google Colab atau Jupyter lokal dan pastikan folder data/frozen_v1/ siap diakses."
+            if HIDE_BAB4_ARCH
+            else "Alokasi waktu: 5 menit. Berikan jeda istirahat penuh 5 menit. Siapkan browser Google Colab atau Jupyter lokal untuk membuka materials/p02_teori_neural_network/p02_teori_neural_network.ipynb."
+        ),
+    )
+
+    _handson_slides = [
         _handson_step_slide(
             step_num=1,
             title="Setup 3 Tahap & Baca Data Frozen Dinamis",
-            kicker="BAB 05 · HANDS-ON (6 MENIT)",
+            kicker="HANDS-ON · LANGKAH 1/6 (9,5 MENIT)" if HIDE_BAB4_ARCH else ("BAB 05 · HANDS-ON (7 MENIT)" if HIDE_SLIDES_28_40 else "BAB 05 · HANDS-ON (6 MENIT)"),
             goal_html="Menyiapkan library, kunci <code>SEED = 42</code>, dan membaca <code>metadata.csv</code>",
             bullets_html="""
               <li>Jalankan <strong>Setup 1/3, 2/3, 3/3</strong> untuk memuat NumPy, Pandas, Matplotlib, TensorFlow, serta mendeteksi folder <code>DATA_DIR</code> otomatis.</li>
@@ -2538,15 +2881,12 @@ print("Total foto tersedia :", len(df_meta))
 print(pd.crosstab(df_meta["kelas"], df_meta["kondisi"]))""",
             callout_html="<strong>Target Langkah 1:</strong> Semua setup hijau tanpa error dan galeri 5 karakter Frozen muncul di layar.",
             color="blue",
-            notes="Alokasi waktu: 6 menit. Pandu peserta menjalankan Setup 1/3 sampai 3/3 dan membaca metadata.csv secara dinamis. Pastikan Colab/lokal menemukan folder data/frozen_v1/.",
-        )
-    )
-
-    s.append(
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else ('7' if HIDE_SLIDES_28_40 else '6')} menit. Pandu peserta menjalankan Setup 1/3 sampai 3/3 dan membaca metadata.csv secara dinamis. Pastikan Colab/lokal menemukan folder data/frozen_v1/.",
+        ),
         _handson_step_slide(
             step_num=2,
             title="Flatten Foto & Hitung Neuron Input Layer",
-            kicker="BAB 05 · HANDS-ON (6 MENIT)",
+            kicker="HANDS-ON · LANGKAH 2/6 (9,5 MENIT)" if HIDE_BAB4_ARCH else ("BAB 05 · HANDS-ON (7 MENIT)" if HIDE_SLIDES_28_40 else "BAB 05 · HANDS-ON (6 MENIT)"),
             goal_html="Mengubah foto 2D/3D menjadi vektor 1D dan menghitung neuron input",
             bullets_html="""
               <li>Buka 1 foto asli Elsa, ubah ukurannya ke <code>(64, 64, 3)</code> dan <code>(224, 224, 3)</code>, lalu normalisasi ke <code>0.0–1.0</code>.</li>
@@ -2560,20 +2900,17 @@ print("Shape 3D      :", arr_64.shape)
 print("Neuron Input  :", len(vektor_input))  # 12.288""",
             callout_html="<strong>Target Langkah 2:</strong> Melihat langsung hubungan antara <code>shape (H, W, C)</code> dengan jumlah neuron di <em>Input Layer</em>.",
             color="green",
-            notes="Alokasi waktu: 6 menit. Pandu peserta menyelesaikan TODO 1 & TODO 2 tentang flatten dan hitungan neuron input layer. Cocokkan angkanya dengan Slide 21–22.",
-        )
-    )
-
-    s.append(
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else ('7' if HIDE_SLIDES_28_40 else '6')} menit. Pandu peserta menyelesaikan TODO 1 & TODO 2 tentang flatten dan hitungan neuron input layer. Cocokkan angkanya dengan Slide 21–22.",
+        ),
         _handson_step_slide(
             step_num=3,
             title="Forward Pass Manual dengan NumPy",
-            kicker="BAB 05 · HANDS-ON (6 MENIT)",
+            kicker="HANDS-ON · LANGKAH 3/6 (10 MENIT)" if HIDE_BAB4_ARCH else ("BAB 05 · HANDS-ON (8 MENIT)" if HIDE_SLIDES_28_40 else "BAB 05 · HANDS-ON (6 MENIT)"),
             goal_html="Menulis sendiri hitungan 1 neuron, <code>ReLU</code>, <code>Softmax</code>, dan 4-piksel Forward Pass",
-            bullets_html="""
+            bullets_html=f"""
               <li>Kerjakan <strong># TODO 3</strong>: hitung <code>z = np.dot(x, w) + b</code> dan fungsi <code>relu(z)</code>.</li>
               <li>Kerjakan <strong># TODO 4</strong>: buat <code>softmax_manual(logits)</code> dan buktikan jumlah probabilitasnya selalu <code>1.0</code>.</li>
-              <li>Jalankan ulang contoh <strong>4 piksel nyata Elsa</strong> (Slide 33) di NumPy dan cocokkan hasilnya!</li>
+              <li>Jalankan ulang contoh <strong>4 piksel nyata Elsa</strong>{"" if HIDE_SLIDES_28_40 else " (Slide 33)"} di NumPy dan cocokkan hasilnya!</li>
             """,
             code_snippet="""# Forward Pass 2 layer di NumPy (Langkah 3)
 z1 = x_4px @ W1 + b1
@@ -2582,15 +2919,12 @@ logits = h1 @ W2 + b2           # Skor Output
 probs = softmax_manual(logits)  # Probabilitas 100%""",
             callout_html="<strong>Target Langkah 3:</strong> Semua <code>assert</code> lolos dan peserta melihat bahwa Forward Pass hanyalah perkalian matriks + aktivasi.",
             color="red",
-            notes="Alokasi waktu: 6 menit. Minta peserta melengkapi TODO 3 & TODO 4. Jika mentok >2 menit, boleh mengintip tombol dropdown Hint di bawah sel.",
-        )
-    )
-
-    s.append(
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else ('8' if HIDE_SLIDES_28_40 else '6')} menit. Minta peserta melengkapi TODO 3 & TODO 4. Jika mentok >2 menit, boleh mengintip tombol dropdown Hint di bawah sel.",
+        ),
         _handson_step_slide(
             step_num=4,
             title="Bangun MLP Kecil dengan Keras",
-            kicker="BAB 05 · HANDS-ON (6 MENIT)",
+            kicker="HANDS-ON · LANGKAH 4/6 (10 MENIT)" if HIDE_BAB4_ARCH else ("BAB 05 · HANDS-ON (8 MENIT)" if HIDE_SLIDES_28_40 else "BAB 05 · HANDS-ON (6 MENIT)"),
             goal_html="Menyusun arsitektur <code>Input → Flatten → Dense(ReLU) → Dense(Softmax)</code>",
             bullets_html="""
               <li>Muat foto Frozen ke ukuran ringkas <code>64×64×3</code> (agar RAM aman &amp; cepat dilatih di kelas).</li>
@@ -2604,17 +2938,14 @@ mlp = tf.keras.Sequential([
     tf.keras.layers.Dense(64, activation="relu"),
     tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),
 ])""",
-            callout_html="<strong>Catatan jujur:</strong> MLP ini hanya untuk <strong>demo konsep</strong> (bukan model final) — jembatan menuju CNN di P03!",
+            callout_html="<strong>Catatan jujur:</strong> MLP ini hanya untuk <strong>demo konsep</strong> (bukan model final) — jembatan menuju Arsitektur &amp; CNN di P03!",
             color="yellow",
-            notes="Alokasi waktu: 6 menit. Jelaskan kaitan tiap baris Sequential dengan diagram Bab 3 (Input -> Flatten -> Hidden ReLU -> Output Softmax).",
-        )
-    )
-
-    s.append(
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else ('7.5' if HIDE_SLIDES_28_40 else '6')} menit. Jelaskan kaitan tiap baris Sequential dengan diagram Bab 3 (Input -> Flatten -> Hidden ReLU -> Output Softmax).",
+        ),
         _handson_step_slide(
             step_num=5,
             title="Latih MLP Sebentar & Plot Kurva Loss",
-            kicker="BAB 05 · HANDS-ON (7 MENIT)",
+            kicker="HANDS-ON · LANGKAH 5/6 (10 MENIT)" if HIDE_BAB4_ARCH else ("BAB 05 · HANDS-ON (8 MENIT)" if HIDE_SLIDES_28_40 else "BAB 05 · HANDS-ON (7 MENIT)"),
             goal_html="Menjalankan <code>model.fit()</code> dan mengamati penurunan nilai <em>Loss</em>",
             bullets_html="""
               <li>Kerjakan <strong># TODO 6</strong>: latih model beberapa epoch pada foto Frozen (<code>2</code> epoch saat <code>SMOKE_TEST=1</code>, <code>8</code> epoch di kelas).</li>
@@ -2630,15 +2961,12 @@ history = mlp.fit(
 plt.plot(history.history["loss"], marker="o")""",
             callout_html="<strong>Ingat metodologi:</strong> Pembagian data <em>train/val/test</em> resmi bebas <em>leakage</em> (Group Split) akan kita pelajari tuntas di <strong>P05</strong>.",
             color="blue",
-            notes="Alokasi waktu: 7 menit. Jalankan training demo singkat dan tunjukkan grafik Loss yang turun. Jangan mengklaim akurasi tinggi — fokus pada konsep Loss turun dan keterbatasan MLP.",
-        )
-    )
-
-    s.append(
+            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else ('7.5' if HIDE_SLIDES_28_40 else '7')} menit. Jalankan training demo singkat dan tunjukkan grafik Loss yang turun. Jangan mengklaim akurasi tinggi — fokus pada konsep Loss turun dan keterbatasan MLP.",
+        ),
         _handson_step_slide(
             step_num=6,
             title="Cek model.summary() vs Hitungan Tangan",
-            kicker="BAB 05 · HANDS-ON (7 MENIT)",
+            kicker="HANDS-ON · LANGKAH 6/6 (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON (7 MENIT)",
             goal_html="Membuktikan rumus <code>(Input × Output) + Bias</code> cocok 100% dengan Keras",
             bullets_html="""
               <li>Panggil <code>mlp.summary()</code> dan baca kolom <code>Param #</code> di setiap layer.</li>
@@ -2653,18 +2981,14 @@ print("Keras count     :", f"{mlp.count_params():,}")
 assert hitung_manual == mlp.count_params()""",
             callout_html="<strong>Momen Aha:</strong> Angka di <code>model.summary()</code> bukan angka misterius — kamu sekarang tahu persis asal setiap parameternya!",
             color="green",
-            notes="Alokasi waktu: 7 menit. Pastikan peserta melihat assert hitung_manual == mlp.count_params() lolos. Ini mengunci seluruh pemahaman Bab 3 dan Bab 4.",
-        )
-    )
+            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Pastikan peserta melihat assert hitung_manual == mlp.count_params() lolos. Ini mengunci seluruh pemahaman Bab 3 tentang jumlah bobot dan parameter Neural Network.",
+        ),
+    ]
 
-    # =========================================================================
-    # MINI-CHALLENGE (SLIDE 53 · 5.0 MENIT)
-    # =========================================================================
-    s.append(
-        f"""
-    <!-- 53: MINI-CHALLENGE -->
-    <section class="slide" data-title="Mini-Challenge: Ubah Jumlah Neuron Hidden Layer" data-notes="Alokasi waktu: 5 menit. Ajak peserta menebak dulu sebelum menjalankan sel Mini-Challenge di notebook: apa dampak mengubah hidden neuron dari 32 ke 64 lalu 128 terhadap jumlah parameter dan kurva Loss?">
-      <div class="kicker">BAB 05 · MINI-CHALLENGE (5 MENIT)</div>
+    _challenge_html = f"""
+    <!-- MINI-CHALLENGE -->
+    <section class="slide" data-title="Mini-Challenge: Ubah Jumlah Neuron Hidden Layer" data-notes="Alokasi waktu: {"6.5" if HIDE_BAB4_ARCH else ("5.5" if HIDE_SLIDES_28_40 else "5")} menit. Ajak peserta menebak dulu sebelum menjalankan sel Mini-Challenge di notebook: apa dampak mengubah hidden neuron dari 32 ke 64 lalu 128 terhadap jumlah parameter dan kurva Loss?">
+      <div class="kicker">{"MINI-CHALLENGE · 6,5 MENIT" if HIDE_BAB4_ARCH else (f'BAB 05 · MINI-CHALLENGE ({"6" if HIDE_SLIDES_28_40 else "5"} MENIT)')}</div>
       <h2>Mini-Challenge: <span class="hl-red">32 vs 64 vs 128 Neuron Hidden</span></h2>
       <div class="split-60-40">
         <div class="card surface" style="justify-content:space-between;">
@@ -2695,11 +3019,18 @@ assert hitung_manual == mlp.count_params()""",
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
 
-    <!-- 54: KAMUS ISTILAH -->
+    _glossary_item12 = (
+        '<div class="gloss-card"><div class="gloss-term">Epoch &amp; Learning Rate</div><div class="gloss-def"><code>Epoch</code>: 1 putaran penuh membaca seluruh data latih. <code>Learning Rate</code>: lebar langkah koreksi bobot.</div></div>'
+        if HIDE_BAB4_ARCH
+        else '<div class="gloss-card"><div class="gloss-term">MLP vs CNN</div><div class="gloss-def">MLP meluruskan foto (boros bobot); CNN memakai filter 2D yang hemat dan tahan geser.</div></div>'
+    )
+    _glossary_html = f"""
+    <!-- KAMUS ISTILAH -->
     <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 12 istilah asli yang kita pakai sepanjang sesi dengan penjelasan sederhana dalam bahasa sehari-hari.">
-      <div class="kicker">BAB 05 · GLOSARIUM RINGKAS</div>
-      <h2>Kamus Istilah <span class="hl-blue">Computer Vision 101</span></h2>
+      <div class="kicker">{"GLOSARIUM RINGKAS · TEORI NEURAL NETWORK" if HIDE_BAB4_ARCH else "BAB 05 · GLOSARIUM RINGKAS"}</div>
+      <h2>Kamus Istilah <span class="hl-blue">Teori Neural Network</span></h2>
       <div class="glossary-grid">
         <div class="gloss-card"><div class="gloss-term">AI / ML / DL</div><div class="gloss-def">Hierarki subset: AI (bidang luas) ⊃ ML (belajar dari data) ⊃ DL (memakai Neural Network berlapis).</div></div>
         <div class="gloss-card"><div class="gloss-term">Image Classification</div><div class="gloss-def">Memberi 1 label kategori (dan probabilitas) pada keseluruhan foto.</div></div>
@@ -2712,14 +3043,31 @@ assert hitung_manual == mlp.count_params()""",
         <div class="gloss-card"><div class="gloss-term">Forward Pass</div><div class="gloss-def">Aliran perhitungan maju dari piksel foto hingga keluar probabilitas prediksi.</div></div>
         <div class="gloss-card"><div class="gloss-term">Loss Function</div><div class="gloss-def">Skor hukuman seberapa jauh tebakan model dari label asli (makin kecil makin baik).</div></div>
         <div class="gloss-card"><div class="gloss-term">Gradient Descent &amp; Backprop</div><div class="gloss-def">Cara model mencari arah salah dan menggeser bobot turun menuju Loss terkecil.</div></div>
-        <div class="gloss-card"><div class="gloss-term">MLP vs CNN</div><div class="gloss-def">MLP meluruskan foto (boros bobot); CNN memakai filter 2D yang hemat dan tahan geser.</div></div>
+        {_glossary_item12}
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
 
-    <!-- 55: KUIS INTERAKTIF 5 SOAL -->
-    <section class="slide" data-title="Kuis Interaktif 5 Soal" data-notes="Alokasi waktu: 4 menit. Minta peserta menjawab kelima soal secara lisan terlebih dahulu sebelum membuka tombol jawaban satu per satu.">
-      <div class="kicker">BAB 05 · EVALUASI CEPAT (5 SOAL)</div>
+    _q5_q = (
+        "5. Saat <em>training</em> berjalan dari Epoch 1 ke Epoch 8, rata-rata <em>Loss</em> turun dari <code>1.70 → 0.21</code>. Proses apa yang melacak balik kesalahan &amp; menggeser bobotnya?"
+        if HIDE_BAB4_ARCH
+        else "5. Mengapa MLP biasa tidak ideal untuk foto <code>224×224×3</code> sehingga kita butuh CNN?"
+    )
+    _q5_a = (
+        "<strong>Jawab:</strong> <strong>Backpropagation</strong> melacak mundur dari <em>Loss</em> ke tiap kabel <code>W, b</code>, lalu <strong>Gradient Descent</strong> menggeser bobot sebesar <em>Learning Rate</em> agar <em>Loss</em> makin kecil!"
+        if HIDE_BAB4_ARCH
+        else "<strong>Jawab:</strong> Karena <em>Flatten</em> merusak struktur spasial 2D dan jumlah bobotnya langsung meledak hingga jutaan (&gt;19 juta untuk 128 hidden)."
+    )
+    _quiz_target_line4 = (
+        "✓ Paham <em>Backpropagation</em>, <em>Gradient Descent</em> &amp; <em>Epoch</em>!"
+        if HIDE_BAB4_ARCH
+        else "✓ Tahu alasan pindah ke <strong>CNN</strong> di P03!"
+    )
+    _quiz_html = f"""
+    <!-- KUIS INTERAKTIF 5 SOAL -->
+    <section class="slide" data-title="Kuis Interaktif 5 Soal" data-notes="Alokasi waktu: {"5" if HIDE_BAB4_ARCH else "4"} menit. Minta peserta menjawab kelima soal Bab 1–3 secara lisan terlebih dahulu sebelum membuka tombol jawaban satu per satu.">
+      <div class="kicker">{"EVALUASI CEPAT · KUIS 5 SOAL" if HIDE_BAB4_ARCH else "BAB 05 · EVALUASI CEPAT (5 SOAL)"}</div>
       <h2>Kuis Interaktif <span class="hl-red">5 Soal</span></h2>
       <div class="quiz-grid-compact">
         <div class="quiz-item compact">
@@ -2743,26 +3091,39 @@ assert hitung_manual == mlp.count_params()""",
           <div id="q4" class="quiz-ans"><strong>Jawab:</strong> Agar 5 skor mentah (<em>logits</em>) diubah menjadi probabilitas <code>0–100%</code> yang jumlah totalnya selalu tepat <code>100%</code>.</div>
         </div>
         <div class="quiz-item compact">
-          <div class="q-txt">5. Mengapa MLP biasa tidak ideal untuk foto <code>224×224×3</code> sehingga kita butuh CNN?</div>
+          <div class="q-txt">{_q5_q}</div>
           <button class="btn-ui outline" onclick="toggleAns('q5', this)">Lihat Jawaban</button>
-          <div id="q5" class="quiz-ans"><strong>Jawab:</strong> Karena <em>Flatten</em> merusak struktur spasial 2D dan jumlah bobotnya langsung meledak hingga jutaan (&gt;19 juta untuk 128 hidden).</div>
+          <div id="q5" class="quiz-ans">{_q5_a}</div>
         </div>
         <div class="card tint-green" style="padding:10px 13px; justify-content:center; gap:5px;">
           <div class="card-title" style="font-size:13.5px; color:#137333;">Target Penguasaan P02</div>
           <div style="font-size:11.6px; line-height:1.4; color:#202124;">
             ✓ Bisa membedakan AI/ML/DL &amp; 4 Task CV<br/>
             ✓ Bisa menghitung neuron &amp; parameter MLP<br/>
-            ✓ Paham alur Forward Pass &amp; Loss → Gradient Descent<br/>
-            ✓ Tahu alasan pindah ke <strong>CNN</strong> di P03!
+            ✓ Paham alur <em>Forward Pass</em>, <em>ReLU</em>, &amp; <em>Softmax</em><br/>
+            {_quiz_target_line4}
           </div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
 
-    <!-- 56: 3 POIN UTAMA (DARK) -->
-    <section class="slide dark" data-title="3 Poin Utama Hari Ini" data-notes="Alokasi waktu: 2 menit. Rangkum seluruh sesi Computer Vision 101 menjadi 3 pilar utama agar mudah diingat setelah kelas selesai.">
-      <div class="kicker">RANGKUMAN INTI · COMPUTER VISION 101</div>
+    _ref_slide_range = "33–34" if HIDE_BAB4_ARCH else ("47–48" if HIDE_SLIDES_28_40 else "58–59")
+    _p03_preview_title = (
+        "P03 — Arsitektur Neural Network &amp; Konvolusi (CNN)"
+        if HIDE_BAB4_ARCH
+        else "P03 — Training Neural Network &amp; Konvolusi (CNN)"
+    )
+    _p03_preview_b1 = (
+        "Membedah keterbatasan MLP pada foto (19,27 juta bobot) &amp; evolusi arsitektur CV: <strong>MLP → CNN → ResNet → MobileNetV2</strong>."
+        if HIDE_BAB4_ARCH
+        else "Memperdalam proses training (kurva <em>Train vs Validation Loss</em>, <em>Overfitting</em>, <em>Learning Rate</em>)."
+    )
+    _summary_html = f"""
+    <!-- 3 POIN UTAMA (DARK) -->
+    <section class="slide dark" data-title="3 Poin Utama Hari Ini" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else "2"} menit. Rangkum seluruh sesi Teori Neural Network menjadi 3 pilar utama agar mudah diingat setelah kelas selesai sekaligus beri preview singkat menuju P03 (Arsitektur Neural Network &amp; Konvolusi CNN).">
+      <div class="kicker">RANGKUMAN INTI · TEORI NEURAL NETWORK</div>
       <h2>3 Poin Utama yang <span style="color:var(--yellow);">Wajib Dibawa Pulang</span></h2>
       <div class="grid-3" style="margin-top:12px;">
         <div class="card" style="background:#292A2D; border-color:#3C4043; color:#FFF; justify-content:space-between;">
@@ -2774,42 +3135,44 @@ assert hitung_manual == mlp.count_params()""",
         <div class="card" style="background:#292A2D; border-color:#3C4043; color:#FFF; justify-content:space-between;">
           <div class="card-top-bar bar-green"></div>
           <div class="big-num" style="color:var(--green);">02</div>
-          <div class="card-title" style="color:#FFF;">Neural Network = Susunan Sederhana</div>
-          <div class="card-body" style="color:#BDC1C6;">Dimulai dari <strong>1 Neuron</strong> (<code>x·w + b → ReLU</code>), disusun menjadi <strong>Input, Hidden, &amp; Output Layer (<code>Softmax</code>)</strong>, lalu belajar menurunkan <strong>Loss</strong> lewat <strong>Gradient Descent</strong>.</div>
+          <div class="card-title" style="color:#FFF;">Neural Network = 5 Tahap Runtut</div>
+          <div class="card-body" style="color:#BDC1C6;">Dimulai dari <strong>1 Piksel → 1 Neuron</strong>, disusun lewat <strong>Flatten</strong> menjadi <strong>Input, Hidden (<code>ReLU</code>), &amp; Output (<code>Softmax</code>)</strong>, lalu belajar menurunkan <strong>Loss</strong> lewat <strong>Backpropagation &amp; Gradient Descent</strong>.</div>
         </div>
         <div class="card" style="background:#292A2D; border-color:#3C4043; color:#FFF; justify-content:space-between;">
           <div class="card-top-bar bar-red"></div>
           <div class="big-num" style="color:var(--yellow);">03</div>
-          <div class="card-title" style="color:#FFF;">Batasan MLP → Pintu Menuju CNN</div>
-          <div class="card-body" style="color:#BDC1C6;">Foto <code>224×224×3</code> meledakkan MLP ke <strong>19,27 juta parameter</strong>. Di <strong>P03</strong> kita bedah <strong>CNN</strong> yang membaca gambar 2D secara efisien!</div>
+          <div class="card-title" style="color:#FFF;">MLP 19,27 Juta Param → Siap ke P03</div>
+          <div class="card-body" style="color:#BDC1C6;">Foto <code>224×224×3</code> di MLP langsung butuh <strong>19,27 juta parameter</strong>. Di <strong>P03</strong> kita bedah <strong>Arsitektur Neural Network &amp; CNN</strong> yang membaca gambar 2D secara efisien!</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
 
-    <!-- 57: CLOSING & PREVIEW P03 -->
-    <section class="slide" data-title="Closing &amp; Preview P03" data-notes="Alokasi waktu: 2 menit. Beri apresiasi kepada peserta, sampaikan tugas ringan merangkum alur neuron sampai jaringan dengan bahasa sendiri, dan berikan preview seru menuju P03 (Training Neural Network & Konvolusi CNN)." style="background: radial-gradient(circle at 80% 35%, rgba(52,168,83,0.12) 0%, rgba(66,133,244,0.09) 45%, #FFFFFF 100%);">
+    _closing_html = f"""
+    <!-- CLOSING & PREVIEW P03 -->
+    <section class="slide" data-title="Closing &amp; Preview P03" data-notes="Alokasi waktu: 2 menit. Beri apresiasi kepada peserta, sampaikan tugas ringan merangkum alur neuron sampai jaringan dengan bahasa sendiri, dan berikan preview seru menuju P03 (Arsitektur Neural Network &amp; Konvolusi CNN)." style="background: radial-gradient(circle at 80% 35%, rgba(52,168,83,0.12) 0%, rgba(66,133,244,0.09) 45%, #FFFFFF 100%);">
       <div class="kicker">PENUTUP · SAMPAI JUMPA DI P03</div>
-      <h2>Luar Biasa! Pondasi <span class="hl-green">Computer Vision 101</span> Selesai</h2>
+      <h2>Luar Biasa! Pondasi <span class="hl-green">Teori Neural Network</span> Selesai</h2>
       <div class="grid-2" style="margin-top:8px;">
         <div class="card surface" style="justify-content:space-between;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title">Tugas Ringan Mandiri (Opsional)</div>
           <div class="card-body">
             <ul>
-              <li>Tulis ringkasan singkat (maks. 1 halaman) dengan <strong>bahasamu sendiri</strong>: perjalanan 1 foto Frozen dari piksel → <em>Input Layer</em> → <em>Hidden Layer</em> → <code>Softmax</code>.</li>
+              <li>Tulis ringkasan singkat (maks. 1 halaman) dengan <strong>bahasamu sendiri</strong>: perjalanan 1 foto Frozen dari piksel → <em>Input Layer</em> → <em>Hidden Layer</em> → <code>Softmax</code> → <em>Backpropagation</em>.</li>
               <li>Simpan grafik Loss &amp; tabel eksperimen <code>32 / 64 / 128</code> neuron dari notebook sebagai catatan belajar.</li>
             </ul>
           </div>
-          <div class="callout"><strong>Slide 58–59</strong> berisi daftar referensi video &amp; bacaan mandiri yang bisa diklik kapan saja.</div>
+          <div class="callout"><strong>Slide {_ref_slide_range}</strong> berisi daftar referensi video &amp; bacaan mandiri yang bisa diklik kapan saja.</div>
         </div>
         <div class="card tint-green" style="justify-content:space-between;">
           <div class="card-top-bar bar-green"></div>
           <span class="pill green">PREVIEW PERTEMUAN BERIKUTNYA</span>
-          <div class="card-title">P03 — Training Neural Network &amp; Konvolusi (CNN)</div>
+          <div class="card-title">{_p03_preview_title}</div>
           <div class="card-body">
             <ul>
-              <li>Memperdalam proses training (kurva <em>Train vs Validation Loss</em>, <em>Overfitting</em>, <em>Learning Rate</em>).</li>
+              <li>{_p03_preview_b1}</li>
               <li>Membongkar <strong>Konvolusi (CNN)</strong>: kernel/filter 2D, stride, padding, pooling, dan melihat langsung <em>Feature Map</em> dari foto Disney Frozen milikmu!</li>
             </ul>
           </div>
@@ -2818,8 +3181,10 @@ assert hitung_manual == mlp.count_params()""",
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
 
-    <!-- 58: REFERENSI BELAJAR MANDIRI (1/2) — 0 MENIT -->
+    _refs_html = f"""
+    <!-- REFERENSI BELAJAR MANDIRI (1/2) — 0 MENIT -->
     <section class="slide" data-title="Referensi Belajar Mandiri (1/2)" data-notes="Alokasi waktu: 0 menit. Referensi belajar mandiri bagian 1 (sumber sesuai docs/PLAN.md; sumber belum diverifikasi ulang diberi label [CEK LINK]).">
       <div class="kicker">REFERENSI BELAJAR · BAGIAN 1</div>
       <h2>Sumber Belajar: <span class="hl-blue">Neural Network &amp; Visualisasi Dasar</span></h2>
@@ -2880,8 +3245,8 @@ assert hitung_manual == mlp.count_params()""",
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 59: REFERENSI BELAJAR MANDIRI (2/2) — 0 MENIT -->
-    <section class="slide" data-title="Referensi Belajar Mandiri (2/2)" data-notes="Alokasi waktu: 0 menit. Referensi belajar mandiri bagian 2 untuk persiapan CNN (P03) dan Arsitektur MobileNetV2 (P04), seluruhnya merujuk docs/PLAN.md.">
+    <!-- REFERENSI BELAJAR MANDIRI (2/2) — 0 MENIT -->
+    <section class="slide" data-title="Referensi Belajar Mandiri (2/2)" data-notes="Alokasi waktu: 0 menit. Referensi belajar mandiri bagian 2 untuk persiapan Arsitektur CNN (P03) dan MobileNetV2 (P04), seluruhnya merujuk docs/PLAN.md.">
       <div class="kicker">REFERENSI BELAJAR · BAGIAN 2</div>
       <h2>Sumber Belajar: <span class="hl-green">Computer Vision, CNN &amp; MobileNetV2</span></h2>
       <div class="grid-2" style="gap:12px;">
@@ -2941,7 +3306,25 @@ assert hitung_manual == mlp.count_params()""",
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 """
-    )
+
+    if HIDE_BAB4_ARCH:
+        # Urutan final 42 slide: Bab 1-3 -> Cover Kuis/Kamus/Ref -> Kuis -> Kamus -> Referensi -> Cover Hands-On -> Hands-On 1-6 -> 3 Poin Utama
+        s.append(_eval_cover_slide)
+        s.append(_quiz_html)
+        s.append(_glossary_html)
+        s.append(_refs_html)
+        s.append(_break_slide)
+        s.extend(_handson_slides)
+        s.append(_summary_html)
+    else:
+        s.append(_break_slide)
+        s.extend(_handson_slides)
+        s.append(_challenge_html)
+        s.append(_glossary_html)
+        s.append(_quiz_html)
+        s.append(_summary_html)
+        s.append(_closing_html)
+        s.append(_refs_html)
 
     return "\n".join(s)
 
@@ -2952,6 +3335,7 @@ def build_extra_js(data: dict) -> str:
     flt_json = json.dumps(data["flatten_4x4"], ensure_ascii=False)
     ends_json = json.dumps(data["elsa_rgb_ends"], ensure_ascii=False)
     tm_json = json.dumps(data["training_math_demo"], ensure_ascii=False)
+    fnn_json = json.dumps(data["full_nn_demo"], ensure_ascii=False)
     total_imgs = data["total_images"]
     return f"""
     const FROZEN_CHAR_DATA = {cs_json};
@@ -2959,6 +3343,7 @@ def build_extra_js(data: dict) -> str:
     const FLATTEN_PIXELS = {flt_json};
     const ELSA_ENDS = {ends_json};
     const TRAINING_MATH = {tm_json};
+    const FULL_NN_DATA = {fnn_json};
 
     // =========================================================================
     // SIMULATOR #1 (Slide 09): Aturan Manual vs Machine Learning
@@ -3152,6 +3537,23 @@ def build_extra_js(data: dict) -> str:
     }}
 
     // =========================================================================
+    // SHARED HELPER: Synchronized Explanation-Card Glow & Lift across S20–S28
+    // =========================================================================
+    function _syncCards(ids, activeIdx, colors) {{
+      ids.forEach((id, idx) => {{
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.remove('sync-on', 'sync-dim', 'sync-blue', 'sync-yellow', 'sync-green', 'sync-red');
+        if (activeIdx < 0) return;
+        if (idx === activeIdx) {{
+          el.classList.add('sync-on', 'sync-' + (colors[idx] || 'blue'));
+        }} else {{
+          el.classList.add('sync-dim');
+        }}
+      }});
+    }}
+
+    // =========================================================================
     // ANIMASI INTERAKTIF 1 PIKSEL -> 1 NEURON (Slide 20): 60fps Zoom -> Pick -> Morph
     // =========================================================================
     const N1_GRID_N = (ELSA_ENDS && ELSA_ENDS.grid_n) ? ELSA_ENDS.grid_n : 8;
@@ -3175,7 +3577,7 @@ def build_extra_js(data: dict) -> str:
     function _n1SetPlayBtn(playing) {{
       const b = document.getElementById('n1-btn-play');
       if (!b) return;
-      b.textContent = playing ? '■ Stop' : '▶ Putar';
+      b.textContent = playing ? '■ Stop' : '▶ Play';
       b.style.background = playing ? '#EA4335' : '#34A853';
       b.style.borderColor = playing ? '#EA4335' : '#34A853';
     }}
@@ -3447,10 +3849,15 @@ def build_extra_js(data: dict) -> str:
         n1Raf = null;
         _n1SetPlayBtn(false);
         _n1ApplyPixelValues(n1SelectedIdx, true, true);
+        _syncCards(['n1-bul-1', 'n1-bul-2'], -1, ['blue', 'green']);
+        _syncCards(['n1-caption'], -1, ['green']);
         _n1ClearOverlay();
         return;
       }}
       _n1ApplyPixelValues(n1SelectedIdx, n1Prog >= 0.60, n1Prog >= 0.90);
+      const n1PhaseIdx = n1Prog < 0.64 ? 0 : 1;
+      _syncCards(['n1-bul-1', 'n1-bul-2'], n1PhaseIdx, ['blue', 'green']);
+      _syncCards(['n1-caption'], 0, [n1PhaseIdx === 0 ? 'blue' : 'green']);
       _n1DrawOverlay();
       n1Raf = requestAnimationFrame(_tickN1);
     }}
@@ -3508,6 +3915,8 @@ def build_extra_js(data: dict) -> str:
       n1Prog = 1.0;
       const cap = document.getElementById('n1-caption');
       if (cap) cap.textContent = 'Setiap 1 kotak piksel pada foto Elsa diwakili oleh tepat 1 lingkaran Neuron yang memegang angkanya.';
+      _syncCards(['n1-bul-1', 'n1-bul-2'], -1, ['blue', 'green']);
+      _syncCards(['n1-caption'], -1, ['green']);
       _n1ApplyPixelValues(n1SelectedIdx, true, true);
       _n1ClearOverlay();
     }}
@@ -3522,12 +3931,16 @@ def build_extra_js(data: dict) -> str:
     const FLT_ROW_COL = ['#4285F4', '#EA4335', '#E37400', '#34A853'];
     const FLT_ROW_BG  = ['#E8F0FE', '#FCE8E6', '#FEF7E0', '#E6F4EA'];
     const FLT_ROW_LBL = ['Brs 1', 'Brs 2', 'Brs 3', 'Brs 4'];
-    let fltPlaced = FLT_TOTAL; // number of pixels already landed in Input Layer (0..16)
-    let fltFlyIdx = -1;        // index (0..15) currently in flight, or -1 if idle
-    let fltFlyT = 0;           // 0..1 progress of current flying pixel
+    let fltExtracted = FLT_TOTAL; // number of cropped photo tiles landed in 4x4 grid (0..16)
+    let fltPlaced = FLT_TOTAL;    // number of pixels landed in Input Layer (0..16)
+    let fltPhase = 'idle';        // 'idle' | 'split' | 'flatten'
+    let fltSplitProg = 1.0;       // 0..1 progress of Phase 1 (Photo -> 4x4 grid split)
+    let fltFlyIdx = -1;           // index (0..15) currently in flight (4x4 -> Input Layer)
+    let fltFlyT = 0;              // 0..1 progress of current flying pixel in Phase 2
     let fltAutoPlay = false;
     let fltRafId = null;
     let fltLastTs = 0;
+    let fltSplitCache = null;
 
     function _fltRoundRect(ctx, x, y, w, h, r) {{
       const rad = Math.min(r, w / 2, h / 2);
@@ -3538,6 +3951,183 @@ def build_extra_js(data: dict) -> str:
       ctx.arcTo(x, y + h, x, y, rad);
       ctx.arcTo(x, y, x + w, y, rad);
       ctx.closePath();
+    }}
+
+    function _fltSplitCellWindow(idx) {{
+      const tStart = idx * 0.056;
+      const tEnd = tStart + 0.16;
+      return {{ tStart, tEnd }};
+    }}
+
+    function _fltCacheSplitLayout() {{
+      const wrap = document.getElementById('flt-stage-wrap');
+      const ov = document.getElementById('flt-split-canvas');
+      const photo = document.getElementById('flt-photo-box');
+      const cvs = document.getElementById('flatten-canvas');
+      if (!wrap || !ov || !photo || !cvs) return null;
+      const wRect = wrap.getBoundingClientRect();
+      const cw = wrap.clientWidth || wRect.width || 1000;
+      const ch = wrap.clientHeight || wRect.height || 360;
+      if (!wRect.width || !wRect.height) return null;
+      const sx = wRect.width / cw;
+      const sy = wRect.height / ch;
+      const toLocal = (el) => {{
+        const r = el.getBoundingClientRect();
+        return {{
+          x: (r.left - wRect.left) / sx,
+          y: (r.top - wRect.top) / sy,
+          w: r.width / sx,
+          h: r.height / sy,
+        }};
+      }};
+      const rPhoto = toLocal(photo);
+      const rCvsBox = toLocal(cvs);
+      // Compute actual rendered rectangle of 800x340 canvas inside rCvsBox (object-fit: contain)
+      const natW = cvs.width || 800, natH = cvs.height || 340;
+      const fitScale = Math.min(rCvsBox.w / natW, rCvsBox.h / natH);
+      const drawW = natW * fitScale;
+      const drawH = natH * fitScale;
+      const ox = rCvsBox.x + (rCvsBox.w - drawW) / 2;
+      const oy = rCvsBox.y + (rCvsBox.h - drawH) / 2;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      ov.width = Math.round(cw * dpr);
+      ov.height = Math.round(ch * dpr);
+      const ctx = ov.getContext('2d');
+
+      return {{ ctx, dpr, cw, ch, rPhoto, ox, oy, fitScale }};
+    }}
+
+    function _fltClearSplitOverlay() {{
+      const ov = document.getElementById('flt-split-canvas');
+      if (!ov) return;
+      const ctx = ov.getContext('2d');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, ov.width, ov.height);
+    }}
+
+    function _fltDrawSplitOverlay() {{
+      if (fltPhase !== 'split') {{
+        _fltClearSplitOverlay();
+        return;
+      }}
+      const L = fltSplitCache || (fltSplitCache = _fltCacheSplitLayout());
+      if (!L) return;
+      const {{ ctx, dpr, cw, ch, rPhoto, ox, oy, fitScale }} = L;
+      const img = document.getElementById('flt-elsa-img');
+      const imgReady = img && img.complete && img.naturalWidth > 0;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, cw, ch);
+
+      const gx0 = 58, gy0 = 44, cell = 54, gap = 6;
+      const srcCellW = rPhoto.w / FLT_N;
+      const srcCellH = rPhoto.h / FLT_N;
+      const dstCellW = cell * fitScale;
+      const dstCellH = cell * fitScale;
+      const smooth = (a, b, v) => {{
+        const u = Math.max(0, Math.min(1, (v - a) / (b - a)));
+        return u * u * (3 - 2 * u);
+      }};
+
+      // Subtle tint over already-lifted cells on Foto Elsa so the slice-off is unmistakable
+      FLATTEN_PIXELS.forEach((px, idx) => {{
+        const {{ tStart, tEnd }} = _fltSplitCellWindow(idx);
+        const sx0 = rPhoto.x + px.col * srcCellW;
+        const sy0 = rPhoto.y + px.row * srcCellH;
+        if (fltSplitProg >= tStart && fltSplitProg < tEnd) {{
+          ctx.save();
+          ctx.strokeStyle = '#FBBC04';
+          ctx.lineWidth = 2.4;
+          ctx.strokeRect(sx0 + 1, sy0 + 1, srcCellW - 2, srcCellH - 2);
+          ctx.restore();
+        }}
+      }});
+
+      // Draw each flying cropped piece of Foto Elsa -> morphing into colored numeric 4x4 cell!
+      FLATTEN_PIXELS.forEach((px, idx) => {{
+        const {{ tStart, tEnd }} = _fltSplitCellWindow(idx);
+        if (fltSplitProg < tStart || fltSplitProg >= tEnd) return;
+        const rawT = (fltSplitProg - tStart) / (tEnd - tStart);
+        const e = rawT < 0.5 ? 2 * rawT * rawT : 1 - Math.pow(-2 * rawT + 2, 2) / 2;
+        const inv = 1 - e;
+
+        const srcCx = rPhoto.x + (px.col + 0.5) * srcCellW;
+        const srcCy = rPhoto.y + (px.row + 0.5) * srcCellH;
+        const dstCx = ox + (gx0 + px.col * (cell + gap) + cell / 2) * fitScale;
+        const dstCy = oy + (gy0 + px.row * (cell + gap) + cell / 2) * fitScale;
+
+        const ctrlX = (srcCx + dstCx) / 2;
+        const ctrlY = Math.min(srcCy, dstCy) - (22 + px.row * 4);
+        const cx = inv * inv * srcCx + 2 * inv * e * ctrlX + e * e * dstCx;
+        const cy = inv * inv * srcCy + 2 * inv * e * ctrlY + e * e * dstCy;
+
+        const pop = 1 + 0.14 * Math.sin(Math.PI * rawT);
+        const w = (srcCellW + (dstCellW - srcCellW) * e) * pop;
+        const h = (srcCellH + (dstCellH - srcCellH) * e) * pop;
+        const rad = (3 + 5 * e) * fitScale;
+        const x = cx - w / 2;
+        const y = cy - h / 2;
+
+        // Faint curved guide trail behind flying slice
+        ctx.save();
+        ctx.strokeStyle = FLT_ROW_COL[px.row];
+        ctx.globalAlpha = 0.34;
+        ctx.lineWidth = 1.6;
+        ctx.setLineDash([4, 3]);
+        ctx.beginPath();
+        ctx.moveTo(srcCx, srcCy);
+        ctx.quadraticCurveTo(ctrlX, ctrlY, cx, cy);
+        ctx.stroke();
+        ctx.restore();
+
+        // Card container with crisp shadow
+        ctx.save();
+        ctx.shadowColor = 'rgba(26, 115, 232, 0.28)';
+        ctx.shadowBlur = 10;
+        _fltRoundRect(ctx, x, y, w, h, rad);
+        ctx.fillStyle = `rgb(${{px.rgb[0]}},${{px.rgb[1]}},${{px.rgb[2]}})`;
+        ctx.fill();
+        ctx.restore();
+
+        // Crossfade real Elsa photo crop (1 -> 0) into colored pixel tile + number (0 -> 1)
+        const photoAlpha = 1 - smooth(0.45, 0.94, rawT);
+        if (imgReady && photoAlpha > 0.02) {{
+          ctx.save();
+          _fltRoundRect(ctx, x, y, w, h, rad);
+          ctx.clip();
+          ctx.globalAlpha = photoAlpha;
+          const natSliceW = img.naturalWidth / FLT_N;
+          const natSliceH = img.naturalHeight / FLT_N;
+          ctx.drawImage(
+            img,
+            px.col * natSliceW, px.row * natSliceH, natSliceW, natSliceH,
+            x, y, w, h
+          );
+          ctx.restore();
+        }}
+
+        const numAlpha = smooth(0.38, 0.90, rawT);
+        if (numAlpha > 0.02) {{
+          ctx.save();
+          ctx.globalAlpha = numAlpha;
+          const tc = px.gray < 0.58 ? '#FFFFFF' : '#202124';
+          ctx.fillStyle = tc;
+          ctx.textAlign = 'center';
+          ctx.font = `700 ${{(9.5 * fitScale).toFixed(1)}}px Roboto Mono, monospace`;
+          ctx.fillText(`x${{px.idx}}`, cx, y + h * 0.39);
+          ctx.font = `700 ${{(12 * fitScale).toFixed(1)}}px Roboto Mono, monospace`;
+          ctx.fillText(px.gray.toFixed(2), cx, y + h * 0.72);
+          ctx.restore();
+        }}
+
+        // Crisp row-colored border
+        ctx.save();
+        _fltRoundRect(ctx, x, y, w, h, rad);
+        ctx.strokeStyle = rawT < 0.55 ? '#FBBC04' : FLT_ROW_COL[px.row];
+        ctx.lineWidth = 2.3;
+        ctx.stroke();
+        ctx.restore();
+      }});
     }}
 
     function drawFlattenFrame() {{
@@ -3563,7 +4153,7 @@ def build_extra_js(data: dict) -> str:
         y: slotY0 + idx * slotGap,
       }});
 
-      // Title: 2D Grid (centered directly over 4x4 grid, no numbering, aligned on y=24 baseline)
+      // Title: 2D Grid
       ctx.fillStyle = '#202124';
       ctx.font = '700 13px Poppins, Arial';
       ctx.textAlign = 'center';
@@ -3581,12 +4171,32 @@ def build_extra_js(data: dict) -> str:
         ctx.fillText(FLT_ROW_LBL[r], 28, cy + 3.5);
       }}
 
-      // Draw 4x4 real Elsa pixel cells
+      // Draw 4x4 real Elsa pixel cells (or dashed waiting placeholders before photo split lands!)
       FLATTEN_PIXELS.forEach((px, idx) => {{
         const x = gx0 + px.col * (cell + gap);
         const y = gy0 + px.row * (cell + gap);
+        const isExtracted = idx < fltExtracted;
         const isLanded = idx < fltPlaced;
-        const isFlying = idx === fltFlyIdx;
+        const isFlying = fltPhase === 'flatten' && idx === fltFlyIdx;
+
+        if (!isExtracted) {{
+          const {{ tStart, tEnd }} = _fltSplitCellWindow(idx);
+          const incoming = fltPhase === 'split' && fltSplitProg >= tStart && fltSplitProg < tEnd;
+          ctx.save();
+          ctx.setLineDash([4, 3]);
+          _fltRoundRect(ctx, x, y, cell, cell, 8);
+          ctx.fillStyle = incoming ? '#FEF7E0' : '#F8F9FA';
+          ctx.fill();
+          ctx.strokeStyle = incoming ? '#FBBC04' : '#DADCE0';
+          ctx.lineWidth = incoming ? 2.2 : 1.4;
+          ctx.stroke();
+          ctx.restore();
+          ctx.fillStyle = incoming ? '#B06000' : '#9AA0A6';
+          ctx.textAlign = 'center';
+          ctx.font = '700 9.5px Roboto Mono, monospace';
+          ctx.fillText(`x${{px.idx}}`, x + cell / 2, y + 31);
+          return;
+        }}
 
         _fltRoundRect(ctx, x, y, cell, cell, 8);
         ctx.fillStyle = `rgb(${{px.rgb[0]}},${{px.rgb[1]}},${{px.rgb[2]}})`;
@@ -3596,7 +4206,6 @@ def build_extra_js(data: dict) -> str:
         ctx.lineWidth = isFlying ? 4.0 : 2.3;
         ctx.stroke();
 
-        // Glow ring when scanning/flying
         if (isFlying) {{
           ctx.save();
           _fltRoundRect(ctx, x - 3, y - 3, cell + 6, cell + 6, 10);
@@ -3631,7 +4240,7 @@ def build_extra_js(data: dict) -> str:
       ctx.textAlign = 'center';
       ctx.fillText('Urutan pindai: kiri → kanan, lalu turun baris', gx0 + gridW / 2, gy0 + gridH + 22);
 
-      // Center Flatten Badge (symmetrical gaps, no numbering, aligned on y=24 baseline)
+      // Center Flatten Badge
       _fltRoundRect(ctx, 344, 6, 108, 28, 9);
       ctx.fillStyle = '#FEF7E0'; ctx.fill();
       ctx.strokeStyle = '#FBBC04'; ctx.lineWidth = 2; ctx.stroke();
@@ -3644,7 +4253,7 @@ def build_extra_js(data: dict) -> str:
       ctx.font = '600 10px Roboto, Arial';
       ctx.fillText('Susun ke bawah', 398, 48);
 
-      // Right: Input Layer vertical capsule (all 16 neurons cleanly stacked in 1 column)
+      // Right: Input Layer vertical capsule
       _fltRoundRect(ctx, 510, 6, 282, 326, 16);
       ctx.fillStyle = '#F8F9FA'; ctx.fill();
       ctx.strokeStyle = '#4285F4'; ctx.lineWidth = 2.6; ctx.stroke();
@@ -3661,7 +4270,7 @@ def build_extra_js(data: dict) -> str:
       FLATTEN_PIXELS.forEach((px, idx) => {{
         const pos = slotCenter(idx);
         const isLanded = idx < fltPlaced;
-        const isTarget = idx === fltFlyIdx;
+        const isTarget = fltPhase === 'flatten' && idx === fltFlyIdx;
 
         if (isLanded) {{
           ctx.beginPath();
@@ -3709,7 +4318,7 @@ def build_extra_js(data: dict) -> str:
       }});
 
       // If idle & completed (16/16), show clean 4-row directional guide arrows
-      if (fltFlyIdx === -1 && fltPlaced === FLT_TOTAL) {{
+      if (fltPhase === 'idle' && fltFlyIdx === -1 && fltPlaced === FLT_TOTAL) {{
         [0, 1, 2, 3].forEach((r) => {{
           const sy = gy0 + r * (cell + gap) + cell / 2;
           const ey = slotY0 + (r * FLT_N + 1.5) * slotGap;
@@ -3721,7 +4330,6 @@ def build_extra_js(data: dict) -> str:
           ctx.moveTo(gx0 + gridW + 8, sy);
           ctx.quadraticCurveTo(398, (sy + ey) / 2 + curveBias, 502, ey);
           ctx.stroke();
-          // arrowhead
           ctx.fillStyle = FLT_ROW_COL[r];
           ctx.beginPath();
           ctx.moveTo(506, ey);
@@ -3733,8 +4341,8 @@ def build_extra_js(data: dict) -> str:
         }});
       }}
 
-      // Flying pixel -> morphing into Neuron circle along Bezier curve!
-      if (fltFlyIdx >= 0 && fltFlyIdx < FLATTEN_PIXELS.length) {{
+      // Phase 2: Flying pixel -> morphing into Neuron circle along Bezier curve!
+      if (fltPhase === 'flatten' && fltFlyIdx >= 0 && fltFlyIdx < FLATTEN_PIXELS.length) {{
         const px = FLATTEN_PIXELS[fltFlyIdx];
         const src = cellCenter(px.row, px.col);
         const dst = slotCenter(fltFlyIdx);
@@ -3746,7 +4354,6 @@ def build_extra_js(data: dict) -> str:
         const fx = inv * inv * src.x + 2 * inv * e * ctrlX + e * e * dst.x;
         const fy = inv * inv * src.y + 2 * inv * e * ctrlY + e * e * dst.y;
 
-        // Dashed Bezier flight trajectory
         ctx.save();
         ctx.setLineDash([6, 4]);
         ctx.strokeStyle = FLT_ROW_COL[px.row];
@@ -3757,7 +4364,6 @@ def build_extra_js(data: dict) -> str:
         ctx.stroke();
         ctx.restore();
 
-        // Morphing token: starts as square pixel (42px, rx=8), morphs into glowing circle (28px, rx=14)
         const sz = 42 - 14 * e;
         const rad = 8 + (sz / 2 - 8) * e;
         ctx.save();
@@ -3779,16 +4385,34 @@ def build_extra_js(data: dict) -> str:
         ctx.fillText(px.gray.toFixed(2), fx, fy + 9.5);
       }}
 
+      // Render Phase 1 photo-to-4x4 split overlay if active
+      _fltDrawSplitOverlay();
+
+      // Sync 3 bottom explanation cards live with the animation phase!
+      let fltCardIdx = -1;
+      if (fltPhase === 'split') {{
+        fltCardIdx = 0; // Card 1: Pindai Kiri -> Kanan, Atas -> Bawah
+      }} else if (fltPhase === 'flatten' && fltFlyIdx >= 0) {{
+        fltCardIdx = fltFlyT < 0.72 ? 1 : 2; // Card 2 while flying/morphing -> Card 3 on landing!
+      }}
+      _syncCards(['flt-card-1', 'flt-card-2', 'flt-card-3'], fltCardIdx, ['blue', 'yellow', 'green']);
+
       // Update status pill
       const st = document.getElementById('flatten-status');
       if (st) {{
-        if (fltFlyIdx >= 0) {{
+        if (fltPhase === 'split') {{
+          st.className = 'pill yellow';
+          st.textContent = `Tahap 1/2: Memotong Foto Elsa → Grid 4×4 (${{fltExtracted}} / ${{FLT_TOTAL}})`;
+        }} else if (fltPhase === 'flatten' && fltFlyIdx >= 0) {{
           const px = FLATTEN_PIXELS[fltFlyIdx];
           st.className = 'pill yellow';
-          st.textContent = `Memindahkan x${{px.idx}} (Baris ${{px.row + 1}}, Kol ${{px.col + 1}}) → Slot #${{px.idx}}`;
+          st.textContent = `Tahap 2/2: Memindahkan x${{px.idx}} (Baris ${{px.row + 1}}, Kol ${{px.col + 1}}) → Slot #${{px.idx}}`;
+        }} else if (fltExtracted === 0) {{
+          st.className = 'pill blue';
+          st.textContent = 'Siap! Klik "▶ Play" atau "+1 Piksel"';
         }} else if (fltPlaced === 0) {{
           st.className = 'pill blue';
-          st.textContent = 'Siap! Klik "Putar Animasi" atau "+1 Piksel"';
+          st.textContent = 'Grid 4×4 siap! Klik "+1 Piksel" untuk susun ke Input Layer';
         }} else if (fltPlaced < FLT_TOTAL) {{
           st.className = 'pill blue';
           st.textContent = `Input Layer: ${{fltPlaced}} / ${{FLT_TOTAL}} neuron tersusun`;
@@ -3799,15 +4423,59 @@ def build_extra_js(data: dict) -> str:
       }}
     }}
 
+    function _fltSetPlayBtn(playing) {{
+      const b = document.getElementById('flt-btn-play');
+      if (!b) return;
+      b.textContent = playing ? '■ Stop' : '▶ Play';
+      b.style.background = playing ? '#EA4335' : '#34A853';
+      b.style.borderColor = playing ? '#EA4335' : '#34A853';
+    }}
+
     function _stopFltRaf() {{
       if (fltRafId !== null) {{ cancelAnimationFrame(fltRafId); fltRafId = null; }}
       fltAutoPlay = false;
+      fltPhase = 'idle';
+      _fltSetPlayBtn(false);
+      _fltClearSplitOverlay();
     }}
 
     function _tickFltAnim(ts) {{
       if (!fltLastTs) fltLastTs = ts;
       const dt = Math.min(0.05, (ts - fltLastTs) / 1000);
       fltLastTs = ts;
+
+      if (fltPhase === 'split') {{
+        fltSplitProg = Math.min(1.0, fltSplitProg + dt * 0.48); // ~1.78s silky 16-piece cascade!
+        let landed = 0;
+        for (let i = 0; i < FLT_TOTAL; i++) {{
+          if (fltSplitProg >= _fltSplitCellWindow(i).tEnd) landed += 1;
+        }}
+        fltExtracted = landed;
+        if (fltSplitProg >= 1.0) {{
+          fltExtracted = FLT_TOTAL;
+          _fltClearSplitOverlay();
+          if (fltAutoPlay) {{
+            // Seamlessly transition into Phase 2: Flatten 4x4 -> Input Layer!
+            fltPhase = 'flatten';
+            fltPlaced = 0;
+            fltFlyIdx = 0;
+            fltFlyT = 0;
+            drawFlattenFrame();
+            fltRafId = requestAnimationFrame(_tickFltAnim);
+            return;
+          }} else {{
+            fltPhase = 'idle';
+            fltRafId = null;
+            drawFlattenFrame();
+            return;
+          }}
+        }}
+        drawFlattenFrame();
+        fltRafId = requestAnimationFrame(_tickFltAnim);
+        return;
+      }}
+
+      // Phase 2: Flatten 4x4 -> Input Layer
       const speed = fltAutoPlay ? 2.55 : 2.9;
       fltFlyT += dt * speed;
       if (fltFlyT >= 1.0) {{
@@ -3817,8 +4485,10 @@ def build_extra_js(data: dict) -> str:
           fltFlyIdx = fltPlaced;
         }} else {{
           fltFlyIdx = -1;
+          fltPhase = 'idle';
           fltAutoPlay = false;
           fltRafId = null;
+          _fltSetPlayBtn(false);
           drawFlattenFrame();
           return;
         }}
@@ -3828,26 +4498,60 @@ def build_extra_js(data: dict) -> str:
     }}
 
     function playFlattenAnim() {{
+      if (fltAutoPlay) {{
+        _stopFltRaf();
+        fltFlyIdx = -1;
+        fltFlyT = 0;
+        drawFlattenFrame();
+        return;
+      }}
       _stopFltRaf();
+      fltSplitCache = _fltCacheSplitLayout();
+      fltExtracted = 0;
       fltPlaced = 0;
-      fltFlyIdx = 0;
+      fltSplitProg = 0.0;
+      fltFlyIdx = -1;
       fltFlyT = 0;
+      fltPhase = 'split';
       fltAutoPlay = true;
       fltLastTs = 0;
+      _fltSetPlayBtn(true);
       drawFlattenFrame();
       fltRafId = requestAnimationFrame(_tickFltAnim);
     }}
 
     function stepFlattenAnim() {{
       if (fltAutoPlay) _stopFltRaf();
+      if (fltPhase === 'split') {{
+        // Finish split immediately if mid-split
+        _stopFltRaf();
+        fltExtracted = FLT_TOTAL;
+        fltSplitProg = 1.0;
+        drawFlattenFrame();
+        return;
+      }}
+      if (fltExtracted < FLT_TOTAL) {{
+        // Step 1: Animate Foto Elsa -> 4x4 grid first, then stop ready for +1 Piksel!
+        _stopFltRaf();
+        fltSplitCache = _fltCacheSplitLayout();
+        fltExtracted = 0;
+        fltPlaced = 0;
+        fltSplitProg = 0.0;
+        fltPhase = 'split';
+        fltAutoPlay = false;
+        fltLastTs = 0;
+        drawFlattenFrame();
+        fltRafId = requestAnimationFrame(_tickFltAnim);
+        return;
+      }}
       if (fltFlyIdx >= 0) {{
-        // snap current flying pixel immediately first
         fltPlaced = fltFlyIdx + 1;
         fltFlyIdx = -1;
       }}
       if (fltPlaced >= FLT_TOTAL) {{
         fltPlaced = 0;
       }}
+      fltPhase = 'flatten';
       fltFlyIdx = fltPlaced;
       fltFlyT = 0;
       fltAutoPlay = false;
@@ -3858,7 +4562,9 @@ def build_extra_js(data: dict) -> str:
 
     function resetFlattenAnim() {{
       _stopFltRaf();
+      fltExtracted = 0;
       fltPlaced = 0;
+      fltSplitProg = 0.0;
       fltFlyIdx = -1;
       fltFlyT = 0;
       drawFlattenFrame();
@@ -3866,7 +4572,9 @@ def build_extra_js(data: dict) -> str:
 
     function completeFlattenAnim() {{
       _stopFltRaf();
+      fltExtracted = FLT_TOTAL;
       fltPlaced = FLT_TOTAL;
+      fltSplitProg = 1.0;
       fltFlyIdx = -1;
       fltFlyT = 0;
       drawFlattenFrame();
@@ -3875,10 +4583,14 @@ def build_extra_js(data: dict) -> str:
     function setFlattenPdfState(mode) {{
       _stopFltRaf();
       if (mode === 'mid') {{
+        fltExtracted = FLT_TOTAL;
+        fltPhase = 'flatten';
         fltPlaced = 9;
         fltFlyIdx = 9;   // x10 (Row 3, Col 2 — Elsa's blue dress!) frozen gracefully mid-flight!
         fltFlyT = 0.54;
       }} else {{
+        fltExtracted = FLT_TOTAL;
+        fltPhase = 'idle';
         fltPlaced = FLT_TOTAL;
         fltFlyIdx = -1;
         fltFlyT = 0;
@@ -3918,12 +4630,12 @@ def build_extra_js(data: dict) -> str:
     let inLastTotText = '';
     let inLastClipPct = -1;
 
-    const IN_DEFAULT_CALLOUT = '<strong>Aturan cepat:</strong> Pada foto berwarna (<code>RGB = 3</code>), tiap <strong>1 kotak piksel</strong> pecah menjadi <strong>3 neuron</strong> (<code>R, G, B</code>). Klik <strong>▶ Putar</strong>, <strong>⏭ +1 Piksel</strong>, atau klik kotak piksel mana saja pada Foto Elsa!';
+    const IN_DEFAULT_CALLOUT = '<strong>Aturan cepat:</strong> Pada foto berwarna (<code>RGB = 3</code>), tiap <strong>1 kotak piksel</strong> pecah menjadi <strong>3 neuron</strong> (<code>R, G, B</code>). Klik <strong>▶ Play</strong>, <strong>⏭ +1 Piksel</strong>, atau klik kotak piksel mana saja pada Foto Elsa!';
 
     function _inSetPlayBtn(isPlaying) {{
       const btn = document.getElementById('in-btn-play');
       if (!btn) return;
-      btn.textContent = isPlaying ? '■ Stop' : '▶ Putar';
+      btn.textContent = isPlaying ? '■ Stop' : '▶ Play';
       btn.style.background = isPlaying ? '#EA4335' : '#34A853';
       btn.style.borderColor = isPlaying ? '#EA4335' : '#34A853';
     }}
@@ -4119,6 +4831,8 @@ def build_extra_js(data: dict) -> str:
           if (a1) a1.className = 'in-arrow-box';
           if (a2) a2.className = 'in-arrow-box';
         }}
+        const inCallCol = phaseCode === 'p1' ? 'blue' : (phaseCode === 'stream' ? 'yellow' : (phaseCode === 'p2' ? 'green' : ''));
+        _syncCards(['in-live-callout'], inCallCol ? 0 : -1, [inCallCol || 'blue']);
       }}
 
       // 2. Smooth 1D strip reveal & curly brace (only write when changed)
@@ -4200,7 +4914,7 @@ def build_extra_js(data: dict) -> str:
       }} else if (inTracedRow < 0 && inCompletedSteps === IN_TOTAL_STEPS) {{
         _inSetCallout('default', IN_DEFAULT_CALLOUT);
       }} else if (inCompletedSteps === 0) {{
-        _inSetCallout('zero', '<strong>Siap dimulai!</strong> Klik <strong>▶ Putar</strong>, <strong>⏭ +1 Piksel</strong>, atau klik langsung kotak piksel mana saja pada <strong>Foto Elsa</strong> di kiri!');
+        _inSetCallout('zero', '<strong>Siap dimulai!</strong> Klik <strong>▶ Play</strong>, <strong>⏭ +1 Piksel</strong>, atau klik langsung kotak piksel mana saja pada <strong>Foto Elsa</strong> di kiri!');
       }}
     }}
 
@@ -4357,8 +5071,9 @@ def build_extra_js(data: dict) -> str:
               ];
             }} else if (meta.destMode === 'end') {{
               orbs = [
-                {{ dst: ptOf(3), col: '#34A853', txt: px.norm[1].toFixed(2) }},
-                {{ dst: ptOf(4), col: '#4285F4', txt: px.norm[2].toFixed(2) }},
+                {{ dst: ptOf(3), col: '#EA4335', txt: px.norm[0].toFixed(2) }},
+                {{ dst: ptOf(4), col: '#34A853', txt: px.norm[1].toFixed(2) }},
+                {{ dst: ptOf(5), col: '#4285F4', txt: px.norm[2].toFixed(2) }},
               ];
             }} else {{
               orbs = [
@@ -4531,14 +5246,14 @@ def build_extra_js(data: dict) -> str:
 
       // CASE C: Interactive Reverse Trace when user clicks any neuron circle in Input Layer!
       if (inTracedRow >= 0 && inTracedRow !== 3) {{
-        const cMap = {{ 0: 0, 1: 1, 2: 2, 4: 3, 5: 4 }};
+        const cMap = {{ 0: 0, 1: 1, 2: 2, 4: 3, 5: 4, 6: 5 }};
         const cIdx = cMap[inTracedRow];
         const dstC = circles[cIdx];
         if (!dstC) return;
-        const pxMap = isRgb ? [0, 0, 0, 0, 63, 63] : [0, 1, 2, 0, 62, 63];
+        const pxMap = isRgb ? [0, 0, 0, 0, 63, 63, 63] : [0, 1, 2, 0, 62, 63];
         const px = _inGetPixel(pxMap[inTracedRow]);
         const col = isRgb
-          ? (inTracedRow === 0 ? '#EA4335' : (inTracedRow === 1 || inTracedRow === 4) ? '#34A853' : '#4285F4')
+          ? ((inTracedRow === 0 || inTracedRow === 4) ? '#EA4335' : (inTracedRow === 1 || inTracedRow === 5) ? '#34A853' : '#4285F4')
           : '#1A73E8';
 
         const p1x = rImg.x + (px.c + 0.5) * cellW;
@@ -4749,7 +5464,7 @@ def build_extra_js(data: dict) -> str:
       if (inTracedRow >= 0) {{
         const {{ isRgb, tot }} = _inGetCfg();
         const names = isRgb
-          ? ['x₁ (Piksel 1 · Red)', 'x₂ (Piksel 1 · Green)', 'x₃ (Piksel 1 · Blue)', '', `x${{(tot-1).toLocaleString('id-ID')}} (Piksel akhir · Green)`, `x${{tot.toLocaleString('id-ID')}} (Piksel akhir · Blue)`]
+          ? ['x₁ (Piksel 1 · Red)', 'x₂ (Piksel 1 · Green)', 'x₃ (Piksel 1 · Blue)', '', `x${{(tot-2).toLocaleString('id-ID')}} (Piksel akhir · Red)`, `x${{(tot-1).toLocaleString('id-ID')}} (Piksel akhir · Green)`, `x${{tot.toLocaleString('id-ID')}} (Piksel akhir · Blue)`]
           : ['x₁ (Piksel 1 · Gray)', 'x₂ (Piksel 2 · Gray)', 'x₃ (Piksel 3 · Gray)', '', `x${{(tot-1).toLocaleString('id-ID')}} (Piksel akhir-1)`, `x${{tot.toLocaleString('id-ID')}} (Piksel akhir)`];
         _inSetCallout(
           `trace_${{inTracedRow}}_${{isRgb}}`,
@@ -4821,7 +5536,8 @@ def build_extra_js(data: dict) -> str:
 
       const nodesHost = document.getElementById('in-layer-nodes');
       if (nodesHost) {{
-        const middleCount = Math.max(0, tot - 5).toLocaleString('id-ID');
+        const middleCount = Math.max(0, tot - (isRgb ? 6 : 5)).toLocaleString('id-ID');
+        const nPrev2 = (tot - 2).toLocaleString('id-ID');
         const nPrev = (tot - 1).toLocaleString('id-ID');
         const nLast = totStr;
         const rows = isRgb
@@ -4830,8 +5546,9 @@ def build_extra_js(data: dict) -> str:
               {{ col: '#34A853', val: ELSA_ENDS.first_rgb[1].toFixed(2), idx: 'x₂', desc: 'Piksel 1 (Green)' }},
               {{ col: '#4285F4', val: ELSA_ENDS.first_rgb[2].toFixed(2), idx: 'x₃', desc: 'Piksel 1 (Blue)' }},
               {{ ellipsis: true, text: `${{middleCount}} neuron lainnya...` }},
-              {{ col: '#34A853', val: ELSA_ENDS.last_rgb[1].toFixed(2), idx: `x${{nPrev}}`, desc: 'Piksel akhir (G)' }},
-              {{ col: '#4285F4', val: ELSA_ENDS.last_rgb[2].toFixed(2), idx: `x${{nLast}}`, desc: 'Piksel akhir (B)' }},
+              {{ col: '#EA4335', val: ELSA_ENDS.last_rgb[0].toFixed(2), idx: `x${{nPrev2}}`, desc: 'Piksel akhir (Red)' }},
+              {{ col: '#34A853', val: ELSA_ENDS.last_rgb[1].toFixed(2), idx: `x${{nPrev}}`, desc: 'Piksel akhir (Green)' }},
+              {{ col: '#4285F4', val: ELSA_ENDS.last_rgb[2].toFixed(2), idx: `x${{nLast}}`, desc: 'Piksel akhir (Blue)' }},
             ]
           : [
               {{ col: '#4285F4', val: ELSA_ENDS.first_gray[0].toFixed(2), idx: 'x₁', desc: 'Piksel 1 (Gray)' }},
@@ -4841,22 +5558,23 @@ def build_extra_js(data: dict) -> str:
               {{ col: '#5F6368', val: ELSA_ENDS.last_gray[0].toFixed(2), idx: `x${{nPrev}}`, desc: 'Piksel akhir-1' }},
               {{ col: '#5F6368', val: ELSA_ENDS.last_gray[1].toFixed(2), idx: `x${{nLast}}`, desc: 'Piksel akhir' }},
             ];
+        const cSz = isRgb ? 27 : 31;
         nodesHost.innerHTML = rows.map((r, rIdx) => {{
           if (r.ellipsis) {{
-            return `<div class="in-node-row" style="display:flex; align-items:center; gap:10px; padding:2px 4px; cursor:default;">
-              <div style="width:32px; display:flex; flex-direction:column; align-items:center; gap:3px;">
-                <span style="width:4px; height:4px; border-radius:50%; background:#1A73E8;"></span>
-                <span style="width:4px; height:4px; border-radius:50%; background:#1A73E8;"></span>
-                <span style="width:4px; height:4px; border-radius:50%; background:#1A73E8;"></span>
+            return `<div class="in-node-row" style="display:flex; align-items:center; gap:9px; padding:1px 4px; cursor:default;">
+              <div style="width:${{cSz}}px; display:flex; flex-direction:column; align-items:center; gap:2.5px;">
+                <span style="width:3.5px; height:3.5px; border-radius:50%; background:#1A73E8;"></span>
+                <span style="width:3.5px; height:3.5px; border-radius:50%; background:#1A73E8;"></span>
+                <span style="width:3.5px; height:3.5px; border-radius:50%; background:#1A73E8;"></span>
               </div>
-              <span style="font-family:var(--font-title); font-size:10.5px; font-weight:700; color:#1A73E8;">${{r.text}}</span>
+              <span style="font-family:var(--font-title); font-size:10.2px; font-weight:700; color:#1A73E8;">${{r.text}}</span>
             </div>`;
           }}
-          return `<div class="in-node-row" onclick="traceInputNeuron(${{rIdx}})" title="Klik untuk melihat jejak asal piksel ini!" style="display:flex; align-items:center; gap:9px; padding:2px 4px;">
-            <div class="in-node-circle" style="width:32px; height:32px; border-radius:50%; background:${{r.col}}; color:#FFFFFF; font-family:var(--font-code); font-size:9.6px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 5px rgba(0,0,0,0.12);">${{r.val}}</div>
-            <div style="display:flex; flex-direction:column; line-height:1.2; min-width:0;">
-              <span style="font-family:var(--font-code); font-size:11px; font-weight:700; color:#202124;">${{r.idx}}</span>
-              <span style="font-size:9.6px; color:#5F6368;">${{r.desc}}</span>
+          return `<div class="in-node-row" onclick="traceInputNeuron(${{rIdx}})" title="Klik untuk melihat jejak asal piksel ini!" style="display:flex; align-items:center; gap:8px; padding:1px 4px;">
+            <div class="in-node-circle" style="width:${{cSz}}px; height:${{cSz}}px; border-radius:50%; background:${{r.col}}; color:#FFFFFF; font-family:var(--font-code); font-size:${{isRgb ? '8.8' : '9.4'}}px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 2px 5px rgba(0,0,0,0.12);">${{r.val}}</div>
+            <div style="display:flex; flex-direction:column; line-height:1.15; min-width:0;">
+              <span style="font-family:var(--font-code); font-size:10.5px; font-weight:700; color:#202124;">${{r.idx}}</span>
+              <span style="font-size:9.2px; color:#5F6368;">${{r.desc}}</span>
             </div>
           </div>`;
         }}).join('');
@@ -4887,7 +5605,7 @@ def build_extra_js(data: dict) -> str:
     const IO_OUT_COLS  = ['#4285F4', '#34A853', '#FBBC04', '#EA4335', '#5F6368'];
     const IO_FINAL_PCT = [4, 89, 2, 3, 2];
     const IO_STREAM_PX = [2, 5, 9, 13, 18, 21, 25, 28, 31, 35, 38, 42, 45, 49, 53, 57, 60];
-    const IO_DEFAULT_STATUS = '<strong style="color:#1A73E8;">Interaktif:</strong> Klik <strong>▶ Putar Semua</strong>, <strong>⏭ +1 Langkah</strong>, atau klik langsung <strong>piksel foto / neuron Input / neuron Output</strong>!';
+    const IO_DEFAULT_STATUS = '<strong style="color:#1A73E8;">Interaktif:</strong> Klik <strong>▶ Play</strong>, <strong>⏭ +1 Langkah</strong>, atau klik langsung <strong>piksel foto / neuron Input / neuron Output</strong>!';
 
     let ioAnimRaf = null;
     let ioCompletedSteps = IO_TOTAL_STEPS; // 0..7
@@ -4907,7 +5625,7 @@ def build_extra_js(data: dict) -> str:
     function _ioSetPlayBtn(isPlaying) {{
       const btn = document.getElementById('io-btn-play');
       if (!btn) return;
-      btn.textContent = isPlaying ? '■ Stop' : '▶ Putar Semua';
+      btn.textContent = isPlaying ? '■ Stop' : '▶ Play';
       btn.style.background = isPlaying ? '#EA4335' : '#34A853';
       btn.style.borderColor = isPlaying ? '#EA4335' : '#34A853';
     }}
@@ -5114,13 +5832,12 @@ def build_extra_js(data: dict) -> str:
         if (st4) st4.className = 'io-stage ' + (activeStage === 4 ? 'glow-green' : (!winVis ? 'dim' : ''));
         if (rc) rc.style.opacity = winVis ? '1' : '0.18';
 
-        // Sync highlight on matching 4 bottom numbered cards
-        for (let c = 1; c <= 4; c++) {{
-          const card = document.getElementById(`io-card-${{c}}`);
-          if (!card) continue;
-          card.classList.remove('active-card', 'active-green');
-          if (activeStage === c) card.classList.add(c >= 3 ? 'active-green' : 'active-card');
-        }}
+        // Sync highlight & lift on matching 4 bottom numbered cards!
+        _syncCards(
+          ['io-card-1', 'io-card-2', 'io-card-3', 'io-card-4'],
+          activeStage >= 1 && activeStage <= 4 ? activeStage - 1 : -1,
+          ['blue', 'blue', 'green', 'yellow']
+        );
       }}
 
       // 3. Live narration status bar (dirty-checked!)
@@ -5148,7 +5865,7 @@ def build_extra_js(data: dict) -> str:
       }} else if (ioActiveStep === 103 && ioInspectOutIdx >= 0) {{
         _ioSetStatus(`io_c103_${{ioInspectOutIdx}}`, `<strong style="color:#137333;">Sinyal Masuk ke y${{ioInspectOutIdx + 1}} (${{IO_OUT_NAMES[ioInspectOutIdx]}}):</strong> Neuron output ini mengumpulkan sinyal dari <strong>seluruh 150.528 neuron Input</strong>!`);
       }} else if (ioCompletedSteps === 0) {{
-        _ioSetStatus('io_zero', '<strong>Siap!</strong> Klik <strong>▶ Putar Semua</strong> atau <strong>⏭ +1 Langkah</strong> untuk melihat alur dari piksel pertama sampai hasil klasifikasi.');
+        _ioSetStatus('io_zero', '<strong>Siap!</strong> Klik <strong>▶ Play</strong> atau <strong>⏭ +1 Langkah</strong> untuk melihat alur dari piksel pertama sampai hasil klasifikasi.');
       }} else {{
         _ioSetStatus('io_default', IO_DEFAULT_STATUS);
       }}
@@ -5705,23 +6422,24 @@ def build_extra_js(data: dict) -> str:
 
     // =========================================================================
     // SIMULATOR #4 (Slide 24): Slow-Motion Mathematical Training & Calculation
-    // Explicitly highlights 4 readable phases per photo with 100% calculator-exact math:
-    //   Phase 1 (0.00-0.22): Foto -> Input Layer (4 fitur piksel murni + node +1 Bias)
+    // Uses REAL 150.528-pixel (224x224x3) Softmax Regression matching Slide 22 & 23:
+    //   x1, x2, x3 (Piksel 1 R/G/B) + [Ellipsis +150.523 piksel lain] + x150.527, x150.528 + Bias
+    //   Phase 1 (0.00-0.22): Foto -> Input Layer (150.528 neuron + node +1 Bias)
     //   Phase 2 (0.22-0.56): Weight + Bias -> z = Σ(x·w) + b (lights up Box A!)
     //   Phase 3 (0.56-0.80): Activation Function (Unshifted Softmax e^z / Σe^z) -> P% (Box B!)
     //   Phase 4 (0.80-1.00): Target vs Prediksi -> Error -> Weight & Bias update!
     // =========================================================================
-    const TM_IN_COLS  = ['#EA4335', '#34A853', '#4285F4', '#E37400', '#9334E6', '#0097A7'];
+    const TM_VIS_COLS = ['#EA4335', '#34A853', '#4285F4', '#1A73E8', '#EA4335', '#34A853', '#4285F4'];
     const TM_OUT_COLS = ['#4285F4', '#34A853', '#FBBC04', '#EA4335', '#5F6368'];
-    const TM_N_IN = TRAINING_MATH.feature_names.length; // 6 pure pixel features (> 5 output classes!)
-    let tmPhotoIdx = -1;      // default: -1 (no image picked yet — clean initial / reset state!)
-    let tmTrainAlpha = 1.0;   // 0.0 = Sebelum Training (Acak), 1.0 = Sesudah Training (Terlatih)
+    const TM_N_VIS = 7; // 3 top pixels (x1..x3) + 1 ellipsis bundle (+150.522) + 3 bottom pixels (x150.526..x150.528)
+    let tmPhotoIdx = -1;       // default: -1 (no image picked yet — clean initial / reset state!)
+    let tmTrainAlpha = 1.0;    // 0.0 = Sebelum Training (Acak), 1.0 = Sesudah Training (Terlatih)
     let tmPreUpdatePct = null; // Pre-update probability for Target vs Prediksi -> Error readout in Phase 4
     let tmRaf = null;
-    let tmMode = 'idle';      // 'idle', 'train' (5 slow passes), 'pulse' (1 slow photo)
-    let tmStepIdx = 0;        // 0..4 during slow 5-photo training tour
-    let tmStepProg = 1.0;     // 0..1 (1.0 = complete)
-    let tmManualPhase = 0;    // 0..4 when using "+1 Tahap Hitung"
+    let tmMode = 'idle';       // 'idle', 'train' (5 slow passes), 'pulse' (1 slow photo)
+    let tmStepIdx = 0;         // 0..4 during slow 5-photo training tour
+    let tmStepProg = 1.0;      // 0..1 (1.0 = complete)
+    let tmManualPhase = 0;     // 0..4 when using "+1 Tahap Hitung"
     let tmLastRenderedPh = -1;
     let tmLastTs = 0;
     let tmCache = null;
@@ -5729,7 +6447,7 @@ def build_extra_js(data: dict) -> str:
     function _tmSetTrainBtn(running) {{
       const b = document.getElementById('tm-btn-train');
       if (!b) return;
-      b.textContent = running ? '■ Stop Simulasi' : '▶ Simulasi Training';
+      b.textContent = running ? '■ Stop' : '▶ Play';
       b.style.background = running ? '#EA4335' : '#34A853';
       b.style.borderColor = running ? '#EA4335' : '#34A853';
     }}
@@ -5750,31 +6468,40 @@ def build_extra_js(data: dict) -> str:
     }}
 
     function _tmEval(photoIdx, alpha) {{
-      const x = TRAINING_MATH.X[photoIdx];
-      // Round W and b to exact 1 decimal BEFORE calculating z so SVG labels & Kotak A arithmetic match 100%!
-      const round1 = (v) => Math.round(v * 10) / 10;
-      const W = TRAINING_MATH.W0.map((row, i) => row.map((v, j) => round1(v + (TRAINING_MATH.W_trained[i][j] - v) * alpha)));
-      const b = TRAINING_MATH.b0.map((v, j) => round1(v + (TRAINING_MATH.b_trained[j] - v) * alpha));
+      const x = TRAINING_MATH.X_sample[photoIdx]; // 5 sample corner pixel values (x1,x2,x3,x150527,x150528)
+      const round4 = (v) => Math.round(v * 10000) / 10000;
+      const round2 = (v) => Math.round(v * 100) / 100;
+      const W_samp = TRAINING_MATH.W0_sample.map((row, m) =>
+        row.map((v, c) => round4(v + (TRAINING_MATH.W_sample[m][c] - v) * alpha))
+      );
+      const mid = TRAINING_MATH.mid0[photoIdx].map((v, c) =>
+        round2(v + (TRAINING_MATH.mid_trained[photoIdx][c] - v) * alpha)
+      );
+      const b = TRAINING_MATH.b0.map((v, c) =>
+        round2(v + (TRAINING_MATH.b_trained[c] - v) * alpha)
+      );
+      const sumSamp = [0, 0, 0, 0, 0];
       const z = [0, 0, 0, 0, 0];
-      for (let j = 0; j < 5; j++) {{
-        let s = b[j];
-        for (let i = 0; i < TM_N_IN; i++) s += x[i] * W[i][j];
-        z[j] = s;
+      for (let c = 0; c < 5; c++) {{
+        let ss = 0;
+        for (let m = 0; m < x.length; m++) ss += x[m] * W_samp[m][c];
+        sumSamp[c] = ss;
+        z[c] = ss + mid[c] + b[c];
       }}
-      // Exact unshifted Softmax: e^z / Σe^z (safe because L2 keeps |z| < 5, 100% verifiable on any calculator!)
+      // Exact unshifted Softmax: e^z / Σe^z (100% calculator-verifiable!)
       const ex = z.map((v) => Math.exp(v));
       const sumEx = ex.reduce((a, c) => a + c, 0);
       const probs = ex.map((v) => (v / sumEx) * 100);
       let predIdx = 0;
-      for (let j = 1; j < 5; j++) if (probs[j] > probs[predIdx]) predIdx = j;
-      return {{ x, W, b, z, ex, sumEx, probs, predIdx }};
+      for (let c = 1; c < 5; c++) if (probs[c] > probs[predIdx]) predIdx = c;
+      return {{ x, W_samp, mid, b, sumSamp, z, ex, sumEx, probs, predIdx }};
     }}
 
     function _tmBuildDatasetList() {{
       const host = document.getElementById('tm-dataset-list');
       if (!host || host.children.length > 0) return;
       host.innerHTML = TRAINING_MATH.classes.map((cls, idx) => `
-        <div id="tm-ds-${{idx}}" class="tm-ds-item${{idx === tmPhotoIdx ? ' active' : ''}}" onclick="selectTmPhoto(${{idx}})" title="Klik untuk melihat perhitungan Weight + Bias &amp; Softmax untuk ${{cls}}!">
+        <div id="tm-ds-${{idx}}" class="tm-ds-item${{idx === tmPhotoIdx ? ' active' : ''}}" onclick="selectTmPhoto(${{idx}})" title="Klik untuk melihat perhitungan 150.528 neuron piksel untuk ${{cls}}!">
           <img src="${{TRAINING_MATH.thumbs[idx]}}" alt="${{cls}}" style="width:28px; height:28px; border-radius:7px; object-fit:cover; border:2px solid ${{TM_OUT_COLS[idx]}}; flex-shrink:0;"/>
           <div style="display:flex; flex-direction:column; line-height:1.15; min-width:0; flex:1;">
             <span style="font-family:var(--font-title); font-size:10px; font-weight:700; color:#202124;">Gambar ${{idx + 1}} · ${{cls}}</span>
@@ -5796,8 +6523,10 @@ def build_extra_js(data: dict) -> str:
       const hasPhoto = tmPhotoIdx >= 0 && tmPhotoIdx < 5;
       const evalRes = hasPhoto ? _tmEval(tmPhotoIdx, tmTrainAlpha) : null;
       const x = evalRes ? evalRes.x : null;
-      const W = evalRes ? evalRes.W : null;
+      const W_samp = evalRes ? evalRes.W_samp : null;
+      const mid = evalRes ? evalRes.mid : null;
       const b = evalRes ? evalRes.b : null;
+      const sumSamp = evalRes ? evalRes.sumSamp : null;
       const z = evalRes ? evalRes.z : null;
       const ex = evalRes ? evalRes.ex : null;
       const sumEx = evalRes ? evalRes.sumEx : 0;
@@ -5806,109 +6535,141 @@ def build_extra_js(data: dict) -> str:
       const svg = document.getElementById('tm-svg');
       if (!svg) return;
 
-      const fNames = TRAINING_MATH.feature_names;
+      const sIds = TRAINING_MATH.sample_ids;
+      const sNames = TRAINING_MATH.sample_names;
       const cNames = TRAINING_MATH.classes;
       const cls = hasPhoto ? cNames[tmPhotoIdx] : '';
       const isCorrect = hasPhoto && predIdx === tmPhotoIdx;
 
-      // True funnel geometry (viewBox="0 0 820 248"): TALL 6-neuron Input Layer + Bias > COMPACT 5-neuron Output Layer!
-      const inY = [51, 79, 107, 135, 163, 191];
-      const biasY = 225;
+      // True funnel geometry (viewBox="0 0 820 248"): REAL 150.528-neuron Input Layer (3 RGB top + ellipsis + 3 RGB bottom)!
+      const inY = [47, 68.5, 90, 117, 144, 165.5, 187]; // index 3 = +150.522 ellipsis bundle pill
+      const biasY = 223;
       const outY = [74, 105, 136, 167, 198];
-      const xInRight = 210;
+      const xInRight = 218;
       const xOutLeft = 524;
+      const visToSamp = [0, 1, 2, null, 3, 4, 5];
 
       let html = '';
-      // 1) Input Layer Capsule (TALLER & DENSER — 6 pixel neurons + Bias > 5 output neurons!)
-      html += `<rect x="4" y="4" width="206" height="240" rx="13" fill="#E8F0FE" stroke="#4285F4" stroke-width="${{hasPhoto && ph === 1 ? '3' : '2'}}"/>`;
-      html += `<text x="107" y="19" text-anchor="middle" font-family="Poppins, Arial" font-size="11" font-weight="700" fill="#1A73E8">2. Input Layer (6 Neuron)</text>`;
-      html += `<text x="107" y="31" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" fill="#5F6368">Versi mini 6 fitur piksel (aslinya 150.528)</text>`;
+      // 1) Input Layer Capsule (REAL 150.528 neurons — 100% consistent with Slide 22 & 23!)
+      html += `<rect x="4" y="4" width="214" height="240" rx="13" fill="#E8F0FE" stroke="#4285F4" stroke-width="${{hasPhoto && ph === 1 ? '3' : '2'}}"/>`;
+      html += `<text x="111" y="19" text-anchor="middle" font-family="Poppins, Arial" font-size="10.4" font-weight="700" fill="#1A73E8">2. Input Layer (150.528 Neuron)</text>`;
+      html += `<text x="111" y="31" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" fill="#5F6368">224×224×3 piksel nyata (awal, ..., akhir)</text>`;
 
       // 2) Output Layer Capsule (VISIBLY SHORTER & CENTERED — true funnel taper!)
       html += `<rect x="516" y="24" width="300" height="200" rx="13" fill="#E6F4EA" stroke="#34A853" stroke-width="${{hasPhoto && ph >= 3 ? '3' : '2'}}"/>`;
       html += `<text x="666" y="41" text-anchor="middle" font-family="Poppins, Arial" font-size="11" font-weight="700" fill="#137333">3. Output Layer (5 Kelas)</text>`;
       html += `<text x="666" y="53" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">Activation Function: Softmax</text>`;
 
-      // 3) Top Center Stage Pill + Inline Green/Red Weight Color Legend
+      // 3) Top Center Stage Pill + Inline Green/Red/Grey Weight Color Legend
       const isTrainPh4 = hasPhoto && tmMode === 'train' && ph === 4;
       const wPillCol = !hasPhoto ? '#E8F0FE' : (isTrainPh4 ? '#FCE8E6' : (ph === 2 ? '#FEF7E0' : (ph === 3 ? '#E6F4EA' : (tmTrainAlpha < 0.15 ? '#FCE8E6' : '#E6F4EA'))));
       const wPillStr = !hasPhoto ? '#4285F4' : (isTrainPh4 ? '#EA4335' : (ph === 2 ? '#FBBC04' : (ph === 3 ? '#34A853' : (tmTrainAlpha < 0.15 ? '#EA4335' : '#34A853'))));
       const wPillTxt = !hasPhoto ? '#1A73E8' : (isTrainPh4 ? '#C5221F' : (ph === 2 ? '#B06000' : (ph === 3 ? '#137333' : (tmTrainAlpha < 0.15 ? '#C5221F' : '#137333'))));
       const wPillLbl = !hasPhoto
-        ? 'Pilih 1 Foto di Kiri / Klik ▶ Simulasi'
+        ? 'Pilih 1 Foto di Kiri / Klik ▶ Play'
         : ph === 1
-          ? 'Tahap 1: Baca Input (x₁..x₆)'
+          ? 'Tahap 1: Baca 150.528 Input Piksel'
           : ph === 2
             ? 'Tahap 2: Hitung Weight + Bias'
             : ph === 3
               ? 'Tahap 3: Activation (Softmax)'
               : isTrainPh4
                 ? `Tahap 4: Error → Update w & b (${{Math.round(tmTrainAlpha * 100)}}%)`
-                : (tmTrainAlpha < 0.15 ? 'Weight + Bias: Acak (Epoch 0)' : 'Weight + Bias: Terlatih');
-      html += `<rect x="238" y="4" width="250" height="20" rx="8" fill="${{wPillCol}}" stroke="${{wPillStr}}" stroke-width="1.6"/>`;
-      html += `<text x="363" y="17.3" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="${{wPillTxt}}">${{wPillLbl}}</text>`;
-      // Crisp Green / Red Weight Legend right beneath pill
-      html += `<circle cx="238" cy="32.5" r="3.3" fill="#34A853"/>`;
-      html += `<text x="245" y="35.3" font-family="Roboto, Arial" font-size="7.8" font-weight="700" fill="#137333">Hijau: w positif (mendukung)</text>`;
-      html += `<circle cx="382" cy="32.5" r="3.3" fill="#EA4335"/>`;
-      html += `<text x="389" y="35.3" font-family="Roboto, Arial" font-size="7.8" font-weight="700" fill="#C5221F">Merah: w negatif (menekan)</text>`;
+                : (tmTrainAlpha < 0.15 ? 'Weight + Bias: Acak (Epoch 0)' : 'Weight + Bias: Terlatih (150.528 w)');
+      html += `<rect x="242" y="4" width="254" height="20" rx="8" fill="${{wPillCol}}" stroke="${{wPillStr}}" stroke-width="1.6"/>`;
+      html += `<text x="369" y="17.3" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="${{wPillTxt}}">${{wPillLbl}}</text>`;
+      html += `<circle cx="242" cy="32.5" r="3.3" fill="#34A853"/>`;
+      html += `<text x="249" y="35.3" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#137333">Hijau: w &gt; 0 (dukung)</text>`;
+      html += `<circle cx="358" cy="32.5" r="3.3" fill="#EA4335"/>`;
+      html += `<text x="365" y="35.3" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#C5221F">Merah: w &lt; 0 (tekan)</text>`;
+      html += `<circle cx="468" cy="32.5" r="3.1" fill="#9AA0A6"/>`;
+      html += `<text x="475" y="35.3" font-family="Roboto, Arial" font-size="7.3" font-weight="700" fill="#5F6368">w≈0</text>`;
 
-      // 4) Background wires (when no photo is picked, all 30 wires stay soft neutral grey!)
-      for (let i = 0; i < TM_N_IN; i++) {{
+      // 4) Background wires (all 6 visual rows to non-target outputs)
+      for (let i = 0; i < TM_N_VIS; i++) {{
         for (let j = 0; j < 5; j++) {{
           if (hasPhoto && j === tmPhotoIdx) continue;
-          const wv = hasPhoto ? W[i][j] : 0;
-          const lw = hasPhoto ? Math.min(1.8, 0.7 + Math.abs(wv) * 0.04) : 1.05;
-          html += `<line x1="${{xInRight}}" y1="${{inY[i]}}" x2="${{xOutLeft}}" y2="${{outY[j]}}" stroke="#D0D5DC" stroke-width="${{lw.toFixed(2)}}" opacity="${{!hasPhoto ? '0.62' : (ph === 1 ? '0.24' : '0.54')}}"/>`;
+          const isMidRow = i === 3;
+          const lw = isMidRow ? 1.55 : 0.95;
+          html += `<line x1="${{xInRight}}" y1="${{inY[i]}}" x2="${{xOutLeft}}" y2="${{outY[j]}}" stroke="#D0D5DC" stroke-width="${{lw}}" opacity="${{!hasPhoto ? '0.62' : (ph === 1 ? '0.24' : '0.50')}}"/>`;
         }}
       }}
 
-      // 5 & 6) Highlighted 6 Weight wires + Dedicated Bias wire ONLY when a photo is selected!
+      // 5 & 6) Highlighted Weight wires + Hero 150.523-Pixel Bundle Wire + Bias wire ONLY when a photo is selected!
       const bVal = hasPhoto ? b[tmPhotoIdx] : 0;
+      const midVal = hasPhoto ? mid[tmPhotoIdx] : 0;
       if (hasPhoto) {{
-        const tPosArr = [0.15, 0.36, 0.57, 0.15, 0.36, 0.57];
-        for (let i = 0; i < TM_N_IN; i++) {{
-          const wv = W[i][tmPhotoIdx];
-          const col = wv >= 0 ? '#34A853' : '#EA4335';
-          const lw = Math.min(4.0, 1.5 + Math.abs(wv) * 0.16);
-          const y0 = inY[i], y1 = outY[tmPhotoIdx];
-          html += `<line x1="${{xInRight}}" y1="${{y0}}" x2="${{xOutLeft}}" y2="${{y1}}" stroke="${{col}}" stroke-width="${{lw.toFixed(2)}}" opacity="${{ph >= 2 ? '0.95' : '0.30'}}"/>`;
-          const tPos = tPosArr[i];
+        const yTgt = outY[tmPhotoIdx];
+        const tPosSample = {{ 0: 0.16, 1: 0.34, 2: 0.16, 4: 0.16, 5: 0.35, 6: 0.16 }};
+        for (let i = 0; i < TM_N_VIS; i++) {{
+          if (i === 3) continue;
+          const m = visToSamp[i];
+          const wv = W_samp[m][tmPhotoIdx];
+          const isNearZero = Math.abs(wv) < 0.00005;
+          const col = isNearZero ? '#9AA0A6' : (wv >= 0 ? '#34A853' : '#EA4335');
+          const lw = isNearZero ? 1.2 : 1.7;
+          const dash = isNearZero ? ' stroke-dasharray="3,2"' : '';
+          const y0 = inY[i];
+          html += `<line x1="${{xInRight}}" y1="${{y0}}" x2="${{xOutLeft}}" y2="${{yTgt}}" stroke="${{col}}" stroke-width="${{lw}}"${{dash}} opacity="${{ph >= 2 ? '0.88' : '0.28'}}"/>`;
+          const tPos = tPosSample[i];
           const bx = xInRight + (xOutLeft - xInRight) * tPos;
-          const by = y0 + (y1 - y0) * tPos;
-          const wStr = (wv >= 0 ? '+' : '') + wv.toFixed(1);
-          html += `<rect x="${{(bx - 25.5).toFixed(1)}}" y="${{(by - 7.8).toFixed(1)}}" width="51" height="15.6" rx="4.8" fill="${{wv >= 0 ? '#E6F4EA' : '#FCE8E6'}}" stroke="${{col}}" stroke-width="1.15" opacity="${{ph >= 2 ? '1' : '0.35'}}"/>`;
-          html += `<text x="${{bx.toFixed(1)}}" y="${{(by + 2.8).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" font-weight="700" fill="${{wv >= 0 ? '#137333' : '#C5221F'}}" opacity="${{ph >= 2 ? '1' : '0.35'}}">w${{i + 1}}:${{wStr}}</text>`;
+          const by = y0 + (yTgt - y0) * tPos;
+          const wKey = m < 3 ? 'w' + (m + 1) : (m === 3 ? 'wₙ₋₂' : (m === 4 ? 'wₙ₋₁' : 'wₙ'));
+          const wLbl = isNearZero ? `${{wKey}}:≈0` : `${{wKey}}:${{(wv >= 0 ? '+' : '') + wv.toFixed(3)}}`;
+          const pw = isNearZero ? (m >= 3 && m < 5 ? 48 : 42) : (m >= 3 && m < 5 ? 64 : 58);
+          const pFill = isNearZero ? '#F1F3F4' : (wv >= 0 ? '#E6F4EA' : '#FCE8E6');
+          const pTxt = isNearZero ? '#5F6368' : (wv >= 0 ? '#137333' : '#C5221F');
+          html += `<rect x="${{(bx - pw / 2).toFixed(1)}}" y="${{(by - 7.0).toFixed(1)}}" width="${{pw}}" height="14" rx="4.2" fill="${{pFill}}" stroke="${{col}}" stroke-width="1.0" opacity="${{ph >= 2 ? '0.96' : '0.32'}}"/>`;
+          html += `<text x="${{bx.toFixed(1)}}" y="${{(by + 2.5).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" font-weight="700" fill="${{pTxt}}" opacity="${{ph >= 2 ? '1' : '0.35'}}">${{wLbl}}</text>`;
         }}
-        const bSign = (bVal >= 0 ? '+' : '') + bVal.toFixed(1);
+
+        // HERO +150.523-pixel bundle wire right through the center!
+        const mCol = midVal >= 0 ? '#34A853' : '#EA4335';
+        const mLw = Math.min(5.0, 2.2 + Math.abs(midVal) * 0.85);
+        html += `<line x1="${{xInRight}}" y1="${{inY[3]}}" x2="${{xOutLeft}}" y2="${{yTgt}}" stroke="${{mCol}}" stroke-width="${{mLw.toFixed(2)}}" opacity="${{ph >= 2 ? '0.96' : '0.30'}}"/>`;
+        const mT = 0.43;
+        const mBx = xInRight + (xOutLeft - xInRight) * mT;
+        const mBy = inY[3] + (yTgt - inY[3]) * mT;
+        const mStr = (midVal >= 0 ? '+' : '') + midVal.toFixed(2);
+        html += `<rect x="${{(mBx - 64).toFixed(1)}}" y="${{(mBy - 9.5).toFixed(1)}}" width="128" height="19" rx="6" fill="${{midVal >= 0 ? '#E6F4EA' : '#FCE8E6'}}" stroke="${{mCol}}" stroke-width="1.7" opacity="${{ph >= 2 ? '1' : '0.35'}}"/>`;
+        html += `<text x="${{mBx.toFixed(1)}}" y="${{(mBy + 3.0).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" font-weight="800" fill="${{midVal >= 0 ? '#137333' : '#C5221F'}}" opacity="${{ph >= 2 ? '1' : '0.35'}}">Σ 150.522 piksel: ${{mStr}}</text>`;
+
+        // Dedicated Bias dashed wire
+        const bSign = (bVal >= 0 ? '+' : '') + bVal.toFixed(2);
         const bT = 0.80;
         const bBx = xInRight + (xOutLeft - xInRight) * bT;
-        const bBy = biasY + (outY[tmPhotoIdx] - biasY) * bT;
-        html += `<line x1="${{xInRight}}" y1="${{biasY}}" x2="${{xOutLeft}}" y2="${{outY[tmPhotoIdx]}}" stroke="#E37400" stroke-width="2.1" stroke-dasharray="5,3" opacity="${{ph >= 2 ? '0.95' : '0.30'}}"/>`;
-        html += `<rect x="${{(bBx - 30).toFixed(1)}}" y="${{(bBy - 8.5).toFixed(1)}}" width="60" height="17" rx="5.5" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.5" opacity="${{ph >= 2 ? '1' : '0.35'}}"/>`;
-        html += `<text x="${{bBx.toFixed(1)}}" y="${{(bBy + 2.9).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="700" fill="#B06000" opacity="${{ph >= 2 ? '1' : '0.35'}}">b${{tmPhotoIdx + 1}}:${{bSign}}</text>`;
+        const bBy = biasY + (yTgt - biasY) * bT;
+        html += `<line x1="${{xInRight}}" y1="${{biasY}}" x2="${{xOutLeft}}" y2="${{yTgt}}" stroke="#E37400" stroke-width="2.1" stroke-dasharray="5,3" opacity="${{ph >= 2 ? '0.95' : '0.30'}}"/>`;
+        html += `<rect x="${{(bBx - 33).toFixed(1)}}" y="${{(bBy - 8.5).toFixed(1)}}" width="66" height="17" rx="5.5" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.5" opacity="${{ph >= 2 ? '1' : '0.35'}}"/>`;
+        html += `<text x="${{bBx.toFixed(1)}}" y="${{(bBy + 2.9).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" font-weight="700" fill="#B06000" opacity="${{ph >= 2 ? '1' : '0.35'}}">b${{tmPhotoIdx + 1}}:${{bSign}}</text>`;
       }} else {{
-        // Subtle dashed bias lines to all 5 outputs in neutral default state
         for (let j = 0; j < 5; j++) {{
           html += `<line x1="${{xInRight}}" y1="${{biasY}}" x2="${{xOutLeft}}" y2="${{outY[j]}}" stroke="#F5C76B" stroke-width="1.1" stroke-dasharray="4,3" opacity="0.55"/>`;
         }}
       }}
 
-      // 7) Input Layer 6 Pure Pixel Feature Neurons + Dedicated +1 Bias Node at bottom!
-      for (let i = 0; i < TM_N_IN; i++) {{
-        html += `<circle id="tm-in-c-${{i}}" cx="27" cy="${{inY[i]}}" r="10.8" fill="${{TM_IN_COLS[i]}}" stroke="#FFFFFF" stroke-width="1.8" opacity="${{hasPhoto ? '1' : '0.55'}}"/>`;
-        html += `<text x="27" y="${{inY[i] + 3.0}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.5" font-weight="700" fill="#FFFFFF">${{hasPhoto ? x[i].toFixed(2) : '—'}}</text>`;
-        html += `<text x="44" y="${{inY[i] + 3.2}}" font-family="Roboto Mono, monospace" font-size="9.0" font-weight="700" fill="#202124">x${{i + 1}}</text>`;
-        html += `<text x="64" y="${{inY[i] + 3.1}}" font-family="Roboto, Arial" font-size="8.8" fill="#3C4043">${{fNames[i]}}</text>`;
+      // 7) Input Layer REAL 150.528 Neurons (x1..x3 RGB + Ellipsis +150.522 + x150.526..x150.528 RGB + Bias)
+      for (let i = 0; i < TM_N_VIS; i++) {{
+        if (i === 3) {{
+          html += `<rect id="tm-in-c-3" x="14" y="${{inY[3] - 11.5}}" width="194" height="23" rx="7.5" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.5" stroke-dasharray="4,2" opacity="${{hasPhoto ? '1' : '0.82'}}"/>`;
+          html += `<text x="111" y="${{inY[3] - 1.2}}" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#1A73E8">⋮ +150.522 neuron piksel</text>`;
+          html += `<text x="111" y="${{inY[3] + 8.0}}" text-anchor="middle" font-family="Roboto, Arial" font-size="6.7" fill="#5F6368">(memuat seluruh area figurin)</text>`;
+        }} else {{
+          const m = visToSamp[i];
+          const isEnd = m >= 3;
+          html += `<circle id="tm-in-c-${{i}}" cx="25" cy="${{inY[i]}}" r="8.8" fill="${{TM_VIS_COLS[i]}}" stroke="#FFFFFF" stroke-width="1.5" opacity="${{hasPhoto ? '1' : '0.58'}}"/>`;
+          html += `<text x="25" y="${{inY[i] + 2.7}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.7" font-weight="700" fill="#FFFFFF">${{hasPhoto ? x[m].toFixed(2) : '—'}}</text>`;
+          html += `<text x="39" y="${{inY[i] + 2.8}}" font-family="Roboto Mono, monospace" font-size="${{isEnd ? '7.5' : '8.4'}}" font-weight="700" fill="#202124">${{sIds[m]}}</text>`;
+          html += `<text x="${{isEnd ? 89 : 60}}" y="${{inY[i] + 2.8}}" font-family="Roboto, Arial" font-size="8.0" fill="#3C4043">${{sNames[m]}}</text>`;
+        }}
       }}
-      // Subtle dashed divider + dedicated +1 Bias node (standard DL textbook convention!)
-      html += `<line x1="15" y1="208" x2="198" y2="208" stroke="#B6CCF8" stroke-width="1" stroke-dasharray="3,3"/>`;
-      html += `<circle id="tm-bias-c" cx="27" cy="${{biasY}}" r="10.2" fill="#FBBC04" stroke="#FFFFFF" stroke-width="1.8" opacity="${{hasPhoto ? '1' : '0.70'}}"/>`;
-      html += `<text x="27" y="${{biasY + 3.0}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="800" fill="#202124">+1</text>`;
-      html += `<text x="44" y="${{biasY + 3.1}}" font-family="Poppins, Arial" font-size="8.9" font-weight="700" fill="#B06000">Bias (b)</text>`;
-      html += `<text x="95" y="${{biasY + 3.0}}" font-family="Roboto, Arial" font-size="8.0" fill="#5F6368">Ambang kelas</text>`;
+      html += `<line x1="15" y1="204" x2="206" y2="204" stroke="#B6CCF8" stroke-width="1" stroke-dasharray="3,3"/>`;
+      html += `<circle id="tm-bias-c" cx="25" cy="${{biasY}}" r="9.4" fill="#FBBC04" stroke="#FFFFFF" stroke-width="1.6" opacity="${{hasPhoto ? '1' : '0.72'}}"/>`;
+      html += `<text x="26" y="${{biasY + 3.0}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="800" fill="#202124">+1</text>`;
+      html += `<text x="41" y="${{biasY + 3.1}}" font-family="Poppins, Arial" font-size="8.7" font-weight="700" fill="#B06000">Bias (b)</text>`;
+      html += `<text x="92" y="${{biasY + 3.0}}" font-family="Roboto, Arial" font-size="7.9" fill="#5F6368">Ambang kelas</text>`;
 
-      // 8) Output Layer 5 Class Rows (compact vertically inside shorter funnel capsule!)
+      // 8) Output Layer 5 Class Rows
       for (let j = 0; j < 5; j++) {{
         const isTarget = hasPhoto && j === tmPhotoIdx;
         const isWinner = hasPhoto && j === predIdx;
@@ -5931,7 +6692,7 @@ def build_extra_js(data: dict) -> str:
       }}
       svg.innerHTML = html;
 
-      // 9) 2-Box Transparent Live Math Strip (100% Calculator-Exact for all 6 inputs!)
+      // 9) 2-Box Transparent Live Math Strip (100% Calculator-Exact across ALL 150.528 pixels!)
       const wbBox = document.getElementById('tm-math-wb');
       const wbEq = document.getElementById('tm-math-wb-eq');
       const actBox = document.getElementById('tm-math-act');
@@ -5940,21 +6701,18 @@ def build_extra_js(data: dict) -> str:
       if (wbBox && wbEq) {{
         wbBox.className = 'tm-math-card ' + (!hasPhoto || ph < 2 ? 'dim' : (ph === 2 ? 'glow-yellow' : ''));
         if (!hasPhoto) {{
-          wbEq.innerHTML = `<span style="color:#5F6368;">Klik 1 foto di <strong>Dataset Berlabel</strong> atau <strong>▶ Simulasi Training</strong> untuk memulai perhitungan!</span>`;
+          wbEq.innerHTML = `<span style="color:#5F6368;">Klik 1 foto di <strong>Dataset Berlabel</strong> atau <strong>▶ Play</strong> untuk memulai perhitungan!</span>`;
         }} else if (ph < 2) {{
-          wbEq.innerHTML = `<span style="color:#5F6368;">Menunggu nilai x₁..x₆ masuk ke kabel Weight &amp; Bias...</span>`;
+          wbEq.innerHTML = `<span style="color:#5F6368;">Menunggu 150.528 nilai piksel (x₁..x₁₅₀.₅₂₈) masuk ke kabel Weight &amp; Bias...</span>`;
         }} else {{
-          let sumWx = 0;
-          const tParts = [];
-          for (let i = 0; i < TM_N_IN; i++) {{
-            sumWx += x[i] * W[i][tmPhotoIdx];
-            tParts.push(`(${{x[i].toFixed(2)}}×${{W[i][tmPhotoIdx].toFixed(1)}})`);
-          }}
-          const line1 = tParts.slice(0, 3).join(' + ') + ' +';
-          const line2 = tParts.slice(3).join(' + ') + ` = <strong>${{sumWx >= 0 ? '+' : ''}}${{sumWx.toFixed(2)}}</strong>`;
-          const bTxt = (bVal >= 0 ? '+ ' : '− ') + Math.abs(bVal).toFixed(1);
+          const ss = sumSamp[tmPhotoIdx];
+          const sumWx = ss + midVal;
+          const ssTxt = (ss >= 0 ? '+' : '') + ss.toFixed(2);
+          const midTxt = (midVal >= 0 ? '+' : '') + midVal.toFixed(2);
+          const sumTxt = (sumWx >= 0 ? '+' : '') + sumWx.toFixed(2);
+          const bTxt = (bVal >= 0 ? '+ ' : '− ') + Math.abs(bVal).toFixed(2);
           const zTxt = (z[tmPhotoIdx] >= 0 ? '+' : '') + z[tmPhotoIdx].toFixed(2);
-          wbEq.innerHTML = `<div style="font-size:8.0px; white-space:nowrap;">${{line1}} ${{line2}}</div>`
+          wbEq.innerHTML = `<div style="font-size:8.2px; white-space:nowrap;">6 kanal sudut (<code>${{ssTxt}}</code>) + [Σ 150.522 piksel = <code>${{midTxt}}</code>] = <strong>${{sumTxt}}</strong></div>`
             + `<div>Tambah Bias (<code>b${{tmPhotoIdx + 1}} = ${{bTxt}}</code>) → <strong style="color:#B06000;">Skor Mentah z${{tmPhotoIdx + 1}} = ${{zTxt}}</strong></div>`;
         }}
       }}
@@ -5981,12 +6739,17 @@ def build_extra_js(data: dict) -> str:
         }}
       }}
 
+      // 9b) Sync 3 bottom step cards with active phase during Play / +1 Tahap / photo pulse!
+      const tmIsStepping = hasPhoto && (tmMode !== 'idle' || (tmManualPhase >= 1 && tmManualPhase <= 3));
+      const tmCardIdx = !tmIsStepping ? -1 : (ph === 1 ? 0 : (ph === 2 ? 1 : 2));
+      _syncCards(['tm-card-1', 'tm-card-2', 'tm-card-3'], tmCardIdx, ['blue', 'yellow', 'green']);
+
       // 10) Status Pill & Preset Buttons
       const pill = document.getElementById('tm-status-pill');
       if (pill && tmMode === 'idle') {{
         if (!hasPhoto) {{
           pill.className = 'pill blue';
-          pill.textContent = 'Siap · Pilih Foto / Simulasi';
+          pill.textContent = 'Siap · Pilih Foto / ▶ Play';
         }} else if (tmTrainAlpha < 0.1) {{
           pill.className = 'pill red';
           pill.textContent = 'Epoch 0 · Weight Acak (Salah Tebak)';
@@ -6023,7 +6786,7 @@ def build_extra_js(data: dict) -> str:
       tmCache = {{
         canvas, ctx: canvas.getContext('2d'), W, H, dpr,
         ds: [0, 1, 2, 3, 4].map((i) => ptOf(`tm-ds-${{i}}`)),
-        ins: Array.from({{ length: TM_N_IN }}, (_, i) => ptOf(`tm-in-c-${{i}}`)),
+        ins: Array.from({{ length: TM_N_VIS }}, (_, i) => ptOf(`tm-in-c-${{i}}`)),
         bias: ptOf('tm-bias-c'),
         outs: [0, 1, 2, 3, 4].map((j) => ptOf(`tm-out-c-${{j}}`)),
       }};
@@ -6045,51 +6808,54 @@ def build_extra_js(data: dict) -> str:
       const easeIO = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
       const easeOut = (t) => 1 - Math.pow(1 - t, 3);
 
-      // Phase 1 (0.00 -> 0.22): Slow glide from dataset photo -> 4 Input Layer neurons (with trails!)
+      // Phase 1 (0.00 -> 0.22): Slow glide from dataset photo -> Input Layer (150.528 neurons)
       if (tmStepProg < 0.24) {{
         const u = easeIO(clamp01(tmStepProg / 0.20));
         ins.forEach((inP, i) => {{
           if (!inP) return;
-          const ox = srcDs.rightX + (inP.x - srcDs.rightX) * u;
+          const tx = i === 3 ? inP.leftX + 14 : inP.x;
+          const ox = srcDs.rightX + (tx - srcDs.rightX) * u;
           const oy = srcDs.y + (inP.y - srcDs.y) * u;
           for (let g = 3; g >= 1; g--) {{
             const gu = Math.max(0, u - g * 0.06);
             ctx.beginPath();
-            ctx.arc(srcDs.rightX + (inP.x - srcDs.rightX) * gu, srcDs.y + (inP.y - srcDs.y) * gu, 4.5 - g * 0.8, 0, Math.PI * 2);
-            ctx.fillStyle = _inHexRgba(TM_IN_COLS[i], 0.25 * (1 - g / 4)); ctx.fill();
+            ctx.arc(srcDs.rightX + (tx - srcDs.rightX) * gu, srcDs.y + (inP.y - srcDs.y) * gu, 4.5 - g * 0.8, 0, Math.PI * 2);
+            ctx.fillStyle = _inHexRgba(TM_VIS_COLS[i], 0.25 * (1 - g / 4)); ctx.fill();
           }}
           ctx.save();
           ctx.beginPath(); ctx.arc(ox, oy, 8.5, 0, Math.PI * 2);
-          ctx.fillStyle = _inHexRgba(TM_IN_COLS[i], 0.25); ctx.fill();
+          ctx.fillStyle = _inHexRgba(TM_VIS_COLS[i], 0.25); ctx.fill();
           ctx.beginPath(); ctx.arc(ox, oy, 5.4, 0, Math.PI * 2);
-          ctx.fillStyle = TM_IN_COLS[i]; ctx.fill();
+          ctx.fillStyle = TM_VIS_COLS[i]; ctx.fill();
           ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.6; ctx.stroke();
           ctx.restore();
         }});
       }}
 
-      // Phase 2 (0.22 -> 0.56): Slow travel across 4 Weight wires + 5th dedicated +1 Bias wire -> Target Neuron!
+      // Phase 2 (0.22 -> 0.56): Slow travel across 150.528 Weight wires + Bias wire -> Target Neuron!
       if (tmStepProg >= 0.22 && tmStepProg < 0.58) {{
         const u = easeIO(clamp01((tmStepProg - 0.22) / 0.30));
         const sources = bias ? ins.concat([bias]) : ins;
         sources.forEach((inP, idx) => {{
           if (!inP) return;
+          const isMidOrb = idx === 3;
           const isBiasOrb = bias && idx === sources.length - 1;
-          const sx = inP.x + 14, sy = inP.y;
+          const sx = isMidOrb ? inP.rightX : inP.x + 14, sy = inP.y;
           const dx = tgtOut.x - 12, dy = tgtOut.y;
           const ox = sx + (dx - sx) * u;
           const oy = sy + (dy - sy) * u;
-          const orbCol = isBiasOrb ? '#FBBC04' : '#E37400';
+          const orbCol = isBiasOrb ? '#FBBC04' : (isMidOrb ? '#34A853' : '#E37400');
+          const rad = isMidOrb ? 7.2 : 5.4;
           for (let g = 4; g >= 1; g--) {{
             const gu = Math.max(0, u - g * 0.05);
             ctx.beginPath();
-            ctx.arc(sx + (dx - sx) * gu, sy + (dy - sy) * gu, 5.0 - g * 0.85, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(251, 188, 4, ${{(0.28 * (1 - g / 5)).toFixed(3)}})`; ctx.fill();
+            ctx.arc(sx + (dx - sx) * gu, sy + (dy - sy) * gu, rad - g * 0.85, 0, Math.PI * 2);
+            ctx.fillStyle = _inHexRgba(orbCol, 0.28 * (1 - g / 5)); ctx.fill();
           }}
           ctx.save();
-          ctx.beginPath(); ctx.arc(ox, oy, 9.5, 0, Math.PI * 2);
-          ctx.fillStyle = 'rgba(251, 188, 4, 0.28)'; ctx.fill();
-          ctx.beginPath(); ctx.arc(ox, oy, 5.8, 0, Math.PI * 2);
+          ctx.beginPath(); ctx.arc(ox, oy, rad + 3.8, 0, Math.PI * 2);
+          ctx.fillStyle = _inHexRgba(orbCol, 0.26); ctx.fill();
+          ctx.beginPath(); ctx.arc(ox, oy, rad, 0, Math.PI * 2);
           ctx.fillStyle = orbCol; ctx.fill();
           ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.8; ctx.stroke();
           ctx.restore();
@@ -6130,9 +6896,6 @@ def build_extra_js(data: dict) -> str:
       if (!tmLastTs) tmLastTs = ts;
       const dt = Math.min(0.033, Math.max(0.001, (ts - tmLastTs) / 1000));
       tmLastTs = ts;
-      // Extra-SLOW & crystal-clear (~7.1s per photo in training, ~6.0s on single photo click!)
-      // Numbers stay 100% STATIC during Phases 1..3 so audience can read every digit comfortably;
-      // weights smoothly update ONLY during Phase 4 (0.80 -> 1.00) driven by Target vs Prediksi (Error)!
       const speed = tmMode === 'train' ? 0.14 : 0.17;
       tmStepProg += dt * speed;
       const ph = _tmPhaseFromProg(tmStepProg);
@@ -6160,7 +6923,7 @@ def build_extra_js(data: dict) -> str:
             pill.className = 'pill red';
             pill.textContent = `Target ${{clsName}} 100% vs ${{tmPreUpdatePct.toFixed(1)}}% → Error! Kuatkan w & b ke y${{tmPhotoIdx + 1}}!`;
           }} else {{
-            const phLabel = ph === 1 ? '1. Baca Input (x)' : (ph === 2 ? '2. Weight + Bias → z' : '3. Softmax → %');
+            const phLabel = ph === 1 ? '1. Baca 150.528 Input' : (ph === 2 ? '2. Weight + Bias → z' : '3. Softmax → %');
             pill.className = ph === 2 ? 'pill yellow' : (ph === 3 ? 'pill green' : 'pill blue');
             pill.textContent = `Foto ${{tmPhotoIdx + 1}}/5 (${{clsName}}) · ${{phLabel}}`;
           }}
@@ -6181,7 +6944,6 @@ def build_extra_js(data: dict) -> str:
           tmPhotoIdx = tmStepIdx;
           tmTrainAlpha = Math.pow(tmStepIdx / totalPhotos, 0.80);
         }}
-        // Re-render SVG only when phase changes OR during Phase 4 smooth weight update (zero number flicker!)
         if (ph !== tmLastRenderedPh || needWeightUpdate) {{
           tmLastRenderedPh = ph;
           _tmRenderNetwork(ph);
@@ -6191,9 +6953,8 @@ def build_extra_js(data: dict) -> str:
         return;
       }}
 
-      // Single photo extra-slow walkthrough mode (static readable numbers through all 4 phases!)
       const clsName = TRAINING_MATH.classes[tmPhotoIdx];
-      const phLabel = ph === 1 ? '1. Baca Input (x)' : (ph === 2 ? '2. Weight + Bias → z' : (ph === 3 ? '3. Softmax → %' : '4. Hasil Akhir!'));
+      const phLabel = ph === 1 ? '1. Baca 150.528 Input' : (ph === 2 ? '2. Weight + Bias → z' : (ph === 3 ? '3. Softmax → %' : '4. Hasil Akhir!'));
       const pill = document.getElementById('tm-status-pill');
       if (pill) {{
         pill.className = ph === 2 ? 'pill yellow' : (ph >= 3 ? 'pill green' : 'pill blue');
@@ -6258,7 +7019,7 @@ def build_extra_js(data: dict) -> str:
       tmManualPhase = tmManualPhase >= 4 ? 1 : tmManualPhase + 1;
       tmLastRenderedPh = tmManualPhase;
       const clsName = TRAINING_MATH.classes[tmPhotoIdx];
-      const labels = ['', 'Tahap 1/4: Input Layer (x₁..x₆ + Bias)', 'Tahap 2/4: Hitung Weight + Bias → z', 'Tahap 3/4: Activation Function (Softmax)', 'Tahap 4/4: Hasil Akhir di Output Layer'];
+      const labels = ['', 'Tahap 1/4: Input Layer (150.528 Neuron + Bias)', 'Tahap 2/4: Hitung Weight + Bias → z', 'Tahap 3/4: Activation Function (Softmax)', 'Tahap 4/4: Hasil Akhir di Output Layer'];
       const pill = document.getElementById('tm-status-pill');
       if (pill) {{
         pill.className = tmManualPhase === 2 ? 'pill yellow' : (tmManualPhase >= 3 ? 'pill green' : 'pill blue');
@@ -6301,434 +7062,1781 @@ def build_extra_js(data: dict) -> str:
     resetTmSim();
 
     // =========================================================================
-    // SIMULATOR #5 (Slide 25): Interactive Weight & Bias Explorer on 5 Frozen Photos
-    // Uses real 1-neuron binary Elsa detector weights trained on data/frozen_v1/
+    // SIMULATOR #5 (Slide 25): SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP 4.1 (WEIGHT + BIAS)
+    // Uses 100% IDENTICAL 150.528-pixel weights, mid sums, & bias from Slide 24!
     // =========================================================================
-    let wbPhotoIdx = 1; // default Elsa
+    const WB_CHAR_NOTES = [
+      '<strong>Zoom-In Tahap 4.1 (Anna · y₁):</strong> <code>150.522 piksel</code> objek menyumbang <code>+2.89</code> (pojok latar <code>w≈0</code>), dikurangi <code>Bias (−0.51)</code> → <strong>z₁ = +2.38</strong> → Softmax <strong>83.0% ✅</strong>!',
+      '<strong>Zoom-In Tahap 4.1 (Elsa · y₂):</strong> <code>150.522 piksel</code> objek gaun biru menyumbang <code>+3.17</code> (pojok latar <code>w≈0</code>), lalu <code>Bias (−1.04)</code> menyeimbangkan jadi <strong>z₂ = +2.13</strong> → Softmax <strong>77.7% ✅</strong>!',
+      '<strong>Zoom-In Tahap 4.1 (Kristoff · y₃):</strong> <code>150.522 piksel</code> objek menyumbang <code>+2.20</code> + <code>Bias (−0.16)</code> → <strong>z₃ = +2.04</strong> → Softmax <strong>75.4% ✅</strong>!',
+      '<strong>Zoom-In Tahap 4.1 (Olaf · y₄):</strong> <code>150.522 piksel</code> objek menyumbang <code>+1.38</code>, diangkat oleh <code>Bias (+0.81)</code> → <strong>z₄ = +2.19</strong> → Softmax <strong>79.2% ✅</strong>!',
+      '<strong>Zoom-In Tahap 4.1 (Sven · y₅):</strong> <code>150.522 piksel</code> objek menyumbang <code>+1.10</code>, dibantu <code>Bias (+0.90)</code> → <strong>z₅ = +2.00</strong> → Softmax <strong>74.9% ✅</strong>!',
+    ];
+    let wbCharIdx = 1; // default Elsa (matches Slide 24!)
     let wbPresetKey = 'elsa_opt';
-    const WB_BIN_W = TRAINING_MATH.elsa_binary.w;
-    const WB_BIN_B = TRAINING_MATH.elsa_binary.b;
-    const WB_PRESETS = {{
-      elsa_opt: {{
-        w: WB_BIN_W.slice(),
-        b: WB_BIN_B,
-        note: `<strong>Bobot Terlatih Neuron Elsa:</strong> <code>w₃ (Biru) = +${{WB_BIN_W[2].toFixed(1)}}</code> mengangkat <strong>Elsa</strong> jadi <strong>satu-satunya skor positif</strong>, sedangkan <code>Bias = ${{WB_BIN_B.toFixed(1)}}</code> menahan ke-4 karakter lain di zona negatif!`,
-      }},
-      no_bias: {{
-        w: WB_BIN_W.slice(),
-        b: 0.0,
-        note: '<strong>Efek Tanpa Bias (<code>b = 0.0</code>):</strong> Tanpa ambang penggeser <em>Bias</em>, karakter lain (seperti <strong>Olaf</strong>) ikut melompat ke zona positif (<code>z &gt; 0</code>) sehingga neuron gagal menyaring Elsa secara bersih!',
-      }},
-      wrong_w: {{
-        w: [WB_BIN_W[0], WB_BIN_W[1], -10.0, WB_BIN_W[3]],
-        b: WB_BIN_B,
-        note: '<strong>Efek Weight Biru Dibalik (<code>w₃ = -10.0</code>):</strong> Warna biru gaun Elsa justru dihukum keras sehingga skor <strong>Elsa langsung anjlok negatif</strong> — bukti <em>Weight</em> menentukan ciri apa yang dicari neuron!',
-      }},
-    }};
+    let wbTourTimer = null;
+    let wbGlideRaf = null;
 
-    function setWbPreset(key) {{
-      const cfg = WB_PRESETS[key];
-      if (!cfg) return;
+    function _wbSetTourBtn(running) {{
+      const btn = document.getElementById('wb-btn-tour');
+      if (!btn) return;
+      btn.textContent = running ? '■ Stop' : '▶ Play';
+      btn.style.background = running ? '#EA4335' : '#34A853';
+      btn.style.borderColor = running ? '#EA4335' : '#34A853';
+    }}
+
+    function _stopWbAnim() {{
+      if (wbTourTimer !== null) {{ clearInterval(wbTourTimer); wbTourTimer = null; }}
+      if (wbGlideRaf !== null) {{ cancelAnimationFrame(wbGlideRaf); wbGlideRaf = null; }}
+      _wbSetTourBtn(false);
+    }}
+
+    function _wbOrigParams(charIdx) {{
+      return {{
+        wScale: 1.0,
+        b: TRAINING_MATH.b_trained[charIdx],
+      }};
+    }}
+
+    function _wbPresetParams(charIdx, key) {{
+      const o = _wbOrigParams(charIdx);
+      if (key === 'no_bias') return {{ wScale: 1.0, b: 0.0 }};
+      if (key === 'wrong_w') return {{ wScale: -1.0, b: o.b }};
+      return {{ wScale: 1.0, b: o.b }};
+    }}
+
+    function _wbGlideTo(targetScale, targetB, presetKey) {{
+      if (wbGlideRaf !== null) {{ cancelAnimationFrame(wbGlideRaf); wbGlideRaf = null; }}
+      const wEl = document.getElementById('wb-hero-w');
+      const bEl = document.getElementById('wb-b');
+      if (!wEl || !bEl) return;
+      const startW = parseFloat(wEl.value);
+      const startB = parseFloat(bEl.value);
+      const t0 = performance.now();
+      const dur = 480;
+      const step = (now) => {{
+        const u = Math.min(1, (now - t0) / dur);
+        const e = u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2;
+        wEl.value = (startW + (targetScale - startW) * e).toFixed(2);
+        bEl.value = (startB + (targetB - startB) * e).toFixed(2);
+        updateWb(presetKey);
+        if (u < 1) wbGlideRaf = requestAnimationFrame(step);
+        else wbGlideRaf = null;
+      }};
+      wbGlideRaf = requestAnimationFrame(step);
+    }}
+
+    function _wbApplyInstant(charIdx, key) {{
+      wbCharIdx = charIdx;
       wbPresetKey = key;
-      for (let i = 0; i < 4; i++) {{
-        const el = document.getElementById(`wb-w${{i}}`);
-        if (el) el.value = cfg.w[i].toFixed(1);
-      }}
-      const bel = document.getElementById('wb-b');
-      if (bel) bel.value = cfg.b.toFixed(1);
-      document.querySelectorAll('#wb-presets button').forEach((b) => {{
+      const p = _wbPresetParams(charIdx, key);
+      const wEl = document.getElementById('wb-hero-w');
+      const bEl = document.getElementById('wb-b');
+      if (wEl) wEl.value = p.wScale.toFixed(2);
+      if (bEl) bEl.value = p.b.toFixed(2);
+      document.querySelectorAll('#wb-presets button[data-wb]').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.wb !== key);
       }});
       updateWb(key);
     }}
 
-    function selectWbPhoto(idx) {{
-      wbPhotoIdx = idx;
-      updateWb(wbPresetKey);
+    function setWbPreset(key) {{
+      _stopWbAnim();
+      wbPresetKey = key;
+      document.querySelectorAll('#wb-presets button[data-wb]').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.wb !== key);
+      }});
+      const p = _wbPresetParams(wbCharIdx, key);
+      _wbGlideTo(p.wScale, p.b, key);
+    }}
+
+    function setWbPdfState(key) {{
+      _stopWbAnim();
+      _wbApplyInstant(1, key);
+    }}
+
+    function selectWbChar(idx, animate) {{
+      wbCharIdx = idx;
+      wbPresetKey = 'elsa_opt';
+      document.querySelectorAll('#wb-presets button[data-wb]').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.wb !== 'elsa_opt');
+      }});
+      const p = _wbPresetParams(idx, 'elsa_opt');
+      if (animate) _wbGlideTo(p.wScale, p.b, 'elsa_opt');
+      else _wbApplyInstant(idx, 'elsa_opt');
+    }}
+
+    function onWbChipClick(idx) {{
+      _stopWbAnim();
+      selectWbChar(idx, true);
+    }}
+
+    function nextWbChar() {{
+      _stopWbAnim();
+      selectWbChar((wbCharIdx + 1) % 5, true);
+    }}
+
+    function playWbTour() {{
+      if (wbTourTimer !== null) {{
+        _stopWbAnim();
+        return;
+      }}
+      _stopWbAnim();
+      _wbSetTourBtn(true);
+      let idx = 0;
+      selectWbChar(idx, true);
+      wbTourTimer = setInterval(() => {{
+        idx += 1;
+        if (idx >= 5) {{
+          _stopWbAnim();
+          selectWbChar(1, true);
+          return;
+        }}
+        selectWbChar(idx, true);
+      }}, 3800);
+    }}
+
+    function onWbSliderInput() {{
+      _stopWbAnim();
+      updateWb('');
     }}
 
     function updateWb(presetTag) {{
-      const w = [0, 1, 2, 3].map((i) => parseFloat(document.getElementById(`wb-w${{i}}`).value));
-      const b = parseFloat(document.getElementById('wb-b').value);
-      const fmt1 = (v) => (v >= 0 ? '+' : '') + v.toFixed(1);
+      const k = wbCharIdx;
+      const clsName = TRAINING_MATH.classes[k];
+      const sIds = TRAINING_MATH.sample_ids;
+      const x = TRAINING_MATH.X_sample[k];
+      const wScale = parseFloat(document.getElementById('wb-hero-w').value);
+      const curB = parseFloat(document.getElementById('wb-b').value);
+
+      const evBase = _tmEval(k, 1.0);
+      const origMid = evBase.mid[k];
+      const origSamp = evBase.sumSamp[k];
+      const scaledMid = origMid * wScale;
+      const sumWx = origSamp + scaledMid;
+      const zCur = sumWx + curB;
+
+      const zAll = evBase.z.slice();
+      zAll[k] = zCur;
+      const exAll = zAll.map((v) => Math.exp(v));
+      const sumExAll = exAll.reduce((a, c) => a + c, 0);
+      const probCur = (exAll[k] / sumExAll) * 100;
+      let winIdx = 0;
+      for (let j = 1; j < 5; j++) if (zAll[j] > zAll[winIdx]) winIdx = j;
+      const isWinner = winIdx === k;
+
       const fmt2 = (v) => (v >= 0 ? '+' : '') + v.toFixed(2);
-      for (let i = 0; i < 4; i++) {{
-        const sp = document.getElementById(`wb-vw${{i}}`);
-        if (sp) {{
-          sp.textContent = fmt1(w[i]);
-          sp.style.color = w[i] >= 0 ? '#137333' : '#C5221F';
-        }}
+      const fmtScale = (v) => (v >= 0 ? '+' : '') + v.toFixed(2) + '×';
+
+      // Update slider labels & readouts
+      const hl = document.getElementById('wb-hero-lbl');
+      if (hl) hl.textContent = 'Weight 150.522 Piksel';
+      const hv = document.getElementById('wb-hero-vw');
+      if (hv) {{
+        hv.textContent = fmtScale(wScale);
+        hv.style.color = wScale >= 0 ? '#137333' : '#C5221F';
       }}
-      const sb = document.getElementById('wb-vb');
-      if (sb) sb.textContent = fmt1(b);
+      const bl = document.getElementById('wb-bias-lbl');
+      if (bl) bl.textContent = `b${{k + 1}} · Bias`;
+      const bv = document.getElementById('wb-vb');
+      if (bv) bv.textContent = fmt2(curB);
 
-      // Score ALL 5 real Frozen figurines with current (w, b)
-      const scores = TRAINING_MATH.X.map((xv) => xv[0] * w[0] + xv[1] * w[1] + xv[2] * w[2] + xv[3] * w[3] + b);
-      let topIdx = 0;
-      for (let k = 1; k < 5; k++) if (scores[k] > scores[topIdx]) topIdx = k;
-      const posCount = scores.filter((v) => v > 0).length;
-
-      // Render 5 Frozen photo chips with live z scores
+      // 1. Render 5 clickable Frozen character chips showing exact Slide 24 z & %!
       const chipsHost = document.getElementById('wb-ds-chips');
       if (chipsHost) {{
         chipsHost.innerHTML = TRAINING_MATH.classes.map((cls, idx) => {{
-          const zv = scores[idx];
-          const isAct = idx === wbPhotoIdx;
-          const isPos = zv > 0;
-          const bg = isPos ? '#E6F4EA' : '#FCE8E6';
-          const col = isPos ? '#137333' : '#C5221F';
-          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="selectWbPhoto(${{idx}})" title="Klik untuk melihat rincian hitungan ${{cls}}">
+          const isAct = idx === k;
+          const evC = _tmEval(idx, 1.0);
+          const zDisp = isAct ? zCur : evC.z[idx];
+          const pDisp = isAct ? probCur : evC.probs[idx];
+          const ok = isAct ? isWinner : true;
+          const bg = ok ? '#E6F4EA' : '#FCE8E6';
+          const col = ok ? '#137333' : '#C5221F';
+          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="onWbChipClick(${{idx}})" title="Klik untuk Zoom-In kabel 150.528 Weight &amp; Bias milik ${{cls}}!">
             <img src="${{TRAINING_MATH.thumbs[idx]}}" alt="${{cls}}" style="border-color:${{TM_OUT_COLS[idx]}};"/>
-            <span class="c-name">${{cls}}${{idx === 1 ? ' ★' : ''}}</span>
-            <span class="c-score" style="background:${{bg}}; color:${{col}};">z=${{fmt2(zv)}}</span>
+            <span class="c-name">${{cls}}${{isAct ? ' ★' : ''}}</span>
+            <span class="c-score" style="background:${{bg}}; color:${{col}};">z=${{fmt2(zDisp)}} · ${{pDisp.toFixed(0)}}%</span>
           </div>`;
         }}).join('');
       }}
 
-      // Active character tug-of-war contribution bars
-      const x = TRAINING_MATH.X[wbPhotoIdx];
-      const clsName = TRAINING_MATH.classes[wbPhotoIdx];
-      const lblEl = document.getElementById('wb-active-lbl');
-      if (lblEl) lblEl.textContent = clsName;
-      const terms = [0, 1, 2, 3].map((i) => x[i] * w[i]);
-      const items = [
-        {{ lbl: 'x₁·w₁ (R)', val: terms[0], isBias: false }},
-        {{ lbl: 'x₂·w₂ (G)', val: terms[1], isBias: false }},
-        {{ lbl: 'x₃·w₃ (B)', val: terms[2], isBias: false }},
-        {{ lbl: 'x₄·w₄ (Atas)', val: terms[3], isBias: false }},
-        {{ lbl: 'Bias (b)', val: b, isBias: true }},
-      ];
-      const maxAbs = Math.max(4.0, ...items.map((it) => Math.abs(it.val)));
-      const cHost = document.getElementById('wb-contribs');
-      if (cHost) {{
-        cHost.innerHTML = items.map((it) => {{
-          const pct = Math.min(48, (Math.abs(it.val) / maxAbs) * 48);
-          const left = it.val >= 0 ? 50 : (50 - pct);
-          const col = it.isBias ? '#FBBC04' : (it.val >= 0 ? '#34A853' : '#EA4335');
-          const tCol = it.isBias ? '#B06000' : (it.val >= 0 ? '#137333' : '#C5221F');
-          return `<div class="contrib-row" style="grid-template-columns:80px 1fr 48px; font-size:9.9px;">
-            <span style="color:${{it.isBias ? '#B06000' : '#3C4043'}}; font-weight:${{it.isBias ? '700' : '500'}};">${{it.lbl}}</span>
-            <div class="contrib-track" style="height:12px;"><div class="contrib-mid"></div><div class="contrib-bar" style="left:${{left.toFixed(1)}}%; width:${{Math.max(1.5, pct).toFixed(1)}}%; background:${{col}};"></div></div>
-            <strong style="text-align:right; color:${{tCol}};">${{fmt2(it.val)}}</strong>
-          </div>`;
-        }}).join('');
-      }}
+      // 2. Render LIVE ZOOM-IN NEURON DIAGRAM SVG (REAL 150.528 pixel inputs: 3 RGB top + ellipsis + 3 RGB bottom!)
+      const svg = document.getElementById('wb-zoom-svg');
+      if (svg) {{
+        const inY = [32, 51, 70, 96, 122, 141, 160];
+        const visToSamp = [0, 1, 2, null, 3, 4, 5];
+        const shortNames = ['Piksel 1 (R)', 'Piksel 1 (G)', 'Piksel 1 (B)', 'Akhir (R)', 'Akhir (G)', 'Akhir (B)'];
+        const biasY = 196;
+        const nCy = 104;
+        const xLeft = 158;
+        const xNeuronLeft = 408;
 
-      // Exact arithmetic equation strip
-      const zNow = scores[wbPhotoIdx];
-      const eqEl = document.getElementById('wb-eq-box');
-      if (eqEl) {{
-        const parts = [0, 1, 2, 3].map((i) => `(${{x[i].toFixed(2)}}×${{w[i].toFixed(1)}})`).join(' + ');
-        const bPart = (b >= 0 ? '+ ' : '− ') + Math.abs(b).toFixed(1);
-        eqEl.innerHTML = `<strong>${{clsName}}:</strong> z = ${{parts}} ${{bPart}} = <strong style="color:${{zNow >= 0 ? '#137333' : '#C5221F'}};">${{fmt2(zNow)}}</strong>`;
-      }}
-
-      // Top badge & insight
-      const badge = document.getElementById('wb-badge');
-      if (badge) {{
-        if (topIdx === 1 && scores[1] > 0 && posCount === 1) {{
-          badge.className = 'pill green';
-          badge.textContent = `Elsa Aktif Sendiri! (1/5 Positif)`;
-        }} else if (topIdx === 1 && scores[1] > 0) {{
-          badge.className = 'pill yellow';
-          badge.textContent = `${{posCount}}/5 Kelas Ikut Positif (Atur Bias!)`;
-        }} else {{
-          badge.className = 'pill red';
-          badge.textContent = `Elsa Tidak Aktif (z=${{fmt2(scores[1])}})`;
+        let h = '';
+        // Left: Input Layer capsule (150.528 neurons!)
+        h += `<rect x="3" y="4" width="155" height="210" rx="11" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.8"/>`;
+        h += `<text x="80.5" y="16.5" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#1A73E8">Input ${{clsName}} (150.528)</text>`;
+        for (let i = 0; i < 7; i++) {{
+          if (i === 3) {{
+            h += `<rect x="10" y="${{inY[3] - 11.0}}" width="141" height="22" rx="6.5" fill="#FFFFFF" stroke="#FBBC04" stroke-width="2.0"/>`;
+            h += `<text x="80.5" y="${{inY[3] - 1.0}}" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#1A73E8">⋮ +150.522 piksel</text>`;
+            h += `<text x="80.5" y="${{inY[3] + 7.6}}" text-anchor="middle" font-family="Roboto, Arial" font-size="6.2" fill="#5F6368">Area objek utama (aktif)</text>`;
+          }} else {{
+            const m = visToSamp[i];
+            const isEnd = m >= 3;
+            h += `<circle cx="19" cy="${{inY[i]}}" r="7.5" fill="${{TM_VIS_COLS[i]}}" stroke="#FFFFFF" stroke-width="1.4"/>`;
+            h += `<text x="19" y="${{inY[i] + 2.4}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="5.9" font-weight="700" fill="#FFFFFF">${{x[m].toFixed(2)}}</text>`;
+            h += `<text x="31" y="${{inY[i] + 2.5}}" font-family="Roboto Mono, monospace" font-size="${{isEnd ? '6.7' : '7.5'}}" font-weight="700" fill="#202124">${{sIds[m]}}</text>`;
+            h += `<text x="${{isEnd ? 78 : 49}}" y="${{inY[i] + 2.5}}" font-family="Roboto, Arial" font-size="7.0" fill="#5F6368">${{shortNames[m]}}</text>`;
+          }}
         }}
+        h += `<line x1="11" y1="178" x2="150" y2="178" stroke="#B6CCF8" stroke-width="1" stroke-dasharray="3,2"/>`;
+        h += `<circle cx="19" cy="${{biasY}}" r="8.2" fill="#FBBC04" stroke="#FFFFFF" stroke-width="1.5"/>`;
+        h += `<text x="19" y="${{biasY + 2.6}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.0" font-weight="800" fill="#202124">+1</text>`;
+        h += `<text x="32" y="${{biasY + 2.6}}" font-family="Poppins, Arial" font-size="7.9" font-weight="700" fill="#B06000">Bias (b${{k + 1}})</text>`;
+
+        // Center: 6 corner RGB wires (w ≈ 0 ignored!) + HERO 150.522-pixel thick cable + Dashed Amber Bias Wire!
+        for (let i = 0; i < 7; i++) {{
+          if (i === 3) continue;
+          h += `<line x1="${{xLeft}}" y1="${{inY[i]}}" x2="${{xNeuronLeft}}" y2="${{nCy}}" stroke="#BDC1C6" stroke-width="1.15" stroke-dasharray="3,2" opacity="0.82"/>`;
+        }}
+        const topBx = xLeft + (xNeuronLeft - xLeft) * 0.44;
+        const topBy = inY[1] + (nCy - inY[1]) * 0.44 - 12;
+        h += `<rect x="${{(topBx - 54).toFixed(1)}}" y="${{(topBy - 7.5).toFixed(1)}}" width="108" height="15" rx="4.5" fill="#F1F3F4" stroke="#BDC1C6" stroke-width="1"/>`;
+        h += `<text x="${{topBx.toFixed(1)}}" y="${{(topBy + 2.6).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.9" font-weight="700" fill="#5F6368">Piksel sudut: w≈0 (abaikan)</text>`;
+
+        const botBx = xLeft + (xNeuronLeft - xLeft) * 0.42;
+        const botBy = inY[5] + (nCy - inY[5]) * 0.42 + 12;
+        h += `<rect x="${{(botBx - 46).toFixed(1)}}" y="${{(botBy - 7.5).toFixed(1)}}" width="92" height="15" rx="4.5" fill="#F1F3F4" stroke="#BDC1C6" stroke-width="1"/>`;
+        h += `<text x="${{botBx.toFixed(1)}}" y="${{(botBy + 2.6).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.9" font-weight="700" fill="#5F6368">Piksel akhir: w≈0</text>`;
+
+        // HERO 150.522-PIXEL WEIGHT BUNDLE WIRE (controlled live by Slider 1!)
+        const mCol = scaledMid >= 0 ? '#34A853' : '#EA4335';
+        const mLw = Math.min(5.4, 2.4 + Math.abs(scaledMid) * 0.85);
+        h += `<line x1="${{xLeft}}" y1="${{inY[3]}}" x2="${{xNeuronLeft}}" y2="${{nCy}}" stroke="${{mCol}}" stroke-width="${{mLw.toFixed(2)}}" opacity="0.96"/>`;
+        const hBx = xLeft + (xNeuronLeft - xLeft) * 0.50;
+        const hBy = (inY[3] + nCy) / 2;
+        h += `<rect x="${{(hBx - 78).toFixed(1)}}" y="${{(hBy - 12).toFixed(1)}}" width="156" height="24" rx="6.5" fill="${{scaledMid >= 0 ? '#E6F4EA' : '#FCE8E6'}}" stroke="#FBBC04" stroke-width="2.1"/>`;
+        h += `<text x="${{hBx.toFixed(1)}}" y="${{(hBy - 1.0).toFixed(1)}}" text-anchor="middle" font-family="Poppins, Arial" font-size="7.1" font-weight="700" fill="#3C4043">Σ 150.522 piksel × (${{fmtScale(wScale)}})</text>`;
+        h += `<text x="${{hBx.toFixed(1)}}" y="${{(hBy + 8.6).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="800" fill="${{scaledMid >= 0 ? '#137333' : '#C5221F'}}">= ${{fmt2(scaledMid)}}</text>`;
+
+        // Bias dashed wire + amber pill
+        const bBx = xLeft + (xNeuronLeft - xLeft) * 0.52;
+        const bBy = biasY + (nCy + 14 - biasY) * 0.52 + 12;
+        h += `<line x1="${{xLeft}}" y1="${{biasY}}" x2="${{xNeuronLeft}}" y2="${{nCy + 14}}" stroke="#E37400" stroke-width="2.2" stroke-dasharray="5,3"/>`;
+        h += `<rect x="${{(bBx - 44).toFixed(1)}}" y="${{(bBy - 8.2).toFixed(1)}}" width="88" height="16.4" rx="5.5" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.6"/>`;
+        h += `<text x="${{bBx.toFixed(1)}}" y="${{(bBy + 2.8).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.5" font-weight="700" fill="#B06000">Bias b${{k + 1}} = ${{fmt2(curB)}}</text>`;
+
+        // Right: ZOOMED-IN OUTPUT NEURON BOX
+        const boxFill = isWinner ? '#FEF7E0' : '#FCE8E6';
+        const boxStr = isWinner ? '#FBBC04' : '#EA4335';
+        h += `<rect x="${{xNeuronLeft}}" y="12" width="188" height="194" rx="13" fill="${{boxFill}}" stroke="${{boxStr}}" stroke-width="2.2"/>`;
+        h += `<circle cx="${{xNeuronLeft + 22}}" cy="31" r="10.5" fill="${{TM_OUT_COLS[k]}}"/>`;
+        h += `<text x="${{xNeuronLeft + 22}}" y="34.2" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.4" font-weight="700" fill="${{k === 2 ? '#202124' : '#FFFFFF'}}">y${{k + 1}}</text>`;
+        h += `<text x="${{xNeuronLeft + 38}}" y="30" font-family="Poppins, Arial" font-size="10.2" font-weight="700" fill="#202124">Neuron ${{clsName}}</text>`;
+        h += `<text x="${{xNeuronLeft + 38}}" y="41" font-family="Roboto, Arial" font-size="7.8" fill="#5F6368">Di dalam 1 neuron output</text>`;
+
+        // Inner Step A1: Sum of 150.528 weighted inputs + Bias
+        h += `<rect x="${{xNeuronLeft + 10}}" y="50" width="168" height="84" rx="9" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.4"/>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="65" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#B06000">TAHAP 4.1 · PENJUMLAHAN (Σ)</text>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="80" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.3" fill="#3C4043">Σ(x·w) = ${{fmt2(sumWx)}}</text>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="94" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.3" fill="#B06000">Bias b${{k + 1}} = ${{fmt2(curB)}}</text>`;
+        h += `<line x1="${{xNeuronLeft + 26}}" y1="101" x2="${{xNeuronLeft + 162}}" y2="101" stroke="#E0E3E7" stroke-width="1.2"/>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="122" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="14.5" font-weight="800" fill="${{zCur >= 0 ? '#137333' : '#C5221F'}}">z${{k + 1}} = ${{fmt2(zCur)}}</text>`;
+
+        // Down arrow into Faded Preview of Tahap 4.2 (Slide 26: Softmax)
+        h += `<line x1="${{xNeuronLeft + 94}}" y1="135" x2="${{xNeuronLeft + 94}}" y2="149" stroke="#34A853" stroke-width="2" stroke-dasharray="3,2"/>`;
+        h += `<polygon points="${{xNeuronLeft + 89}},147 ${{xNeuronLeft + 99}},147 ${{xNeuronLeft + 94}},154" fill="#34A853"/>`;
+        h += `<rect x="${{xNeuronLeft + 10}}" y="155" width="168" height="42" rx="9" fill="${{isWinner ? '#E6F4EA' : '#FCE8E6'}}" stroke="${{isWinner ? '#A8DAB5' : '#F6AEA9'}}" stroke-width="1.3"/>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="169" text-anchor="middle" font-family="Poppins, Arial" font-size="7.8" font-weight="700" fill="#5F6368">LANJUT KE TAHAP 4.2</text>`;
+        h += `<text x="${{xNeuronLeft + 94}}" y="186" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="10.2" font-weight="700" fill="${{isWinner ? '#137333' : '#C5221F'}}">Softmax → ${{probCur.toFixed(1)}}% ${{isWinner ? '✅' : '❌'}}</text>`;
+
+        svg.innerHTML = h;
       }}
+
+      // 2b. Sync 3 left explanation cards with active experiment / Play tour!
+      const wbCardIdx = presetTag === 'wrong_w'
+        ? 0
+        : (presetTag === 'no_bias'
+          ? 1
+          : (wbTourTimer !== null ? 2 : (presetTag === '' ? (Math.abs(wScale - 1.0) > 0.01 ? 0 : 1) : -1)));
+      _syncCards(['wb-card-1', 'wb-card-2', 'wb-card-3'], wbCardIdx, ['blue', 'yellow', 'green']);
+
+      // 3. Live Insight Callout
       const ins = document.getElementById('wb-insight');
       if (ins) {{
-        if (presetTag && WB_PRESETS[presetTag]) {{
-          ins.className = presetTag === 'elsa_opt' ? 'callout green' : (presetTag === 'no_bias' ? 'callout yellow' : 'callout red');
-          ins.innerHTML = WB_PRESETS[presetTag].note;
+        if (presetTag === 'elsa_opt') {{
+          ins.className = 'callout green';
+          ins.innerHTML = WB_CHAR_NOTES[k];
+        }} else if (presetTag === 'no_bias') {{
+          ins.className = 'callout yellow';
+          ins.innerHTML = `<strong>Efek Bias = 0 pada ${{clsName}}:</strong> Tanpa penggeser <code>b${{k + 1}} (${{fmt2(evBase.b[k])}})</code>, skor bergeser dari <code>${{fmt2(evBase.z[k])}}</code> ke <strong>z${{k + 1}} = ${{fmt2(zCur)}}</strong> (Softmax <strong>${{probCur.toFixed(1)}}%</strong>) — coba klik Olaf/Sven untuk lihat peluangnya anjlok tanpa Bias!`;
+        }} else if (presetTag === 'wrong_w') {{
+          ins.className = 'callout red';
+          ins.innerHTML = `<strong>Efek Balik Weight 150.522 Piksel:</strong> Kabel utama berbalik merah (<code>${{fmtScale(wScale)}}</code>) sehingga sumbangan piksel jadi <code>${{fmt2(scaledMid)}}</code>, skor <strong>z${{k + 1}} jatuh ke ${{fmt2(zCur)}}</strong>, dan peluang ${{clsName}} anjlok jadi <strong>${{probCur.toFixed(1)}}% ❌</strong>!`;
         }} else {{
           wbPresetKey = '';
-          document.querySelectorAll('#wb-presets button').forEach((btn) => btn.classList.add('outline'));
-          ins.className = topIdx === 1 && posCount === 1 ? 'callout green' : 'callout yellow';
-          ins.innerHTML = `<strong>Eksperimen Bebas:</strong> Saat ini skor tertinggi ada di <strong>${{TRAINING_MATH.classes[topIdx]}} (${{fmt2(scores[topIdx])}})</strong>, dengan <strong>${{posCount}}/5</strong> karakter bernilai positif (<code>z &gt; 0</code>).`;
+          document.querySelectorAll('#wb-presets button[data-wb]').forEach((btn) => btn.classList.add('outline'));
+          ins.className = isWinner ? 'callout green' : 'callout red';
+          ins.innerHTML = `<strong>Eksperimen ${{clsName}}:</strong> Skala <code>Weight=${{fmtScale(wScale)}}</code> &amp; <code>b${{k + 1}}=${{fmt2(curB)}}</code> menghasilkan <strong>z${{k + 1}} = ${{fmt2(zCur)}}</strong> → Softmax <strong>${{probCur.toFixed(1)}}%</strong> (${{isWinner ? 'masih menang ✅' : `kalah dari ${{TRAINING_MATH.classes[winIdx]}} ❌`}}).`;
         }}
       }}
     }}
-    setWbPreset('elsa_opt');
+    _wbApplyInstant(1, 'elsa_opt');
 
     // =========================================================================
-    // SIMULATOR #6 (Slide 26): Interactive Activation Function Explorer on Frozen Dataset
-    // ReLU & Sigmoid use real 1-neuron binary Elsa detector (ONLY Elsa activates!);
-    // Softmax uses full 5-class multi-class model (all 5 Frozen classes exact!)
+    // SIMULATOR #6 (Slide 26): SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP B (ACTIVATION FUNCTION)
+    // Takes the EXACT scores z1..z5 from Slide 24 & Slide 25 and feeds them visibly through
+    // ReLU / Sigmoid / Softmax inside a Zoom-In Pipeline SVG (Tahap A z -> Mesin Aktivasi -> Output)!
     // =========================================================================
     let actTab = 'relu';
-    let actPhotoIdx = 1; // default Elsa
-    let actManualZ = 1.8;
+    let actPhotoIdx = 1; // default Elsa (exact match with Slide 24 & 25!)
+    let actManualZ = null; // null = exact Slide 24/25 z; number = live slider override on target neuron z_k
+    let actTourTimer = null;
 
-    function _actBinScore(photoIdx) {{
-      const xv = TRAINING_MATH.X[photoIdx];
-      return xv[0] * WB_BIN_W[0] + xv[1] * WB_BIN_W[1] + xv[2] * WB_BIN_W[2] + xv[3] * WB_BIN_W[3] + WB_BIN_B;
+    function _actSetTourBtn(running) {{
+      const btn = document.getElementById('act-btn-tour');
+      if (!btn) return;
+      btn.textContent = running ? '■ Stop' : '▶ Play';
+      btn.style.background = running ? '#EA4335' : '#34A853';
+      btn.style.borderColor = running ? '#EA4335' : '#34A853';
+    }}
+
+    function _stopActTour() {{
+      if (actTourTimer !== null) {{ clearInterval(actTourTimer); actTourTimer = null; }}
+      _actSetTourBtn(false);
     }}
 
     function setActTab(tab) {{
+      _stopActTour();
       actTab = tab;
-      document.querySelectorAll('#act-tabs button').forEach((b) => {{
+      actManualZ = null;
+      document.querySelectorAll('#act-tabs button[data-act]').forEach((b) => {{
         b.classList.toggle('outline', b.dataset.act !== tab);
       }});
-      const pill = document.getElementById('act-pill');
-      if (pill) {{
-        if (tab === 'relu') {{ pill.className = 'pill red'; pill.textContent = 'ReLU · Hidden Layer'; }}
-        else if (tab === 'sigmoid') {{ pill.className = 'pill blue'; pill.textContent = 'Sigmoid · Output 2 Kelas'; }}
-        else {{ pill.className = 'pill green'; pill.textContent = 'Softmax · Output 5 Kelas'; }}
-      }}
-      const cPanel = document.getElementById('act-curve-panel');
-      const sPanel = document.getElementById('act-softmax-panel');
-      if (cPanel) cPanel.style.display = tab === 'softmax' ? 'none' : 'flex';
-      if (sPanel) sPanel.style.display = tab === 'softmax' ? 'flex' : 'none';
-      actManualZ = Math.max(-4, Math.min(4, _actBinScore(actPhotoIdx)));
-      const sl = document.getElementById('act-z-slider');
-      if (sl) sl.value = actManualZ.toFixed(1);
       renderActSim();
+    }}
+
+    function setActPdfState(tab) {{
+      _stopActTour();
+      actPhotoIdx = 1; // Elsa for clean PDF/PPTX export
+      setActTab(tab);
     }}
 
     function selectActPhoto(idx) {{
+      _stopActTour();
       actPhotoIdx = idx;
-      actManualZ = Math.max(-4, Math.min(4, _actBinScore(idx)));
-      const sl = document.getElementById('act-z-slider');
-      if (sl) sl.value = actManualZ.toFixed(1);
+      actManualZ = null;
       renderActSim();
     }}
 
+    function nextActChar() {{
+      _stopActTour();
+      actPhotoIdx = (actPhotoIdx + 1) % 5;
+      actManualZ = null;
+      renderActSim();
+    }}
+
+    function playActTour() {{
+      if (actTourTimer !== null) {{
+        _stopActTour();
+        return;
+      }}
+      _stopActTour();
+      _actSetTourBtn(true);
+      let idx = 0;
+      actPhotoIdx = idx;
+      actManualZ = null;
+      renderActSim();
+      actTourTimer = setInterval(() => {{
+        idx += 1;
+        if (idx >= 5) {{
+          _stopActTour();
+          actPhotoIdx = 1;
+          actManualZ = null;
+          renderActSim();
+          return;
+        }}
+        actPhotoIdx = idx;
+        actManualZ = null;
+        renderActSim();
+      }}, 3400);
+    }}
+
     function onActSlider() {{
+      _stopActTour();
       const sl = document.getElementById('act-z-slider');
       if (!sl) return;
       actManualZ = parseFloat(sl.value);
-      renderActSim(true);
+      renderActSim();
     }}
 
-    function renderActSim(fromSlider) {{
-      const fmt2 = (v) => (v >= 0 ? '+' : '') + v.toFixed(2);
-      const binScores = [0, 1, 2, 3, 4].map((k) => _actBinScore(k));
-      const multiEvals = [0, 1, 2, 3, 4].map((k) => _tmEval(k, 1.0));
-      const curMulti = multiEvals[actPhotoIdx];
-      const curBinZ = binScores[actPhotoIdx];
-      const curName = TRAINING_MATH.classes[actPhotoIdx];
+    function resetActZ() {{
+      _stopActTour();
+      actManualZ = null;
+      renderActSim();
+    }}
 
-      // 1. Update 5 Frozen Figurine Chips
+    function renderActSim() {{
+      const fmt2 = (v) => (v >= 0 ? '+' : '') + v.toFixed(2);
+      const cNames = TRAINING_MATH.classes;
+      const k = actPhotoIdx;
+      const clsName = cNames[k];
+
+      // Get exact Slide 24/25 raw scores z1..z5 for the selected Frozen photo!
+      const evBase = _tmEval(k, 1.0);
+      const zArr = evBase.z.slice();
+      const origZk = evBase.z[k];
+      const curZk = actManualZ !== null ? actManualZ : origZk;
+      zArr[k] = curZk;
+
+      // Sync slider value & label
+      const sl = document.getElementById('act-z-slider');
+      if (sl) sl.value = Math.max(-4, Math.min(4, curZk)).toFixed(1);
+      const zLbl = document.getElementById('act-z-lbl');
+      if (zLbl) zLbl.textContent = `Geser z${{k + 1}} (${{clsName}}):`;
+
+      // Compute outputs for current photo across all 3 functions
+      const reluArr = zArr.map((v) => Math.max(0, v));
+      const sigK = (1 / (1 + Math.exp(-curZk))) * 100;
+      const exArr = zArr.map((v) => Math.exp(v));
+      const sumEx = exArr.reduce((a, c) => a + c, 0);
+      const smArr = exArr.map((v) => (v / sumEx) * 100);
+      let smWin = 0;
+      for (let j = 1; j < 5; j++) if (smArr[j] > smArr[smWin]) smWin = j;
+
+      // Update slider readout
+      const rEl = document.getElementById('act-z-readout');
+      if (rEl) {{
+        if (actTab === 'relu') {{
+          rEl.textContent = `z=${{fmt2(curZk)}} → ${{reluArr[k].toFixed(2)}}`;
+          rEl.style.color = reluArr[k] > 0 ? '#137333' : '#C5221F';
+        }} else if (actTab === 'sigmoid') {{
+          rEl.textContent = `z=${{fmt2(curZk)}} → ${{sigK.toFixed(1)}}%`;
+          rEl.style.color = sigK >= 50 ? '#137333' : '#C5221F';
+        }} else {{
+          rEl.textContent = `z=${{fmt2(curZk)}} → ${{smArr[k].toFixed(1)}}%`;
+          rEl.style.color = smWin === k ? '#137333' : '#C5221F';
+        }}
+      }}
+
+      // 0. Sync 3 left explanation cards + highlight active function bullet (ReLU / Sigmoid / Softmax)!
+      const actBulIdx = actTab === 'relu' ? 0 : (actTab === 'sigmoid' ? 1 : 2);
+      _syncCards(['act-b-relu', 'act-b-sigmoid', 'act-b-softmax'], actBulIdx, ['red', 'blue', 'green']);
+      const actCardIdx = actManualZ !== null ? 1 : (actTourTimer !== null ? 2 : -1);
+      _syncCards(['act-card-1', 'act-card-2', 'act-card-3'], actCardIdx, ['red', 'blue', 'green']);
+
+      // 1. Update 5 Frozen Character Chips (exact Slide 24/25 z -> current Activation output!)
       const chipHost = document.getElementById('act-ds-chips');
       if (chipHost) {{
-        chipHost.innerHTML = TRAINING_MATH.classes.map((cls, idx) => {{
-          const zBin = binScores[idx];
-          const isAct = idx === actPhotoIdx;
-          let badgeTxt = '';
-          let bg = '#E8F0FE', col = '#1A73E8';
+        chipHost.innerHTML = cNames.map((cls, idx) => {{
+          const isAct = idx === k;
+          const evC = _tmEval(idx, 1.0);
+          const zk = isAct ? curZk : evC.z[idx];
+          let txt = '', bg = '#E6F4EA', col = '#137333';
           if (actTab === 'relu') {{
-            const rv = Math.max(0, zBin);
-            badgeTxt = `ReLU=${{rv.toFixed(2)}}`;
+            const rv = Math.max(0, zk);
+            txt = `ReLU=${{rv.toFixed(2)}}`;
             bg = rv > 0 ? '#E6F4EA' : '#FCE8E6';
             col = rv > 0 ? '#137333' : '#C5221F';
           }} else if (actTab === 'sigmoid') {{
-            const sv = (1 / (1 + Math.exp(-zBin))) * 100;
-            badgeTxt = `${{sv.toFixed(0)}}% Elsa`;
-            bg = sv >= 50 ? '#E6F4EA' : '#F1F3F4';
-            col = sv >= 50 ? '#137333' : '#5F6368';
+            const sv = (1 / (1 + Math.exp(-zk))) * 100;
+            txt = `σ=${{sv.toFixed(0)}}%`;
+            bg = sv >= 50 ? '#E6F4EA' : '#FCE8E6';
+            col = sv >= 50 ? '#137333' : '#C5221F';
           }} else {{
-            const pv = multiEvals[idx].probs[idx];
-            badgeTxt = `${{pv.toFixed(1)}}%`;
-            bg = '#E6F4EA'; col = '#137333';
+            const pv = isAct ? smArr[idx] : evC.probs[idx];
+            const ok = isAct ? (smWin === idx) : true;
+            txt = `${{pv.toFixed(1)}}%`;
+            bg = ok ? '#E6F4EA' : '#FCE8E6';
+            col = ok ? '#137333' : '#C5221F';
           }}
-          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="selectActPhoto(${{idx}})" title="Klik untuk menguji foto ${{cls}}">
+          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="selectActPhoto(${{idx}})" title="Klik untuk melihat Tahap B (Activation) pada Foto ${{cls}}!">
             <img src="${{TRAINING_MATH.thumbs[idx]}}" alt="${{cls}}" style="border-color:${{TM_OUT_COLS[idx]}};"/>
-            <span class="c-name">${{cls}}</span>
-            <span class="c-score" style="background:${{bg}}; color:${{col}};">${{badgeTxt}}</span>
+            <span class="c-name">${{cls}}${{isAct ? ' ★' : ''}}</span>
+            <span class="c-score" style="background:${{bg}}; color:${{col}};">${{txt}}</span>
           </div>`;
         }}).join('');
       }}
 
-      // 2A. Softmax 5-class live transform view
-      if (actTab === 'softmax') {{
-        const smTitle = document.getElementById('act-sm-photo');
-        if (smTitle) smTitle.textContent = `Foto ${{curName}}`;
-        const rowsHost = document.getElementById('act-sm-rows');
-        if (rowsHost) {{
-          rowsHost.innerHTML = TRAINING_MATH.classes.map((cls, j) => {{
-            const pct = curMulti.probs[j];
-            const isWin = j === curMulti.predIdx;
-            return `<div style="display:grid; grid-template-columns:68px 58px 1fr 56px; gap:8px; align-items:center; background:${{isWin ? '#E6F4EA' : '#FFFFFF'}}; border:1px solid ${{isWin ? '#34A853' : '#E0E3E7'}}; border-radius:8px; padding:5px 9px; font-size:10.6px;">
-              <strong style="color:${{isWin ? '#137333' : '#202124'}};">${{cls}}${{isWin ? ' ★' : ''}}</strong>
-              <span style="font-family:var(--font-code); font-size:9.7px; color:#5F6368;">z=${{fmt2(curMulti.z[j])}}</span>
-              <div class="prob-track" style="height:13px;"><div class="prob-fill" style="width:${{Math.max(2, pct).toFixed(1)}}%; background:${{TM_OUT_COLS[j]}};"></div></div>
-              <strong style="font-family:var(--font-code); text-align:right; color:${{isWin ? '#137333' : '#3C4043'}};">${{pct.toFixed(1)}}%</strong>
-            </div>`;
-          }}).join('');
-        }}
-        const cl = document.getElementById('act-callout');
-        if (cl) {{
-          cl.className = 'callout green';
-          cl.innerHTML = `<strong>Softmax pada Foto ${{curName}}:</strong> Dari 5 skor mentah (termasuk yang negatif), <code>e^z / Σe^z</code> mengangkat <strong>${{TRAINING_MATH.classes[curMulti.predIdx]}} (${{curMulti.probs[curMulti.predIdx].toFixed(1)}}%)</strong> sebagai pemenang dan total selalu <code>100.0%</code>!`;
-        }}
-        return;
-      }}
+      // 2. Render LIVE ZOOM-IN ACTIVATION PIPELINE SVG (Tahap A z -> Mesin Activation -> Output Akhir!)
+      const svg = document.getElementById('act-zoom-svg');
+      if (svg) {{
+        let h = '';
+        const rowY = [54, 86, 118, 150, 182];
 
-      // 2B. Retina-Crisp ReLU or Sigmoid Canvas 2D Curve (1080x440 internal, 2x crisp!)
-      const canvas = document.getElementById('act-canvas');
-      if (!canvas) return;
-      const ctx = canvas.getContext('2d');
-      ctx.setTransform(2, 0, 0, 2, 0, 0); // logical 540 x 220 -> ultra-sharp Retina!
-      const W = 540, H = 220;
-      ctx.clearRect(0, 0, W, H);
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, W, H);
-
-      const padL = 44, padR = 16, padT = 16, padB = 28;
-      const pw = W - padL - padR, ph = H - padT - padB;
-      const xMin = -4.2, xMax = 4.2;
-      const yMin = actTab === 'relu' ? -0.35 : -0.07;
-      const yMax = actTab === 'relu' ? 4.35 : 1.09;
-      const toX = (xv) => padL + ((Math.max(xMin, Math.min(xMax, xv)) - xMin) / (xMax - xMin)) * pw;
-      const toY = (yv) => padT + ph - ((Math.max(yMin, Math.min(yMax, yv)) - yMin) / (yMax - yMin)) * ph;
-
-      // Grid & zero axes
-      ctx.strokeStyle = '#ECEFF1'; ctx.lineWidth = 1;
-      for (let gx = -4; gx <= 4; gx += 1) {{
-        const px = toX(gx);
-        ctx.beginPath(); ctx.moveTo(px, padT); ctx.lineTo(px, padT + ph); ctx.stroke();
-      }}
-      ctx.strokeStyle = '#DADCE0'; ctx.lineWidth = 1.2; ctx.strokeRect(padL, padT, pw, ph);
-      // Vertical z=0 axis
-      ctx.strokeStyle = '#9AA0A6'; ctx.lineWidth = 1.3; ctx.setLineDash([4, 3]);
-      ctx.beginPath(); ctx.moveTo(toX(0), padT); ctx.lineTo(toX(0), padT + ph); ctx.stroke();
-      if (actTab === 'sigmoid') {{
-        ctx.beginPath(); ctx.moveTo(padL, toY(0.5)); ctx.lineTo(padL + pw, toY(0.5)); ctx.stroke();
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#5F6368'; ctx.font = '700 9.5px Roboto Mono, monospace'; ctx.textAlign = 'left';
-        ctx.fillText('Ambang 50%', padL + 6, toY(0.5) - 5);
-        ctx.fillStyle = '#137333'; ctx.textAlign = 'right';
-        ctx.fillText('> 50% → Elsa', padL + pw - 8, padT + 15);
-        ctx.fillStyle = '#5F6368'; ctx.textAlign = 'left';
-        ctx.fillText('< 50% → Bukan Elsa', padL + 6, padT + ph - 8);
-      }} else {{
-        ctx.setLineDash([]);
-        ctx.fillStyle = '#C5221F'; ctx.font = '700 9.5px Roboto, Arial'; ctx.textAlign = 'left';
-        ctx.fillText('z ≤ 0 → Dimatikan (0.00)', padL + 8, toY(0) - 9);
-        ctx.fillStyle = '#137333'; ctx.textAlign = 'left';
-        ctx.fillText('z > 0 → Diteruskan (Aktif)', toX(0) + 10, padT + 16);
-      }}
-
-      // Plot activation curve
-      const fn = actTab === 'relu' ? (v) => Math.max(0, v) : (v) => 1 / (1 + Math.exp(-v));
-      if (actTab === 'relu') {{
-        ctx.strokeStyle = '#EA4335'; ctx.lineWidth = 3.2;
-        ctx.beginPath(); ctx.moveTo(toX(xMin), toY(0)); ctx.lineTo(toX(0), toY(0)); ctx.stroke();
-        ctx.strokeStyle = '#34A853'; ctx.lineWidth = 3.2;
-        ctx.beginPath(); ctx.moveTo(toX(0), toY(0)); ctx.lineTo(toX(xMax), toY(xMax)); ctx.stroke();
-      }} else {{
-        ctx.strokeStyle = '#1A73E8'; ctx.lineWidth = 3.2;
-        ctx.beginPath();
-        for (let i = 0; i <= 160; i++) {{
-          const xv = xMin + (i / 160) * (xMax - xMin);
-          const px = toX(xv), py = toY(fn(xv));
-          if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
-        }}
-        ctx.stroke();
-      }}
-
-      // Plot all 5 real Frozen character binary-Elsa logits onto the curve!
-      binScores.forEach((zv, idx) => {{
-        const yv = fn(zv);
-        const px = toX(zv), py = toY(yv);
-        const isSel = !fromSlider && idx === actPhotoIdx;
-        ctx.beginPath();
-        ctx.arc(px, py, isSel ? 7 : 5, 0, Math.PI * 2);
-        ctx.fillStyle = TM_OUT_COLS[idx]; ctx.fill();
-        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.8; ctx.stroke();
-        if (idx === 1 || isSel) {{
-          ctx.fillStyle = '#202124'; ctx.font = '700 10px Poppins, Arial'; ctx.textAlign = 'center';
-          ctx.fillText(TRAINING_MATH.classes[idx], px, Math.max(padT + 14, py - 12));
-        }}
-      }});
-
-      // Highlight interactive slider test marker
-      const mx = toX(actManualZ), my = toY(fn(actManualZ));
-      ctx.beginPath(); ctx.arc(mx, my, 12, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(251, 188, 4, 0.34)'; ctx.fill();
-      ctx.beginPath(); ctx.arc(mx, my, 6.2, 0, Math.PI * 2);
-      ctx.fillStyle = '#FBBC04'; ctx.fill();
-      ctx.strokeStyle = '#202124'; ctx.lineWidth = 1.9; ctx.stroke();
-
-      // Axis labels
-      ctx.fillStyle = '#5F6368'; ctx.font = '700 10px Roboto Mono, monospace'; ctx.textAlign = 'center';
-      ctx.fillText('Skor Mentah z   (-4   ...   0   ...   +4)', padL + pw / 2, H - 7);
-      ctx.save();
-      ctx.translate(14, padT + ph / 2); ctx.rotate(-Math.PI / 2);
-      ctx.fillText(actTab === 'relu' ? 'ReLU(z)' : 'Sigmoid(z)', 0, 0);
-      ctx.restore();
-
-      // Readout & callout
-      const outVal = fn(actManualZ);
-      const rEl = document.getElementById('act-z-readout');
-      if (rEl) {{
+        // --- TAB 1: ReLU (Hidden Layer) ---
         if (actTab === 'relu') {{
-          rEl.textContent = `z=${{actManualZ >= 0 ? '+' : ''}}${{actManualZ.toFixed(1)}} → ${{outVal.toFixed(2)}}`;
-          rEl.style.color = outVal > 0 ? '#137333' : '#C5221F';
-        }} else {{
-          rEl.textContent = `z=${{actManualZ >= 0 ? '+' : ''}}${{actManualZ.toFixed(1)}} → ${{(outVal * 100).toFixed(1)}}%`;
-          rEl.style.color = outVal >= 0.5 ? '#137333' : '#5F6368';
+          // Left box: 5 Raw Scores z from Slide 25 (Tahap A)
+          h += `<rect x="3" y="6" width="144" height="206" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>`;
+          h += `<text x="75" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#B06000">Hasil Tahap 4.1</text>`;
+          h += `<text x="75" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">Skor mentah z Foto ${{clsName}}</text>`;
+          for (let j = 0; j < 5; j++) {{
+            const isT = j === k;
+            const zv = zArr[j];
+            h += `<rect x="10" y="${{rowY[j] - 11}}" width="130" height="22" rx="6" fill="#FFFFFF" stroke="${{isT ? '#FBBC04' : '#E0E3E7'}}" stroke-width="${{isT ? '1.8' : '1'}}"/>`;
+            h += `<circle cx="22" cy="${{rowY[j]}}" r="7.2" fill="${{TM_OUT_COLS[j]}}"/>`;
+            h += `<text x="22" y="${{rowY[j] + 2.5}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="${{j === 2 ? '#202124' : '#FFFFFF'}}">z${{j + 1}}</text>`;
+            h += `<text x="34" y="${{rowY[j] + 2.8}}" font-family="Poppins, Arial" font-size="8.0" font-weight="${{isT ? '700' : '600'}}" fill="#202124">${{cNames[j]}}</text>`;
+            h += `<text x="134" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="${{zv > 0 ? '#137333' : '#C5221F'}}">${{fmt2(zv)}}</text>`;
+          }}
+
+          // Arrows Left -> Center Machine & Center Machine -> Right Output
+          h += `<line x1="147" y1="109" x2="167" y2="109" stroke="#FBBC04" stroke-width="2.6"/><polygon points="165,104 174,109 165,114" fill="#FBBC04"/>`;
+          h += `<line x1="414" y1="109" x2="434" y2="109" stroke="#34A853" stroke-width="2.6"/><polygon points="432,104 441,109 432,114" fill="#34A853"/>`;
+
+          // Center box: Live ReLU Curve Machine!
+          h += `<rect x="174" y="6" width="240" height="206" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>`;
+          h += `<text x="294" y="22" text-anchor="middle" font-family="Poppins, Arial" font-size="9.4" font-weight="700" fill="#C5221F">TAHAP 4.2 · MESIN ReLU</text>`;
+          h += `<text x="294" y="34" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">f(z) = max(0, z)  (Hidden Layer)</text>`;
+          // Embedded crisp mini SVG coordinate plot (x=186..402, y=44..186)
+          const gx0 = 188, gx1 = 400, gy0 = 46, gy1 = 182;
+          const xTo = (v) => gx0 + ((Math.max(-4.2, Math.min(4.2, v)) + 4.2) / 8.4) * (gx1 - gx0);
+          const yTo = (v) => gy1 - ((Math.max(-0.3, Math.min(4.3, v)) + 0.3) / 4.6) * (gy1 - gy0);
+          h += `<rect x="${{gx0}}" y="${{gy0}}" width="${{gx1 - gx0}}" height="${{gy1 - gy0}}" rx="7" fill="#FFFFFF" stroke="#F6AEA9" stroke-width="1.2"/>`;
+          h += `<line x1="${{xTo(0).toFixed(1)}}" y1="${{gy0}}" x2="${{xTo(0).toFixed(1)}}" y2="${{gy1}}" stroke="#BDBDBD" stroke-width="1.1" stroke-dasharray="3,2"/>`;
+          h += `<line x1="${{gx0 + 4}}" y1="${{yTo(0).toFixed(1)}}" x2="${{xTo(0).toFixed(1)}}" y2="${{yTo(0).toFixed(1)}}" stroke="#EA4335" stroke-width="3" stroke-linecap="round"/>`;
+          h += `<line x1="${{xTo(0).toFixed(1)}}" y1="${{yTo(0).toFixed(1)}}" x2="${{gx1 - 4}}" y2="${{yTo(4.0).toFixed(1)}}" stroke="#34A853" stroke-width="3" stroke-linecap="round"/>`;
+          h += `<text x="${{gx0 + 6}}" y="${{(yTo(0) - 7).toFixed(1)}}" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#C5221F">z ≤ 0 → Mati (0)</text>`;
+          h += `<text x="${{(xTo(0) + 6).toFixed(1)}}" y="${{gy0 + 13}}" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#137333">z &gt; 0 → Lolos Aktif</text>`;
+          // Plot all 5 real z dots on the ReLU curve!
+          for (let j = 0; j < 5; j++) {{
+            const px = xTo(zArr[j]), py = yTo(reluArr[j]);
+            const isT = j === k;
+            if (isT) h += `<circle cx="${{px.toFixed(1)}}" cy="${{py.toFixed(1)}}" r="9.5" fill="rgba(251,188,4,0.38)"/>`;
+            h += `<circle cx="${{px.toFixed(1)}}" cy="${{py.toFixed(1)}}" r="${{isT ? '5.4' : '4.0'}}" fill="${{TM_OUT_COLS[j]}}" stroke="${{isT ? '#202124' : '#FFFFFF'}}" stroke-width="1.5"/>`;
+            if (isT) {{
+              const rLblX = Math.max(gx0 + 24, Math.min(gx1 - 24, px));
+              const rLblY = py < gy0 + 28 ? py + 18 : py - 11;
+              h += `<text x="${{rLblX.toFixed(1)}}" y="${{rLblY.toFixed(1)}}" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#202124">${{clsName}}</text>`;
+            }}
+          }}
+          h += `<text x="294" y="199" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.4" fill="#5F6368">Skor mentah z  (-4 ... 0 ... +4)</text>`;
+
+          // Right box: 5 ReLU Outputs (Negative cut to 0.00, Positive pass through!)
+          h += `<rect x="441" y="6" width="156" height="206" rx="11" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>`;
+          h += `<text x="519" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#137333">Output Setelah ReLU</text>`;
+          h += `<text x="519" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">Sinyal ke layer berikutnya</text>`;
+          for (let j = 0; j < 5; j++) {{
+            const rv = reluArr[j];
+            const alive = rv > 0;
+            const isT = j === k;
+            h += `<rect x="448" y="${{rowY[j] - 11}}" width="142" height="22" rx="6" fill="${{alive ? '#FFFFFF' : '#F8F9FA'}}" stroke="${{isT ? (alive ? '#34A853' : '#EA4335') : '#DADCE0'}}" stroke-width="${{isT ? '1.8' : '1'}}"/>`;
+            h += `<text x="456" y="${{rowY[j] + 2.8}}" font-family="Poppins, Arial" font-size="8.0" font-weight="${{isT ? '700' : '600'}}" fill="${{alive ? '#202124' : '#9AA0A6'}}">${{cNames[j]}}</text>`;
+            h += `<text x="584" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="700" fill="${{alive ? '#137333' : '#C5221F'}}">${{rv.toFixed(2)}} ${{alive ? '✅' : '✕'}}</text>`;
+          }}
         }}
+
+        // --- TAB 2: Sigmoid (Output 2 Kelas) ---
+        else if (actTab === 'sigmoid') {{
+          // Left box: Single Neuron Raw Score z_k from Slide 25
+          h += `<rect x="3" y="24" width="144" height="170" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>`;
+          h += `<text x="75" y="42" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#B06000">Hasil Tahap 4.1</text>`;
+          h += `<text x="75" y="54" text-anchor="middle" font-family="Roboto, Arial" font-size="7.5" fill="#5F6368">1 Neuron Biner (${{clsName}})</text>`;
+          h += `<rect x="15" y="72" width="120" height="68" rx="9" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.5"/>`;
+          h += `<text x="75" y="90" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#202124">Skor Mentah z${{k + 1}}</text>`;
+          h += `<text x="75" y="118" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="16" font-weight="800" fill="${{curZk >= 0 ? '#137333' : '#C5221F'}}">${{fmt2(curZk)}}</text>`;
+          h += `<text x="75" y="160" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">Bisa minus / plus bebas,</text>`;
+          h += `<text x="75" y="172" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">belum berbentuk %!</text>`;
+
+          h += `<line x1="147" y1="109" x2="167" y2="109" stroke="#FBBC04" stroke-width="2.6"/><polygon points="165,104 174,109 165,114" fill="#FBBC04"/>`;
+          h += `<line x1="414" y1="109" x2="434" y2="109" stroke="#1A73E8" stroke-width="2.6"/><polygon points="432,104 441,109 432,114" fill="#1A73E8"/>`;
+
+          // Center box: Live Sigmoid S-Curve Machine!
+          h += `<rect x="174" y="6" width="240" height="206" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>`;
+          h += `<text x="294" y="22" text-anchor="middle" font-family="Poppins, Arial" font-size="9.4" font-weight="700" fill="#1A73E8">TAHAP 4.2 · MESIN Sigmoid</text>`;
+          h += `<text x="294" y="34" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">σ(z) = 1 / (1 + e⁻ᶻ)  (Output 2 Kelas)</text>`;
+          const gx0 = 188, gx1 = 400, gy0 = 46, gy1 = 182;
+          const xTo = (v) => gx0 + ((Math.max(-4.2, Math.min(4.2, v)) + 4.2) / 8.4) * (gx1 - gx0);
+          const yTo = (v) => gy1 - ((Math.max(-0.06, Math.min(1.06, v)) + 0.06) / 1.12) * (gy1 - gy0);
+          h += `<rect x="${{gx0}}" y="${{gy0}}" width="${{gx1 - gx0}}" height="${{gy1 - gy0}}" rx="7" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1.2"/>`;
+          h += `<line x1="${{xTo(0).toFixed(1)}}" y1="${{gy0}}" x2="${{xTo(0).toFixed(1)}}" y2="${{gy1}}" stroke="#BDBDBD" stroke-width="1.1" stroke-dasharray="3,2"/>`;
+          h += `<line x1="${{gx0}}" y1="${{yTo(0.5).toFixed(1)}}" x2="${{gx1}}" y2="${{yTo(0.5).toFixed(1)}}" stroke="#BDBDBD" stroke-width="1.1" stroke-dasharray="3,2"/>`;
+          let pts = [];
+          for (let s = 0; s <= 64; s++) {{
+            const xv = -4.1 + (s / 64) * 8.2;
+            const yv = 1 / (1 + Math.exp(-xv));
+            pts.push(`${{xTo(xv).toFixed(1)}},${{yTo(yv).toFixed(1)}}`);
+          }}
+          h += `<polyline points="${{pts.join(' ')}}" fill="none" stroke="#1A73E8" stroke-width="3" stroke-linecap="round"/>`;
+          h += `<text x="${{gx0 + 6}}" y="${{(yTo(0.5) - 4).toFixed(1)}}" font-family="Roboto Mono, monospace" font-size="7.4" font-weight="700" fill="#5F6368">Ambang 50%</text>`;
+          const px = xTo(curZk), py = yTo(sigK / 100);
+          const sigLblX = Math.max(gx0 + 24, Math.min(gx1 - 24, px));
+          const sigLblY = py < gy0 + 28 ? py + 19 : py - 12;
+          h += `<circle cx="${{px.toFixed(1)}}" cy="${{py.toFixed(1)}}" r="10.5" fill="rgba(251,188,4,0.38)"/>`;
+          h += `<circle cx="${{px.toFixed(1)}}" cy="${{py.toFixed(1)}}" r="5.6" fill="#FBBC04" stroke="#202124" stroke-width="1.8"/>`;
+          h += `<text x="${{sigLblX.toFixed(1)}}" y="${{sigLblY.toFixed(1)}}" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#202124">${{sigK.toFixed(1)}}%</text>`;
+          h += `<text x="294" y="199" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.4" fill="#5F6368">Diperas mulus ke rentang 0% – 100%</text>`;
+
+          // Right box: Binary 2-Class Output
+          const isYes = sigK >= 50;
+          h += `<rect x="441" y="24" width="156" height="170" rx="11" fill="${{isYes ? '#E6F4EA' : '#FCE8E6'}}" stroke="${{isYes ? '#34A853' : '#EA4335'}}" stroke-width="1.8"/>`;
+          h += `<text x="519" y="42" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="${{isYes ? '#137333' : '#C5221F'}}">Output Biner (2 Kelas)</text>`;
+          h += `<rect x="451" y="56" width="136" height="58" rx="8" fill="#FFFFFF" stroke="${{isYes ? '#34A853' : '#DADCE0'}}" stroke-width="1.6"/>`;
+          h += `<text x="519" y="72" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#202124">Ya, ${{clsName}}</text>`;
+          h += `<text x="519" y="94" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="14.5" font-weight="800" fill="${{isYes ? '#137333' : '#5F6368'}}">${{sigK.toFixed(1)}}%</text>`;
+          h += `<rect x="462" y="101" width="114" height="6.5" rx="3.2" fill="#ECEFF1"/>`;
+          h += `<rect x="462" y="101" width="${{Math.max(2, Math.round((sigK / 100) * 114))}}" height="6.5" rx="3.2" fill="${{isYes ? '#34A853' : '#9AA0A6'}}"/>`;
+
+          const notPct = 100 - sigK;
+          h += `<rect x="451" y="122" width="136" height="44" rx="8" fill="#FFFFFF" stroke="${{!isYes ? '#EA4335' : '#DADCE0'}}" stroke-width="1.4"/>`;
+          h += `<text x="519" y="138" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#5F6368">Bukan ${{clsName}}</text>`;
+          h += `<text x="519" y="155" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="10.5" font-weight="700" fill="${{!isYes ? '#C5221F' : '#5F6368'}}">${{notPct.toFixed(1)}}%</text>`;
+          h += `<text x="519" y="182" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="${{isYes ? '#137333' : '#C5221F'}}">${{isYes ? `✅ Prediksi: ${{clsName}}` : `❌ Bukan ${{clsName}}`}}</text>`;
+        }}
+
+        // --- TAB 3: Softmax (Output 5 Kelas — 100% IDENTICAL TO SLIDE 24!) ---
+        else {{
+          // Left box: 5 Raw Scores z1..z5 from Slide 24/25
+          h += `<rect x="3" y="6" width="144" height="206" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>`;
+          h += `<text x="75" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#B06000">Hasil Tahap 4.1</text>`;
+          h += `<text x="75" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">5 Skor Mentah Foto ${{clsName}}</text>`;
+          for (let j = 0; j < 5; j++) {{
+            const isT = j === k;
+            const zv = zArr[j];
+            h += `<rect x="10" y="${{rowY[j] - 11}}" width="130" height="22" rx="6" fill="#FFFFFF" stroke="${{isT ? '#FBBC04' : '#E0E3E7'}}" stroke-width="${{isT ? '1.8' : '1'}}"/>`;
+            h += `<circle cx="22" cy="${{rowY[j]}}" r="7.2" fill="${{TM_OUT_COLS[j]}}"/>`;
+            h += `<text x="22" y="${{rowY[j] + 2.5}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="${{j === 2 ? '#202124' : '#FFFFFF'}}">z${{j + 1}}</text>`;
+            h += `<text x="34" y="${{rowY[j] + 2.8}}" font-family="Poppins, Arial" font-size="8.0" font-weight="${{isT ? '700' : '600'}}" fill="#202124">${{cNames[j]}}</text>`;
+            h += `<text x="134" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="${{zv > 0 ? '#137333' : '#C5221F'}}">${{fmt2(zv)}}</text>`;
+          }}
+
+          h += `<line x1="147" y1="109" x2="167" y2="109" stroke="#FBBC04" stroke-width="2.6"/><polygon points="165,104 174,109 165,114" fill="#FBBC04"/>`;
+          h += `<line x1="376" y1="109" x2="396" y2="109" stroke="#34A853" stroke-width="2.6"/><polygon points="394,104 403,109 394,114" fill="#34A853"/>`;
+
+          // Center box: Exact e^z / Σe^z Machine (100% matching Slide 24 Kotak B!)
+          h += `<rect x="174" y="6" width="202" height="206" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>`;
+          h += `<text x="275" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="9.2" font-weight="700" fill="#137333">TAHAP 4.2 · MESIN Softmax</text>`;
+          h += `<text x="275" y="33" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.6" fill="#5F6368">e^z (semua positif) ÷ Σe^z</text>`;
+          for (let j = 0; j < 5; j++) {{
+            const isT = j === k;
+            h += `<rect x="184" y="${{rowY[j] - 10.5}}" width="182" height="21" rx="5.5" fill="#FFFFFF" stroke="${{isT ? '#34A853' : '#C8E6C9'}}" stroke-width="${{isT ? '1.6' : '1'}}"/>`;
+            h += `<text x="192" y="${{rowY[j] + 2.8}}" font-family="Roboto Mono, monospace" font-size="7.5" fill="#5F6368">e^(${{fmt2(zArr[j])}})</text>`;
+            h += `<text x="358" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="700" fill="${{isT ? '#137333' : '#202124'}}">= ${{exArr[j].toFixed(2)}}</text>`;
+          }}
+          h += `<rect x="194" y="195" width="162" height="14" rx="4.5" fill="#137333"/>`;
+          h += `<text x="275" y="204.8" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.5" font-weight="700" fill="#FFFFFF">Total Σe^z = ${{sumEx.toFixed(2)}}</text>`;
+
+          // Right box: Final 5-Class Probabilities (Total = 100.0%)
+          h += `<rect x="403" y="6" width="194" height="206" rx="11" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>`;
+          h += `<text x="500" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#137333">Output Akhir (Total 100%)</text>`;
+          h += `<text x="500" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">Persis Output Layer Tahap 4</text>`;
+          for (let j = 0; j < 5; j++) {{
+            const pct = smArr[j];
+            const isWin = j === smWin;
+            h += `<rect x="410" y="${{rowY[j] - 11}}" width="180" height="22" rx="6" fill="${{isWin ? '#D4F0DC' : '#FFFFFF'}}" stroke="${{isWin ? '#34A853' : '#DADCE0'}}" stroke-width="${{isWin ? '1.8' : '1'}}"/>`;
+            h += `<text x="418" y="${{rowY[j] + 2.8}}" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="${{isWin ? '#137333' : '#202124'}}">${{cNames[j]}}${{isWin ? ' ★' : ''}}</text>`;
+            h += `<rect x="478" y="${{rowY[j] - 3.8}}" width="68" height="7.6" rx="3.8" fill="${{isWin ? '#FFFFFF' : '#F1F3F4'}}"/>`;
+            h += `<rect x="478" y="${{rowY[j] - 3.8}}" width="${{Math.max(2, Math.round((pct / 100) * 68))}}" height="7.6" rx="3.8" fill="${{TM_OUT_COLS[j]}}"/>`;
+            h += `<text x="584" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="${{isWin ? '#137333' : '#3C4043'}}">${{pct.toFixed(1)}}%</text>`;
+          }}
+        }}
+
+        svg.innerHTML = h;
       }}
+
+      // 3. Bottom Concrete Dataset Takeaway tying back to Slide 24 & Slide 25!
       const cl = document.getElementById('act-callout');
       if (cl) {{
         if (actTab === 'relu') {{
-          cl.className = outVal > 0 ? 'callout green' : 'callout red';
-          cl.innerHTML = fromSlider
-            ? `<strong>Uji ReLU(<code>${{actManualZ.toFixed(1)}}</code>) = <code>${{outVal.toFixed(2)}}</code>:</strong> ${{outVal > 0 ? 'Skor positif diteruskan agar pola aktif mengalir ke layer berikutnya!' : 'Skor negatif dipotong jadi <code>0.00</code> — inilah pembengkokan <em>non-linear</em> khas ReLU!'}}`
-            : `<strong>ReLU pada Foto ${{curName}} (<code>z=${{fmt2(curBinZ)}}</code>):</strong> Output = <code>${{Math.max(0, curBinZ).toFixed(2)}}</code> — ${{curBinZ > 0 ? 'neuron detektor Elsa <strong>AKTIF</strong> meneruskan sinyal!' : 'skor negatif dimatikan jadi <code>0.00</code> (sinyal fitur Elsa tidak menyala)!'}}`;
+          const negCnt = zArr.filter((v) => v <= 0).length;
+          cl.className = reluArr[k] > 0 ? 'callout green' : 'callout red';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (ReLU pada Foto ${{clsName}}):</strong> Dari 5 skor mentah Tahap 4.1, <strong>${{negCnt}} skor negatif dipotong jadi <code>0.00</code></strong> dan <strong>${{clsName}} (<code>z=${{fmt2(curZk)}}</code> → <code>${{reluArr[k].toFixed(2)}}</code>)</strong> ${{reluArr[k] > 0 ? 'lolos aktif ke layer berikutnya!' : 'ikut mati karena negatif!'}}`;
+        }} else if (actTab === 'sigmoid') {{
+          cl.className = sigK >= 50 ? 'callout green' : 'callout red';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (Sigmoid pada Foto ${{clsName}}):</strong> Skor mentah Tahap 4.1 (<code>z${{k + 1}}=${{fmt2(curZk)}}</code>) diperas kurva-S menjadi <strong>${{sigK.toFixed(1)}}%</strong> (${{sigK >= 50 ? `di atas 50% → <strong>Ya, ${{clsName}} ✅</strong>` : `di bawah 50% → <strong>Bukan ${{clsName}} ❌</strong>`}}).`;
         }} else {{
-          const pct = outVal * 100;
-          cl.className = pct >= 50 ? 'callout green' : 'callout';
-          cl.innerHTML = fromSlider
-            ? `<strong>Uji Sigmoid(<code>${{actManualZ.toFixed(1)}}</code>) = <code>${{pct.toFixed(1)}}%</code>:</strong> ${{pct >= 50 ? 'Di atas ambang 50% → prediksi <strong>Elsa</strong>!' : 'Di bawah 50% → prediksi <strong>Bukan Elsa</strong>.'}}`
-            : `<strong>Sigmoid pada Foto ${{curName}} (<code>z=${{fmt2(curBinZ)}}</code>):</strong> Diperas kurva-S menjadi <strong>${{(fn(curBinZ) * 100).toFixed(1)}}% Elsa</strong> — ${{curBinZ >= 0 ? 'lolos di atas ambang 50% (<strong>Elsa!</strong>)' : 'di bawah ambang 50% (<strong>Bukan Elsa!</strong>)'}}`;
+          cl.className = smWin === k ? 'callout green' : 'callout red';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (Softmax pada Foto ${{clsName}}):</strong> Persis Tahap 4! <code>e^(${{fmt2(curZk)}}) / ${{sumEx.toFixed(2)}}</code> = <strong>${{smArr[k].toFixed(1)}}% ${{clsName}}</strong> (${{smWin === k ? 'menang tertinggi ✅' : `kalah dari ${{cNames[smWin]}} ❌`}}), total 5 kelas selalu <code>100.0%</code>!`;
         }}
       }}
     }}
     setActTab('relu');
 
     // =========================================================================
-    // SIMULATOR #7 (Slide 25): Softmax 5 Karakter Frozen
+    // SIMULATOR #7 (Slide 27): SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP C (OUTPUT AKHIR)
+    // Connects 100% identical probabilities from Slide 24 & 26 -> Argmax + Confidence
+    // + Evaluation vs Ground-Truth Label (Error & Cross-Entropy Loss)!
     // =========================================================================
-    const SM_NAMES = ['Anna', 'Elsa', 'Kristoff', 'Olaf', 'Sven'];
-    const SM_PRESETS = {{
-      elsa: [0.8, 3.2, -0.6, 0.2, -1.0],
-      ragu: [2.2, 2.4, -0.8, -0.4, -1.2],
-      neg: [-2.4, -0.8, -3.0, -2.6, -3.4],
-    }};
-    function setSmPreset(key) {{
-      const vals = SM_PRESETS[key];
-      if (!vals) return;
-      vals.forEach((v, i) => {{
-        const el = document.getElementById('sm-' + i);
-        if (el) {{ el.value = String(v); el.setAttribute('value', String(v)); }}
-      }});
-      document.querySelectorAll('#sm-presets button').forEach((b) => {{
-        b.classList.toggle('outline', b.dataset.smp !== key);
-      }});
-      updateSm();
+    let outMode = 'trained'; // 'trained' | 'ragu' | 'untrained'
+    let outPhotoIdx = 1;     // default Elsa (matches Slide 24, 25, & 26!)
+    let outThresh = 60;      // confidence threshold (%)
+    let outTourTimer = null;
+
+    function _outSetTourBtn(running) {{
+      const btn = document.getElementById('out-btn-tour');
+      if (!btn) return;
+      btn.textContent = running ? '■ Stop' : '▶ Play';
+      btn.style.background = running ? '#EA4335' : '#34A853';
+      btn.style.borderColor = running ? '#EA4335' : '#34A853';
     }}
-    function updateSm() {{
-      const logits = [0, 1, 2, 3, 4].map((i) => parseFloat(document.getElementById('sm-' + i).value));
-      const exps = logits.map((v) => Math.exp(v));
-      const sumE = exps.reduce((a, b) => a + b, 0);
-      const probs = exps.map((e) => (e / sumE) * 100);
-      let best = 0;
-      probs.forEach((p, i) => {{
-        if (p > probs[best]) best = i;
-        document.getElementById('sm-v' + i).textContent = (logits[i] >= 0 ? '+' : '') + logits[i].toFixed(1);
-        document.getElementById('sm-e' + i).textContent = exps[i] >= 10 ? exps[i].toFixed(1) : exps[i].toFixed(2);
-        document.getElementById('sm-b' + i).style.width = p.toFixed(1) + '%';
-        document.getElementById('sm-p' + i).textContent = p.toFixed(1) + '%';
-      }});
-      document.getElementById('sm-sum-pill').textContent = `Total = ${{probs.reduce((a, b) => a + b, 0).toFixed(1)}}%`;
-      document.getElementById('sm-winner').innerHTML =
-        `<strong>Prediksi: ${{SM_NAMES[best].toUpperCase()}} (${{probs[best].toFixed(1)}}%)</strong> — Semua nilai <code>eᶻ</code> selalu positif sehingga total peluang selalu tepat <code>100.0%</code>.`;
+
+    function _stopOutTour() {{
+      if (outTourTimer !== null) {{ clearInterval(outTourTimer); outTourTimer = null; }}
+      _outSetTourBtn(false);
     }}
-    updateSm();
+
+    function _outComputeProbs(photoIdx, mode) {{
+      const ev = _tmEval(photoIdx, mode === 'untrained' ? 0.0 : 1.0);
+      const temp = mode === 'ragu' ? 2.5 : 1.0;
+      const zArr = ev.z.map((v) => v / temp);
+      const ex = zArr.map((v) => Math.exp(v));
+      const sumEx = ex.reduce((a, c) => a + c, 0);
+      const probs = ex.map((e) => (e / sumEx) * 100);
+      let winIdx = 0;
+      for (let c = 1; c < 5; c++) if (probs[c] > probs[winIdx]) winIdx = c;
+      const pTrue = probs[photoIdx];
+      const errPct = 100 - pTrue;
+      const ceLoss = -Math.log(Math.max(pTrue / 100, 1e-6));
+      return {{ probs, winIdx, winPct: probs[winIdx], pTrue, errPct, ceLoss, isCorrect: winIdx === photoIdx }};
+    }}
+
+    function setOutMode(mode) {{
+      _stopOutTour();
+      outMode = mode;
+      document.querySelectorAll('#out-presets button[data-out]').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.out !== mode);
+      }});
+      renderOutSim();
+    }}
+
+    function setOutPdfState(mode) {{
+      _stopOutTour();
+      outMode = mode;
+      outThresh = 60;
+      outPhotoIdx = mode === 'untrained' ? 3 : 1; // Olaf salah tebak di Acak; Elsa di Terlatih & Ragu!
+      const sl = document.getElementById('out-thresh-slider');
+      if (sl) {{ sl.value = '60'; sl.setAttribute('value', '60'); }}
+      document.querySelectorAll('#out-presets button[data-out]').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.out !== mode);
+      }});
+      renderOutSim();
+    }}
+
+    function onOutChipClick(idx) {{
+      _stopOutTour();
+      outPhotoIdx = idx;
+      renderOutSim();
+    }}
+
+    function nextOutChar() {{
+      _stopOutTour();
+      outPhotoIdx = (outPhotoIdx + 1) % 5;
+      renderOutSim();
+    }}
+
+    function playOutTour() {{
+      if (outTourTimer !== null) {{
+        _stopOutTour();
+        return;
+      }}
+      _stopOutTour();
+      _outSetTourBtn(true);
+      let idx = 0;
+      outPhotoIdx = idx;
+      renderOutSim();
+      outTourTimer = setInterval(() => {{
+        idx += 1;
+        if (idx >= 5) {{
+          _stopOutTour();
+          outPhotoIdx = 1;
+          renderOutSim();
+          return;
+        }}
+        outPhotoIdx = idx;
+        renderOutSim();
+      }}, 3200);
+    }}
+
+    function onOutThreshInput() {{
+      _stopOutTour();
+      const sl = document.getElementById('out-thresh-slider');
+      if (!sl) return;
+      outThresh = parseInt(sl.value, 10) || 60;
+      renderOutSim();
+    }}
+
+    function resetOutSim() {{
+      _stopOutTour();
+      outMode = 'trained';
+      outPhotoIdx = 1;
+      outThresh = 60;
+      const sl = document.getElementById('out-thresh-slider');
+      if (sl) {{ sl.value = '60'; sl.setAttribute('value', '60'); }}
+      document.querySelectorAll('#out-presets button[data-out]').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.out !== 'trained');
+      }});
+      renderOutSim();
+    }}
+
+    function renderOutSim() {{
+      const k = outPhotoIdx;
+      const cNames = TRAINING_MATH.classes;
+      const thumbs = TRAINING_MATH.thumbs;
+      const clsName = cNames[k];
+      const cur = _outComputeProbs(k, outMode);
+      const isConfident = cur.winPct >= outThresh;
+      const statusKind = !cur.isCorrect ? 'wrong' : (isConfident ? 'ok' : 'doubt');
+
+      const trReadout = document.getElementById('out-thresh-readout');
+      if (trReadout) trReadout.textContent = `≥ ${{outThresh}}%`;
+
+      // 0. Sync 3 left explanation cards with active evaluation mode / Play tour!
+      const outCardIdx = outMode === 'untrained'
+        ? 2
+        : (outMode === 'ragu' || outThresh !== 60
+          ? 1
+          : (outTourTimer !== null ? 0 : -1));
+      _syncCards(['out-card-1', 'out-card-2', 'out-card-3'], outCardIdx, ['green', 'blue', 'red']);
+
+      // 1. Render 5 clickable Frozen character chips showing real decision badge!
+      const chipsEl = document.getElementById('out-ds-chips');
+      if (chipsEl) {{
+        chipsEl.innerHTML = cNames.map((nm, idx) => {{
+          const r = _outComputeProbs(idx, outMode);
+          const kind = !r.isCorrect ? 'wrong' : (r.winPct >= outThresh ? 'ok' : 'doubt');
+          const bg = kind === 'ok' ? '#E6F4EA' : (kind === 'doubt' ? '#FEF7E0' : '#FCE8E6');
+          const fg = kind === 'ok' ? '#137333' : (kind === 'doubt' ? '#B06000' : '#C5221F');
+          const ico = kind === 'ok' ? '✅' : (kind === 'doubt' ? '⚠' : '❌');
+          const isAct = idx === k;
+          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="onOutChipClick(${{idx}})" title="Klik untuk cek Output Akhir Foto ${{nm}}">
+            <img src="${{thumbs[idx]}}" alt="${{nm}}" style="border-color:${{TM_OUT_COLS[idx]}};"/>
+            <div class="c-name">${{nm}}${{isAct ? ' ★' : ''}}</div>
+            <div class="c-score" style="background:${{bg}}; color:${{fg}};">${{ico}} ${{r.winPct.toFixed(0)}}%</div>
+          </div>`;
+        }}).join('');
+      }}
+
+      // 2. Render 3-Column Zoom-In Output Decision & Evaluation SVG (viewBox 600x218)
+      const svg = document.getElementById('out-zoom-svg');
+      if (svg) {{
+        let h = '';
+        const rowY = [54, 86, 118, 150, 182];
+        const statusStroke = statusKind === 'ok' ? '#34A853' : (statusKind === 'doubt' ? '#FBBC04' : '#EA4335');
+        const statusFill = statusKind === 'ok' ? '#E6F4EA' : (statusKind === 'doubt' ? '#FEF7E0' : '#FCE8E6');
+        const statusText = statusKind === 'ok' ? '#137333' : (statusKind === 'doubt' ? '#B06000' : '#C5221F');
+
+        // LEFT BOX: 5 Softmax Probabilities from Slide 26 (Tahap B)
+        h += `<rect x="3" y="6" width="166" height="206" rx="11" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>`;
+        h += `<text x="86" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#137333">Hasil Tahap 4.2</text>`;
+        h += `<text x="86" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.3" fill="#5F6368">5 Probabilitas Softmax (100%)</text>`;
+        for (let j = 0; j < 5; j++) {{
+          const pct = cur.probs[j];
+          const isWin = j === cur.winIdx;
+          h += `<rect x="10" y="${{rowY[j] - 11}}" width="152" height="22" rx="6" fill="${{isWin ? '#D4F0DC' : '#FFFFFF'}}" stroke="${{isWin ? '#34A853' : '#DADCE0'}}" stroke-width="${{isWin ? '1.8' : '1'}}"/>`;
+          h += `<text x="17" y="${{rowY[j] + 2.8}}" font-family="Poppins, Arial" font-size="7.8" font-weight="${{isWin ? '700' : '600'}}" fill="${{isWin ? '#137333' : '#202124'}}">${{cNames[j]}}${{isWin ? ' ★' : ''}}</text>`;
+          h += `<rect x="74" y="${{rowY[j] - 3.5}}" width="46" height="7" rx="3.5" fill="${{isWin ? '#FFFFFF' : '#F1F3F4'}}"/>`;
+          h += `<rect x="74" y="${{rowY[j] - 3.5}}" width="${{Math.max(2, Math.round((pct / 100) * 46))}}" height="7" rx="3.5" fill="${{TM_OUT_COLS[j]}}"/>`;
+          h += `<text x="157" y="${{rowY[j] + 2.8}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="7.9" font-weight="700" fill="${{isWin ? '#137333' : '#3C4043'}}">${{pct.toFixed(1)}}%</text>`;
+        }}
+
+        // Arrows Left -> Center & Center -> Right
+        h += `<line x1="169" y1="109" x2="188" y2="109" stroke="#34A853" stroke-width="2.6"/><polygon points="186,104 195,109 186,114" fill="#34A853"/>`;
+        h += `<line x1="399" y1="109" x2="418" y2="109" stroke="${{statusStroke}}" stroke-width="2.6"/><polygon points="416,104 425,109 416,114" fill="${{statusStroke}}"/>`;
+
+        // CENTER BOX: TAHAP C — ARGMAX & CONFIDENCE METER
+        h += `<rect x="195" y="6" width="204" height="206" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>`;
+        h += `<text x="297" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="9.0" font-weight="700" fill="#1A73E8">TAHAP 4.3 · Argmax &amp; Confidence</text>`;
+        h += `<text x="297" y="33" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.4" fill="#5F6368">Pilih peluang tertinggi (max)</text>`;
+
+        // Winning Prediction Card inside Center Box
+        h += `<rect x="206" y="42" width="182" height="58" rx="9" fill="#FFFFFF" stroke="${{TM_OUT_COLS[cur.winIdx]}}" stroke-width="1.8"/>`;
+        h += `<text x="297" y="57" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#5F6368">PREDIKSI MODEL (Argmax)</text>`;
+        h += `<text x="297" y="77" text-anchor="middle" font-family="Poppins, Arial" font-size="14.5" font-weight="800" fill="#202124">${{cNames[cur.winIdx].toUpperCase()}}</text>`;
+        h += `<text x="297" y="92" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="700" fill="${{statusText}}">Confidence = ${{cur.winPct.toFixed(1)}}%</text>`;
+
+        // Live Confidence vs Threshold Gauge Bar (x=212..382, width=170)
+        const bx = 212, bw = 170, by = 122;
+        const fillW = Math.max(3, Math.round((cur.winPct / 100) * bw));
+        const thX = bx + Math.round((outThresh / 100) * bw);
+        h += `<text x="${{bx}}" y="114" font-family="Poppins, Arial" font-size="7.6" font-weight="700" fill="#202124">Cek vs Ambang Yakin</text>`;
+        h += `<text x="${{bx + bw}}" y="114" text-anchor="end" font-family="Roboto Mono, monospace" font-size="7.6" font-weight="700" fill="#1A73E8">Ambang ${{outThresh}}%</text>`;
+        h += `<rect x="${{bx}}" y="${{by}}" width="${{bw}}" height="14" rx="7" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1.2"/>`;
+        h += `<rect x="${{bx}}" y="${{by}}" width="${{fillW}}" height="14" rx="7" fill="${{statusStroke}}"/>`;
+        // Vertical dashed threshold marker
+        h += `<line x1="${{thX}}" y1="${{by - 5}}" x2="${{thX}}" y2="${{by + 19}}" stroke="#202124" stroke-width="1.8" stroke-dasharray="3,2"/>`;
+        h += `<text x="${{bx}}" y="${{by + 27}}" font-family="Roboto Mono, monospace" font-size="7.0" fill="#5F6368">0%</text>`;
+        h += `<text x="${{bx + bw / 2}}" y="${{by + 27}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.0" fill="#5F6368">50%</text>`;
+        h += `<text x="${{bx + bw}}" y="${{by + 27}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="7.0" fill="#5F6368">100%</text>`;
+
+        // Decision Badge at bottom of Center Box
+        const decTitle = !cur.isCorrect
+          ? '❌ PREDIKSI SALAH!'
+          : (isConfident ? '✅ YAKIN · DITERIMA' : '⚠ RAGU · CEK MANUAL');
+        const decSub = !cur.isCorrect
+          ? `Tebak ${{cNames[cur.winIdx]}}, padahal ${{clsName}}`
+          : (isConfident ? `${{cur.winPct.toFixed(1)}}% ≥ ambang ${{outThresh}}%` : `${{cur.winPct.toFixed(1)}}% &lt; ambang ${{outThresh}}%`);
+        h += `<rect x="206" y="160" width="182" height="42" rx="8" fill="${{statusFill}}" stroke="${{statusStroke}}" stroke-width="1.6"/>`;
+        h += `<text x="297" y="177" text-anchor="middle" font-family="Poppins, Arial" font-size="8.8" font-weight="800" fill="${{statusText}}">${{decTitle}}</text>`;
+        h += `<text x="297" y="192" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" font-weight="600" fill="#3C4043">${{decSub}}</text>`;
+
+        // RIGHT BOX: EVALUASI VS LABEL ASLI (ERROR & LOSS -> BRIDGE TO TRAINING!)
+        h += `<rect x="425" y="6" width="172" height="206" rx="11" fill="${{statusFill}}" stroke="${{statusStroke}}" stroke-width="1.8"/>`;
+        h += `<text x="511" y="21" text-anchor="middle" font-family="Poppins, Arial" font-size="8.5" font-weight="700" fill="${{statusText}}">Evaluasi vs Label Asli</text>`;
+        h += `<text x="511" y="32" text-anchor="middle" font-family="Roboto, Arial" font-size="7.3" fill="#5F6368">Target 100% − Prediksi</text>`;
+
+        // Ground Truth Card
+        h += `<rect x="434" y="42" width="154" height="42" rx="8" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.2"/>`;
+        h += `<text x="511" y="56" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">Label Asli Foto</text>`;
+        h += `<text x="511" y="74" text-anchor="middle" font-family="Poppins, Arial" font-size="11.2" font-weight="800" fill="#202124">${{clsName}} (Target 100%)</text>`;
+
+        // Error & Loss Readout Card
+        h += `<rect x="434" y="92" width="154" height="62" rx="8" fill="#FFFFFF" stroke="${{statusStroke}}" stroke-width="1.5"/>`;
+        h += `<text x="444" y="109" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">P(${{clsName}}):</text>`;
+        h += `<text x="578" y="109" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="#202124">${{cur.pTrue.toFixed(1)}}%</text>`;
+        h += `<text x="444" y="127" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="${{statusText}}">Error (100−P):</text>`;
+        h += `<text x="578" y="127" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="800" fill="${{statusText}}">${{cur.errPct.toFixed(1)}}%</text>`;
+        h += `<text x="444" y="145" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">Loss (−ln P):</text>`;
+        h += `<text x="578" y="145" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.4" font-weight="700" fill="${{statusText}}">${{cur.ceLoss.toFixed(2)}}</text>`;
+
+        // Feedback Loop Footer Pill
+        const fbTxt = !cur.isCorrect
+          ? '↩ Error Besar → Koreksi Weight!'
+          : (isConfident ? '✅ Loss Kecil → Bobot Sudah Baik' : '↩ Loss Sedang → Perlu Latih Lagi');
+        h += `<rect x="434" y="164" width="154" height="36" rx="8" fill="${{statusStroke}}"/>`;
+        h += `<text x="511" y="185" text-anchor="middle" font-family="Poppins, Arial" font-size="7.6" font-weight="700" fill="${{statusKind === 'doubt' ? '#202124' : '#FFFFFF'}}">${{fbTxt}}</text>`;
+
+        svg.innerHTML = h;
+      }}
+
+      // 3. Bottom Concrete Takeaway
+      const cl = document.getElementById('out-callout');
+      if (cl) {{
+        if (!cur.isCorrect) {{
+          cl.className = 'callout red';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.3 (Foto ${{clsName}} · Acak):</strong> <code>Argmax</code> salah memilih <strong>${{cNames[cur.winIdx]}} (${{cur.winPct.toFixed(1)}}%)</strong>, sedangkan peluang ${{clsName}} hanya <code>${{cur.pTrue.toFixed(1)}}%</code> → <strong>Error ${{cur.errPct.toFixed(1)}}% (Loss ${{cur.ceLoss.toFixed(2)}})</strong> dikirim balik untuk memperbaiki bobot!`;
+        }} else if (!isConfident) {{
+          cl.className = 'callout yellow';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.3 (Foto ${{clsName}} · Ragu):</strong> <code>Argmax</code> memang memilih <strong>${{clsName}} (${{cur.winPct.toFixed(1)}}%)</strong>, tetapi masih di bawah ambang <code>${{outThresh}}%</code> (<code>Error ${{cur.errPct.toFixed(1)}}%</code>) → perlu verifikasi manual atau tambahan <em>training</em>!`;
+        }} else {{
+          cl.className = 'callout green';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.3 (Foto ${{clsName}} · Terlatih):</strong> Persis Tahap 4 &amp; 4.2! <code>Argmax</code> memilih <strong>${{clsName}} (${{cur.winPct.toFixed(1)}}%)</strong> ≥ ambang <code>${{outThresh}}%</code> → <strong>Prediksi Benar &amp; Yakin ✅</strong> (<code>Loss = ${{cur.ceLoss.toFixed(2)}}</code>)!`;
+        }}
+      }}
+    }}
+    renderOutSim();
+
+    // =========================================================================
+    // SIMULATOR #7B (Slide 28): SIKLUS BELAJAR UTUH (FORWARD -> LOSS -> BACKPROP+GD -> EPOCH)
+    // Seamless continuation of Slide 27 Untrained Olaf (P=11.3%, Loss=2.18) -> Trained Olaf (P=79.2%, Loss=0.23)!
+    // =========================================================================
+    let trStage = 1; // 1: Forward Pass, 2: Hitung Loss, 3: Backprop+GD, 4: Epoch Loop
+    let trTimer = null;
+
+    function _trSetPlayBtn(running) {{
+      const btn = document.getElementById('tr-btn-play');
+      if (!btn) return;
+      btn.textContent = running ? '■ Stop' : '▶ Play';
+      btn.style.background = running ? '#EA4335' : '#34A853';
+      btn.style.borderColor = running ? '#EA4335' : '#34A853';
+    }}
+
+    function _stopTrCycle() {{
+      if (trTimer !== null) {{ clearInterval(trTimer); trTimer = null; }}
+      _trSetPlayBtn(false);
+    }}
+
+    function setTrStage(st) {{
+      _stopTrCycle();
+      trStage = st;
+      renderTrCycle();
+    }}
+
+    function setTrPdfState(st) {{
+      _stopTrCycle();
+      trStage = parseInt(st, 10) || 1;
+      renderTrCycle();
+    }}
+
+    function stepTrCycle() {{
+      _stopTrCycle();
+      trStage = (trStage % 4) + 1;
+      renderTrCycle();
+    }}
+
+    function resetTrCycle() {{
+      _stopTrCycle();
+      trStage = 1;
+      renderTrCycle();
+    }}
+
+    function playTrCycle() {{
+      if (trTimer !== null) {{
+        _stopTrCycle();
+        return;
+      }}
+      _stopTrCycle();
+      _trSetPlayBtn(true);
+      trStage = 1;
+      renderTrCycle();
+      trTimer = setInterval(() => {{
+        if (trStage >= 4) {{
+          _stopTrCycle();
+          return;
+        }}
+        trStage += 1;
+        renderTrCycle();
+      }}, 2600);
+    }}
+
+    function renderTrCycle() {{
+      const svg = document.getElementById('tr-cycle-svg');
+      if (!svg) return;
+      document.querySelectorAll('#tr-cycle-tabs button[data-trst]').forEach((b) => {{
+        b.classList.toggle('outline', parseInt(b.dataset.trst, 10) !== trStage);
+      }});
+
+      const st = trStage;
+      const trCardIdx = st <= 2 ? 0 : (st === 3 ? 1 : 2);
+      _syncCards(['tr-card-1', 'tr-card-2', 'tr-card-3'], trCardIdx, ['blue', 'yellow', 'green']);
+      const box = (id, x, y, w, h, fill, stroke, numCol, title, l1, l2, active) => {{
+        const sw = active ? '2.6' : '1.4';
+        const op = active ? '1' : '0.62';
+        let g = `<g opacity="${{op}}">`;
+        if (active) g += `<rect x="${{x - 3}}" y="${{y - 3}}" width="${{w + 6}}" height="${{h + 6}}" rx="13" fill="none" stroke="${{stroke}}" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+        g += `<rect x="${{x}}" y="${{y}}" width="${{w}}" height="${{h}}" rx="11" fill="${{fill}}" stroke="${{stroke}}" stroke-width="${{sw}}"/>`;
+        g += `<circle cx="${{x + 17}}" cy="${{y + 17}}" r="9.5" fill="${{stroke}}"/>`;
+        g += `<text x="${{x + 17}}" y="${{y + 20.5}}" text-anchor="middle" font-family="Poppins, Arial" font-size="9.5" font-weight="800" fill="${{numCol}}">${{id}}</text>`;
+        g += `<text x="${{x + 32}}" y="${{y + 20.5}}" font-family="Poppins, Arial" font-size="9.6" font-weight="800" fill="#202124">${{title}}</text>`;
+        g += `<text x="${{x + 12}}" y="${{y + 40}}" font-family="Roboto, Arial" font-size="8.2" fill="#3C4043">${{l1}}</text>`;
+        g += `<text x="${{x + 12}}" y="${{y + 54}}" font-family="Roboto Mono, monospace" font-size="8.1" font-weight="700" fill="#202124">${{l2}}</text>`;
+        g += `</g>`;
+        return g;
+      }};
+
+      let h = '';
+      // 4 Cycle Nodes in a crisp, full-height 2x2 clockwise loop! (viewBox 600x316)
+      h += box('1', 10, 10, 254, 72, '#E8F0FE', '#4285F4', '#FFFFFF', 'FORWARD PASS (Maju)',
+        'Foto Olaf → Weight+Bias → Softmax', 'Epoch 1: P(Olaf) = 11.3% (Tebak Kristoff)', st === 1);
+      h += box('2', 336, 10, 254, 72, '#FCE8E6', '#EA4335', '#FFFFFF', 'HITUNG LOSS (Ukur Salah)',
+        'Bandingkan prediksi vs Label Asli (100%)', 'Error = 88.7%  |  Loss = 2.18 (Tinggi!)', st === 2);
+      h += box('3', 336, 114, 254, 72, '#FEF7E0', '#FBBC04', '#202124', 'BACKPROP + GRADIENT DESCENT',
+        'Lacak mundur &amp; geser w, b sebesar LR', 'w_baru = w_lama − LR × gradien', st === 3);
+      h += box('4', 10, 114, 254, 72, '#E6F4EA', '#34A853', '#FFFFFF', 'ULANGI TIAP EPOCH',
+        'Baca ulang seluruh foto Frozen (Ep 1→8)', 'Loss 2.18 → 0.23  |  P(Olaf) → 79.2% ✅', st === 4);
+
+      // Clockwise Connecting Arrows between the 4 nodes
+      const a12 = st === 1 || st === 2 ? '#4285F4' : '#BDC1C6';
+      h += `<line x1="266" y1="46" x2="326" y2="46" stroke="${{a12}}" stroke-width="2.8"/><polygon points="324,40.5 334,46 324,51.5" fill="${{a12}}"/>`;
+      const a23 = st === 2 || st === 3 ? '#EA4335' : '#BDC1C6';
+      h += `<line x1="463" y1="84" x2="463" y2="104" stroke="${{a23}}" stroke-width="2.8"/><polygon points="457.5,102 463,112 468.5,102" fill="${{a23}}"/>`;
+      const a34 = st === 3 || st === 4 ? '#FBBC04' : '#BDC1C6';
+      h += `<line x1="334" y1="150" x2="274" y2="150" stroke="${{a34}}" stroke-width="2.8"/><polygon points="276,144.5 266,150 276,155.5" fill="${{a34}}"/>`;
+      const a41 = st === 4 ? '#34A853' : '#BDC1C6';
+      h += `<line x1="137" y1="112" x2="137" y2="92" stroke="${{a41}}" stroke-width="2.8" stroke-dasharray="4,2"/><polygon points="131.5,94 137,84 142.5,94" fill="${{a41}}"/>`;
+      h += `<text x="148" y="102" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="${{st === 4 ? '#137333' : '#5F6368'}}">Ulangi Epoch berikutnya!</text>`;
+
+      // Richer Full-Width Bottom Panel: Real Loss Curve Drop (2.18 -> 0.23) across Epoch 1..8!
+      h += `<rect x="10" y="200" width="580" height="106" rx="11" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4"/>`;
+      h += `<text x="24" y="220" font-family="Poppins, Arial" font-size="9.2" font-weight="700" fill="#202124">Dampak Siklus Belajar (Foto Olaf · Tahap 4.3):</text>`;
+      h += `<text x="24" y="241" font-family="Roboto, Arial" font-size="8.5" fill="#C5221F">● Epoch 1 (Acak): Loss = 2.18 · P(Olaf) = 11.3% ❌</text>`;
+      h += `<text x="24" y="261" font-family="Roboto, Arial" font-size="8.5" fill="#1A73E8">● Epoch 4 (Belajar): Loss = 0.85 · Mulai tepat</text>`;
+      h += `<text x="24" y="281" font-family="Roboto, Arial" font-size="8.5" font-weight="700" fill="#137333">● Epoch 8 (Terlatih): Loss = 0.23 · P(Olaf) = 79.2% ✅</text>`;
+      h += `<text x="24" y="297" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">Di Keras, cukup 1 baris: model.fit(epochs=8)</text>`;
+
+      // Crisp Loss-vs-Epoch Chart on right half (x=318..578, y=210..294)
+      const lossPts = [2.18, 1.72, 1.24, 0.85, 0.58, 0.41, 0.30, 0.23];
+      const gx0 = 336, gx1 = 568, gy0 = 216, gy1 = 278;
+      const showN = st === 1 || st === 2 ? 1 : (st === 3 ? 4 : 8);
+      h += `<rect x="312" y="208" width="268" height="90" rx="8" fill="#FFFFFF" stroke="#E0E3E7" stroke-width="1.1"/>`;
+      // Subtle horizontal guide lines
+      for (const gl of [2.0, 1.2, 0.4]) {{
+        const gy = gy1 - ((gl - 0.1) / 2.25) * (gy1 - gy0);
+        h += `<line x1="${{gx0 - 4}}" y1="${{gy.toFixed(1)}}" x2="${{gx1 + 4}}" y2="${{gy.toFixed(1)}}" stroke="#F1F3F4" stroke-width="1"/>`;
+        h += `<text x="${{gx0 - 7}}" y="${{(gy + 2.5).toFixed(1)}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="6.4" fill="#9AA0A6">${{gl.toFixed(1)}}</text>`;
+      }}
+      let poly = [];
+      for (let i = 0; i < showN; i++) {{
+        const px = gx0 + (i / 7) * (gx1 - gx0);
+        const py = gy1 - ((lossPts[i] - 0.1) / 2.25) * (gy1 - gy0);
+        poly.push(`${{px.toFixed(1)}},${{py.toFixed(1)}}`);
+      }}
+      if (poly.length > 1) {{
+        h += `<polyline points="${{poly.join(' ')}}" fill="none" stroke="#34A853" stroke-width="2.6" stroke-linecap="round"/>`;
+      }}
+      for (let i = 0; i < showN; i++) {{
+        const px = gx0 + (i / 7) * (gx1 - gx0);
+        const py = gy1 - ((lossPts[i] - 0.1) / 2.25) * (gy1 - gy0);
+        const isLast = i === showN - 1;
+        const col = i === 0 ? '#EA4335' : (isLast && st === 4 ? '#34A853' : '#4285F4');
+        h += `<circle cx="${{px.toFixed(1)}}" cy="${{py.toFixed(1)}}" r="${{isLast ? '4.8' : '3.2'}}" fill="${{col}}" stroke="#FFFFFF" stroke-width="1.3"/>`;
+        if (i === 0 || isLast) {{
+          const lblY = i === 0 ? py + 13 : (py > gy1 - 15 ? py - 9 : py + 13);
+          h += `<text x="${{px.toFixed(1)}}" y="${{lblY.toFixed(1)}}" text-anchor="${{i === 0 ? 'start' : 'end'}}" font-family="Roboto Mono, monospace" font-size="7.6" font-weight="700" fill="${{col}}">${{lossPts[i].toFixed(2)}}</text>`;
+        }}
+      }}
+      for (let e = 1; e <= 8; e++) {{
+        const ex = gx0 + ((e - 1) / 7) * (gx1 - gx0);
+        h += `<text x="${{ex.toFixed(1)}}" y="292" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" fill="#5F6368">E${{e}}</text>`;
+      }}
+
+      svg.innerHTML = h;
+
+      const cl = document.getElementById('tr-cycle-callout');
+      if (cl) {{
+        if (st === 1) {{
+          cl.className = 'callout';
+          cl.innerHTML = '<strong>Langkah 1/4 · Forward Pass:</strong> Foto Olaf melewati alur Tahap 4.1–4.3. Karena bobot masih acak (Epoch 1), peluang Olaf baru <code>11.3%</code> dan model salah menebak Kristoff!';
+        }} else if (st === 2) {{
+          cl.className = 'callout red';
+          cl.innerHTML = '<strong>Langkah 2/4 · Hitung Loss:</strong> Bandingkan tebakan <code>11.3%</code> dengan target <code>100%</code> → dihasilkan <strong>Loss = <code>2.18</code></strong> (skor kesalahan besar, persis Tahap 4.3)!';
+        }} else if (st === 3) {{
+          cl.className = 'callout yellow';
+          cl.innerHTML = '<strong>Langkah 3/4 · Backpropagation &amp; Gradient Descent:</strong> Sistem melacak mundur kabel <code>w</code> &amp; <code>b</code> penyebab salah, lalu menggesernya sebesar <em>Learning Rate</em> agar <strong>Loss turun</strong>!';
+        }} else {{
+          cl.className = 'callout green';
+          cl.innerHTML = '<strong>Langkah 4/4 · Epoch (<code>model.fit()</code>):</strong> Siklus 1→2→3 diulang tiap <strong>Epoch</strong>. Di Epoch 8, <strong>Loss turun <code>2.18 → 0.23</code></strong> dan prediksi Olaf naik ke <strong><code>79.2% ✅</code></strong> — siap praktik di Hands-On!';
+        }}
+      }}
+    }}
+    renderTrCycle();
+
+    // =========================================================================
+    // ULTIMATE SLIDE 29: SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 5!)
+    // Model 1-Layer nyata (150.528 Input -> 5 Output Softmax = 752.645 param, ZERO Hidden Layer!)
+    // + Mode "Full 8 Epoch" menjalankan semua 5 karakter bergantian dari E1 -> E8!
+    // =========================================================================
+    let fnnPhotoIdx = 3;      // Default: Olaf
+    let fnnEpochIdx = 7;      // Default: Epoch 8 (index 7) — trained 5/5!
+    let fnnStage = 0;         // 0 = overview, 1..5 = active stage highlight
+    let fnnMode = 'idle';     // 'idle' | 'single' | 'full'
+    let fnnFullPhase = 0;     // In 'full' mode: 0 = forward wave (T1..T4), 1 = red Backprop (T5)
+    let fnnFullDone = false;  // Banner after finishing Full 8-Epoch tour
+    let fnnProg = 0;
+    let fnnRaf = null;
+    let fnnLastTs = 0;
+    let fnnCache = null;
+    const fnnPlayEpochs = [0, 2, 4, 7]; // Key epochs for slow single-photo tour (E1 -> E3 -> E5 -> E8)
+    let fnnPlayEpPos = 0;
+
+    function _fnnSetBtns() {{
+      const bFull = document.getElementById('fnn-btn-full');
+      const bPlay = document.getElementById('fnn-btn-play');
+      if (bFull) {{
+        const isFull = fnnMode === 'full';
+        bFull.textContent = isFull ? '■ Stop Full' : '▶ Full 8 Epoch';
+        bFull.style.background = isFull ? '#EA4335' : '#1A73E8';
+        bFull.style.borderColor = isFull ? '#EA4335' : '#1A73E8';
+      }}
+      if (bPlay) {{
+        const isSingle = fnnMode === 'single';
+        bPlay.textContent = isSingle ? '■ Stop' : '▶ 1 Foto';
+        bPlay.style.background = isSingle ? '#EA4335' : '#34A853';
+        bPlay.style.borderColor = isSingle ? '#EA4335' : '#34A853';
+      }}
+    }}
+
+    function _fnnClearCanvas() {{
+      const c = document.getElementById('fnn-motion-canvas');
+      if (!c) return;
+      const ctx = c.getContext('2d');
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.clearRect(0, 0, c.width, c.height);
+    }}
+
+    function _stopFnnAnim() {{
+      if (fnnRaf !== null) {{ cancelAnimationFrame(fnnRaf); fnnRaf = null; }}
+      fnnMode = 'idle';
+      _fnnSetBtns();
+    }}
+
+    function _fnnBuildCharBar() {{
+      const host = document.getElementById('fnn-char-bar');
+      if (!host) return;
+      const epObj = FULL_NN_DATA.epochs[fnnEpochIdx];
+      if (host.children.length === 0) {{
+        host.innerHTML = FULL_NN_DATA.classes.map((cls, idx) => `
+          <button id="fnn-ch-${{idx}}" class="fnn-char-btn${{idx === fnnPhotoIdx ? ' active' : ''}}" onclick="selectFnnChar(${{idx}})" title="Uji foto nyata ${{cls}} di Full Neural Network!">
+            <img src="${{FULL_NN_DATA.thumbs[idx]}}" alt="${{cls}}" style="border-color:${{TM_OUT_COLS[idx]}};"/>
+            <span>${{cls}}</span>
+            <span id="fnn-ch-dot-${{idx}}" class="fnn-char-dot"></span>
+          </button>
+        `).join('');
+      }}
+      for (let i = 0; i < 5; i++) {{
+        const btn = document.getElementById(`fnn-ch-${{i}}`);
+        if (btn) btn.classList.toggle('active', i === fnnPhotoIdx);
+        const dot = document.getElementById(`fnn-ch-dot-${{i}}`);
+        if (dot) {{
+          const row = epObj.photos[i];
+          const pT = row.probs[i];
+          dot.style.background = !row.ok ? '#EA4335' : (pT >= 60 ? '#34A853' : '#FBBC04');
+          dot.title = `${{FULL_NN_DATA.classes[i]}}: ${{pT.toFixed(1)}}% (${{row.ok ? (pT >= 60 ? 'Yakin' : 'Benar/Ragu') : 'Salah'}})`;
+        }}
+      }}
+    }}
+
+    function _fnnRenderSvg() {{
+      _fnnBuildCharBar();
+      const svg = document.getElementById('fnn-svg');
+      if (!svg) return;
+
+      const epObj = FULL_NN_DATA.epochs[fnnEpochIdx];
+      const ph = epObj.photos[fnnPhotoIdx];
+      const epNum = epObj.epoch;
+      const clsName = FULL_NN_DATA.classes[fnnPhotoIdx];
+      const cNames = FULL_NN_DATA.classes;
+      const xSamp = FULL_NN_DATA.X_sample[fnnPhotoIdx];
+      const isCorrect = ph.ok;
+      const winPct = ph.probs[ph.pred];
+      const isConf = isCorrect && winPct >= 60;
+      const st = fnnStage; // 0 = overview, 1..5 = active stage highlight
+      const isBackprop = st === 5;
+      const isFullRunning = fnnMode === 'full';
+
+      // Sync Epoch slider & top pill (shows Epoch, Acc/5, Mean Loss!)
+      const sl = document.getElementById('fnn-ep-slider');
+      if (sl) sl.value = String(epNum);
+      const pill = document.getElementById('fnn-ep-pill');
+      if (pill) {{
+        pill.textContent = `E${{epNum}}/8 · ${{epObj.acc}}/5 · ${{epObj.avg_loss.toFixed(2)}}`;
+        pill.style.color = epObj.acc < 3 ? '#C5221F' : (epObj.acc === 5 && epObj.avg_loss < 0.36 ? '#137333' : '#B06000');
+      }}
+
+      // Sync 5 bottom stage cards (.sync-card choreography!)
+      _syncCards(
+        ['fnn-card-1', 'fnn-card-2', 'fnn-card-3', 'fnn-card-4', 'fnn-card-5'],
+        st >= 1 && st <= 5 ? st - 1 : -1,
+        ['blue', 'blue', 'yellow', 'green', 'red']
+      );
+
+      // Layout geometry (viewBox="0 0 1050 284")
+      const inY = [66, 92, 118, 150, 182, 208, 234]; // 3 top RGB + ellipsis + 3 bottom RGB
+      const inCols = ['#EA4335', '#34A853', '#4285F4', '#1A73E8', '#EA4335', '#34A853', '#4285F4'];
+      const inIds = ['x1', 'x2', 'x3', '', 'x150.526', 'x150.527', 'x150.528'];
+      const inSubs = ['(R)', '(G)', '(B)', '', '(R)', '(G)', '(B)'];
+      const inMap = [0, 1, 2, null, 3, 4, 5];
+
+      const rowY = [82, 112, 142, 172, 202]; // Shared crisp alignment for Col 3 (z1..z5) & Col 4 (y1..y5)
+
+      const colStroke = (colStage, baseCol) => (st === colStage ? baseCol : (st === 0 ? baseCol : '#DADCE0'));
+      const colSw = (colStage) => (st === colStage ? '2.8' : '1.7');
+      const colOp = (colStage) => (st === 0 || st === colStage || (colStage === 2 && st === 1) ? '1' : '0.78');
+
+      let h = '';
+      // Top Backpropagation return arc (Col 5 -> W, b at x=347) — lights up vivid RED during Tahap 5!
+      const bpArcCol = isBackprop ? '#EA4335' : '#E0E3E7';
+      const bpArcSw = isBackprop ? '2.8' : '1.4';
+      const bpArcOp = isBackprop ? '1' : '0.72';
+      h += `<path id="fnn-bp-arc" d="M 946 22 C 946 4, 347 4, 347 22" fill="none" stroke="${{bpArcCol}}" stroke-width="${{bpArcSw}}" stroke-dasharray="6,4" opacity="${{bpArcOp}}"/>`;
+      h += `<polygon points="342,20 352,20 347,29" fill="${{bpArcCol}}" opacity="${{bpArcOp}}"/>`;
+      h += `<rect x="498" y="1" width="292" height="16" rx="8" fill="${{isBackprop ? '#FCE8E6' : '#F8F9FA'}}" stroke="${{isBackprop ? '#EA4335' : '#DADCE0'}}" stroke-width="1.3"/>`;
+      h += `<text x="644" y="11.8" text-anchor="middle" font-family="Poppins, Arial" font-size="7.7" font-weight="800" fill="${{isBackprop ? '#C5221F' : '#5F6368'}}">↩ BACKPROPAGATION + GRADIENT DESCENT (Koreksi W &amp; b)</text>`;
+
+      // =========================================================================
+      // COL 1: TAHAP 1 · FOTO & PIKSEL (x=4..128, y=28..278)
+      // =========================================================================
+      h += `<g opacity="${{colOp(1)}}">`;
+      h += `<rect id="fnn-col-1" x="4" y="28" width="124" height="250" rx="13" fill="#F8F9FA" stroke="${{colStroke(1, '#4285F4')}}" stroke-width="${{colSw(1)}}"/>`;
+      h += `<rect x="18" y="36" width="96" height="16" rx="8" fill="#E8F0FE"/><text x="66" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.6" font-weight="800" fill="#1A73E8">TAHAP 1 · PIKSEL</text>`;
+      h += `<text x="66" y="65" text-anchor="middle" font-family="Poppins, Arial" font-size="9.6" font-weight="700" fill="#202124">Foto ${{clsName}}</text>`;
+      h += `<defs><clipPath id="fnn-ph-clip"><rect x="20" y="74" width="92" height="92" rx="10"/></clipPath></defs>`;
+      h += `<image id="fnn-photo-el" href="${{FULL_NN_DATA.thumbs[fnnPhotoIdx]}}" x="20" y="74" width="92" height="92" preserveAspectRatio="xMidYMid slice" clip-path="url(#fnn-ph-clip)"/>`;
+      for (let g = 1; g < 4; g++) {{
+        h += `<line x1="${{20 + g * 23}}" y1="74" x2="${{20 + g * 23}}" y2="166" stroke="rgba(255,255,255,0.45)" stroke-width="0.9"/>`;
+        h += `<line x1="20" y1="${{74 + g * 23}}" x2="112" y2="${{74 + g * 23}}" stroke="rgba(255,255,255,0.45)" stroke-width="0.9"/>`;
+      }}
+      h += `<rect x="20" y="74" width="92" height="92" rx="10" fill="none" stroke="${{TM_OUT_COLS[fnnPhotoIdx]}}" stroke-width="2.4"/>`;
+      if (isFullRunning) {{
+        h += `<rect x="24" y="78" width="84" height="14" rx="5" fill="rgba(26,115,232,0.92)"/>`;
+        h += `<text x="66" y="87.8" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" font-weight="800" fill="#FFFFFF">E${{epNum}}/8 · Foto ${{fnnPhotoIdx + 1}}/5</text>`;
+      }}
+      h += `<rect x="22" y="176" width="88" height="18" rx="6" fill="#E8F0FE" stroke="#C6DAFC" stroke-width="1"/><text x="66" y="188" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="#1A73E8">224 × 224 × 3</text>`;
+      h += `<text x="66" y="210" text-anchor="middle" font-family="Roboto, Arial" font-size="7.8" fill="#5F6368">Nilai piksel 0.0 – 1.0</text>`;
+      h += `<rect x="14" y="222" width="104" height="44" rx="8" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.2"/>`;
+      h += `<text x="66" y="237" text-anchor="middle" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">Label Asli (Ground Truth)</text>`;
+      h += `<text x="66" y="254" text-anchor="middle" font-family="Poppins, Arial" font-size="9.6" font-weight="800" fill="#202124">${{clsName}} (y${{fnnPhotoIdx + 1}}=1)</text>`;
+      h += `</g>`;
+
+      // Arrow Col 1 -> Col 2 (Flatten)
+      const a12Col = st === 1 || st === 2 ? '#4285F4' : '#9AA0A6';
+      h += `<text x="141" y="140" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="700" fill="${{a12Col}}">Flatten</text>`;
+      h += `<line x1="129" y1="150" x2="147" y2="150" stroke="${{a12Col}}" stroke-width="2.4"/><polygon points="145,145.5 153,150 145,154.5" fill="${{a12Col}}"/>`;
+
+      // =========================================================================
+      // COL 2: TAHAP 2 · INPUT LAYER (150.528 NEURON) (x=154..312, y=28..278)
+      // =========================================================================
+      h += `<g opacity="${{colOp(2)}}">`;
+      h += `<rect id="fnn-col-2" x="154" y="28" width="158" height="250" rx="13" fill="#E8F0FE" stroke="${{colStroke(2, '#4285F4')}}" stroke-width="${{colSw(2)}}"/>`;
+      h += `<rect x="179" y="36" width="108" height="16" rx="8" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1"/><text x="233" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.5" font-weight="800" fill="#1A73E8">TAHAP 2 · INPUT LAYER</text>`;
+      for (let i = 0; i < 7; i++) {{
+        if (i === 3) {{
+          h += `<rect id="fnn-in-3" x="163" y="${{inY[3] - 11.5}}" width="140" height="23" rx="7" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.3" stroke-dasharray="4,2"/>`;
+          h += `<text x="233" y="${{inY[3] - 1.2}}" text-anchor="middle" font-family="Poppins, Arial" font-size="7.5" font-weight="700" fill="#1A73E8">⋮ +150.522 neuron</text>`;
+          h += `<text x="233" y="${{inY[3] + 7.8}}" text-anchor="middle" font-family="Roboto, Arial" font-size="6.4" fill="#5F6368">Total 150.528 piksel</text>`;
+        }} else {{
+          const m = inMap[i];
+          const isEnd = m >= 3;
+          h += `<circle id="fnn-in-${{i}}" cx="174" cy="${{inY[i]}}" r="9.4" fill="${{inCols[i]}}" stroke="#FFFFFF" stroke-width="1.5"/>`;
+          h += `<text x="174" y="${{inY[i] + 2.8}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.7" font-weight="700" fill="#FFFFFF">${{xSamp[m].toFixed(2)}}</text>`;
+          h += `<text x="188" y="${{inY[i] + 3.0}}" font-family="Roboto Mono, monospace" font-size="${{isEnd ? '7.5' : '8.4'}}" font-weight="700" fill="#202124">${{inIds[i]}}</text>`;
+          h += `<text x="${{isEnd ? 240 : 210}}" y="${{inY[i] + 3.0}}" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">${{inSubs[i]}}</text>`;
+        }}
+      }}
+      h += `<rect x="168" y="252" width="130" height="18" rx="6" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1"/>`;
+      h += `<text x="233" y="264" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.6" font-weight="700" fill="#1A73E8">150.528 Neuron (RGB)</text>`;
+      h += `</g>`;
+
+      // =========================================================================
+      // WIRES W, b (Input Layer 150.528 -> Weight + Bias 5 Skor, x=312..382)
+      // =========================================================================
+      const wBaseCol = isBackprop ? '#EA4335' : (st === 3 ? '#FBBC04' : '#CBD5E1');
+      const wOp = isBackprop ? '0.82' : (st === 3 ? '0.90' : '0.58');
+      for (let i = 0; i < 7; i++) {{
+        for (let j = 0; j < 5; j++) {{
+          const isTgt = j === fnnPhotoIdx;
+          const lw = (i === 3 && isTgt) ? (isBackprop ? 2.6 : 2.3) : (isTgt ? 1.15 : 0.85);
+          const strokeC = isBackprop && isTgt
+            ? '#EA4335'
+            : ((i === 3 && isTgt && !isBackprop) ? (ph.z[j] >= 0 ? '#34A853' : '#EA4335') : wBaseCol);
+          h += `<line x1="312" y1="${{inY[i]}}" x2="382" y2="${{rowY[j]}}" stroke="${{strokeC}}" stroke-width="${{lw}}" opacity="${{wOp}}"/>`;
+        }}
+      }}
+      // W, b Parameter Pill (752.645 param — 100% consistent with Bab 3 & TODO 2!)
+      h += `<rect x="315" y="30" width="64" height="30" rx="7" fill="${{isBackprop ? '#FCE8E6' : '#FEF7E0'}}" stroke="${{isBackprop ? '#EA4335' : '#FBBC04'}}" stroke-width="1.5"/>`;
+      h += `<text x="347" y="42.5" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="800" fill="${{isBackprop ? '#C5221F' : '#B06000'}}">${{isBackprop ? '← ΔW, b' : 'W, b'}}</text>`;
+      h += `<text x="347" y="54" text-anchor="middle" font-family="Roboto, Arial" font-size="6.8" font-weight="700" fill="#5F6368">752.645 param</text>`;
+
+      // =========================================================================
+      // COL 3: TAHAP 3 · WEIGHT + BIAS (z = Σ(x·w) + b, 5 SKOR MENTAH — TANPA HIDDEN!)
+      // (x=382..578, y=28..278)
+      // =========================================================================
+      h += `<g opacity="${{colOp(3)}}">`;
+      h += `<rect id="fnn-col-3" x="382" y="28" width="196" height="250" rx="13" fill="#FEF7E0" stroke="${{colStroke(3, '#FBBC04')}}" stroke-width="${{colSw(3)}}"/>`;
+      h += `<rect x="404" y="36" width="152" height="16" rx="8" fill="#FFFFFF" stroke="#FDE293" stroke-width="1"/><text x="480" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#B06000">TAHAP 3 · WEIGHT + BIAS</text>`;
+      h += `<text x="480" y="63" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" fill="#5F6368">z = Σ(x·w) + b  (5 Skor Mentah)</text>`;
+
+      let maxZIdx = 0;
+      for (let j = 1; j < 5; j++) {{ if (ph.z[j] > ph.z[maxZIdx]) maxZIdx = j; }}
+
+      for (let j = 0; j < 5; j++) {{
+        const zv = ph.z[j];
+        const wxv = ph.wx[j];
+        const bv = ph.b[j];
+        const isTgt = j === fnnPhotoIdx;
+        const isTop = j === maxZIdx;
+        const rFill = isTop ? (isTgt ? '#E6F4EA' : '#FCE8E6') : '#FFFFFF';
+        const rStr = isTgt ? (isTop ? '#34A853' : '#FBBC04') : (isTop ? '#EA4335' : '#E0E3E7');
+        const fmtS = (v) => (v >= 0 ? '+' : '−') + Math.abs(v).toFixed(2);
+        h += `<rect x="390" y="${{rowY[j] - 12}}" width="180" height="24" rx="7" fill="${{rFill}}" stroke="${{rStr}}" stroke-width="${{isTgt || isTop ? '1.7' : '1.0'}}"/>`;
+        h += `<circle id="fnn-z-${{j}}" cx="403" cy="${{rowY[j]}}" r="8.2" fill="${{TM_OUT_COLS[j]}}"/>`;
+        h += `<text x="403" y="${{rowY[j] + 2.8}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" font-weight="700" fill="${{j === 2 ? '#202124' : '#FFFFFF'}}">z${{j + 1}}</text>`;
+        h += `<text x="415" y="${{rowY[j] + 2.9}}" font-family="Roboto Mono, monospace" font-size="6.8" fill="#5F6368">${{fmtS(wxv)}} ${{bv >= 0 ? '+' : '−'}}${{Math.abs(bv).toFixed(2)}}</text>`;
+        h += `<text x="564" y="${{rowY[j] + 3.0}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="800" fill="${{zv >= 0 ? '#137333' : '#C5221F'}}">=${{fmtS(zv)}}${{isTgt ? '★' : ''}}</text>`;
+      }}
+      h += `<rect x="390" y="232" width="180" height="36" rx="8" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.3"/>`;
+      h += `<text x="480" y="247" text-anchor="middle" font-family="Poppins, Arial" font-size="8.1" font-weight="800" fill="#B06000">Skor Tertinggi: z${{maxZIdx + 1}} = ${{(ph.z[maxZIdx] >= 0 ? '+' : '') + ph.z[maxZIdx].toFixed(2)}}</text>`;
+      h += `<text x="480" y="260" text-anchor="middle" font-family="Roboto, Arial" font-size="7.0" fill="#5F6368">(${{cNames[maxZIdx]}}) → diteruskan ke Softmax</text>`;
+      h += `</g>`;
+
+      // Arrow Col 3 -> Col 4 (Softmax)
+      const a34Col = st === 3 || st === 4 ? '#34A853' : '#9AA0A6';
+      h += `<text x="593" y="139" text-anchor="middle" font-family="Poppins, Arial" font-size="7.0" font-weight="800" fill="${{a34Col}}">Softmax</text>`;
+      h += `<line x1="579" y1="150" x2="601" y2="150" stroke="${{a34Col}}" stroke-width="2.4"/><polygon points="599,145.5 607,150 599,154.5" fill="${{a34Col}}"/>`;
+
+      // =========================================================================
+      // COL 4: TAHAP 4 · OUTPUT LAYER (5 KELAS + SOFTMAX + ARGMAX) (x=608..820)
+      // =========================================================================
+      h += `<g opacity="${{colOp(4)}}">`;
+      h += `<rect id="fnn-col-4" x="608" y="28" width="212" height="250" rx="13" fill="#E6F4EA" stroke="${{colStroke(4, '#34A853')}}" stroke-width="${{colSw(4)}}"/>`;
+      h += `<rect x="640" y="36" width="148" height="16" rx="8" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1"/><text x="714" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#137333">TAHAP 4 · OUTPUT (SOFTMAX)</text>`;
+      h += `<text x="714" y="63" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" fill="#5F6368">e^z / Σe^z (100%) → Argmax</text>`;
+
+      for (let j = 0; j < 5; j++) {{
+        const pct = ph.probs[j];
+        const isWin = j === ph.pred;
+        const isTgt = j === fnnPhotoIdx;
+        const rowFill = isWin ? (isCorrect ? '#D4F0DC' : '#FCE8E6') : '#FFFFFF';
+        const rowStr = isWin ? (isCorrect ? '#34A853' : '#EA4335') : (isTgt ? '#FBBC04' : '#DADCE0');
+        const barW = Math.max(2, Math.round((pct / 100) * 64));
+        h += `<rect x="616" y="${{rowY[j] - 12}}" width="196" height="24" rx="7" fill="${{rowFill}}" stroke="${{rowStr}}" stroke-width="${{isWin || isTgt ? '1.8' : '1'}}"/>`;
+        h += `<circle id="fnn-out-${{j}}" cx="629" cy="${{rowY[j]}}" r="8.2" fill="${{TM_OUT_COLS[j]}}"/>`;
+        h += `<text x="629" y="${{rowY[j] + 2.8}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" font-weight="700" fill="${{j === 2 ? '#202124' : '#FFFFFF'}}">y${{j + 1}}</text>`;
+        h += `<text x="642" y="${{rowY[j] + 3.0}}" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#202124">${{cNames[j]}}${{isTgt ? ' ★' : ''}}</text>`;
+        h += `<rect x="706" y="${{rowY[j] - 3.8}}" width="64" height="7.6" rx="3.8" fill="${{isWin ? '#FFFFFF' : '#F1F3F4'}}"/>`;
+        h += `<rect x="706" y="${{rowY[j] - 3.8}}" width="${{barW}}" height="7.6" rx="3.8" fill="${{TM_OUT_COLS[j]}}"/>`;
+        h += `<text x="807" y="${{rowY[j] + 3.0}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="800" fill="${{isWin ? (isCorrect ? '#137333' : '#C5221F') : '#3C4043'}}">${{pct.toFixed(1)}}%</text>`;
+      }}
+      // Argmax Verdict Box
+      const vBg = !isCorrect ? '#FCE8E6' : (isConf ? '#137333' : '#FEF7E0');
+      const vStr = !isCorrect ? '#EA4335' : (isConf ? '#137333' : '#FBBC04');
+      const vTxtCol = !isCorrect ? '#C5221F' : (isConf ? '#FFFFFF' : '#B06000');
+      const vLbl = !isCorrect
+        ? `❌ Argmax: ${{cNames[ph.pred]}} (${{winPct.toFixed(1)}}%)`
+        : (isConf ? `✅ YAKIN: ${{clsName.toUpperCase()}} (${{winPct.toFixed(1)}}%)` : `⚠ RAGU: ${{clsName}} (${{winPct.toFixed(1)}}%)`);
+      h += `<rect x="616" y="232" width="196" height="36" rx="8" fill="${{vBg}}" stroke="${{vStr}}" stroke-width="1.6"/>`;
+      h += `<text x="714" y="247" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="800" fill="${{vTxtCol}}">${{vLbl}}</text>`;
+      h += `<text x="714" y="260" text-anchor="middle" font-family="Roboto, Arial" font-size="7.1" font-weight="600" fill="${{isConf ? '#E6F4EA' : '#5F6368'}}">${{!isCorrect ? `Padahal asli: ${{clsName}} (${{ph.probs[fnnPhotoIdx].toFixed(1)}}%)` : (isConf ? 'Lolos ambang yakin ≥ 60%!' : 'Benar, tapi masih di bawah 60%')}}</text>`;
+      h += `</g>`;
+
+      // Arrow Col 4 -> Col 5 (Loss)
+      const a45Col = st === 4 || st === 5 ? '#EA4335' : '#9AA0A6';
+      h += `<line x1="821" y1="150" x2="837" y2="150" stroke="${{a45Col}}" stroke-width="2.4"/><polygon points="835,145.5 843,150 835,154.5" fill="${{a45Col}}"/>`;
+
+      // =========================================================================
+      // COL 5: TAHAP 5 · LOSS -> BACKPROP + GD -> FULL 8-EPOCH PROGRESS (x=844..1046)
+      // =========================================================================
+      const c5Fill = !isCorrect ? '#FCE8E6' : (isConf ? '#E6F4EA' : '#FEF7E0');
+      const c5Base = !isCorrect ? '#EA4335' : (isConf ? '#34A853' : '#FBBC04');
+      h += `<g opacity="${{colOp(5)}}">`;
+      h += `<rect id="fnn-col-5" x="844" y="28" width="202" height="250" rx="13" fill="${{c5Fill}}" stroke="${{colStroke(5, isBackprop ? '#EA4335' : c5Base)}}" stroke-width="${{colSw(5)}}"/>`;
+      h += `<rect x="872" y="36" width="146" height="16" rx="8" fill="#FFFFFF" stroke="${{isBackprop ? '#EA4335' : '#DADCE0'}}" stroke-width="1"/><text x="945" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="${{isBackprop ? '#C5221F' : '#202124'}}">TAHAP 5 · LOSS &amp; EPOCH</text>`;
+
+      // Live Loss & Error Box (compact height 54px so 5-char scoreboard fits cleanly below!)
+      const errPct = Math.max(0, 100 - ph.probs[fnnPhotoIdx]);
+      h += `<rect x="854" y="56" width="182" height="54" rx="9" fill="#FFFFFF" stroke="${{c5Base}}" stroke-width="1.5"/>`;
+      h += `<text x="863" y="70" font-family="Roboto, Arial" font-size="7.4" fill="#5F6368">P(${{clsName}}) / Error:</text>`;
+      h += `<text x="1028" y="70" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="800" fill="${{!isCorrect ? '#C5221F' : (isConf ? '#137333' : '#B06000')}}">${{ph.probs[fnnPhotoIdx].toFixed(1)}}% / ${{errPct.toFixed(1)}}%</text>`;
+      h += `<text x="863" y="86" font-family="Roboto, Arial" font-size="7.4" font-weight="700" fill="#202124">Loss ${{clsName}}:</text>`;
+      h += `<text x="1028" y="86" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="800" fill="${{!isCorrect ? '#C5221F' : (isConf ? '#137333' : '#B06000')}}">${{ph.loss.toFixed(2)}}</text>`;
+      h += `<text x="863" y="102" font-family="Roboto, Arial" font-size="7.3" font-weight="700" fill="#1A73E8">Mean Loss (5 Foto):</text>`;
+      h += `<text x="1028" y="102" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="800" fill="#1A73E8">${{epObj.avg_loss.toFixed(2)}}</text>`;
+
+      // Live Mean-Loss-vs-Epoch Sparkline (ALL 5 characters across E1 -> E8!)
+      h += `<rect x="854" y="116" width="182" height="90" rx="9" fill="#FFFFFF" stroke="#DADCE0" stroke-width="1.2"/>`;
+      h += `<text x="945" y="129" text-anchor="middle" font-family="Poppins, Arial" font-size="7.3" font-weight="700" fill="#202124">Kurva Mean Loss 5 Foto (E1 → E8)</text>`;
+      const lx0 = 874, lx1 = 1022, ly0 = 138, ly1 = 188;
+      const meanLosses = FULL_NN_DATA.epochs.map((e) => e.avg_loss);
+      const maxL = Math.max(1.9, Math.ceil(meanLosses[0] * 10) / 10 + 0.15);
+      for (const frac of [0.25, 0.6, 0.95]) {{
+        const gy = ly1 - frac * (ly1 - ly0);
+        h += `<line x1="${{lx0}}" y1="${{gy.toFixed(1)}}" x2="${{lx1}}" y2="${{gy.toFixed(1)}}" stroke="#F1F3F4" stroke-width="1"/>`;
+      }}
+      let ptsAll = [];
+      let ptsCur = [];
+      for (let e = 0; e < 8; e++) {{
+        const px = lx0 + (e / 7) * (lx1 - lx0);
+        const py = ly1 - (Math.min(maxL, meanLosses[e]) / maxL) * (ly1 - ly0);
+        ptsAll.push(`${{px.toFixed(1)}},${{py.toFixed(1)}}`);
+        if (e <= fnnEpochIdx) ptsCur.push({{ x: px, y: py, v: meanLosses[e], e }});
+      }}
+      h += `<polyline points="${{ptsAll.join(' ')}}" fill="none" stroke="#E0E3E7" stroke-width="1.6" stroke-dasharray="3,2"/>`;
+      if (ptsCur.length > 1) {{
+        h += `<polyline points="${{ptsCur.map((pt) => `${{pt.x.toFixed(1)}},${{pt.y.toFixed(1)}}`).join(' ')}}" fill="none" stroke="#34A853" stroke-width="2.6" stroke-linecap="round"/>`;
+      }}
+      ptsCur.forEach((pt, idxP) => {{
+        const isNow = idxP === ptsCur.length - 1;
+        const dc = idxP === 0 ? '#EA4335' : (isNow && epObj.acc === 5 && epObj.avg_loss < 0.36 ? '#34A853' : '#4285F4');
+        h += `<circle cx="${{pt.x.toFixed(1)}}" cy="${{pt.y.toFixed(1)}}" r="${{isNow ? '4.5' : '2.6'}}" fill="${{dc}}" stroke="#FFFFFF" stroke-width="1.2"/>`;
+        if (isNow) {{
+          const lxTxt = idxP === 0 ? pt.x + 2 : (idxP === 7 ? pt.x - 1 : pt.x + 6);
+          const lyTxt = pt.y < ly0 + 13 ? pt.y + 12 : pt.y - 7;
+          const anch = idxP === 7 ? 'end' : 'start';
+          h += `<text x="${{lxTxt.toFixed(1)}}" y="${{lyTxt.toFixed(1)}}" text-anchor="${{anch}}" font-family="Roboto Mono, monospace" font-size="7.4" font-weight="800" fill="${{dc}}">${{pt.v.toFixed(2)}}</text>`;
+        }}
+      }});
+      for (let e = 1; e <= 8; e++) {{
+        const ex = lx0 + ((e - 1) / 7) * (lx1 - lx0);
+        h += `<text x="${{ex.toFixed(1)}}" y="200" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.3" font-weight="${{e === epNum ? '800' : '500'}}" fill="${{e === epNum ? '#1A73E8' : '#70757A'}}">E${{e}}</text>`;
+      }}
+
+      // 5-Character Live Scoreboard Row (A E K O S) — lights up green one by one across Epochs!
+      const initials = ['A', 'E', 'K', 'O', 'S'];
+      for (let c = 0; c < 5; c++) {{
+        const bx = 854 + c * 37;
+        const rC = epObj.photos[c];
+        const pC = rC.probs[c];
+        const isActiveCh = c === fnnPhotoIdx;
+        const cBg = !rC.ok ? '#FCE8E6' : (pC >= 60 ? '#E6F4EA' : '#FEF7E0');
+        const cTxt = !rC.ok ? '#C5221F' : (pC >= 60 ? '#137333' : '#B06000');
+        const cStr = isActiveCh ? '#1A73E8' : (!rC.ok ? '#F6AEA9' : (pC >= 60 ? '#A8DAB5' : '#FDE293'));
+        const sym = !rC.ok ? '✕' : '✓';
+        h += `<rect x="${{bx}}" y="212" width="33" height="20" rx="6" fill="${{cBg}}" stroke="${{cStr}}" stroke-width="${{isActiveCh ? '2.0' : '1.1'}}"/>`;
+        h += `<text x="${{bx + 16.5}}" y="225" text-anchor="middle" font-family="Poppins, Arial" font-size="7.6" font-weight="800" fill="${{cTxt}}">${{initials[c]}} ${{sym}}</text>`;
+      }}
+
+      // Bottom Epoch Progress Pill
+      const fbFill = isBackprop ? '#EA4335' : (epNum === 8 && epObj.acc === 5 ? '#34A853' : '#1A73E8');
+      const fbTxt = isBackprop
+        ? `↩ Backprop E${{epNum}} · Update W & b!`
+        : (isFullRunning
+            ? `Epoch ${{epNum}}/8 · Foto ${{fnnPhotoIdx + 1}}/5 (${{clsName}})`
+            : (epNum === 8 ? `✅ Epoch 8 · 5/5 Kelas Tepat!` : `Epoch ${{epNum}}/8 · Akurasi ${{epObj.acc}}/5`));
+      h += `<rect x="854" y="238" width="182" height="32" rx="8" fill="${{fbFill}}"/>`;
+      h += `<text x="945" y="257.5" text-anchor="middle" font-family="Poppins, Arial" font-size="7.8" font-weight="800" fill="#FFFFFF">${{fbTxt}}</text>`;
+      h += `</g>`;
+
+      svg.innerHTML = h;
+
+      // Live bottom narration line
+      const nEl = document.getElementById('fnn-narr-txt');
+      if (nEl) {{
+        const fullPrefix = isFullRunning
+          ? `<span style="background:#1A73E8; color:#FFF; font-family:var(--font-code); font-size:8.6px; font-weight:700; padding:1px 6px; border-radius:999px; margin-right:5px;">Full E${{epNum}}/8 · Foto ${{fnnPhotoIdx + 1}}/5</span>`
+          : '';
+        if (fnnFullDone) {{
+          nEl.innerHTML = `<strong style="color:#137333;">✅ Simulasi Full 8 Epoch Selesai!</strong> Setelah melewati 5 karakter × 8 Epoch (40 langkah), akurasi naik <strong>0/5 → 5/5 (Yakin ≥ 74%)</strong> &amp; Mean Loss turun <code>1.70 → 0.21</code>!`;
+        }} else if (st === 1) {{
+          nEl.innerHTML = `${{fullPrefix}}<strong style="color:#1A73E8;">Tahap 1/5 (Foto → Piksel):</strong> Foto nyata <strong>${{clsName}}</strong> (<code>224×224×3</code>) dibaca komputer sebagai matriks angka piksel <code>0.0–1.0</code> dengan label asli <code>y${{fnnPhotoIdx + 1}} = 1</code>.`;
+        }} else if (st === 2) {{
+          nEl.innerHTML = `${{fullPrefix}}<strong style="color:#1A73E8;">Tahap 2/5 (Flatten → Input Layer):</strong> Seluruh piksel RGB diluruskan menjadi <strong>150.528 neuron Input Layer</strong> (<code>x₁..x₃</code> s.d. <code>x₁₅₀.₅₂₆..x₁₅₀.₅₂₈</code>).`;
+        }} else if (st === 3) {{
+          nEl.innerHTML = `${{fullPrefix}}<strong style="color:#B06000;">Tahap 3/5 (Weight + Bias):</strong> 150.528 input dikali bobot <code>W</code> + <code>b</code> (<strong>752.645 param</strong>) menghasilkan 5 skor mentah <code>z₁..z₅</code> — skor <strong>${{clsName}}</strong> = <code>${{(ph.z[fnnPhotoIdx] >= 0 ? '+' : '') + ph.z[fnnPhotoIdx].toFixed(2)}}</code>.`;
+        }} else if (st === 4) {{
+          nEl.innerHTML = `${{fullPrefix}}<strong style="color:#137333;">Tahap 4/5 (Output Softmax + Argmax):</strong> 5 skor mentah diubah <strong>Softmax</strong> menjadi probabilitas total <code>100%</code> → <strong>${{clsName}} ${{ph.probs[fnnPhotoIdx].toFixed(1)}}%</strong> (Argmax: <strong>${{cNames[ph.pred]}} ${{winPct.toFixed(1)}}%</strong> ${{isCorrect ? '✅' : '❌'}}).`;
+        }} else if (st === 5) {{
+          nEl.innerHTML = `${{fullPrefix}}<strong style="color:#C5221F;">Tahap 5/5 (Loss → Backprop + GD):</strong> <strong>Loss = <code>${{ph.loss.toFixed(2)}}</code></strong> mengirim sinyal koreksi mundur (panah merah) untuk menggeser <code>W &amp; b</code> agar Epoch berikutnya makin akurat!`;
+        }} else {{
+          nEl.innerHTML = `<strong style="color:#137333;">Siap Simulasi (Epoch ${{epNum}}/8):</strong> Klik <strong style="color:#1A73E8;">▶ Full 8 Epoch</strong> untuk melihat training utuh <strong>5 karakter bergantian (E1→E8)</strong>, atau klik <strong>▶ 1 Foto</strong> / geser slider Epoch!`;
+        }}
+      }}
+    }}
+
+    function _fnnCacheLayout() {{
+      const wrap = document.getElementById('fnn-stage-wrap');
+      const canvas = document.getElementById('fnn-motion-canvas');
+      const svg = document.getElementById('fnn-svg');
+      if (!wrap || !canvas || !svg) return null;
+      const W = wrap.clientWidth, H = wrap.clientHeight;
+      if (W < 10 || H < 10) return null;
+      const dpr = Math.min(3, (window.devicePixelRatio || 1) * Math.max(1, window.__STAGE_SCALE__ || 1));
+      const cw = Math.round(W * dpr), ch = Math.round(H * dpr);
+      if (canvas.width !== cw || canvas.height !== ch) {{ canvas.width = cw; canvas.height = ch; }}
+      const hR = wrap.getBoundingClientRect();
+      const sR = svg.getBoundingClientRect();
+      const sx = W / (hR.width || 1), sy = H / (hR.height || 1);
+      const fit = Math.min(sR.width / 1050, sR.height / 284);
+      const offX = (sR.left - hR.left + (sR.width - 1050 * fit) / 2) * sx;
+      const offY = (sR.top - hR.top + (sR.height - 284 * fit) / 2) * sy;
+      const toPt = (vx, vy) => ({{ x: offX + vx * fit * sx, y: offY + vy * fit * sy }});
+      fnnCache = {{ canvas, ctx: canvas.getContext('2d'), W, H, dpr, toPt }};
+      return fnnCache;
+    }}
+    window.addEventListener('resize', () => {{ fnnCache = null; }});
+
+    function _fnnDrawOverlay() {{
+      const L = fnnCache || _fnnCacheLayout();
+      if (!L || fnnStage === 0) {{ _fnnClearCanvas(); return; }}
+      const {{ ctx, W, H, dpr, toPt }} = L;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, W, H);
+
+      const t = Math.max(0, Math.min(1, fnnProg));
+      const easeIO = (u) => (u < 0.5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2);
+      const e = easeIO(t);
+      const rowY = [82, 112, 142, 172, 202];
+      const ty = rowY[fnnPhotoIdx];
+
+      const drawOrb = (vx, vy, r, col) => {{
+        const pt = toPt(vx, vy);
+        ctx.save();
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, r + 4, 0, Math.PI * 2);
+        ctx.fillStyle = _inHexRgba(col, 0.28); ctx.fill();
+        ctx.beginPath(); ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+        ctx.fillStyle = col; ctx.fill();
+        ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.6; ctx.stroke();
+        ctx.restore();
+      }};
+
+      if (fnnStage === 1) {{
+        const p0 = toPt(20, 74 + 86 * e);
+        const p1 = toPt(112, 74 + 86 * e + 8);
+        ctx.save();
+        ctx.fillStyle = 'rgba(251, 188, 4, 0.45)';
+        ctx.fillRect(p0.x, p0.y, p1.x - p0.x, Math.max(4, p1.y - p0.y));
+        ctx.restore();
+        drawOrb(66 + 46 * e, 120, 5.2, '#4285F4');
+      }} else if (fnnStage === 2) {{
+        const ys = [66, 92, 118, 150, 182, 208, 234];
+        const cols = ['#EA4335', '#34A853', '#4285F4', '#1A73E8', '#EA4335', '#34A853', '#4285F4'];
+        ys.forEach((yy, idx) => {{
+          drawOrb(114 + (174 - 114) * e, 120 + (yy - 120) * e, idx === 3 ? 6.2 : 4.5, cols[idx]);
+        }});
+      }} else if (fnnStage === 3) {{
+        // Orbs flying across W, b wires (x=312 -> x=403)
+        const srcYs = [66, 118, 150, 182, 234];
+        srcYs.forEach((sy, i) => {{
+          drawOrb(312 + (403 - 312) * e, sy + (rowY[i] - sy) * e, i === 2 ? 5.6 : 4.6, '#FBBC04');
+        }});
+      }} else if (fnnStage === 4) {{
+        // Orbs flying across Softmax (x=578 -> x=629)
+        rowY.forEach((ry, i) => {{
+          drawOrb(578 + (629 - 578) * e, ry, i === fnnPhotoIdx ? 5.8 : 4.2, '#34A853');
+        }});
+      }} else if (fnnStage === 5) {{
+        // BRIGHT RED BACKPROPAGATION PULSES traveling RIGHT -> LEFT along top arc & W, b wires!
+        const bx = 946 - (946 - 347) * e;
+        const by = 10 - Math.sin(Math.PI * e) * 4;
+        drawOrb(bx, by, 6.8, '#EA4335');
+        const inYs = [66, 118, 150, 182, 234];
+        inYs.forEach((iy) => {{
+          drawOrb(382 - (382 - 312) * e, ty + (iy - ty) * e, 5.0, '#EA4335');
+        }});
+      }}
+    }}
+
+    function _tickFnn(ts) {{
+      if (!fnnLastTs) fnnLastTs = ts;
+      const dt = Math.min(0.033, Math.max(0.001, (ts - fnnLastTs) / 1000));
+      fnnLastTs = ts;
+
+      // Identical comfortable 5-stage pace (Tahap 1 -> 2 -> 3 -> 4 -> 5) for BOTH '1 Foto' & 'Full 8 Epoch'!
+      const speed = fnnStage === 5 ? 0.55 : 0.72;
+      fnnProg += dt * speed;
+      if (fnnProg >= 1.0) {{
+        fnnProg = 0;
+        if (fnnStage < 5) {{
+          fnnStage += 1;
+          _fnnRenderSvg();
+        }} else if (fnnMode === 'full') {{
+          // Finished Tahap 5 (Backprop): move smoothly to next character -> next Epoch!
+          if (fnnPhotoIdx < 4) {{
+            fnnPhotoIdx += 1;
+            fnnStage = 1;
+            _fnnRenderSvg();
+          }} else if (fnnEpochIdx < 7) {{
+            fnnPhotoIdx = 0;
+            fnnEpochIdx += 1;
+            fnnStage = 1;
+            _fnnRenderSvg();
+          }} else {{
+            fnnFullDone = true;
+            fnnStage = 0;
+            _stopFnnAnim();
+            _fnnRenderSvg();
+            _fnnClearCanvas();
+            return;
+          }}
+        }} else {{
+          // Single-photo mode: advance across key Epochs (E1 -> E3 -> E5 -> E8)
+          fnnPlayEpPos += 1;
+          if (fnnPlayEpPos >= fnnPlayEpochs.length) {{
+            fnnEpochIdx = 7;
+            fnnStage = 0;
+            _stopFnnAnim();
+            _fnnRenderSvg();
+            _fnnClearCanvas();
+            return;
+          }}
+          fnnEpochIdx = fnnPlayEpochs[fnnPlayEpPos];
+          fnnStage = 1;
+          _fnnRenderSvg();
+        }}
+      }}
+      _fnnDrawOverlay();
+      fnnRaf = requestAnimationFrame(_tickFnn);
+    }}
+
+    function playFnnFull() {{
+      if (fnnMode === 'full' && fnnRaf !== null) {{
+        _stopFnnAnim();
+        _fnnRenderSvg();
+        _fnnClearCanvas();
+        return;
+      }}
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnMode = 'full';
+      fnnEpochIdx = 0;    // Start from Epoch 1 (0/5 correct, Mean Loss 1.70)
+      fnnPhotoIdx = 0;    // Start from Anna -> Elsa -> Kristoff -> Olaf -> Sven!
+      fnnFullPhase = 0;
+      fnnStage = 1;
+      fnnProg = 0;
+      fnnLastTs = 0;
+      _fnnSetBtns();
+      _fnnRenderSvg();
+      fnnCache = _fnnCacheLayout();
+      _fnnDrawOverlay();
+      fnnRaf = requestAnimationFrame(_tickFnn);
+    }}
+
+    function playFnnSim() {{
+      if (fnnMode === 'single' && fnnRaf !== null) {{
+        _stopFnnAnim();
+        _fnnRenderSvg();
+        _fnnClearCanvas();
+        return;
+      }}
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnMode = 'single';
+      fnnPlayEpPos = 0;
+      fnnEpochIdx = fnnPlayEpochs[0];
+      fnnStage = 1;
+      fnnProg = 0;
+      fnnLastTs = 0;
+      _fnnSetBtns();
+      _fnnRenderSvg();
+      fnnCache = _fnnCacheLayout();
+      _fnnDrawOverlay();
+      fnnRaf = requestAnimationFrame(_tickFnn);
+    }}
+
+    function stepFnnStage() {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      if (fnnStage === 0) {{
+        fnnStage = 1;
+      }} else if (fnnStage < 5) {{
+        fnnStage += 1;
+      }} else {{
+        fnnEpochIdx = (fnnEpochIdx + 1) % 8;
+        fnnStage = 1;
+      }}
+      fnnProg = 0.52;
+      _fnnRenderSvg();
+      fnnCache = _fnnCacheLayout();
+      _fnnDrawOverlay();
+    }}
+
+    function jumpFnnStage(st) {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnStage = fnnStage === st ? 0 : st;
+      fnnProg = 0.52;
+      _fnnRenderSvg();
+      fnnCache = _fnnCacheLayout();
+      if (fnnStage > 0) _fnnDrawOverlay();
+      else _fnnClearCanvas();
+    }}
+
+    function selectFnnChar(idx) {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnPhotoIdx = idx;
+      _fnnRenderSvg();
+      fnnCache = _fnnCacheLayout();
+      if (fnnStage > 0) _fnnDrawOverlay();
+      else _fnnClearCanvas();
+    }}
+
+    function onFnnEpochSlide() {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      const sl = document.getElementById('fnn-ep-slider');
+      if (!sl) return;
+      fnnEpochIdx = Math.max(0, Math.min(7, (parseInt(sl.value, 10) || 1) - 1));
+      _fnnRenderSvg();
+      if (fnnStage > 0) _fnnDrawOverlay();
+    }}
+
+    function resetFnnSim() {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnPhotoIdx = 0;
+      fnnEpochIdx = 0; // Epoch 1 (Anna, 0/5) ready to press Full 8 Epoch!
+      fnnStage = 0;
+      fnnProg = 0;
+      _fnnRenderSvg();
+      _fnnClearCanvas();
+    }}
+
+    function setFnnPdfState(mode) {{
+      _stopFnnAnim();
+      fnnFullDone = false;
+      fnnPhotoIdx = 3; // Olaf
+      if (mode === 'ep1_bp') {{
+        fnnEpochIdx = 0; // Epoch 1 (0/5, Mean Loss 1.70 + Red Backprop active!)
+        fnnStage = 5;
+        fnnProg = 0.52;
+      }} else {{
+        fnnEpochIdx = 7; // Epoch 8 (5/5 Yakin, Mean Loss 0.21!)
+        fnnStage = 4;
+        fnnProg = 0.52;
+      }}
+      _fnnRenderSvg();
+      _fnnClearCanvas();
+    }}
+    _fnnRenderSvg();
 
     // =========================================================================
     // SIMULATOR #5 (Slide 25): Telusuri 1 Neuron Input -> 5 Neuron Output
@@ -6798,7 +8906,9 @@ def build_extra_js(data: dict) -> str:
       updateHidCalc();
     }}
     function updateHidCalc() {{
-      const units = parseInt(document.getElementById('hid-units').value, 10) || 128;
+      const hidInput = document.getElementById('hid-units');
+      if (!hidInput) return;
+      const units = parseInt(hidInput.value, 10) || 128;
       document.getElementById('hid-units-v').textContent = String(units);
       const nIn = hidImgDim * hidImgDim * 3;
       const nOut = 5;
@@ -6827,12 +8937,13 @@ def build_extra_js(data: dict) -> str:
     // SIMULATOR #8 (Slide 32): Stepping Forward Pass 4 Piksel Nyata Elsa
     // =========================================================================
     function setFpStep(step) {{
+      const pill = document.getElementById('fp-pill');
+      if (!pill) return;
       document.querySelectorAll('#fp-steps button').forEach((b) => {{
         b.classList.toggle('outline', String(b.dataset.fp) !== String(step));
       }});
       const x = MINI_FP.x;
       const z1 = MINI_FP.z1, h1 = MINI_FP.h1, lg = MINI_FP.logits, pr = MINI_FP.probs;
-      const pill = document.getElementById('fp-pill');
       const bar = document.getElementById('fp-bar');
       const title = document.getElementById('fp-title');
       const math = document.getElementById('fp-math');
@@ -7014,6 +9125,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       }},
     }};
     function setArchTab(k) {{
+      if (!document.getElementById('arch-bar')) return;
       const c = ARCH_CFG[k];
       if (!c) return;
       document.querySelectorAll('#arch-tabs button').forEach((b) => {{
@@ -7053,9 +9165,11 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       expandHelper('flatten-ctrl', ['mid', 'done'], setFlattenPdfState, 'flt');
       expandHelper('in-presets', ['64_1', '224_3'], setInPdfPreset, 'in');
       expandHelper('tm-ctrl', ['before', 'after'], setTmPdfState, 'tm');
-      expandHelper('wb-presets', ['elsa_opt', 'no_bias', 'wrong_w'], setWbPreset, 'wb');
-      expandHelper('act-tabs', ['relu', 'sigmoid', 'softmax'], setActTab, 'act');
-      expandHelper('sm-presets', ['elsa', 'ragu', 'neg'], setSmPreset, 'sm');
+      expandHelper('wb-presets', ['elsa_opt', 'no_bias', 'wrong_w'], setWbPdfState, 'wb');
+      expandHelper('act-tabs', ['relu', 'sigmoid', 'softmax'], setActPdfState, 'act');
+      expandHelper('out-presets', ['trained', 'ragu', 'untrained'], setOutPdfState, 'out');
+      expandHelper('tr-cycle-tabs', ['2', '4'], setTrPdfState, 'tr');
+      expandHelper('fnn-ctrl', ['ep1_bp', 'ep8_done'], setFnnPdfState, 'fnn');
       expandHelper('fp-steps', ['1', '2', '3', '4'], setFpStep, 'fp');
       expandHelper('gd-presets', ['small', 'ideal', 'large'], setGdMode, 'gd');
       expandHelper('arch-tabs', ['mlp', 'cnn', 'resnet', 'mobilenet'], setArchTab, 'arch');

@@ -28,17 +28,17 @@
       "phase": "Fondasi",
       "color": "#EA4335",
       "tint": "#FCE8E6",
-      "title": "Computer Vision 101",
-      "description": "Peta AI vs ML vs DL, 4 task Computer Vision (Classification, Detection, Instance Segmentation, Tracking), bedah Neural Network dari 1 neuron ke jaringan utuh, dan teaser arsitektur CV.",
-      "topics": ["AI/ML/DL", "4 CV Tasks", "Neuron → MLP", "Arsitektur CV"],
+      "title": "Teori Neural Network",
+      "description": "Memahami AI vs ML vs DL, 4 tugas Computer Vision, serta bedah tuntas cara kerja Neural Network dari 1 piksel sampai Backpropagation & simulasi end-to-end.",
+      "topics": ["AI/ML/DL", "4 CV Tasks", "Neuron → MLP", "Backpropagation"],
       "duration": "120 menit",
       "status": "available",
       "links": {
-        "slidesHtml": "materials/P02/P02_computer_vision_101.html",
-        "slidesPdf": "materials/P02/P02_computer_vision_101.pdf",
-        "slidesPptx": "materials/P02/P02_computer_vision_101.pptx",
-        "notebook": "materials/P02/P02_computer_vision_101.ipynb",
-        "solution": "materials/P02/solutions/P02_computer_vision_101.ipynb"
+        "slidesHtml": "materials/p02_teori_neural_network/p02_teori_neural_network.html",
+        "slidesPdf": "materials/p02_teori_neural_network/p02_teori_neural_network.pdf",
+        "slidesPptx": "materials/p02_teori_neural_network/p02_teori_neural_network.pptx",
+        "notebook": "materials/p02_teori_neural_network/p02_teori_neural_network.ipynb",
+        "solution": "materials/p02_teori_neural_network/solutions/p02_teori_neural_network.ipynb"
       }
     },
     {
@@ -47,9 +47,9 @@
       "phase": "Fondasi",
       "color": "#FBBC04",
       "tint": "#FEF7E0",
-      "title": "Training Neural Network & Konvolusi (CNN)",
-      "description": "Pendalaman aktivasi, loss, learning rate, dan overfitting, dilanjutkan konvolusi 2D, kernel/filter, stride, padding, pooling, dan feature map pada foto Disney Frozen.",
-      "topics": ["Training & Loss", "Convolution", "Pooling & Feature Map"],
+      "title": "Arsitektur Neural Network & Konvolusi (CNN)",
+      "description": "Keterbatasan MLP pada foto, evolusi arsitektur CV (MLP → CNN → ResNet → MobileNetV2), konvolusi 2D, kernel/filter, stride, padding, pooling, dan feature map pada foto Disney Frozen.",
+      "topics": ["Arsitektur CV", "Convolution", "Pooling & Feature Map"],
       "duration": "120 menit",
       "status": "coming_soon",
       "links": {}

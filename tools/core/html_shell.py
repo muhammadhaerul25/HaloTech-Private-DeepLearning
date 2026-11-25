@@ -251,9 +251,32 @@ STANDARD_CSS = """
     }
     .qa-choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
     .qa-choice {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 12px 14px; font-size: 14px; color: #3C4043; line-height: 1.4;
+      background: var(--surface); border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 11px 14px; font-size: 14px; color: #3C4043; line-height: 1.4;
     }
+    .qa-choice.clickable {
+      cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      transition: background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease, transform 0.12s ease;
+      user-select: none;
+    }
+    .qa-choice.clickable:hover {
+      border-color: var(--blue); background: #F4F8FF;
+      box-shadow: 0 3px 10px rgba(66,133,244,0.12); transform: translateY(-1px);
+    }
+    .qa-choice.picked-correct {
+      background: var(--tint-green) !important; border-color: var(--green) !important;
+      color: #137333 !important; box-shadow: 0 3px 12px rgba(52,168,83,0.18) !important;
+    }
+    .qa-choice.picked-wrong {
+      background: var(--tint-red) !important; border-color: var(--red) !important;
+      color: #C5221F !important; box-shadow: 0 3px 10px rgba(234,67,53,0.15) !important;
+    }
+    .qa-choice-badge {
+      display: none; flex-shrink: 0; font-family: var(--font-title); font-size: 11px; font-weight: 700;
+      padding: 2px 9px; border-radius: 999px; white-space: nowrap;
+    }
+    .qa-choice.picked-correct .qa-choice-badge { display: inline-block; background: var(--green); color: #FFFFFF; }
+    .qa-choice.picked-wrong .qa-choice-badge { display: inline-block; background: var(--red); color: #FFFFFF; }
     .qa-answer {
       display: none; background: var(--tint-green); border: 1.5px solid #A8DAB5;
       border-left: 6px solid var(--green); border-radius: 14px; padding: 16px 20px;
@@ -518,11 +541,35 @@ def _build_core_js(session_key: str) -> str:
       vis.querySelectorAll('.vis-q').forEach((n) => {{ n.style.display = shown ? 'none' : ''; }});
       vis.querySelectorAll('.vis-a').forEach((n) => {{ n.style.display = shown ? 'inline' : 'none'; }});
     }}
+    function pickQAChoice(choiceEl, qaId) {{
+      if (!choiceEl) return;
+      const isCorrect = choiceEl.dataset.correct === 'true';
+      choiceEl.classList.remove('picked-correct', 'picked-wrong');
+      choiceEl.classList.add(isCorrect ? 'picked-correct' : 'picked-wrong');
+      const badge = choiceEl.querySelector('.qa-choice-badge');
+      if (badge) badge.textContent = isCorrect ? '✓ Tepat!' : '✕ Belum tepat';
+    }}
     function toggleQA(id, btn) {{
       const el = document.getElementById(id);
       if (!el) return;
       const shown = el.classList.toggle('shown');
       syncVisualReveal(id, shown);
+      const box = el.closest('.qa-box');
+      if (box) {{
+        box.querySelectorAll('.qa-choice.clickable').forEach((ch) => {{
+          const badge = ch.querySelector('.qa-choice-badge');
+          if (shown) {{
+            if (ch.dataset.correct === 'true') {{
+              ch.classList.remove('picked-wrong');
+              ch.classList.add('picked-correct');
+              if (badge) badge.textContent = '✓ Tepat!';
+            }}
+          }} else {{
+            ch.classList.remove('picked-correct', 'picked-wrong');
+            if (badge) badge.textContent = '';
+          }}
+        }});
+      }}
       if (btn) btn.textContent = shown ? 'Sembunyikan Jawaban' : 'Klik untuk Lihat Jawaban & Penjelasan';
     }}
     function toggleAns(id, btn) {{

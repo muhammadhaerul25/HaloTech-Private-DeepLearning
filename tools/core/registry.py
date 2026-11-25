@@ -27,10 +27,20 @@ class SessionConfig:
     plan_ref: str            # Reference to docs/PLAN.md section
     duration_minutes: float = 120.0
     is_legacy_p01: bool = False
+    folder_name: str = ""    # Optional custom folder name (defaults to id, e.g. "p02_teori_neural_network")
+    file_stem: str = ""      # Optional custom file stem (defaults to "{id}_{file_slug}")
+
+    @property
+    def dir_name(self) -> str:
+        return self.folder_name or self.id
+
+    @property
+    def stem(self) -> str:
+        return self.file_stem or f"{self.id}_{self.file_slug}"
 
     @property
     def material_dir(self) -> Path:
-        return MATERIALS_DIR / self.id
+        return MATERIALS_DIR / self.dir_name
 
     @property
     def assets_dir(self) -> Path:
@@ -42,51 +52,53 @@ class SessionConfig:
 
     @property
     def code_dir(self) -> Path:
-        return SESSIONS_CODE_DIR / self.id
+        return SESSIONS_CODE_DIR / self.dir_name
 
     @property
     def html_path(self) -> Path:
-        return self.material_dir / f"{self.id}_{self.file_slug}.html"
+        return self.material_dir / f"{self.stem}.html"
 
     @property
     def pdf_path(self) -> Path:
-        return self.material_dir / f"{self.id}_{self.file_slug}.pdf"
+        return self.material_dir / f"{self.stem}.pdf"
 
     @property
     def pptx_path(self) -> Path:
-        return self.material_dir / f"{self.id}_{self.file_slug}.pptx"
+        return self.material_dir / f"{self.stem}.pptx"
 
     @property
     def presenter_script_path(self) -> Path:
+        if self.file_stem:
+            return self.material_dir / f"{self.stem}_presenter_script.pdf"
         return self.material_dir / f"{self.id}_presenter_script.pdf"
 
     @property
     def notebook_student_path(self) -> Path:
-        return self.material_dir / f"{self.id}_{self.file_slug}.ipynb"
+        return self.material_dir / f"{self.stem}.ipynb"
 
     @property
     def notebook_solution_path(self) -> Path:
-        return self.solutions_dir / f"{self.id}_{self.file_slug}.ipynb"
+        return self.solutions_dir / f"{self.stem}.ipynb"
 
     @property
     def rel_html(self) -> str:
-        return f"materials/{self.id}/{self.id}_{self.file_slug}.html"
+        return f"materials/{self.dir_name}/{self.stem}.html"
 
     @property
     def rel_pdf(self) -> str:
-        return f"materials/{self.id}/{self.id}_{self.file_slug}.pdf"
+        return f"materials/{self.dir_name}/{self.stem}.pdf"
 
     @property
     def rel_pptx(self) -> str:
-        return f"materials/{self.id}/{self.id}_{self.file_slug}.pptx"
+        return f"materials/{self.dir_name}/{self.stem}.pptx"
 
     @property
     def rel_notebook(self) -> str:
-        return f"materials/{self.id}/{self.id}_{self.file_slug}.ipynb"
+        return f"materials/{self.dir_name}/{self.stem}.ipynb"
 
     @property
     def rel_solution(self) -> str:
-        return f"materials/{self.id}/solutions/{self.id}_{self.file_slug}.ipynb"
+        return f"materials/{self.dir_name}/solutions/{self.stem}.ipynb"
 
 
 SESSIONS: dict[str, SessionConfig] = {
@@ -107,21 +119,23 @@ SESSIONS: dict[str, SessionConfig] = {
         id="P02",
         num=2,
         url_slug="/p2",
-        file_slug="computer_vision_101",
-        title="Computer Vision 101",
-        short_title="Computer Vision 101 — AI/ML/DL, CV Tasks & Neural Network",
+        file_slug="teori_neural_network",
+        title="Teori Neural Network",
+        short_title="Teori Neural Network — AI/ML/DL, CV Tasks & MLP",
         phase="Fondasi",
         color="#EA4335",
         tint="#FCE8E6",
         plan_ref="P5-P6 (Redesign)",
+        folder_name="p02_teori_neural_network",
+        file_stem="p02_teori_neural_network",
     ),
     "P03": SessionConfig(
         id="P03",
         num=3,
         url_slug="/p3",
         file_slug="cnn_fundamentals_cv",
-        title="Training Neural Network & Konvolusi (CNN)",
-        short_title="Training Neural Network & Konvolusi (CNN)",
+        title="Arsitektur Neural Network & Konvolusi (CNN)",
+        short_title="Arsitektur Neural Network & Konvolusi (CNN)",
         phase="Fondasi",
         color="#FBBC04",
         tint="#FEF7E0",
