@@ -1493,30 +1493,47 @@
     <section class="slide" data-title="Bab 2: Image Classification" data-notes="Alokasi waktu: 1 menit. Image Classification adalah tugas paling dasar dan merupakan tugas proyek akhir kita: 1 foto masuk, keluar 1 label kelas beserta persentase keyakinannya.">
       <div class="kicker">BAB 02 · IMAGE CLASSIFICATION</div>
       <h2><span class="hl-blue">Image Classification</span>: Memberi Label pada Seluruh Foto</h2>
-      <div class="split-40-60">
-        <div class="card tint-blue" style="align-items:center; justify-content:center; gap:16px; text-align:center; padding:18px 18px;">
+      <div class="split-40-60" style="flex:1; min-height:0; align-items:stretch;">
+        <div class="card tint-blue" style="align-items:center; justify-content:space-between; gap:10px; text-align:center; padding:15px 17px;">
           <div class="card-top-bar bar-blue"></div>
-          <img src="assets/P02/thumb_elsa.jpg" alt="Contoh Elsa" style="width:186px; height:186px; object-fit:cover; border-radius:14px; border:3px solid #4285F4; box-shadow:0 4px 14px rgba(66,133,244,0.16);"/>
-          <div style="font-family:var(--font-title); font-weight:700; font-size:15px; color:#1A73E8;">Output: Label &ldquo;Elsa&rdquo; + Probabilitas</div>
-          <div style="width:100%; background:#FFFFFF; border:1px solid #C6DAFC; border-radius:11px; padding:10px 12px; display:flex; flex-direction:column; gap:5px; text-align:left;">
-            <div style="font-size:10px; color:#5F6368; font-weight:700; margin-bottom:2px;">ILUSTRASI OUTPUT PROBABILITAS (5 KELAS):</div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:11px;"><strong>Elsa</strong><div style="height:11px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:88%; height:100%; background:#34A853;"></div></div><span style="font-family:var(--font-code); text-align:right; color:#137333; font-weight:700;">88%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:11px;"><span>Anna</span><div style="height:11px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:7%; height:100%; background:#4285F4;"></div></div><span style="font-family:var(--font-code); text-align:right;">7%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:11px;"><span>Lainnya</span><div style="height:11px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:5%; height:100%; background:#9AA0A6;"></div></div><span style="font-family:var(--font-code); text-align:right;">5%</span></div>
+          <img src="assets/P02/thumb_elsa.jpg" alt="Contoh Elsa" style="width:166px; height:166px; object-fit:cover; border-radius:14px; border:3px solid #4285F4; box-shadow:0 4px 14px rgba(66,133,244,0.16);"/>
+          <div style="font-family:var(--font-title); font-weight:700; font-size:14.2px; color:#1A73E8;">Output: Label &ldquo;Elsa&rdquo; + Probabilitas (100%)</div>
+          <div style="width:100%; background:#FFFFFF; border:1px solid #C6DAFC; border-radius:11px; padding:9px 11px; display:flex; flex-direction:column; gap:4.5px; text-align:left;">
+            <div style="font-size:9.8px; color:#5F6368; font-weight:700; margin-bottom:1px;">ILUSTRASI OUTPUT PROBABILITAS (5 KELAS FROZEN):</div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.8px;"><strong style="color:#137333;">Elsa ★</strong><div style="height:10px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:88%; height:100%; background:#34A853;"></div></div><span style="font-family:var(--font-code); text-align:right; color:#137333; font-weight:700;">88%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Anna</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:5%; height:100%; background:#4285F4;"></div></div><span style="font-family:var(--font-code); text-align:right;">5%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Kristoff</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:3%; height:100%; background:#FBBC04;"></div></div><span style="font-family:var(--font-code); text-align:right;">3%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Olaf</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:2%; height:100%; background:#EA4335;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Sven</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:2%; height:100%; background:#9AA0A6;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
           </div>
         </div>
-        <div class="card surface" style="justify-content:space-between;">
+        <div class="card surface" style="justify-content:space-between; gap:10px; padding:15px 18px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title">Cara Kerja &amp; Karakteristik</div>
-          <div class="card-body">
-            <ul>
-              <li><strong>Input:</strong> 1 gambar utuh (misalnya foto figurine <code>224×224×3</code>).</li>
-              <li><strong>Output:</strong> Daftar probabilitas untuk setiap kelas yang mungkin (di proyek kita: <code>Anna, Elsa, Kristoff, Olaf, Sven</code>).</li>
-              <li><strong>Batasan:</strong> Model <em>tidak</em> menggambar kotak lokasi objek — ia mengasumsikan ada 1 objek utama di foto tersebut.</li>
-              <li><strong>Contoh sehari-hari:</strong> Klasifikasi jenis penyakit daun, pilah jenis sampah, dan <strong>proyek klasifikasi 5 karakter Frozen kita!</strong></li>
-            </ul>
+          <div>
+            <div class="card-title" style="margin-bottom:6px;">Cara Kerja &amp; Karakteristik</div>
+            <div class="card-body" style="font-size:12.8px; line-height:1.44;">
+              <ul style="gap:5.5px;">
+                <li><strong>Input:</strong> 1 gambar utuh (misalnya foto figurine <code>224×224×3</code>).</li>
+                <li><strong>Output:</strong> Daftar probabilitas untuk semua kelas (di proyek kita: <code>Anna, Elsa, Kristoff, Olaf, Sven</code>).</li>
+                <li><strong>Batasan:</strong> Model <em>tidak</em> menggambar kotak lokasi objek — mengasumsikan 1 objek utama per foto.</li>
+                <li><strong>Contoh nyata:</strong> Deteksi penyakit daun, pilah sampah, &amp; <strong>proyek 5 karakter Frozen kita!</strong></li>
+              </ul>
+            </div>
           </div>
-          <div class="callout"><strong>Jembatan ke Bab 3:</strong> Karena hanya menebak 1 dari 5 kelas, <em>Output Layer</em>-nya cukup <strong>5 neuron</strong>!</div>
+
+          <!-- Binary vs Multi-Class Comparison Box -->
+          <div style="background:#FFFFFF; border:1.4px solid #C6DAFC; border-radius:11px; padding:9px 12px; display:grid; grid-template-columns:1fr 1fr; gap:9px;">
+            <div style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:7px 9px;">
+              <div style="font-family:var(--font-title); font-size:10.8px; font-weight:800; color:#5F6368;">1. Binary (2 Kelas)</div>
+              <div style="font-size:10.6px; color:#3C4043; line-height:1.35; margin-top:2px;">Hanya 2 pilihan (mis. <em>Polos vs Ramai</em> atau <em>Kucing vs Anjing</em>) → cukup 1 neuron <code>Sigmoid</code>.</div>
+            </div>
+            <div style="background:#E6F4EA; border:1.4px solid #A8DAB5; border-radius:8px; padding:7px 9px;">
+              <div style="font-family:var(--font-title); font-size:10.8px; font-weight:800; color:#137333;">2. Multi-Class ★ (Proyek Kita)</div>
+              <div style="font-size:10.6px; color:#3C4043; line-height:1.35; margin-top:2px;">Memilih 1 dari ≥ 3 kelas (<strong>5 karakter Frozen</strong>) → memakai <strong>5 neuron <code>Softmax</code></strong>!</div>
+            </div>
+          </div>
+
+          <div class="callout" style="padding:8px 11px; font-size:12.2px;"><strong>Jembatan ke Bab 3:</strong> Karena menebak 1 dari 5 kelas, <em>Output Layer</em>-nya punya tepat <strong>5 neuron Softmax</strong>!</div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>13 / 49</span></div>
@@ -1536,17 +1553,35 @@
             <strong>Format Output per Objek:</strong> 4 angka koordinat kotak <code>(x, y, w, h)</code> + 1 label kelas (contoh: <code>Elsa</code> &amp; <code>Olaf</code> sekaligus).
           </div>
         </div>
-        <div class="card surface" style="justify-content:space-between;">
+        <div class="card surface" style="justify-content:space-between; gap:10px; padding:15px 18px;">
           <div class="card-top-bar bar-red"></div>
-          <div class="card-title">Beda Utama dengan Image Classification</div>
-          <div class="card-body">
-            <ul>
-              <li><strong>Bisa banyak objek sekaligus:</strong> Dalam 1 foto yang berisi Elsa, Anna, dan Olaf bersamaan, semua dideteksi satu per satu.</li>
-              <li><strong>Output ganda:</strong> Untuk setiap objek, model mengeluarkan <strong>4 angka koordinat kotak</strong> (<em>bounding box</em>: posisi &amp; ukuran) <strong>+ 1 label kelas</strong>.</li>
-              <li><strong>Contoh populer:</strong> Kamera pendeteksi wajah di HP, sistem kamera mobil otonom (pejalan kaki, rambu, kendaraan), kasir otomatis penghitung barang.</li>
-            </ul>
+          <div>
+            <div class="card-title" style="margin-bottom:6px;">Beda Utama dengan Image Classification</div>
+            <div class="card-body" style="font-size:12.8px; line-height:1.44;">
+              <ul style="gap:5.5px;">
+                <li><strong>Bisa banyak objek sekaligus:</strong> Dalam 1 foto berisi Elsa, Anna, dan Olaf bersamaan, semua dideteksi satu per satu.</li>
+                <li><strong>Output ganda per objek:</strong> <strong>4 angka koordinat kotak</strong> (<em>bounding box</em>) <strong>+ label kelas + skor yakin</strong>.</li>
+                <li><strong>Contoh populer:</strong> Deteksi wajah kamera HP, mobil otonom (pejalan kaki, rambu, mobil), &amp; kasir otomatis.</li>
+              </ul>
+            </div>
           </div>
-          <div class="callout red"><strong>Catatan arsitektur:</strong> Karena harus memprediksi banyak kotak + label, output layer-nya jauh lebih kompleks daripada 5 neuron biasa.</div>
+
+          <!-- Anatomi 1 Deteksi & Model Populer -->
+          <div style="background:#FFFFFF; border:1.4px solid #F6AEA9; border-radius:11px; padding:9px 12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:var(--font-title); font-size:10.6px; font-weight:800; color:#C5221F;">ANATOMI 1 OUTPUT DETEKSI &amp; MODEL POPULER</div>
+            <div style="display:flex; flex-wrap:wrap; align-items:center; gap:6px; font-family:var(--font-code); font-size:10.2px;">
+              <span style="background:#FCE8E6; color:#C5221F; padding:3px 7px; border-radius:6px; font-weight:700;">Kotak: [x, y, w, h]</span>
+              <span>+</span>
+              <span style="background:#E8F0FE; color:#1A73E8; padding:3px 7px; border-radius:6px; font-weight:700;">Label: Elsa</span>
+              <span>+</span>
+              <span style="background:#E6F4EA; color:#137333; padding:3px 7px; border-radius:6px; font-weight:700;">Yakin: 96%</span>
+            </div>
+            <div style="font-size:11px; color:#5F6368; line-height:1.36;">
+              Model terkenal di industri: <strong><code>YOLO</code></strong> (<em>You Only Look Once</em> — super cepat <em>real-time</em>) &amp; <strong><code>Faster R-CNN</code></strong> (presisi tinggi).
+            </div>
+          </div>
+
+          <div class="callout red" style="padding:8px 11px; font-size:12.2px;"><strong>Catatan arsitektur:</strong> Karena harus memprediksi banyak kotak + label, output layer-nya jauh lebih kompleks daripada 5 neuron biasa.</div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>14 / 49</span></div>
@@ -1574,10 +1609,17 @@
         <div class="card tint-green" style="justify-content:space-between; gap:10px; padding:15px 18px;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title">Perbandingan: Semantic vs Instance</div>
-          <div class="img-box" style="width:100%; height:auto; flex:1; min-height:0; padding:8px; border-color:#A8DAB5;">
+          <div class="img-box" style="width:100%; height:auto; flex:1; min-height:0; padding:8px; border-color:#A8DAB5; display:flex; align-items:center; justify-content:center; background:#FFFFFF;">
             <img src="assets/P02/02c_semantic_vs_instance_demo.png" alt="Perbandingan Semantic Segmentation vs Instance Segmentation pada 2 foto Olaf" style="width:100%; height:auto; max-height:100%; object-fit:contain;"/>
           </div>
-          <div class="mini-box" style="font-size:12.2px;"><strong>Ringkasnya:</strong> <em>Semantic</em> menggabungkan semua objek sekelas dalam 1 warna; <strong>Instance</strong> memisahkan tiap individu (<code>Olaf #1</code> vs <code>Olaf #2</code>).</div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div style="background:#FFFFFF; border:1.4px solid #C6DAFC; border-radius:9px; padding:7px 9px; font-size:11px; line-height:1.34;">
+              <strong style="color:#1A73E8;">Semantic:</strong> Semua Olaf diwarnai <strong>1 warna sama</strong> (tahu <em>kelasnya</em>, tidak hitung individu).
+            </div>
+            <div style="background:#FFFFFF; border:1.4px solid #A8DAB5; border-radius:9px; padding:7px 9px; font-size:11px; line-height:1.34;">
+              <strong style="color:#137333;">Instance:</strong> Memisahkan tiap objek (<code>Olaf #1</code> hijau vs <code>Olaf #2</code> merah — bisa dihitung!).
+            </div>
+          </div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>15 / 49</span></div>
@@ -1587,63 +1629,87 @@
     <section class="slide" data-title="Bab 2: Object Tracking" data-notes="Alokasi waktu: 1 menit. Object Tracking bekerja pada video: menggabungkan Object Detection di tiap frame lalu menghubungkannya dengan ID yang konsisten dari waktu ke waktu. Proyek kita adalah foto statis sehingga ini sebagai wawasan lengkap.">
       <div class="kicker">BAB 02 · OBJECT TRACKING</div>
       <h2><span class="hl-yellow">Object Tracking</span>: Mengikuti Objek Antar-Frame Video</h2>
-      <div class="split-60-40">
-        <div class="card surface" style="justify-content:space-between; padding:14px 16px;">
+      <div class="split-60-40" style="flex:1; min-height:0; align-items:stretch;">
+        <div class="card surface" style="justify-content:space-between; padding:13px 15px; gap:8px;">
           <div class="card-top-bar bar-yellow"></div>
-          <div class="card-title">Detection + ID Tracking Antar-Frame (<code>t = 1 → 2 → 3</code>)</div>
-          <div style="display:grid; grid-template-columns:1fr 22px 1fr 22px 1fr; align-items:center; gap:6px; flex:1;">
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+            <div class="card-title" style="font-size:14.2px;">Detection + ID Tracking (<code>t = 1 → 2 → 3</code>)</div>
+            <div class="sim-bar pdf-keep-ui" id="trk-ctrl" style="gap:4px;">
+              <button type="button" id="trk-btn-play" class="btn-ui green" onclick="toggleTrkPlay()" style="padding:2.8px 9px; font-size:9.6px;">▶ Play Video</button>
+              <button type="button" class="btn-ui outline" data-tf="1" onclick="setTrkFrame(1)" style="padding:2.5px 7px; font-size:9.3px;">t=1</button>
+              <button type="button" class="btn-ui" data-tf="2" onclick="setTrkFrame(2)" style="padding:2.5px 7px; font-size:9.3px;">t=2</button>
+              <button type="button" class="btn-ui outline" data-tf="3" onclick="setTrkFrame(3)" style="padding:2.5px 7px; font-size:9.3px;">t=3</button>
+            </div>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr; align-items:center; gap:6px; flex:1;">
             <!-- Frame t=1 -->
-            <div style="background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:196px; position:relative;">
-              <div style="font-family:var(--font-code); font-size:10px; font-weight:700; color:#5F6368; text-align:center;">Frame t = 1</div>
+            <div id="trk-f-1" onclick="setTrkFrame(1)" style="cursor:pointer; background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
+              <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#5F6368; text-align:center;">Frame t = 1</div>
               <div style="position:absolute; left:10px; top:34px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
-                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:54px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
               <div style="position:absolute; right:10px; bottom:10px; width:68px; border:2px solid #4285F4; border-radius:7px; overflow:hidden; background:#E8F0FE;">
                 <div style="background:#4285F4; color:#FFF; font-family:var(--font-code); font-size:8px; font-weight:700; padding:2px 3px; text-align:center;">ID #2 · Olaf</div>
-                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:44px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:46px; object-fit:cover; display:block;"/>
               </div>
             </div>
             <div style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
             <!-- Frame t=2 -->
-            <div style="background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:196px; position:relative;">
-              <div style="font-family:var(--font-code); font-size:10px; font-weight:700; color:#5F6368; text-align:center;">Frame t = 2</div>
+            <div id="trk-f-2" onclick="setTrkFrame(2)" style="cursor:pointer; background:#FEF7E0; border:2.5px solid #FBBC04; box-shadow:0 4px 12px rgba(251,188,4,0.22); border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
+              <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#B06000; text-align:center;">Frame t = 2 ●</div>
               <div style="position:absolute; left:46px; top:30px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
-                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:54px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
               <div style="position:absolute; right:10px; bottom:10px; width:68px; border:2px solid #4285F4; border-radius:7px; overflow:hidden; background:#E8F0FE;">
                 <div style="background:#4285F4; color:#FFF; font-family:var(--font-code); font-size:8px; font-weight:700; padding:2px 3px; text-align:center;">ID #2 · Olaf</div>
-                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:44px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:46px; object-fit:cover; display:block;"/>
               </div>
             </div>
             <div style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
             <!-- Frame t=3 -->
-            <div style="background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:196px; position:relative;">
-              <div style="font-family:var(--font-code); font-size:10px; font-weight:700; color:#5F6368; text-align:center;">Frame t = 3</div>
+            <div id="trk-f-3" onclick="setTrkFrame(3)" style="cursor:pointer; background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
+              <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#5F6368; text-align:center;">Frame t = 3</div>
               <div style="position:absolute; right:10px; top:26px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
-                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:54px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
               <div style="position:absolute; right:10px; bottom:10px; width:68px; border:2px solid #4285F4; border-radius:7px; overflow:hidden; background:#E8F0FE;">
                 <div style="background:#4285F4; color:#FFF; font-family:var(--font-code); font-size:8px; font-weight:700; padding:2px 3px; text-align:center;">ID #2 · Olaf</div>
-                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:44px; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:46px; object-fit:cover; display:block;"/>
               </div>
             </div>
           </div>
-          <div style="font-size:11.6px; color:#1A73E8; font-weight:700; text-align:center;">Ilustrasi konsep: <code>ID #1</code> (Elsa) bergerak ke kanan &amp; <code>ID #2</code> (Olaf) tetap dikenali dengan ID yang sama!</div>
+          <div id="trk-status" style="font-size:11.3px; color:#1A73E8; font-weight:700; text-align:center; background:#E8F0FE; border-radius:8px; padding:5px 9px;">Frame t = 2: <code>ID #1</code> (Elsa) bergeser ke tengah, <code>ID #2</code> (Olaf) tetap dikenali dengan ID sama!</div>
         </div>
-        <div class="card" style="justify-content:space-between;">
+        <div class="card" style="justify-content:space-between; gap:10px; padding:15px 17px;">
           <div class="card-top-bar bar-yellow"></div>
-          <div class="card-title">Kapan Dipakai?</div>
-          <div class="card-body" style="font-size:13.4px;">
-            <ul>
-              <li><strong>Menghitung lalu lintas:</strong> Memastikan mobil yang lewat tidak dihitung dua kali pada frame berikutnya.</li>
-              <li><strong>Analisis olahraga:</strong> Melacak lintasan bola dan pergerakan tiap pemain.</li>
-              <li><strong>Kamera otomatis:</strong> Mengikuti pembicara yang berjalan di panggung.</li>
-            </ul>
+          <div>
+            <div class="card-title" style="margin-bottom:6px;">Kapan Dipakai?</div>
+            <div class="card-body" style="font-size:12.8px; line-height:1.45;">
+              <ul style="gap:5.5px;">
+                <li><strong>Menghitung lalu lintas:</strong> Memastikan mobil yang lewat tidak dihitung dua kali pada frame berikutnya.</li>
+                <li><strong>Analisis olahraga:</strong> Melacak lintasan bola dan pergerakan tiap pemain.</li>
+                <li><strong>Kamera otomatis:</strong> Mengikuti pembicara yang berjalan di panggung.</li>
+              </ul>
+            </div>
           </div>
-          <div class="callout yellow"><strong>Wawasan:</strong> Proyek Frozen kita memakai <strong>foto tunggal</strong> (bukan video), jadi kita fokus ke <em>Image Classification</em>.</div>
+
+          <!-- Formula Ringkas Tracking -->
+          <div style="background:#FEF7E0; border:1.4px solid #FDE293; border-radius:11px; padding:9px 11px; display:flex; flex-direction:column; gap:5px;">
+            <div style="font-family:var(--font-title); font-size:10.6px; font-weight:800; color:#B06000;">CARA KERJA SINGKAT TRACKING</div>
+            <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; font-family:var(--font-code); font-size:9.6px;">
+              <span style="background:#FFFFFF; border:1px solid #FDE293; border-radius:6px; padding:3.5px 6px; font-weight:700;">Detection (t)</span>
+              <strong>+</strong>
+              <span style="background:#FFFFFF; border:1px solid #FDE293; border-radius:6px; padding:3.5px 6px; font-weight:700;">Cocokkan ID</span>
+              <strong>=</strong>
+              <span style="background:#202124; color:#FDD663; border-radius:6px; padding:3.5px 6px; font-weight:700;">Lintasan</span>
+            </div>
+            <div style="font-size:10.6px; color:#5F6368; line-height:1.35;">Model mencocokkan jarak &amp; kemiripan kotak antar-frame agar <code>ID #1</code> tidak tertukar!</div>
+          </div>
+
+          <div class="callout yellow" style="padding:8px 11px; font-size:12.2px;"><strong>Wawasan:</strong> Proyek Frozen kita memakai <strong>foto tunggal</strong> (bukan video), jadi kita fokus ke <em>Image Classification</em>.</div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>16 / 49</span></div>
@@ -1653,9 +1719,16 @@
     <section class="slide" data-title="Bab 2: Latihan Cocokkan Kasus dengan Task CV" data-notes="Alokasi waktu: 1.5 menit. Minta peserta menebak task yang paling cocok untuk keempat kasus nyata berikut, lalu klik tombolnya satu per satu untuk melihat umpan balik langsung.">
       <div class="kicker">BAB 02 · LATIHAN INTERAKTIF</div>
       <h2>Cocokkan <span class="hl-blue">Kasus Nyata</span> dengan Task CV yang Tepat</h2>
-      <p class="subtitle">Klik jawaban yang paling sesuai untuk tiap kasus di bawah ini:</p>
-      <div id="match-list" style="display:flex; flex-direction:column; gap:9px; flex:1; justify-content:center;">
-        <div class="match-row" id="m-row-0">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px;">
+        <p class="subtitle" style="margin:0;">Klik tombol task CV yang paling sesuai untuk keempat kasus nyata berikut:</p>
+        <div class="pdf-keep-ui" style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+          <span id="match-score" style="font-family:var(--font-code); font-size:11px; font-weight:800; color:#1A73E8; background:#E8F0FE; border:1px solid #C6DAFC; border-radius:999px; padding:3px 10px;">Skor: 0 / 4</span>
+          <button type="button" class="btn-ui outline" onclick="setMatchPdfState('ans')" style="padding:3px 9px; font-size:10px;">✓ Buka Semua</button>
+          <button type="button" class="btn-ui outline" onclick="setMatchPdfState('q')" style="padding:3px 9px; font-size:10px;">↺ Reset</button>
+        </div>
+      </div>
+      <div id="match-list" style="display:flex; flex-direction:column; gap:10px; flex:1; justify-content:space-between;">
+        <div class="match-row" style="flex:1;" id="m-row-0">
           <div><strong>1. Aplikasi menebak jenis penyakit daun</strong> dari 1 foto daun utuh.<div id="m-fb-0" style="font-size:11.5px; color:#5F6368; margin-top:2px;">Pilih salah satu task di sebelah kanan →</div></div>
           <div class="match-btns pdf-keep-ui">
             <button class="btn-ui outline" data-mc="cls" onclick="checkMatch(0,'cls',this)">Classification</button>
@@ -1664,7 +1737,7 @@
             <button class="btn-ui outline" data-mc="trk" onclick="checkMatch(0,'trk',this)">Tracking</button>
           </div>
         </div>
-        <div class="match-row" id="m-row-1">
+        <div class="match-row" style="flex:1;" id="m-row-1">
           <div><strong>2. Kamera kasir otomatis</strong> menghitung banyak barang berbeda di atas nampan.<div id="m-fb-1" style="font-size:11.5px; color:#5F6368; margin-top:2px;">Pilih salah satu task di sebelah kanan →</div></div>
           <div class="match-btns pdf-keep-ui">
             <button class="btn-ui outline" data-mc="cls" onclick="checkMatch(1,'cls',this)">Classification</button>
@@ -1673,7 +1746,7 @@
             <button class="btn-ui outline" data-mc="trk" onclick="checkMatch(1,'trk',this)">Tracking</button>
           </div>
         </div>
-        <div class="match-row" id="m-row-2">
+        <div class="match-row" style="flex:1;" id="m-row-2">
           <div><strong>3. Fitur hapus latar belakang rapi</strong> tepat mengikuti lekuk rambut di foto profil.<div id="m-fb-2" style="font-size:11.5px; color:#5F6368; margin-top:2px;">Pilih salah satu task di sebelah kanan →</div></div>
           <div class="match-btns pdf-keep-ui">
             <button class="btn-ui outline" data-mc="cls" onclick="checkMatch(2,'cls',this)">Classification</button>
@@ -1682,7 +1755,7 @@
             <button class="btn-ui outline" data-mc="trk" onclick="checkMatch(2,'trk',this)">Tracking</button>
           </div>
         </div>
-        <div class="match-row" id="m-row-3">
+        <div class="match-row" style="flex:1;" id="m-row-3">
           <div><strong>4. CCTV jalan tol</strong> mengukur kecepatan &amp; lintasan setiap mobil di rekaman video.<div id="m-fb-3" style="font-size:11.5px; color:#5F6368; margin-top:2px;">Pilih salah satu task di sebelah kanan →</div></div>
           <div class="match-btns pdf-keep-ui">
             <button class="btn-ui outline" data-mc="cls" onclick="checkMatch(3,'cls',this)">Classification</button>
@@ -1692,7 +1765,7 @@
           </div>
         </div>
       </div>
-      <div class="callout" style="margin-top:6px;"><strong>Pola cepat mengingat:</strong> 1 label foto = <em>Classification</em> · Kotak banyak objek = <em>Detection</em> · Mask per piksel = <em>Segmentation</em> · Video + ID = <em>Tracking</em>.</div>
+      <div id="match-hint-box" class="callout" style="margin-top:8px;"><strong>Petunjuk:</strong> Perhatikan apakah kasusnya butuh <em>1 label utuh</em>, <em>banyak kotak lokasi</em>, <em>bentuk presisi per piksel</em>, atau <em>pelacakan antar-frame video</em> — selesaikan 4/4 untuk membuka ringkasan!</div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>17 / 49</span></div>
     </section>
 
@@ -1713,15 +1786,47 @@
         </div>
         <div id="qa-bab2-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:8px; padding:14px 16px;">
           <div class="card-top-bar bar-red"></div>
-          <div class="vis-q" style="width:100%;"><div style="display:flex; gap:8px; justify-content:center;"><img src="assets/P02/thumb_anna.jpg" style="width:82px; height:82px; border-radius:10px; object-fit:cover;"/><img src="assets/P02/thumb_elsa.jpg" style="width:82px; height:82px; border-radius:10px; object-fit:cover;"/><img src="assets/P02/thumb_olaf.jpg" style="width:82px; height:82px; border-radius:10px; object-fit:cover;"/></div><div style="margin-top:10px; font-size:13px; color:#5F6368;">1 foto figurine → 1 nama karakter. Tugas CV yang mana?</div></div>
-          <div class="vis-a" style="width:100%;"><div class="big-num hl-blue" style="font-size:24px;">Image Classification</div><div class="mini-box" style="margin-top:8px; background:#E8F0FE; border-color:#C6DAFC;"><strong>Multi-Class (5 Kelas):</strong> Input 1 foto <code>(224,224,3)</code> → Output 5 probabilitas berjumlah <code>100%</code>. Sekarang kita bongkar jaringan saraf yang melakukannya di Bab 3!</div></div>
+          <div class="vis-q" style="width:100%;"><div style="display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;">
+              <span class="pill red" style="font-size:10px; padding:3px 10px;">CEK PEMAHAMAN BAB 2 · PROYEK FROZEN</span>
+              <div style="display:flex; gap:6px; justify-content:center; width:100%;">
+                <img src="assets/P02/thumb_anna.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #EA4335;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #4285F4;"/>
+                <img src="assets/P02/thumb_kristoff.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #FBBC04;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_sven.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #1A73E8;"/>
+              </div>
+              <div style="background:#FFFFFF; border:1.4px solid #E0E3E7; border-radius:12px; padding:10px 12px; width:100%; display:flex; flex-direction:column; gap:7px; text-align:center;">
+                <div style="font-family:var(--font-code); font-size:11px; font-weight:800; color:#202124;">1 Foto Figurin &nbsp;→&nbsp; 1 Nama Karakter (5 Kelas)</div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px; font-size:10.5px; font-weight:700;">
+                  <div style="background:#E8F0FE; color:#1A73E8; border-radius:7px; padding:5px;">Classification?</div>
+                  <div style="background:#FCE8E6; color:#C5221F; border-radius:7px; padding:5px;">Detection?</div>
+                  <div style="background:#E6F4EA; color:#137333; border-radius:7px; padding:5px;">Segmentation?</div>
+                  <div style="background:#FEF7E0; color:#B06000; border-radius:7px; padding:5px;">Tracking?</div>
+                </div>
+              </div>
+              <div style="font-size:12px; color:#5F6368; text-align:center;">Pilih 1 task CV yang paling tepat di sebelah kiri!</div>
+            </div></div>
+          <div class="vis-a" style="width:100%;"><div style="display:flex; flex-direction:column; gap:11px; width:100%; align-items:center;">
+              <span class="pill green" style="font-size:10px; padding:3px 10px;">KEPUTUSAN PROYEK KITA ✓</span>
+              <div class="big-num hl-blue" style="font-size:23px; line-height:1.15;">Image Classification</div>
+              <div style="display:flex; gap:6px; justify-content:center; width:100%;">
+                <img src="assets/P02/thumb_anna.jpg" style="width:52px; height:52px; border-radius:9px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:52px; height:52px; border-radius:9px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_kristoff.jpg" style="width:52px; height:52px; border-radius:9px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:52px; height:52px; border-radius:9px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_sven.jpg" style="width:52px; height:52px; border-radius:9px; object-fit:cover; border:2px solid #34A853;"/>
+              </div>
+              <div class="mini-box" style="background:#E8F0FE; border-color:#C6DAFC; width:100%; text-align:left; font-size:12px; line-height:1.42; padding:9px 12px;">
+                <strong>Multi-Class (5 Kelas):</strong> Input 1 foto <code>(224,224,3)</code> → Output 5 probabilitas berjumlah <code>100%</code>. Sekarang kita bongkar <strong>Neural Network</strong> yang melakukannya di <strong>Bab 3</strong>!
+              </div>
+            </div></div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>18 / 49</span></div>
     </section>
 
 
-    <section class="slide bg-green" data-title="Bab 3 — Bedah Neural Network" data-notes="Alokasi waktu: 0.5 menit. Bab 3 adalah bagian inti (23.0 menit). Kita susun pelan-pelan dari 1 neuron tunggal, lalu kumpulan neuron menjadi layer, sampai simulasi perhitungan, siklus belajar, dan simulasi penuh end-to-end.">
+    <section class="slide bg-green" data-title="Bab 3 — Bedah Neural Network" data-notes="Alokasi waktu: 0.5 menit. Bab 3 adalah bagian inti (29.5 menit). Kita susun pelan-pelan dari 1 neuron tunggal, lalu kumpulan neuron menjadi layer, sampai simulasi perhitungan, siklus belajar, dan simulasi penuh end-to-end.">
       <div class="divider-center">
         <div class="kicker">BAB 03 · NEURAL NETWORK (5 TAHAP)</div>
         <h1>Bedah Total: Neural Network</h1>
@@ -4575,19 +4680,89 @@ history = model_nn.fit(                               <span class="tok-todo"># T
     // =========================================================================
     // SIMULATOR #3 (Slide 17): Cocokkan Kasus Nyata dengan Task CV
     // =========================================================================
+    // =========================================================================
+    // INTERACTIVE VIDEO FRAME PLAYER (Slide 16: Object Tracking t=1 -> t=2 -> t=3)
+    // =========================================================================
+    let _trkFrame = 2;
+    let _trkTimer = null;
+    const _TRK_MSGS = {
+      1: 'Frame t = 1: <code>ID #1</code> (Elsa) terdeteksi di kiri atas &amp; <code>ID #2</code> (Olaf) di kanan bawah.',
+      2: 'Frame t = 2: <code>ID #1</code> (Elsa) bergeser ke tengah, <code>ID #2</code> (Olaf) tetap dikenali dengan ID sama!',
+      3: 'Frame t = 3: <code>ID #1</code> (Elsa) sampai di kanan atas — lintasan utuh terbentuk tanpa tertukar dengan <code>ID #2</code>!',
+    };
+    function setTrkFrame(f) {
+      _trkFrame = f;
+      [1, 2, 3].forEach((k) => {
+        const box = document.getElementById('trk-f-' + k);
+        if (!box) return;
+        const on = k === f;
+        box.style.background = on ? '#FEF7E0' : '#FFFFFF';
+        box.style.border = on ? '2.5px solid #FBBC04' : '2px solid #DADCE0';
+        box.style.boxShadow = on ? '0 4px 12px rgba(251,188,4,0.22)' : 'none';
+        const hdr = box.firstElementChild;
+        if (hdr) {
+          hdr.textContent = on ? `Frame t = ${k} ●` : `Frame t = ${k}`;
+          hdr.style.color = on ? '#B06000' : '#5F6368';
+        }
+      });
+      document.querySelectorAll('#trk-ctrl button[data-tf]').forEach((b) => {
+        b.classList.toggle('outline', Number(b.dataset.tf) !== f);
+      });
+      const st = document.getElementById('trk-status');
+      if (st) st.innerHTML = _TRK_MSGS[f] || '';
+    }
+    function toggleTrkPlay() {
+      const btn = document.getElementById('trk-btn-play');
+      if (_trkTimer) {
+        clearInterval(_trkTimer); _trkTimer = null;
+        if (btn) btn.textContent = '▶ Play Video';
+        return;
+      }
+      if (btn) btn.textContent = '■ Stop';
+      setTrkFrame(_trkFrame >= 3 ? 1 : _trkFrame + 1);
+      _trkTimer = setInterval(() => {
+        setTrkFrame(_trkFrame >= 3 ? 1 : _trkFrame + 1);
+      }, 950);
+    }
+
+    // =========================================================================
+    // SIMULATOR #3 (Slide 17): Cocokkan Kasus Nyata dengan Task CV (Live Score + Anti-Spoiler!)
+    // =========================================================================
     const MATCH_ANS = {
       0: { ok: 'cls', msg: '✅ Benar! 1 foto daun utuh → 1 label penyakit = Image Classification.' },
       1: { ok: 'det', msg: '✅ Benar! Banyak barang berbeda + lokasinya di nampan = Object Detection.' },
       2: { ok: 'seg', msg: '✅ Benar! Memisahkan lekuk rambut per piksel dari latar = Semantic / Instance Segmentation.' },
       3: { ok: 'trk', msg: '✅ Benar! Mengikuti ID tiap mobil antar-frame video = Object Tracking.' },
     };
+    const _matchSolved = new Set();
+    function _updateMatchScore() {
+      const sc = document.getElementById('match-score');
+      if (sc) {
+        sc.textContent = `Skor: ${_matchSolved.size} / 4`;
+        sc.style.color = _matchSolved.size === 4 ? '#137333' : '#1A73E8';
+        sc.style.background = _matchSolved.size === 4 ? '#E6F4EA' : '#E8F0FE';
+        sc.style.borderColor = _matchSolved.size === 4 ? '#A8DAB5' : '#C6DAFC';
+      }
+      const hb = document.getElementById('match-hint-box');
+      if (hb) {
+        if (_matchSolved.size === 4) {
+          hb.className = 'callout green';
+          hb.innerHTML = '<strong>Hebat (4/4) — Pola Cepat Mengingat:</strong> 1 label foto = <em>Classification</em> · Kotak banyak objek = <em>Detection</em> · Mask per piksel = <em>Segmentation</em> · Video + ID = <em>Tracking</em>!';
+        } else {
+          hb.className = 'callout';
+          hb.innerHTML = '<strong>Petunjuk:</strong> Perhatikan apakah kasusnya butuh <em>1 label utuh</em>, <em>banyak kotak lokasi</em>, <em>bentuk presisi per piksel</em>, atau <em>pelacakan antar-frame video</em> — selesaikan 4/4 untuk membuka ringkasan!';
+        }
+      }
+    }
     function setMatchPdfState(mode) {
+      _matchSolved.clear();
       [0, 1, 2, 3].forEach((i) => {
         const row = document.getElementById('m-row-' + i);
         const fb = document.getElementById('m-fb-' + i);
         if (!row || !fb) return;
         row.querySelectorAll('button').forEach((b) => { b.className = 'btn-ui outline'; b.style.background = ''; });
         if (mode === 'ans') {
+          _matchSolved.add(i);
           const ok = MATCH_ANS[i].ok;
           const okBtn = row.querySelector(`button[data-mc="${ok}"]`);
           if (okBtn) okBtn.className = 'btn-ui green';
@@ -4600,25 +4775,29 @@ history = model_nn.fit(                               <span class="tok-todo"># T
           fb.textContent = 'Pilih salah satu task di sebelah kanan →';
         }
       });
+      _updateMatchScore();
     }
     function checkMatch(rowIdx, choice, btn) {
       const row = document.getElementById('m-row-' + rowIdx);
       const fb = document.getElementById('m-fb-' + rowIdx);
       if (!row || !fb) return;
-      row.querySelectorAll('button').forEach((b) => { b.className = 'btn-ui outline'; });
+      row.querySelectorAll('button').forEach((b) => { b.className = 'btn-ui outline'; b.style.background = ''; });
       const ans = MATCH_ANS[rowIdx];
       if (choice === ans.ok) {
+        _matchSolved.add(rowIdx);
         btn.className = 'btn-ui green';
         fb.style.color = '#137333';
         fb.style.fontWeight = '700';
         fb.textContent = ans.msg;
       } else {
+        _matchSolved.delete(rowIdx);
         btn.className = 'btn-ui';
         btn.style.background = '#EA4335';
         fb.style.color = '#C5221F';
         fb.style.fontWeight = '600';
         fb.textContent = 'Belum tepat — coba lihat lagi apakah outputnya 1 label, banyak kotak, mask piksel, atau video!';
       }
+      _updateMatchScore();
     }
 
     // =========================================================================

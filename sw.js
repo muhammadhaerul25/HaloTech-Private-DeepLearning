@@ -1,4 +1,4 @@
-const CACHE_NAME = 'dl-course-pwa-v13';
+const CACHE_NAME = 'dl-course-pwa-v14';
 const PRECACHE_ASSETS = [
   './',
   './index.html',
