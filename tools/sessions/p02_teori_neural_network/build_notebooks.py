@@ -270,27 +270,27 @@ def build_cells(is_solution: bool) -> list:
             """
 # Hands-on P02: Teori Neural Network *(Visual-First · Mikro-Task)*
 
-**Durasi Hands-on:** ±58 menit (Tahap 0 → Tahap 5.4, selaras **Bab 3 Slide 20–29** & **Slide 39–45**)  
+**Durasi Hands-on:** ±55 menit (Tahap 0 → Tahap 5.4, selaras **Bab 3 Slide 20–32** & **Slide 42–48**)  
 **Dataset Proyek Utama:** **Disney Frozen Figurine (`data/frozen_v1/`)** — 5 kelas (`anna, elsa, kristoff, olaf, sven`), dibaca secara **dinamis** dari `DATA_DIR` dan `metadata.csv`.  
 **Gaya Kode:** Super ramah pemula — kode grafik sudah dirapikan ke **Alat Visualisasi Siap Pakai** sehingga setiap sel kerja Anda cuma **3–7 baris** dan langsung memunculkan **output gambar nyata**!
 
 ### Peta Perjalanan 1 Foto Elsa (100% Cerminan Bab 3):
 - **Tahap 0 (Persiapan):** Setup 3 tahap, muat alat visualisasi, & intip galeri 5 karakter Frozen *(0 coding, tinggal `Shift+Enter`)*.
-- **Tahap 1 (Slide 20 & 40 — Piksel → Angka):**
+- **Tahap 1 (Slide 20 & 43 — Piksel → Angka):**
   - `1.1` Ubah foto Elsa ke grid mini `8×8` & normalisasi `/ 255.0` (`# TODO 1`)
   - `1.2` Ambil 1 piksel di gaun biru Elsa `[4, 2]` & lihat nilai **R, G, B** (`# TODO 2`)
-- **Tahap 2 (Slide 21–22 & 41 — Flatten → Input Layer):**
+- **Tahap 2 (Slide 21–24 & 44 — Flatten, Dense & Parameter):**
   - `2.1` Luruskan foto `8×8` jadi **pita 1D piksel berwarna** (`P1 x1–3 .. P64 x190–192`) dengan `.flatten()` (`# TODO 3`)
-  - `2.2` Hitung skala neuron `224×224×3` (`150.528`) & total kabel `W + b` (`752.645`) (`# TODO 4`)
-- **Tahap 3 (Slide 25–27 & 42 — Weight, Bias, ReLU, Softmax & Loss):**
+  - `2.2` Hitung skala neuron `224×224×3` (`150.528`) & total kabel `Dense` `W + b` (`752.645`) (`# TODO 4`)
+- **Tahap 3 (Slide 26–28 & 45 — Weight, Bias, ReLU, Softmax & Loss):**
   - `3.1` Hitung 1 neuron pakai rumus kali-tambah biasa `r*w_r + g*w_g + b*w_b + bias` & bandingkan **Gaun Biru vs Dinding** (`# TODO 5`)
   - `3.2` Pangkas angka minus jadi `0` dengan `ReLU` (`# TODO 6`)
   - `3.3` Mainkan angka skor mentah & lihat **5 foto Frozen + bar `Softmax 100%` + `Loss (−ln P)`**!
-- **Tahap 4 (Slide 29 & 43 — Bangun Model 1-Layer & Tes "Model Bayi"):**
+- **Tahap 4 (Slide 24, 30 & 46 — Bangun Model 1-Layer `Dense` & Tes "Model Bayi"):**
   - `4.1` Muat seluruh foto Frozen `64×64`
   - `4.2` Susun 2 layer Keras (`Flatten` + `Dense(5, softmax)`) & cek `61.445` parameter (`# TODO 7`)
-  - `4.3` **Uji tebakan "Model Bayi" (Epoch 0 — bobot acak!)**
-- **Tahap 5 (Slide 28–29 & 44–45 — Training, Before vs After, Polos vs Ramai & Intip Bobot):**
+  - `4.3` **Uji tebakan "Model Bayi" (Epoch 0 — *Weight Initialization* acak!)**
+- **Tahap 5 (Slide 29–32 & 47–48 — Training, Adam, Batch Size, Overfitting & Intip Bobot):**
   - `5.1` Latih model `20` Epoch (`model.fit`) (`# TODO 8`)
   - `5.2` Plot kurva **Loss turun** & **Akurasi naik**
   - `5.3` **Bandingkan Tebakan Before (Epoch 0) vs After (Epoch 20)** + cek jujur **Polos vs Ramai (*Shortcut Learning*)**!
@@ -347,13 +347,13 @@ tampilkan_galeri_frozen(df_meta, DATA_DIR)
     )
 
     # =========================================================================
-    # TAHAP 1: PIKSEL FOTO -> ANGKA (1.1 & 1.2 · SLIDE 20 & 40)
+    # TAHAP 1: PIKSEL FOTO -> ANGKA (1.1 & 1.2 · SLIDE 20 & 43)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 1 (9,5 menit): Foto Menjadi Kotak Piksel & Angka RGB *(Sesuai Slide 20 & 40)*
+## Tahap 1 (9 menit): Foto Menjadi Kotak Piksel & Angka RGB *(Sesuai Slide 20 & 43)*
 
 ### Tahap 1.1: Kecilkan Foto Elsa ke Grid `8×8` & Normalisasi ke `0.0–1.0`
 Pertama, kita buka **1 foto asli Elsa** dan mengecilkannya ke `8×8` kotak agar kita bisa melihat **angka di dalam setiap piksel** dengan mata telanjang!
@@ -441,13 +441,13 @@ print("✅ Tahap 1.2 selesai!")
     )
 
     # =========================================================================
-    # TAHAP 2: FLATTEN FOTO 2D -> PITA 1D & SKALA INPUT LAYER (2.1 & 2.2 · SLIDE 21–22 & 41)
+    # TAHAP 2: FLATTEN FOTO 2D -> PITA 1D & SKALA INPUT LAYER (2.1 & 2.2 · SLIDE 21–24 & 44)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 2 (9,5 menit): *Flatten* Foto 2D Menjadi Pita 1D *(Sesuai Slide 21–22 & 41)*
+## Tahap 2 (9 menit): *Flatten* Foto 2D Menjadi Pita 1D *(Sesuai Slide 21–24 & 44)*
 
 ### Tahap 2.1: Lihat Langsung Foto `8×8` Diluruskan Menjadi Pita 1D!
 *Input Layer* Neural Network hanya menerima **1 deretan angka lurus (1D)**. Mari potong baris `B1` sampai `B8` dan jajarkan menjadi 1 pita warna panjang dengan `.flatten()`!
@@ -490,7 +490,7 @@ print("✅ Tahap 2.1 selesai!")
         cells,
         is_solution=is_solution,
         title="Tugas 2.2 (`# TODO 4`): Hitung Skala Foto Penuh `224×224×3` (`752.645` Parameter)",
-        instruction_md="Jika foto berukuran penuh `224×224×3` (seperti Slide 29), hitung `neuron_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)`, lalu lihat grafik perbandingannya!",
+        instruction_md="Jika foto berukuran penuh `224×224×3` (seperti Slide 24 & 32), hitung `neuron_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)`, lalu lihat grafik perbandingannya!",
         student_code="""
 # TODO 4A: Hitung jumlah neuron input untuk foto penuh 224 x 224 x 3
 neuron_224 = None  # TODO: IMG_SIZE * IMG_SIZE * 3
@@ -500,7 +500,7 @@ param_224 = None   # TODO: neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_224 == 150_528, f"Harusnya 224*224*3 = 150.528, didapat {neuron_224}"
 assert param_224 == 752_645, f"Harusnya 150.528*5 + 5 = 752.645, didapat {param_224}"
-print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 29!)")
+print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 32!)")
 tampilkan_skala_parameter(neuron_224, param_224)
 print("✅ Tahap 2.2 selesai!")
 """,
@@ -511,7 +511,7 @@ param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_224 == 150_528, f"Harusnya 224*224*3 = 150.528, didapat {neuron_224}"
 assert param_224 == 752_645, f"Harusnya 150.528*5 + 5 = 752.645, didapat {param_224}"
-print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 29!)")
+print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 32!)")
 tampilkan_skala_parameter(neuron_224, param_224)
 print("✅ Tahap 2.2 selesai!")
 """,
@@ -529,13 +529,13 @@ print("✅ Tahap 2.2 selesai!")
     )
 
     # =========================================================================
-    # TAHAP 3: WEIGHT, BIAS, ReLU, SOFTMAX & LOSS (3.1, 3.2, 3.3 · SLIDE 25–27 & 42)
+    # TAHAP 3: WEIGHT, BIAS, ReLU, SOFTMAX & LOSS (3.1, 3.2, 3.3 · SLIDE 26–28 & 45)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 3 (10 menit): Weight, Bias, `ReLU`, `Softmax` & `Loss` *(Sesuai Slide 25–27 & 42)*
+## Tahap 3 (9 menit): Weight, Bias, `ReLU`, `Softmax` & `Loss` *(Sesuai Slide 26–28 & 45)*
 
 ### Tahap 3.1: Hitung 1 Neuron Pakai Kali-Tambah Biasa *(Gaun Biru vs Dinding!)*
 Kita pakai **piksel gaun biru Elsa (`[r, g, b]`)** dari Tahap 1.2!  
@@ -642,13 +642,13 @@ tampilkan_softmax_frozen([skor_anna, skor_elsa, skor_kristoff, skor_olaf, skor_s
     )
 
     # =========================================================================
-    # TAHAP 4: BANGUN MODEL 1-LAYER KERAS & TES "MODEL BAYI" (4.1–4.3 · SLIDE 29 & 43)
+    # TAHAP 4: BANGUN MODEL 1-LAYER KERAS & TES "MODEL BAYI" (4.1–4.3 · SLIDE 24, 30, 32 & 46)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 4 (10 menit): Bangun Neural Network 1-Layer & Uji "Model Bayi" *(Sesuai Slide 29 & 43)*
+## Tahap 4 (9,5 menit): Bangun Neural Network 1-Layer & Uji "Model Bayi" *(Sesuai Slide 24, 30 & 46)*
 
 ### Tahap 4.1: Muat Seluruh Foto Frozen Ukuran `64×64` *(Cukup `Shift + Enter`)*
 Kita pakai ukuran ringkas `64×64×3` (`12.288` piksel) agar training selesai dalam hitungan **2 detik** di laptop atau Google Colab! Sekaligus kita siapkan 5 contoh foto `polos` (`X_5foto`) dan 5 contoh foto `ramai` (`X_5ramai`)!
@@ -710,7 +710,7 @@ print("✅ Tahap 4.2 selesai! Cocok 100% dengan rumus 12.288 x 5 + 5 = 61.445 pa
         solution_code="""
 tf.keras.utils.set_random_seed(SEED)
 
-# Susun Neural Network 1-Layer persis diagram Slide 29: Input -> Flatten -> Dense(5, softmax)
+# Susun Neural Network 1-Layer persis diagram Slide 24 & 32: Input -> Flatten -> Dense(5, softmax)
 model_nn = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(SMALL_SIZE, SMALL_SIZE, 3)),
     tf.keras.layers.Flatten(),
@@ -754,13 +754,13 @@ tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="SEBELUM BELAJAR (Epoc
     )
 
     # =========================================================================
-    # TAHAP 5: TRAINING, KURVA LOSS, BEFORE vs AFTER & INTIP BOBOT (5.1–5.4 · SLIDE 44–45)
+    # TAHAP 5: TRAINING, KURVA LOSS, BEFORE vs AFTER & INTIP BOBOT (5.1–5.4 · SLIDE 29–32 & 47–48)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 5 (19 menit): Latih Model (`model.fit`), Before vs After & Intip Bobot! *(Sesuai Slide 28–29 & 44–45)*
+## Tahap 5 (18 menit): Latih Model (`model.fit`), Before vs After & Intip Bobot! *(Sesuai Slide 29–32 & 47–48)*
 
 ### Tahap 5.1: Jalankan Proses Belajar (`model_nn.fit`)
 Di satu baris perintah `model_nn.fit(...)` ini, Keras menjalankan seluruh siklus **Bab 3** otomatis: **Forward Pass → Hitung Loss → Backpropagation → Gradient Descent** berulang selama `EPOCHS`!  
@@ -901,7 +901,7 @@ print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur & CNN di P03!
     cells.append(
         md(
             """
-## Referensi Materi (Selaras Slide 37–38 · Bab 1, Bab 2 & Bab 3)
+## Referensi Materi (Selaras Slide 40–41 · Bab 1, Bab 2 & Bab 3)
 
 ### Bagian 1 — Bab 1 (AI/ML/DL) & Bab 2 (Computer Vision)
 1. [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course) `[CEK LINK]`

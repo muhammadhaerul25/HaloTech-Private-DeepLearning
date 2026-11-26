@@ -255,18 +255,18 @@ EXTRA_CSS = """
     .dict-list { display: flex; flex-direction: column; flex: 1; }
     .dict-row {
       display: grid; grid-template-columns: 144px 1fr auto; gap: 10px; align-items: center;
-      padding: 8px 13px; border-bottom: 1px solid #EEF0F3; flex: 1;
+      padding: 5.5px 12px; border-bottom: 1px solid #EEF0F3; flex: 1;
       transition: background 0.14s ease, opacity 0.18s ease;
     }
     .dict-row:nth-child(even) { background: #FAFBFD; }
     .dict-row:last-child { border-bottom: none; }
     .dict-row:hover { background: #F1F6FE; }
     .dict-row.ch-dim { opacity: 0.20; }
-    .dict-term { font-family: var(--font-title); font-size: 11.9px; font-weight: 700; line-height: 1.24; }
+    .dict-term { font-family: var(--font-title); font-size: 11.4px; font-weight: 700; line-height: 1.22; }
     .dict-term.b1 { color: #1A73E8; }
     .dict-term.b2 { color: #C5221F; }
     .dict-term.b3 { color: #137333; }
-    .dict-def { font-size: 11.4px; line-height: 1.38; color: #3C4043; }
+    .dict-def { font-size: 10.9px; line-height: 1.32; color: #3C4043; }
     .dict-slide-btn {
       font-family: var(--font-code); font-size: 9.4px; font-weight: 700;
       padding: 2.5px 7px; border-radius: 7px; border: 1px solid #DADCE0;
@@ -685,22 +685,29 @@ def build_slides_html(data: dict) -> str:
               <div style="font-family:var(--font-code); font-size:9.5px; color:#5F6368;">224×224×3</div>
             </div>
             <span style="font-weight:700; color:#5F6368; font-size:13px;">→</span>
-            <svg viewBox="0 0 120 56" style="width:112px; height:50px; flex-shrink:0;">
-              <g stroke="#CFD4DA" stroke-width="1.4">
-                <line x1="16" y1="12" x2="60" y2="16"/><line x1="16" y1="12" x2="60" y2="40"/>
-                <line x1="16" y1="28" x2="60" y2="16"/><line x1="16" y1="28" x2="60" y2="40"/>
-                <line x1="16" y1="44" x2="60" y2="16"/><line x1="16" y1="44" x2="60" y2="40"/>
-                <line x1="60" y1="16" x2="104" y2="10"/><line x1="60" y1="16" x2="104" y2="28"/><line x1="60" y1="16" x2="104" y2="46"/>
-                <line x1="60" y1="40" x2="104" y2="10"/><line x1="60" y1="40" x2="104" y2="28"/><line x1="60" y1="40" x2="104" y2="46"/>
+            <svg viewBox="0 0 124 58" style="width:116px; height:52px; flex-shrink:0;">
+              <g stroke="#CFD4DA" stroke-width="1.15" opacity="0.85">
+                <line x1="18" y1="9" x2="106" y2="9"/><line x1="18" y1="9" x2="106" y2="19"/><line x1="18" y1="9" x2="106" y2="29"/><line x1="18" y1="9" x2="106" y2="39"/><line x1="18" y1="9" x2="106" y2="49"/>
+                <line x1="18" y1="19" x2="106" y2="9"/><line x1="18" y1="19" x2="106" y2="19"/><line x1="18" y1="19" x2="106" y2="29"/><line x1="18" y1="19" x2="106" y2="39"/><line x1="18" y1="19" x2="106" y2="49"/>
+                <line x1="18" y1="29" x2="106" y2="9"/><line x1="18" y1="29" x2="106" y2="19"/><line x1="18" y1="29" x2="106" y2="29"/><line x1="18" y1="29" x2="106" y2="39"/><line x1="18" y1="29" x2="106" y2="49"/>
+                <line x1="18" y1="39" x2="106" y2="9"/><line x1="18" y1="39" x2="106" y2="19"/><line x1="18" y1="39" x2="106" y2="29"/><line x1="18" y1="39" x2="106" y2="39"/><line x1="18" y1="39" x2="106" y2="49"/>
+                <line x1="18" y1="49" x2="106" y2="9"/><line x1="18" y1="49" x2="106" y2="19"/><line x1="18" y1="49" x2="106" y2="29"/><line x1="18" y1="49" x2="106" y2="39"/><line x1="18" y1="49" x2="106" y2="49"/>
               </g>
-              <circle cx="16" cy="12" r="5.5" fill="#4285F4" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="16" cy="28" r="5.5" fill="#4285F4" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="16" cy="44" r="5.5" fill="#4285F4" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="60" cy="16" r="6.5" fill="#FBBC04" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="60" cy="40" r="6.5" fill="#EA4335" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="104" cy="10" r="5" fill="#34A853" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="104" cy="28" r="6" fill="#34A853" stroke="#FFF" stroke-width="1.5"/>
-              <circle cx="104" cy="46" r="5" fill="#34A853" stroke="#FFF" stroke-width="1.5"/>
+              <g stroke="#4285F4" stroke-width="1.6" opacity="0.72">
+                <line x1="18" y1="19" x2="106" y2="19"/><line x1="18" y1="29" x2="106" y2="19"/><line x1="18" y1="39" x2="106" y2="19"/>
+              </g>
+              <rect x="46" y="20" width="32" height="18" rx="6" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.3"/>
+              <text x="62" y="32" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="800" fill="#B06000">W + b</text>
+              <circle cx="18" cy="9" r="4.3" fill="#EA4335" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="18" cy="19" r="4.3" fill="#34A853" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="18" cy="29" r="4.3" fill="#4285F4" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="18" cy="39" r="4.3" fill="#4285F4" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="18" cy="49" r="4.3" fill="#4285F4" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="106" cy="9" r="4.2" fill="#4285F4" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="106" cy="19" r="5.0" fill="#34A853" stroke="#FFF" stroke-width="1.3"/>
+              <circle cx="106" cy="29" r="4.2" fill="#FBBC04" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="106" cy="39" r="4.2" fill="#EA4335" stroke="#FFF" stroke-width="1.2"/>
+              <circle cx="106" cy="49" r="4.2" fill="#5F6368" stroke="#FFF" stroke-width="1.2"/>
             </svg>
             <span style="font-weight:700; color:#5F6368; font-size:13px;">→</span>
             <div style="text-align:center;">
@@ -722,94 +729,94 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 02: AGENDA & LEARNING GOALS (GABUNGAN PETA + ALUR 120M + TUJUAN) -->
-    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 3 bab teori, kuis, kamus &amp; referensi, serta sesi hands-on dalam 120 menit beserta 3 target belajar utama.">
+    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 3 bab teori (Bab 1: 9m, Bab 2: 9.5m, Bab 3: 29.5m), kuis 5 soal, kamus 14 istilah &amp; Referensi Materi (7.5m), serta sesi hands-on 5 tahap mikro-task &amp; penutup (58.5m) beserta 3 target belajar utama.">
       <div class="kicker">SESSION OVERVIEW · 120 MENIT</div>
       <h2>Agenda &amp; <span class="hl-blue">Learning Goals</span></h2>
-      <div class="split-60-40" style="align-items:stretch;">
-        <div class="step-list" style="gap:7px;">
-          <div class="step-item" style="padding:8px 12px;">
+      <div class="split-60-40" style="flex:1; min-height:0; align-items:stretch;">
+        <div class="step-list" style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; height:100%;">
+          <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
             <div class="step-num">01</div>
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                 <span class="step-title">Bab 1: AI vs Machine Learning vs Deep Learning</span>
-                <span class="pill blue" style="font-size:10px; padding:2px 8px;">~9 menit</span>
+                <span class="pill blue" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~9 menit</span>
               </div>
               <div class="step-desc">Bukan AI vs AI Klasik vs AI Modern, paradigma belajar ML, dan beda spesifik ML vs DL.</div>
             </div>
           </div>
-          <div class="step-item" style="padding:8px 12px;">
+          <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
             <div class="step-num red">02</div>
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                 <span class="step-title">Bab 2: 4 Tugas Utama Computer Vision</span>
-                <span class="pill red" style="font-size:10px; padding:2px 8px;">~9,5 menit</span>
+                <span class="pill red" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~9,5 menit</span>
               </div>
               <div class="step-desc"><em>Classification, Object Detection, Semantic &amp; Instance Segmentation,</em> &amp; <em>Object Tracking</em>.</div>
             </div>
           </div>
-          <div class="step-item" style="padding:8px 12px;">
+          <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
             <div class="step-num green">03</div>
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                 <span class="step-title">Bab 3: Bedah Total Neural Network (Tahap 1–5)</span>
-                <span class="pill green" style="font-size:10px; padding:2px 8px;">{"~26 menit" if HIDE_BAB4_ARCH else ("~22 menit" if HIDE_SLIDES_28_40 else "~27 menit")}</span>
+                <span class="pill green" style="font-size:10px; padding:2px 8px; white-space:nowrap;">{"~29,5 menit" if HIDE_BAB4_ARCH else ("~22 menit" if HIDE_SLIDES_28_40 else "~27 menit")}</span>
               </div>
-              <div class="step-desc">1 Piksel → 1 Neuron → <em>Flatten</em> → <em>Weight &amp; Bias</em> → <em>Activation</em> → <em>Output</em> → <em>Backpropagation</em> &amp; Full 8 Epoch.</div>
+              <div class="step-desc">1 Piksel → <em>Flatten</em> → <em>Dense</em> &amp; Parameter → <em>Weight/Bias</em>, Aktivasi → <em>Backprop</em>, <em>LR/Adam</em>, <em>Batch</em> &amp; <em>Overfitting</em> → Full NN.</div>
             </div>
           </div>
-          <div class="step-item" style="padding:8px 12px;">
+          <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
             <div class="step-num yellow">Q</div>
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-                <span class="step-title">Kuis 5 Soal, Kamus Istilah &amp; Referensi</span>
-                <span class="pill yellow" style="font-size:10px; padding:2px 8px;">~7,5 menit</span>
+                <span class="step-title">Kuis 5 Soal, Kamus Istilah &amp; Referensi Materi</span>
+                <span class="pill yellow" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~7,5 menit</span>
               </div>
-              <div class="step-desc">Evaluasi cepat konsep Bab 1–3, ringkasan 12 istilah kunci, dan tautan sumber belajar mandiri.</div>
+              <div class="step-desc">5 slide kuis berilustrasi Bab 1–3, kamus <strong>14 istilah kunci</strong>, dan Referensi Materi Bab 1–3.</div>
             </div>
           </div>
-          <div class="step-item" style="padding:8px 12px;">
+          <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
             <div class="step-num">HO</div>
-            <div>
+            <div style="flex:1;">
               <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
                 <span class="step-title">Hands-On Notebook &amp; Rangkuman Penutup</span>
-                <span class="pill dark" style="font-size:10px; padding:2px 8px;">~62 menit</span>
+                <span class="pill dark" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~58,5 menit</span>
               </div>
-              <div class="step-desc">6 langkah praktik NumPy &amp; Keras pada foto Frozen (59m) → 3 Poin Utama Hari Ini (3m).</div>
+              <div class="step-desc">5 tahap mikro-task visual-first NumPy &amp; Keras pada foto Frozen (55,5m) → 3 Poin Utama (3m).</div>
             </div>
           </div>
         </div>
 
-        <div class="card surface" style="justify-content:space-between; padding:15px 17px;">
+        <div class="card surface" style="justify-content:space-between; padding:15px 17px; gap:10px; height:100%;">
           <div class="card-top-bar bar-green"></div>
           <div>
             <span class="pill green">3 LEARNING GOALS</span>
             <div class="card-title" style="margin-top:6px;">Yang Akan Kamu Kuasai</div>
           </div>
-          <div style="display:flex; flex-direction:column; gap:8px;">
-            <div class="mini-box" style="background:var(--tint-blue); border-color:#C6DAFC;">
-              <strong>1. Peta AI &amp; Task CV:</strong> Tepat membedakan AI/ML/DL dan memilih <em>Image Classification</em> untuk proyek Frozen.
+          <div style="display:flex; flex-direction:column; gap:10px; flex:1; justify-content:space-between;">
+            <div class="mini-box" style="background:var(--tint-blue); border-color:#C6DAFC; flex:1; display:flex; align-items:center; padding:10px 13px; font-size:12.6px; line-height:1.42;">
+              <div><strong>1. Peta AI &amp; Task CV:</strong> Tepat membedakan AI/ML/DL dan memilih <em>Image Classification</em> untuk proyek Frozen.</div>
             </div>
-            <div class="mini-box" style="background:var(--tint-green); border-color:#A8DAB5;">
-              <strong>2. Bedah Neural Network:</strong> Paham alur 1 Piksel → <em>Input &amp; Output Layer</em> → <em>Weight &amp; Bias</em> → <em>Softmax</em> → <em>Loss</em> &amp; <em>Backpropagation</em>.
+            <div class="mini-box" style="background:var(--tint-green); border-color:#A8DAB5; flex:1; display:flex; align-items:center; padding:10px 13px; font-size:12.6px; line-height:1.42;">
+              <div><strong>2. Bedah Neural Network:</strong> Paham alur 1 Piksel → <em>Flatten</em> &amp; <em>Dense</em> → <em>Weight &amp; Bias</em> → <em>Softmax</em> → <em>Backprop</em>, <em>Adam</em> &amp; <em>Overfitting</em>.</div>
             </div>
-            <div class="mini-box" style="background:var(--tint-red); border-color:#F6AEA9;">
-              <strong>3. Bukti di Kode Nyata:</strong> Membangun Neural Network 1-Layer di NumPy &amp; Keras lalu mencocokkan <code>model.summary()</code> dengan hitungan tangan — siap menuju P03!
+            <div class="mini-box" style="background:var(--tint-red); border-color:#F6AEA9; flex:1; display:flex; align-items:center; padding:10px 13px; font-size:12.6px; line-height:1.42;">
+              <div><strong>3. Bukti di Kode Nyata:</strong> Membangun Neural Network 1-Layer di NumPy &amp; Keras lalu mencocokkan <code>model.summary()</code> dengan hitungan tangan — siap menuju P03!</div>
             </div>
           </div>
-          <div class="callout"><strong>Ritme 120 Menit:</strong> ~58m pembuka, Bab 1–3, kuis &amp; kamus → <strong>62m</strong> sesi hands-on praktik &amp; rangkuman penutup.</div>
+          <div class="callout" style="padding:8px 11px; font-size:12px;"><strong>Ritme 120 Menit:</strong> 61,5m pembuka, Bab 1–3, kuis &amp; kamus → <strong>58,5m</strong> hands-on praktik &amp; rangkuman penutup.</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
     <!-- 03: PEMANASAN RECAP P01 -->
-    <section class="slide" data-title="Pemanasan: Recap P01 — Foto = Matriks Angka" data-notes="Alokasi waktu: 2 menit. Kita menyambung langsung dari akhir P01: komputer tidak melihat boneka Elsa seperti mata kita, melainkan melihat matriks angka piksel RGB berskala 0 sampai 1 dari dataset proyek Frozen kita.">
+    <section class="slide" data-title="Pemanasan: Recap P01 — Foto = Matriks Angka" data-notes="Alokasi waktu: 2 menit. Kita menyambung langsung dari akhir P01: komputer tidak melihat boneka Elsa seperti mata kita, melainkan melihat matriks angka piksel RGB berskala 0 sampai 1 dari dataset proyek Frozen kita — tunjuk contoh 1 piksel gaun biru Elsa [0.52, 0.53, 0.60] sebagai jembatan ke Bab 3 dan Hands-On.">
       <div class="kicker">PEMANASAN · RECAP P01</div>
       <h2>Menyambung P01: Foto Frozen di Mata Komputer = <span class="hl-blue">Matriks Angka</span></h2>
-      <div class="split-60-40">
-        <div style="display:flex; flex-direction:column; gap:8px; min-height:0;">
-          <div class="img-box" style="flex:1; min-height:0; padding:6px;">
-            <img src="assets/P02/01_frozen_gallery_5classes.png" alt="Galeri 5 Karakter Disney Frozen Polos vs Ramai" />
+      <div class="split-60-40" style="flex:1; min-height:0; align-items:stretch;">
+        <div style="display:flex; flex-direction:column; gap:9px; min-height:0;">
+          <div class="img-box" style="flex:1; min-height:0; padding:8px; display:flex; align-items:center; justify-content:center; background:#FFFFFF;">
+            <img src="assets/P02/01_frozen_gallery_5classes.png" alt="Galeri 5 Karakter Disney Frozen Polos vs Ramai" style="width:100%; height:100%; object-fit:contain;" />
           </div>
           <div class="kpi-strip">
             <div class="kpi-mini"><div class="k-num">{total_imgs}</div><div class="k-lbl">Foto Asli (v1)</div></div>
@@ -818,17 +825,41 @@ def build_slides_html(data: dict) -> str:
             <div class="kpi-mini"><div class="k-num" style="color:#B06000;">{sessions_n} Sesi</div><div class="k-lbl">Sesi Foto</div></div>
           </div>
         </div>
-        <div class="card surface" style="gap:9px;">
+        <div class="card surface" style="gap:10px; justify-content:space-between; padding:15px 17px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title">Modal dari P01 yang Kita Bawa Hari Ini</div>
-          <div class="card-body" style="font-size:13.3px;">
-            <ul>
-              <li>Setiap foto warna adalah array 3D berukuran <code>(Tinggi, Lebar, 3)</code> — misalnya setelah di-<em>resize</em> menjadi <code>(224, 224, 3)</code>.</li>
-              <li>Angka piksel asli <code>0–255</code> dinormalisasi menjadi <code>0.0–1.0</code> (<code>float32</code>) agar perhitungan komputer stabil.</li>
-              <li>Dataset proyek kita berisi <strong>5 karakter Disney Frozen</strong> dalam 2 kondisi latar: <strong>Polos</strong> dan <strong>Ramai</strong>.</li>
-            </ul>
+          <div>
+            <div class="card-title" style="margin-bottom:6px;">Modal dari P01 yang Kita Bawa Hari Ini</div>
+            <div class="card-body" style="font-size:12.8px; line-height:1.45;">
+              <ul style="gap:6px;">
+                <li>Setiap foto warna adalah array 3D berukuran <code>(Tinggi, Lebar, 3)</code> — misalnya setelah di-<em>resize</em> menjadi <code>(224, 224, 3)</code>.</li>
+                <li>Angka piksel asli <code>0–255</code> dinormalisasi menjadi <code>0.0–1.0</code> (<code>float32</code>) agar perhitungan komputer stabil.</li>
+                <li>Dataset proyek kita berisi <strong>5 karakter Disney Frozen</strong> dalam 2 kondisi latar: <strong>Polos</strong> dan <strong>Ramai</strong>.</li>
+              </ul>
+            </div>
           </div>
-          <div class="callout"><strong>Pertanyaan besar hari ini:</strong> Setelah foto jadi angka <code>0.0–1.0</code>, bagaimana komputer bisa menebak isinya?</div>
+
+          <!-- Visual Bridge Card: P01 -> P02 (Real Elsa Dress Pixel [4,2] RGB -> 150.528 numbers!) -->
+          <div style="background:#FFFFFF; border:1.5px solid #C6DAFC; border-radius:12px; padding:10px 12px; display:flex; flex-direction:column; gap:7px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#1A73E8;">JEMBATAN P01 → P02 · 1 PIKSEL GAUN ELSA</span>
+              <span style="font-family:var(--font-code); font-size:9.5px; font-weight:700; color:#5F6368;">Skala 0.0–1.0</span>
+            </div>
+            <div style="display:grid; grid-template-columns:56px 1fr; gap:10px; align-items:center;">
+              <div style="width:56px; height:56px; border-radius:10px; background:rgb(133,135,153); border:2px solid #4285F4; display:flex; align-items:flex-end; justify-content:center; padding-bottom:3px; box-shadow:0 3px 8px rgba(66,133,244,0.18);">
+                <span style="font-family:var(--font-code); font-size:8px; font-weight:800; color:#FFFFFF; background:rgba(32,33,36,0.55); border-radius:4px; padding:1px 4px;">[4, 2]</span>
+              </div>
+              <div style="display:flex; flex-direction:column; gap:4px; font-family:var(--font-code); font-size:10px;">
+                <div style="display:flex; align-items:center; gap:6px;"><span style="width:22px; font-weight:800; color:#EA4335;">R:</span><div style="flex:1; height:8px; background:#FCE8E6; border-radius:4px; overflow:hidden;"><div style="width:52%; height:100%; background:#EA4335;"></div></div><strong style="width:44px; text-align:right; white-space:nowrap;">0.52</strong></div>
+                <div style="display:flex; align-items:center; gap:6px;"><span style="width:22px; font-weight:800; color:#137333;">G:</span><div style="flex:1; height:8px; background:#E6F4EA; border-radius:4px; overflow:hidden;"><div style="width:53%; height:100%; background:#34A853;"></div></div><strong style="width:44px; text-align:right; white-space:nowrap;">0.53</strong></div>
+                <div style="display:flex; align-items:center; gap:6px;"><span style="width:22px; font-weight:800; color:#1A73E8;">B:</span><div style="flex:1; height:8px; background:#E8F0FE; border-radius:4px; overflow:hidden;"><div style="width:60%; height:100%; background:#4285F4;"></div></div><strong style="width:44px; text-align:right; color:#1A73E8; white-space:nowrap;">0.60 ★</strong></div>
+              </div>
+            </div>
+            <div style="font-size:10.6px; color:#5F6368; background:#F8F9FA; border-radius:7px; padding:4.5px 8px; text-align:center;">
+              1 foto <code>224×224×3</code> = <strong style="color:#1A73E8;">150.528 angka</strong> seperti ini masuk ke Neural Network!
+            </div>
+          </div>
+
+          <div class="callout" style="padding:9px 12px; font-size:12.4px;"><strong>Pertanyaan besar hari ini:</strong> Setelah foto jadi <code>150.528</code> angka <code>0.0–1.0</code>, bagaimana komputer bisa menebak isinya?</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -850,8 +881,38 @@ def build_slides_html(data: dict) -> str:
                 "<strong>C.</strong> Membandingkan ukuran file JPEG (KB) masing-masing foto",
             ],
             answer_html="<strong>Jawaban: B!</strong> Aturan manual (A) langsung gagal jika latar ramai punya benda biru atau pencahayaan redup. Dengan <strong>Deep Learning (Neural Network)</strong>, komputer mempelajari pola angka langsung dari contoh foto berlabel.",
-            vis_q_html='<img src="assets/P02/thumb_elsa_ramai.jpg" alt="Elsa latar ramai" style="width:185px; height:185px; object-fit:cover; border-radius:14px; border:2px solid #DADCE0;"/><div style="margin-top:8px; font-size:13px; color:#5F6368;">Foto Elsa di latar rak ramai — aturan warna sederhana mudah tertipu!</div>',
-            vis_a_html='<img src="assets/P02/thumb_elsa_ramai.jpg" alt="Elsa latar ramai" style="width:155px; height:155px; object-fit:cover; border-radius:14px; border:3px solid #34A853;"/><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Belajar dari Contoh:</strong> Model mempelajari kombinasi pola wajah, rambut, dan gaun secara otomatis dari data latih.</div>',
+            vis_q_html='''<div style="display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;">
+              <span class="pill red" style="font-size:10px; padding:3px 10px;">TANTANGAN NYATA DATASET FROZEN</span>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+                <div style="background:#FFFFFF; border:1.5px solid #C6DAFC; border-radius:12px; padding:7px; text-align:center;">
+                  <img src="assets/P02/thumb_elsa.jpg" alt="Elsa latar polos" style="width:100%; height:172px; object-fit:cover; border-radius:9px; display:block;"/>
+                  <div style="margin-top:6px; font-family:var(--font-title); font-size:11px; font-weight:700; color:#1A73E8;">Kondisi 1 · Latar Polos</div>
+                </div>
+                <div style="background:#FFFFFF; border:1.5px solid #F6AEA9; border-radius:12px; padding:7px; text-align:center;">
+                  <img src="assets/P02/thumb_elsa_ramai.jpg" alt="Elsa latar ramai" style="width:100%; height:172px; object-fit:cover; border-radius:9px; display:block;"/>
+                  <div style="margin-top:6px; font-family:var(--font-title); font-size:11px; font-weight:700; color:#C5221F;">Kondisi 2 · Latar Rak Ramai</div>
+                </div>
+              </div>
+              <div style="font-size:12px; color:#5F6368; line-height:1.4; text-align:center; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:8px 11px; width:100%;">
+                Keduanya adalah <strong>Elsa</strong> — perhatikan ada banyak objek &amp; warna lain di latar belakang foto kanan!
+              </div>
+            </div>''',
+            vis_a_html='''<div style="display:flex; flex-direction:column; gap:10px; width:100%; align-items:center;">
+              <span class="pill green" style="font-size:10px; padding:3px 10px;">KENAPA NEURAL NETWORK MENANG?</span>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
+                <div style="background:#FFFFFF; border:2px solid #34A853; border-radius:12px; padding:6px; text-align:center;">
+                  <img src="assets/P02/thumb_elsa.jpg" alt="Elsa latar polos" style="width:100%; height:148px; object-fit:cover; border-radius:8px; display:block;"/>
+                  <div style="margin-top:5px; font-family:var(--font-title); font-size:10.5px; font-weight:700; color:#137333;">Polos ✓</div>
+                </div>
+                <div style="background:#FFFFFF; border:2px solid #34A853; border-radius:12px; padding:6px; text-align:center;">
+                  <img src="assets/P02/thumb_elsa_ramai.jpg" alt="Elsa latar ramai" style="width:100%; height:148px; object-fit:cover; border-radius:8px; display:block;"/>
+                  <div style="margin-top:5px; font-family:var(--font-title); font-size:10.5px; font-weight:700; color:#137333;">Ramai ✓ (ada kuda biru!)</div>
+                </div>
+              </div>
+              <div class="mini-box" style="background:#E6F4EA; border-color:#A8DAB5; width:100%; text-align:left; font-size:12px; line-height:1.42; padding:9px 12px;">
+                <strong>Belajar dari Contoh:</strong> Aturan manual (A) tertipu kuda biru di belakang Elsa. <em>Neural Network</em> mempelajari kombinasi pola wajah, rambut, dan gaun secara otomatis dari data berlabel!
+              </div>
+            </div>''',
             notes="Alokasi waktu: 1 menit. Minta peserta menebak dulu sebelum tombol jawaban dibuka. Ini menjadi pintu masuk sempurna ke Bab 1 (AI vs ML vs DL).",
             bar_color="red",
         )
@@ -1461,7 +1522,7 @@ def build_slides_html(data: dict) -> str:
             kicker="BAB 03 · NEURAL NETWORK (5 TAHAP)" if HIDE_SLIDES_28_40 else "BAB 03 · NEURAL NETWORK",
             title="Bedah Total: Neural Network",
             description=(
-                "Tahap 1 (1 Neuron) → Tahap 2 (Input Layer) → Tahap 3 (Input & Output) → Tahap 4 (Cara Hitung 4.1–4.3) → Tahap 5 (Siklus Belajar) → Simulasi Full Neural Network."
+                "Tahap 1 (1 Neuron) → Tahap 2 (Flatten & RGB) → Tahap 3 (Layer & Dense) → Tahap 4 (Weight, Aktivasi, Argmax) → Tahap 5 (Backprop, LR/Adam, Batch & Overfitting) → Full NN."
                 if HIDE_SLIDES_28_40
                 else "Kita rakit dari bagian paling kecil (1 Neuron) → Input Layer → Output Layer → hubungan tiap neuron → Hidden Layer → hitungan Forward Pass → cara belajar."
             ),
@@ -1828,7 +1889,7 @@ def build_slides_html(data: dict) -> str:
 
     <!-- 23: INPUT & OUTPUT LAYER (INTERACTIVE 60FPS PIXEL-BY-PIXEL & NEURON-BY-NEURON MOTION) -->
     <section class="slide" data-title="Bab 3B: Input Layer &amp; Output Layer" data-notes="Alokasi waktu: 1.5 menit. Hubungkan Input Layer (150.528 neuron piksel) langsung ke Output Layer di ujung jaringan dengan animasi interaktif pixel-by-pixel, neuron-by-neuron, dan koneksi neuron-by-neuron. Klik Play, +1 Langkah, atau klik langsung piksel foto / neuron input / neuron output untuk mendemonstrasikan bagaimana 1 neuron input terhubung ke seluruh 5 neuron output.">
-      <div class="kicker">BAB 03 · TAHAP 3 · INPUT &amp; OUTPUT LAYER</div>
+      <div class="kicker">BAB 03 · TAHAP 3.1 · INPUT &amp; OUTPUT LAYER</div>
       <h2><span class="hl-blue">Input Layer</span> &amp; <span class="hl-green">Output Layer</span></h2>
 
       <!-- Compact Single-Row Interactive Control Bar -->
@@ -2053,13 +2114,106 @@ def build_slides_html(data: dict) -> str:
 
       <!-- KEY RULE CALLOUT (SCIENTIFICALLY PRECISE SUMMARY) -->
       <div class="callout" style="margin-top:6px; flex:0 0 auto; padding:5.5px 11px; font-size:11px; line-height:1.35;">
-        <strong>Aturan Kunci (MLP · Klasifikasi Multi-Kelas):</strong> <strong>Ukuran piksel × channel</strong> (<code>H×W×C</code>) menentukan jumlah neuron di <strong>Input Layer</strong> &nbsp;·&nbsp; <strong>Jumlah kelas gambar</strong> menentukan jumlah neuron di <strong>Output Layer</strong> <span style="color:#5F6368;">(catatan: klasifikasi biner 2 kelas cukup 1 neuron Sigmoid).</span>
+        <strong>Aturan Kunci (Neural Network · Klasifikasi Multi-Kelas):</strong> <strong>Ukuran piksel × channel</strong> (<code>H×W×C</code>) menentukan jumlah neuron di <strong>Input Layer</strong> &nbsp;·&nbsp; <strong>Jumlah kelas gambar</strong> menentukan jumlah neuron di <strong>Output Layer</strong> <span style="color:#5F6368;">(catatan: klasifikasi biner 2 kelas cukup 1 neuron Sigmoid).</span>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 24: SIMULASI TRAINING MATEMATIS (DATASET 5 KELAS -> INPUT LAYER x WEIGHT + BIAS -> OUTPUT LAYER) -->
-    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else ("3" if HIDE_SLIDES_28_40 else "2")} menit. Jawab pertanyaan inti setelah Slide 23: bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Play agar peserta melihat tiap gambar masuk ke Input Layer utuh 150.528 neuron piksel (224×224×3, tampil x1..x3, elipsis +150.522 piksel lain, x150.526..x150.528), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
+    <!-- 24 (NEW): DENSE (FULLY CONNECTED) & CARA MENGHITUNG PARAMETER (W + b) — INTERACTIVE SIMULATOR -->
+    <section class="slide" data-title="Bab 3B: Dense (Fully Connected) &amp; Parameter (W + b)" data-notes="Alokasi waktu: 1.5 menit. Simulator interaktif Lapisan Dense (Fully Connected) &amp; Rumus Parameter: klik Play atau +1 Langkah untuk melihat 1 neuron input (x1 -> x2 -> x3 -> semua) menyambungkan kabel bobot W ke seluruh 5 neuron output lalu ditambah 5 Bias (+b1..+b5). Peserta juga bisa mengklik langsung neuron x1..xn atau y1..y5, serta mengganti skala Mini 8x8 (965), Hands-On 64x64 (61.445), dan Penuh 224x224 (752.645).">
+      <div class="kicker">BAB 03 · TAHAP 3.2 · DENSE LAYER &amp; PARAMETER</div>
+      <h2>Lapisan <span class="hl-blue">Dense</span> (<em>Fully Connected</em>) &amp; Menghitung <span class="hl-red">Parameter</span></h2>
+
+      <div style="display:grid; grid-template-columns:0.86fr 1.34fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
+        <!-- LEFT COLUMN: 3 SYNC-CARDS (choreographed live with simulator!) -->
+        <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
+          <div id="dense-sc-1" class="card tint-blue sync-card" style="padding:10px 13px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-blue"></div>
+            <div class="card-title" style="font-size:12.6px; color:#1A73E8;">1. Apa Itu Lapisan <code>Dense</code>?</div>
+            <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
+              Disebut juga <strong>Fully Connected Layer</strong>: <strong>setiap</strong> neuron di <em>Input Layer</em> dihubungkan dengan kabel bobot (<code>W</code>) ke <strong>semua</strong> 5 neuron di <em>Output Layer</em>. Di Keras cukup ditulis: <code>Dense(5, activation="softmax")</code>!
+            </div>
+          </div>
+
+          <div id="dense-sc-2" class="card tint-yellow sync-card" style="padding:10px 13px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-yellow"></div>
+            <div class="card-title" style="font-size:12.6px; color:#B06000;">2. Rumus Menghitung <em>Parameter</em></div>
+            <div class="formula-box" style="padding:5px 9px; font-size:11px; margin:2px 0; background:#FFFFFF; border-color:#FDE293; color:#202124;">
+              Total Parameter = (Input × Output) + Bias
+            </div>
+            <div style="font-size:11px; color:#3C4043; line-height:1.36;">
+              Setiap <strong>1 kabel</strong> menyimpan <code>1 Weight (W)</code> dan setiap <strong>1 neuron output</strong> menyimpan <code>1 Bias (b)</code> — itulah angka yang nanti dipelajari komputer!
+            </div>
+          </div>
+
+          <div id="dense-sc-3" class="card tint-green sync-card" style="padding:10px 13px; gap:4px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-green"></div>
+            <div class="card-title" style="font-size:12.6px; color:#137333;">3. Kenapa Wajib Paham Angka Ini?</div>
+            <div style="font-size:11px; color:#3C4043; line-height:1.36;">
+              Saat Hands-On nanti, tabel <code>model.summary()</code> Keras akan memunculkan tepat <strong><code>61.445</code> parameter</strong> — sekarang kamu tahu 100% asal angkanya, bukan sulap!
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: INTERACTIVE DENSE & PARAMETER SIMULATOR -->
+        <div class="card" style="padding:9px 12px; gap:7px; justify-content:space-between; border:1.5px solid #C6DAFC; box-shadow:0 4px 14px rgba(66,133,244,0.06);">
+          <!-- Control Toolbar (Play / +1 Langkah / Reset + 3 Scale Presets) -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
+            <div id="dense-ctrl" class="sim-bar pdf-keep-ui" style="gap:5px;">
+              <button type="button" id="dense-btn-play" class="btn-ui green" onclick="toggleDensePlay()" style="padding:3.5px 10px; font-size:10px;">▶ Play</button>
+              <button type="button" class="btn-ui outline" onclick="stepDenseSim()" style="padding:3.5px 9px; font-size:10px;">⏭ +1 Langkah</button>
+              <button type="button" class="btn-ui outline" onclick="resetDenseSim()" style="padding:3.5px 8px; font-size:10px;">↺ Reset</button>
+            </div>
+            <div id="dense-scale-tabs" class="pdf-keep-ui" style="display:flex; gap:4px;">
+              <button type="button" class="btn-ui outline" data-ds="8" onclick="setDenseScale(8)" style="padding:3px 8px; font-size:9.6px;">Mini 8×8</button>
+              <button type="button" class="btn-ui outline" data-ds="64" onclick="setDenseScale(64)" style="padding:3px 8px; font-size:9.6px;">Hands-On 64×64</button>
+              <button type="button" class="btn-ui" data-ds="224" onclick="setDenseScale(224)" style="padding:3px 8px; font-size:9.6px;">Penuh 224×224</button>
+            </div>
+          </div>
+
+          <!-- Interactive Stage SVG (fills container cleanly, clickable x1..xn & y1..y5!) -->
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; justify-content:space-between; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:11px; padding:6px 8px; gap:4px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:9.5px; color:#5F6368; padding:0 2px;">
+              <span id="dense-step-badge" style="font-family:var(--font-title); font-weight:700; color:#1A73E8; background:#E8F0FE; border-radius:999px; padding:1.5px 8px;">Tahap 5/5 · Penuh (W + b)</span>
+              <span><strong>Interaktif:</strong> Klik <strong>▶ Play</strong>, <strong>⏭ +1 Langkah</strong>, atau klik langsung neuron <code>x₁..xₙ</code> / <code>y₁..y₅</code>!</span>
+            </div>
+            <svg id="dense-svg" viewBox="0 0 620 232" style="width:100%; flex:1; min-height:0; display:block;"></svg>
+            <!-- Mini Keras model.summary() Live Readout Bar -->
+            <div id="dense-keras-bar" style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:#202124; color:#FFFFFF; border-radius:8px; padding:4.5px 10px; font-family:var(--font-code); font-size:9.6px;">
+              <span style="color:#8AB4F8; font-weight:700;">Keras: Dense(5, activation="softmax")</span>
+              <span id="dense-keras-eq" style="color:#FDD663; font-weight:700;">(150.528 × 5) + 5 = 752.645 Param #</span>
+            </div>
+          </div>
+
+          <!-- 3 Clickable Scale Comparison Cards -->
+          <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:8px;">
+            <div id="dense-card-8" onclick="setDenseScale(8)" style="cursor:pointer; background:#F8F9FA; border:1.5px solid #DADCE0; border-radius:10px; padding:5.5px 8px; text-align:center;">
+              <div style="font-family:var(--font-title); font-size:9.8px; font-weight:800; color:#137333;">Mini 8×8×3</div>
+              <div style="font-family:var(--font-code); font-size:12px; font-weight:800; color:#202124;">965 param</div>
+              <div style="font-size:9px; color:#5F6368;">192×5 + 5 (Tahap 2.1)</div>
+            </div>
+            <div id="dense-card-64" onclick="setDenseScale(64)" style="cursor:pointer; background:#F8F9FA; border:1.5px solid #DADCE0; border-radius:10px; padding:5.5px 8px; text-align:center;">
+              <div style="font-family:var(--font-title); font-size:9.8px; font-weight:800; color:#1A73E8;">Hands-On 64×64×3</div>
+              <div style="font-family:var(--font-code); font-size:12px; font-weight:800; color:#202124;">61.445 param</div>
+              <div style="font-size:9px; color:#5F6368;">12.288×5 + 5 (Keras)</div>
+            </div>
+            <div id="dense-card-224" onclick="setDenseScale(224)" style="cursor:pointer; background:#FCE8E6; border:2px solid #EA4335; border-radius:10px; padding:5.5px 8px; text-align:center;">
+              <div style="font-family:var(--font-title); font-size:9.8px; font-weight:800; color:#C5221F;">Penuh 224×224×3</div>
+              <div style="font-family:var(--font-code); font-size:12px; font-weight:800; color:#202124;">752.645 param</div>
+              <div style="font-size:9px; color:#5F6368;">150.528×5 + 5 (Slide 32)</div>
+            </div>
+          </div>
+
+          <div id="dense-callout" class="callout" style="padding:5px 10px; font-size:10.4px; line-height:1.32;">
+            <strong>Skala Penuh 224×224×3:</strong> <code>150.528 × 5 Weight + 5 Bias = 752.645 parameter</code> yang disetel otomatis saat training!
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+
+    <!-- 25: SIMULASI TRAINING (MATEMATIKA NYATA 5 FOTO FROZEN -> WEIGHTS+BIAS -> ACTIVATION -> OUTPUT) -->
+    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else ("3" if HIDE_SLIDES_28_40 else "2")} menit. Jawab pertanyaan inti setelah Slide 24 (Dense &amp; Parameter): bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Play agar peserta melihat tiap gambar masuk ke Input Layer utuh 150.528 neuron piksel (224×224×3, tampil x1..x3, elipsis +150.522 piksel lain, x150.526..x150.528), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
       <div class="kicker">BAB 03 · TAHAP 4 · SIMULASI TRAINING (ALUR UTUH)</div>
       <h2><span class="hl-green">Simulasi Training</span>: Bagaimana Neural Network Mengenali <span class="hl-blue">Gambar</span>?</h2>
 
@@ -2139,7 +2293,7 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 25: WEIGHT & BIAS — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen pertama dari Slide 24: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
+    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen pertama dari Slide 25: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
       <div class="kicker">BAB 03 · TAHAP 4.1 · WEIGHT &amp; BIAS</div>
       <h2><span class="hl-blue">Weight</span> &amp; <span class="hl-yellow">Bias</span>: Bagaimana Neural Network Menimbang Fitur Gambar</h2>
 
@@ -2229,7 +2383,7 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 26: ACTIVATION FUNCTION — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen kedua dari Slide 24: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, 100 layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks; sekaligus mengubah skor bebas menjadi rentang bermakna); (3) 3 fungsi utama: ReLU di Hidden Layer, Sigmoid untuk 2 kelas, Softmax untuk multi-kelas. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, dan Softmax!">
+    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen kedua dari Slide 25: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, 100 layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks; sekaligus mengubah skor bebas menjadi rentang bermakna); (3) fungsi utama: ReLU di lapisan fitur, Sigmoid/Tanh untuk biner/terpusat-0, Softmax untuk multi-kelas. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, dan Softmax!">
       <div class="kicker">BAB 03 · TAHAP 4.2 · ACTIVATION FUNCTION</div>
       <h2><span class="hl-red">Activation Function</span>: Dari Skor Mentah Menjadi Aktivasi &amp; Peluang</h2>
 
@@ -2246,17 +2400,17 @@ def build_slides_html(data: dict) -> str:
             <div class="card-top-bar bar-blue"></div>
             <div class="card-title" style="font-size:12.6px; color:#1A73E8;">2. Kenapa Wajib Ada?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
-              <div style="margin-bottom:3px;"><strong>Memecah garis lurus (<em>Non-Linearity</em>):</strong> Tanpa aktivasi, menumpuk 100 <em>Hidden Layer</em> tetap setara 1 garis lurus — mustahil mengenali lekuk wajah, rambut, atau gaun!</div>
+              <div style="margin-bottom:3px;"><strong>Memecah garis lurus (<em>Non-Linearity</em>):</strong> Tanpa aktivasi, menumpuk banyak lapisan neuron tetap setara 1 garis lurus — mustahil mengenali lekuk wajah, rambut, atau gaun!</div>
               <div><strong>Menstandarkan output:</strong> Mengubah skor bebas (mis. <code>-0.90, +2.13</code>) menjadi rentang jelas (<code>≥ 0</code> atau <code>0–100%</code>).</div>
             </div>
           </div>
 
           <div id="act-card-3" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-green"></div>
-            <div class="card-title" style="font-size:12.6px; color:#137333;">3. Cara Kerja 3 Fungsi Utama</div>
-            <div style="font-size:10.9px; color:#3C4043; line-height:1.38; display:flex; flex-direction:column; gap:3px;">
-              <div id="act-b-relu" class="sync-bullet">• <strong><code>ReLU</code></strong> <em>(Hidden Layer)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
-              <div id="act-b-sigmoid" class="sync-bullet">• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: kurva-S memeras <code>z</code> ke <code>0–100%</code>.</div>
+            <div class="card-title" style="font-size:12.6px; color:#137333;">3. Fungsi Aktivasi Utama</div>
+            <div style="font-size:10.6px; color:#3C4043; line-height:1.34; display:flex; flex-direction:column; gap:2.5px;">
+              <div id="act-b-relu" class="sync-bullet">• <strong><code>ReLU</code></strong> <em>(Lapisan Fitur)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
+              <div id="act-b-sigmoid" class="sync-bullet">• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: memeras <code>z</code> ke <code>0–100%</code> (<em>sepupunya</em> <code>Tanh</code>: <code>−1 s/d +1</code>).</div>
               <div id="act-b-softmax" class="sync-bullet">• <strong><code>Softmax</code></strong> <em>(Output Multi-Kelas)</em>: 5 skor kelas → total tepat <code>100%</code>!</div>
             </div>
           </div>
@@ -2313,7 +2467,7 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 27: OUTPUT AKHIR — ZOOM-IN TAHAP C (ARGMAX, CONFIDENCE, & EVALUASI ERROR) -->
-    <section class="slide" data-title="Bab 3B: Output Akhir — Keputusan Argmax, Confidence &amp; Evaluasi" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "1.5")} menit. Melengkapi trilogi Zoom-In dari Slide 24 (Tahap A Slide 25 -> Tahap B Slide 26 -> Output Akhir Slide 27). Tunjukkan bagaimana 5 probabilitas Softmax diubah menjadi 1 keputusan lewat Argmax, bedakan Confidence Yakin vs Ragu memakai ambang 60%, lalu klik Acak (Belum Latih) agar peserta melihat tebakan salah menghasilkan Error/Loss besar sebagai bahan belajar Training!">
+    <section class="slide" data-title="Bab 3B: Output Akhir — Keputusan Argmax, Confidence &amp; Evaluasi" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "1.5")} menit. Melengkapi trilogi Zoom-In dari Slide 25 (Tahap 4.1 Slide 26 -> Tahap 4.2 Slide 27 -> Output Akhir Slide 28). Tunjukkan bagaimana 5 probabilitas Softmax diubah menjadi 1 keputusan lewat Argmax, bedakan Confidence Yakin vs Ragu memakai ambang 60%, lalu klik Acak (Belum Latih) agar peserta melihat tebakan salah menghasilkan Error/Loss besar sebagai bahan belajar Training!">
       <div class="kicker">BAB 03 · TAHAP 4.3 · OUTPUT AKHIR &amp; ERROR</div>
       <h2><span class="hl-green">Output Akhir</span>: Keputusan <span class="hl-blue">Argmax</span>, <em>Confidence</em> &amp; Cek <em>Error</em></h2>
 
@@ -2401,8 +2555,8 @@ def build_slides_html(data: dict) -> str:
         s.append(
             f"""
     <!-- 28: SIKLUS BELAJAR UTUH (FORWARD PASS -> LOSS -> BACKPROP & GRADIENT DESCENT -> EPOCH) -->
-    <section class="slide" data-title="Bab 3C: Siklus Belajar Utuh — Forward Pass, Loss, Backprop, Gradient Descent &amp; Epoch" data-notes="Alokasi waktu: 2.5 menit. Menyambung langsung dari nilai Error dan Loss pada Slide 27 (foto Olaf belum latih: P=11.3%, Loss=2.18). Tunjukkan 4 tahap belajar berulang yang bekerja otomatis saat memanggil model.fit() di Keras: (1) Forward Pass (aliran maju Slide 24-27), (2) Hitung Loss (ukur kesalahan), (3) Backpropagation & Gradient Descent (lacak mundur bobot penyebab salah lalu geser sebesar Learning Rate), dan (4) Ulangi tiap Epoch hingga Loss turun dari 2.18 menjadi 0.23 dan Olaf dikenali 79.2%!">
-      <div class="kicker">BAB 03 · TAHAP 5 · SIKLUS BELAJAR UTUH (EPOCH)</div>
+    <section class="slide" data-title="Bab 3C: Siklus Belajar Utuh — Forward Pass, Loss, Backprop, Gradient Descent &amp; Epoch" data-notes="Alokasi waktu: 2 menit. Menyambung langsung dari nilai Error dan Loss pada Slide 28 (foto Olaf belum latih: P=11.3%, Loss=2.18). Tunjukkan 4 tahap belajar berulang yang bekerja otomatis saat memanggil model.fit() di Keras: (1) Forward Pass (aliran maju Slide 25-28), (2) Hitung Loss (ukur kesalahan), (3) Backpropagation & Gradient Descent (lacak mundur bobot penyebab salah lalu geser sebesar Learning Rate), dan (4) Ulangi tiap Epoch hingga Loss turun dari 2.18 menjadi 0.23 dan Olaf dikenali 79.2%!">
+      <div class="kicker">BAB 03 · TAHAP 5.1 · SIKLUS BELAJAR UTUH (EPOCH)</div>
       <h2><span class="hl-green">Siklus Belajar Utuh</span>: Dari <span class="hl-red">Loss</span> ke Koreksi Bobot (<span class="hl-blue">Epoch</span>)</h2>
 
       <div style="display:grid; grid-template-columns:0.86fr 1.34fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
@@ -2469,8 +2623,232 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 29: ULTIMATE BAB 3 — SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 2 -> 3 -> 4 -> 5!) -->
-    <section class="slide" data-title="Bab 3 · Simulasi Full Neural Network (End-to-End Tahap 1–5)" data-notes="Alokasi waktu: {"4" if HIDE_BAB4_ARCH else "3"} menit. Slide puncak (Ultimate) Bab 3 yang menyatukan seluruh 5 tahap dari Slide 20–28 dalam 1 model Neural Network nyata 1-layer (150.528 Input -> 5 Output Softmax = 752.645 parameter, tanpa konsep yang belum diajarkan!) yang dilatih langsung 8 epoch melewati kelima foto figurin Frozen. Demokan: klik tombol biru Full 8 Epoch agar peserta menyaksikan model melatih Anna, Elsa, Kristoff, Olaf, dan Sven secara bergantian dari Epoch 1 (0/5 benar, Mean Loss 1.70) hingga Epoch 8 (5/5 benar yakin, Mean Loss 0.21) lengkap dengan gelombang merah Backpropagation dan kurva Loss yang turun secara real-time! Atau klik 1 Foto / geser slider Epoch 1–8 / klik kartu tahap bawah untuk membedah 1 karakter pelan-pelan. Lalu lanjut ke Kuis 5 Soal di Slide 30.">
+    <!-- 30 (NEW): WEIGHT INITIALIZATION, LEARNING RATE & OPTIMIZER (SGD vs ADAM) — FULL INTERACTIVE SIMULATOR -->
+    <section class="slide" data-title="Bab 3C: Weight Initialization, Learning Rate &amp; Optimizer (SGD vs Adam)" data-notes="Alokasi waktu: 2 menit. Simulator interaktif penuh Tahap 5.2: (1) Klik Acak Bobot atau klik titik mana saja pada kurva parabola untuk menunjukkan Weight Initialization (Epoch 0), (2) klik Play / +1 Langkah atau geser slider Learning Rate (0.02–1.08) + preset Kecil/Ideal/Besar untuk menyaksikan bola meluncur mulus vs memantul liar saat LR > 1.0, dan (3) aktifkan mode Duel SGD vs Adam untuk membuktikan keunggulan adaptif optimizer Adam yang dipakai di Keras Hands-On.">
+      <div class="kicker">BAB 03 · TAHAP 5.2 · WEIGHT INIT, LEARNING RATE &amp; OPTIMIZER</div>
+      <h2><span class="hl-blue">Learning Rate</span> &amp; <span class="hl-green">Optimizer</span>: Mengatur Langkah Turun Bukit</h2>
+
+      <div style="display:grid; grid-template-columns:0.86fr 1.34fr; gap:12px; flex:1; min-height:0; align-items:stretch;">
+        <!-- LEFT COLUMN: 3 SYNC-CARDS (choreographed live with simulator!) -->
+        <div style="display:flex; flex-direction:column; justify-content:space-between; gap:8px; min-height:0;">
+          <div id="gd-sc-1" class="card tint-yellow sync-card" style="padding:9px 12px; gap:3.5px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-yellow"></div>
+            <div class="card-title" style="font-size:12.4px; color:#B06000;">1. <em>Weight Initialization</em> (Bobot Acak)</div>
+            <div style="font-size:10.9px; color:#3C4043; line-height:1.38;">
+              Sebelum belajar (<strong>Epoch 0</strong>), seluruh bobot <code>W</code> diisi angka acak kecil. Akibatnya model mulai di lereng bukit <em>Loss</em> yang tinggi (<em>&ldquo;Model Bayi&rdquo;</em> yang tebakannya masih ngawur!).
+            </div>
+          </div>
+
+          <div id="gd-sc-2" class="card tint-blue sync-card" style="padding:9px 12px; gap:3.5px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-blue"></div>
+            <div class="card-title" style="font-size:12.4px; color:#1A73E8;">2. <em>Learning Rate</em> (Besar Langkah)</div>
+            <div style="font-size:10.9px; color:#3C4043; line-height:1.38;">
+              Mengatur seberapa jauh <code>W &amp; b</code> digeser tiap koreksi: <strong>terlalu kecil</strong> = sangat lambat; <strong>pas</strong> = mulus ke dasar lembah; <strong>terlalu besar</strong> = melompat liar &amp; <em>Loss</em> meledak!
+            </div>
+          </div>
+
+          <div id="gd-sc-3" class="card tint-green sync-card" style="padding:9px 12px; gap:3.5px; flex:1; justify-content:center;">
+            <div class="card-top-bar bar-green"></div>
+            <div class="card-title" style="font-size:12.4px; color:#137333;">3. <em>Optimizer</em>: <code>SGD</code> vs <code>Adam</code></div>
+            <div style="font-size:10.8px; color:#3C4043; line-height:1.36;">
+              Mesin otomatis pengeksekusi <em>Gradient Descent</em>:<br/>
+              • <strong><code>SGD</code>:</strong> langkah konstan, sederhana tapi mudah lambat/liar.<br/>
+              • <strong><code>Adam</code> ★:</strong> menyesuaikan langkah adaptif tiap bobot — pilihan standar di Hands-On Keras kita!
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT COLUMN: FULL 60FPS INTERACTIVE LR & OPTIMIZER SIMULATOR -->
+        <div class="card" style="padding:8.5px 11.5px; gap:6px; justify-content:space-between; border:1.5px solid #C6DAFC; box-shadow:0 4px 14px rgba(66,133,244,0.06);">
+          <!-- Row 1: Animation Controls + Optimizer Mode Switcher -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:5px; flex-wrap:wrap;">
+            <div class="sim-bar pdf-keep-ui" style="gap:4.5px;">
+              <button type="button" id="gd-btn-play" class="btn-ui green" onclick="toggleGdPlay()" style="padding:3.2px 9.5px; font-size:9.8px;">▶ Play</button>
+              <button type="button" class="btn-ui outline" onclick="stepGdSim()" style="padding:3.2px 8.5px; font-size:9.8px;">⏭ +1 Langkah</button>
+              <button type="button" class="btn-ui outline" onclick="randomizeGdStart()" style="padding:3.2px 8.5px; font-size:9.8px;" title="Acak posisi awal Weight Initialization (t=0)">🎲 Acak Bobot</button>
+              <button type="button" class="btn-ui outline" onclick="resetGdSim()" style="padding:3.2px 7.5px; font-size:9.8px;">↺ Reset</button>
+            </div>
+            <div id="gd-opt-tabs" class="pdf-keep-ui" style="display:flex; gap:3.5px; align-items:center;">
+              <button type="button" class="btn-ui" data-opt="sgd" onclick="setGdOptimizer('sgd')" style="padding:3px 8px; font-size:9.5px;">SGD</button>
+              <button type="button" class="btn-ui outline" data-opt="adam" onclick="setGdOptimizer('adam')" style="padding:3px 8px; font-size:9.5px;">Adam ★</button>
+              <button type="button" class="btn-ui outline" data-opt="duel" onclick="setGdOptimizer('duel')" style="padding:3px 8px; font-size:9.5px;">Duel SGD vs Adam</button>
+            </div>
+          </div>
+
+          <!-- Row 2: Learning Rate Presets + Live Slider -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:9px; padding:4px 9px;">
+            <div class="sim-bar pdf-keep-ui" id="gd-presets" style="gap:4px;">
+              <button type="button" class="btn-ui outline" data-gd="small" onclick="setGdMode('small')" style="padding:2.5px 7.5px; font-size:9.4px;">1. LR Kecil</button>
+              <button type="button" class="btn-ui" data-gd="ideal" onclick="setGdMode('ideal')" style="padding:2.5px 7.5px; font-size:9.4px;">2. LR Ideal</button>
+              <button type="button" class="btn-ui outline" data-gd="large" onclick="setGdMode('large')" style="padding:2.5px 7.5px; font-size:9.4px;">3. LR Besar</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:7px; flex:1; min-width:170px; justify-content:flex-end;">
+              <span style="font-family:var(--font-title); font-size:9.6px; font-weight:700; color:#5F6368; white-space:nowrap;">Geser LR:</span>
+              <input id="gd-lr-slider" type="range" min="0.02" max="1.08" step="0.01" value="0.20" oninput="setGdLrSlider(this.value)" style="width:128px; accent-color:#4285F4; cursor:pointer;" />
+              <span id="gd-lr-val" style="font-family:var(--font-code); font-size:10.4px; font-weight:800; color:#1A73E8; background:#E8F0FE; border-radius:6px; padding:1.5px 6px; min-width:42px; text-align:center;">0.20</span>
+            </div>
+          </div>
+
+          <!-- Interactive Canvas Stage (60fps ball rolling + click parabola to set Weight Init!) -->
+          <div style="flex:1; min-height:0; display:flex; flex-direction:column; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:5px 7px; gap:2px;">
+            <div style="display:flex; align-items:center; justify-content:space-between; font-size:9.4px; color:#5F6368;">
+              <span id="gd-title" style="font-family:var(--font-title); font-weight:800; color:#202124;">LR Ideal (0.20) — Mulus ke Dasar Lembah</span>
+              <span><strong>Tip:</strong> Klik kurva parabola untuk atur titik awal <code>w₀</code>!</span>
+            </div>
+            <canvas id="gd-canvas" width="620" height="305" onclick="clickGdCanvas(event)" style="width:100%; flex:1; min-height:0; object-fit:contain; display:block; cursor:crosshair;"></canvas>
+          </div>
+
+          <!-- Compact Live Telemetry Bar -->
+          <div style="display:grid; grid-template-columns:0.85fr 1.05fr 1.1fr; gap:7px;">
+            <div style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 9px; display:flex; justify-content:space-between; align-items:center; font-size:10.5px;">
+              <span style="color:#5F6368;">Langkah:</span>
+              <strong id="gd-step-txt" style="font-family:var(--font-code); color:#1A73E8;">t = 10 / 10</strong>
+            </div>
+            <div style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 9px; display:flex; justify-content:space-between; align-items:center; font-size:10.5px;">
+              <span id="gd-w-lbl" style="color:#5F6368;">Weight (w):</span>
+              <strong id="gd-end-w" style="font-family:var(--font-code); color:#202124;">-0.02</strong>
+            </div>
+            <div style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 9px; display:flex; justify-content:space-between; align-items:center; font-size:10.5px;">
+              <span id="gd-loss-lbl" style="color:#5F6368;">Nilai Loss:</span>
+              <strong id="gd-end-loss" style="font-family:var(--font-code); color:#137333;">0.000</strong>
+            </div>
+          </div>
+
+          <div id="gd-note" class="callout green" style="padding:5px 10px; font-size:10.4px; line-height:1.32;"></div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+
+    <!-- 31 (NEW): BATCH SIZE vs STEP vs EPOCH & PENGENALAN OVERFITTING — DUAL INTERACTIVE SIMULATORS -->
+    <section class="slide" data-title="Bab 3C: Batch Size vs Epoch &amp; Pengenalan Overfitting" data-notes="Alokasi waktu: 2 menit. Dua simulator interaktif berdampingan: (Kiri) Simulator Batch Size vs Step vs Epoch pada 143 foto Frozen — klik Play, +1 Batch, atau ubah Batch Size (8 / 16 / 32 / 143) untuk melihat jumlah Step per Epoch &amp; total update bobot berubah langsung; (Kanan) Simulator Underfitting -> Good Fit -> Overfitting — klik Play atau geser slider Epoch (1–50) untuk menyaksikan kurva pola &amp; kurva Train vs Val Loss memisahkan zona Underfitting, Good Fit, dan Overfitting.">
+      <div class="kicker">BAB 03 · TAHAP 5.3 · BATCH SIZE, EPOCH &amp; OVERFITTING</div>
+      <h2><span class="hl-blue">Batch Size vs Epoch</span> &amp; Jebakan <span class="hl-red">Overfitting</span></h2>
+
+      <div style="display:grid; grid-template-columns:1.0fr 1.08fr; gap:13px; flex:1; min-height:0; align-items:stretch;">
+        <!-- LEFT PANEL: INTERACTIVE BATCH SIZE / STEP / EPOCH SIMULATOR -->
+        <div class="card surface" style="padding:10px 12px; gap:6.5px; justify-content:space-between; border:1.5px solid #C6DAFC;">
+          <div class="card-top-bar bar-blue"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+            <div>
+              <span class="pill blue" style="font-size:9px; padding:1.5px 7px;">SIMULATOR 1 · CARA MEMBACA DATA</span>
+              <div class="card-title" style="margin-top:3px; font-size:13.4px;">Kenapa di Keras Ada <code id="bs-title-code">batch_size=16</code>?</div>
+            </div>
+            <div id="bs-size-tabs" class="pdf-keep-ui" style="display:flex; gap:3px; flex-wrap:wrap; justify-content:flex-end;">
+              <button type="button" class="btn-ui outline" data-bs="8" onclick="setBatchSizeSim(8)" style="padding:2.5px 6.5px; font-size:9.2px;">8</button>
+              <button type="button" class="btn-ui" data-bs="16" onclick="setBatchSizeSim(16)" style="padding:2.5px 6.5px; font-size:9.2px;">16 ★</button>
+              <button type="button" class="btn-ui outline" data-bs="32" onclick="setBatchSizeSim(32)" style="padding:2.5px 6.5px; font-size:9.2px;">32</button>
+              <button type="button" class="btn-ui outline" data-bs="143" onclick="setBatchSizeSim(143)" style="padding:2.5px 6.5px; font-size:9.2px;">143</button>
+            </div>
+          </div>
+
+          <!-- Animation controls for Batch Simulator -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:8px; padding:4px 8px;">
+            <div id="bs-ctrl" class="sim-bar pdf-keep-ui" style="gap:4px;">
+              <button type="button" id="bs-btn-play" class="btn-ui green" onclick="toggleBsPlay()" style="padding:2.8px 8.5px; font-size:9.4px;">▶ Play 1 Epoch</button>
+              <button type="button" class="btn-ui outline" onclick="stepBsSim()" style="padding:2.8px 7.5px; font-size:9.4px;">⏭ +1 Batch</button>
+              <button type="button" class="btn-ui outline" onclick="resetBsSim()" style="padding:2.8px 7px; font-size:9.4px;">↺</button>
+            </div>
+            <span id="bs-status-pill" style="font-family:var(--font-code); font-size:9.4px; font-weight:800; color:#137333; background:#E6F4EA; border-radius:999px; padding:2px 8px;">Epoch 1 ✓ (9/9 Step)</span>
+          </div>
+
+          <!-- Interactive 3-Stage Visual Pipeline: Tumpukan Foto -> Mesin NN + RAM -> Update Bobot W & b -->
+          <div style="background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:7px 8px; display:flex; flex-direction:column; gap:5.5px; flex:1; justify-content:space-between;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:9.4px; color:#5F6368;">
+              <span>Alur 1 Epoch (<strong style="color:#202124;">{total_imgs} foto Frozen</strong>):</span>
+              <strong id="bs-photo-prog" style="font-family:var(--font-code); color:#1A73E8;">48 / 143 foto</strong>
+            </div>
+
+            <!-- 3-Stage Animated Visual SVG -->
+            <svg id="bs-svg" viewBox="0 0 470 154" style="width:100%; flex:1; min-height:0; display:block;"></svg>
+
+            <!-- Compact Clickable Batch Strip (click any batch to inspect that step!) -->
+            <div style="display:flex; flex-direction:column; gap:3px;">
+              <div style="display:flex; justify-content:space-between; font-size:8.6px; color:#5F6368;">
+                <span>Klik paket batch di bawah (atau tekan <strong>▶ Play</strong>):</span>
+                <span id="bs-strip-legend">Hijau = selesai · Kuning = diproses di NN</span>
+              </div>
+              <div id="bs-grid" style="display:flex; flex-wrap:wrap; gap:3.5px; align-items:center;"></div>
+            </div>
+
+            <!-- Live Summary Equation Bar -->
+            <div id="bs-eq-bar" style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 8px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-code); font-size:9.3px;">
+              <span style="color:#3C4043;">⌈143 / 16⌉ = <strong style="color:#1A73E8;">9 Step/Epoch</strong></span>
+              <span style="color:#137333; font-weight:800;">20 Epoch = 180× update W,b</span>
+            </div>
+          </div>
+
+          <div style="display:flex; flex-direction:column; gap:3.5px; font-size:10.5px; color:#3C4043; line-height:1.34;">
+            <div>• <strong><code>Batch Size</code>:</strong> Paket foto sekali proses agar RAM aman &amp; bobot cepat dikoreksi.</div>
+            <div>• <strong><code>Step / Iteration</code>:</strong> 1× siklus <code>Forward → Loss → Backprop</code> untuk 1 batch.</div>
+            <div>• <strong><code>Epoch</code>:</strong> 1 putaran penuh melewati seluruh {total_imgs} foto Frozen!</div>
+          </div>
+
+          <div id="bs-callout" class="callout" style="padding:5.5px 9px; font-size:10.2px; line-height:1.3;">
+            <strong>Analogi Kartu Soal:</strong> Daripada menunggu 143 soal selesai baru cek jawaban, model mengoreksi diri tiap <strong>16 soal (1 Batch)</strong>!
+          </div>
+        </div>
+
+        <!-- RIGHT PANEL: INTERACTIVE UNDERFITTING vs GOOD FIT vs OVERFITTING SIMULATOR -->
+        <div class="card surface" style="padding:10px 12px; gap:6.5px; justify-content:space-between; border:1.5px solid #F6AEA9;">
+          <div class="card-top-bar bar-red"></div>
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px;">
+            <div style="min-width:0;">
+              <span class="pill red" style="font-size:9px; padding:1.5px 7px;">SIMULATOR 2 · KUALITAS BELAJAR</span>
+              <div class="card-title" style="margin-top:3px; font-size:13.2px; white-space:nowrap;">Hafal Kunci vs Paham Pola!</div>
+            </div>
+            <div id="fit-tabs" class="pdf-keep-ui" style="display:flex; gap:3px; flex-wrap:nowrap; flex-shrink:0;">
+              <button type="button" class="btn-ui outline" data-fit="under" onclick="setFitScenario('under')" style="padding:2.5px 6px; font-size:8.8px; white-space:nowrap;">Underfit</button>
+              <button type="button" class="btn-ui" data-fit="good" onclick="setFitScenario('good')" style="padding:2.5px 6px; font-size:8.8px; white-space:nowrap;">Good Fit ✓</button>
+              <button type="button" class="btn-ui outline" data-fit="over" onclick="setFitScenario('over')" style="padding:2.5px 6px; font-size:8.8px; white-space:nowrap;">Overfit</button>
+              <button type="button" class="btn-ui outline" data-fit="all" onclick="setFitScenario('all')" style="padding:2.5px 6px; font-size:8.8px; white-space:nowrap;" title="Alur nyambung Underfit → Good Fit → Overfit (Epoch 1–50)">Semua</button>
+            </div>
+          </div>
+
+          <!-- Play + Reset + Epoch Slider Control -->
+          <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:8px; padding:4px 8px;">
+            <div style="display:flex; align-items:center; gap:4px;">
+              <button type="button" id="fit-btn-play" class="btn-ui green" onclick="toggleFitPlay()" style="padding:2.8px 8.5px; font-size:9.3px; white-space:nowrap;">▶ Play Good Fit</button>
+              <button type="button" class="btn-ui outline" onclick="resetFitSim()" style="padding:2.8px 6.5px; font-size:9.3px;" title="Ulang dari Epoch 1">↺</button>
+            </div>
+            <div style="display:flex; align-items:center; gap:5px; flex:1; justify-content:flex-end;">
+              <span style="font-family:var(--font-title); font-size:9.3px; font-weight:700; color:#5F6368;">Epoch:</span>
+              <input id="fit-ep-slider" type="range" min="1" max="30" step="1" value="30" oninput="setFitEpoch(this.value)" style="width:105px; accent-color:#34A853; cursor:pointer;" />
+              <span id="fit-ep-val" style="font-family:var(--font-code); font-size:9.8px; font-weight:800; color:#137333; background:#E6F4EA; border-radius:6px; padding:1.5px 6px; min-width:44px; text-align:center;">30/30</span>
+            </div>
+          </div>
+
+          <!-- Interactive Dual Canvas (Left: Pattern Fit · Right: Train vs Val Loss) -->
+          <div style="background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:5px 7px; flex:1; min-height:0; display:flex; flex-direction:column; gap:3px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:9.3px; color:#5F6368;">
+              <span id="fit-zone-title" style="font-family:var(--font-title); font-weight:800; color:#137333;">2. Good Fit / Generalization ✓ (Target Ideal!)</span>
+              <span>● Latih (Train) &nbsp; ★ Foto Baru (Val)</span>
+            </div>
+            <canvas id="fit-canvas" width="520" height="268" style="width:100%; flex:1; min-height:0; object-fit:contain; display:block;"></canvas>
+          </div>
+
+          <!-- Live Train vs Val Accuracy Comparison Strip -->
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:7px;">
+            <div style="background:#FFFFFF; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 9px; display:flex; justify-content:space-between; align-items:center; font-size:10.3px;">
+              <span style="color:#5F6368;">Akurasi Latih (Train):</span>
+              <strong id="fit-acc-tr" style="font-family:var(--font-code); color:#1A73E8;">88%</strong>
+            </div>
+            <div style="background:#FFFFFF; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 9px; display:flex; justify-content:space-between; align-items:center; font-size:10.3px;">
+              <span style="color:#5F6368;">Akurasi Foto Baru (Val):</span>
+              <strong id="fit-acc-val" style="font-family:var(--font-code); color:#137333;">85% ✓</strong>
+            </div>
+          </div>
+
+          <div id="fit-callout" class="callout green" style="padding:5.5px 9px; font-size:10.2px; line-height:1.3;">
+            <strong>Good Fit (Generalization):</strong> Model menangkap ciri asli karakter Frozen — akurat di foto latihan <strong>DAN</strong> foto baru! (Di <strong>P05</strong> kita pisah <code>train/val/test</code> agar <em>Overfitting</em> langsung terdeteksi!)
+          </div>
+        </div>
+      </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+
+    <!-- 32: ULTIMATE BAB 3 — SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 2 -> 3 -> 4 -> 5!) -->
+    <section class="slide" data-title="Bab 3 · Simulasi Full Neural Network (End-to-End Tahap 1–5)" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else "3"} menit. Slide puncak (Ultimate) Bab 3 yang menyatukan seluruh 5 tahap dari Slide 20–31 dalam 1 model Neural Network nyata 1-layer (150.528 Input -> 5 Output Softmax = 752.645 parameter, tanpa konsep yang belum diajarkan!) yang dilatih langsung 8 epoch melewati kelima foto figurin Frozen. Demokan: klik tombol biru Full 8 Epoch agar peserta menyaksikan model melatih Anna, Elsa, Kristoff, Olaf, dan Sven secara bergantian dari Epoch 1 (0/5 benar, Mean Loss 1.70) hingga Epoch 8 (5/5 benar yakin, Mean Loss 0.21) lengkap dengan gelombang merah Backpropagation dan kurva Loss yang turun secara real-time! Atau klik 1 Foto / geser slider Epoch 1–8 / klik kartu tahap bawah untuk membedah 1 karakter pelan-pelan. Lalu lanjut ke Kuis 5 Soal Berilustrasi di Slide 34–38.">
       <div class="kicker">BAB 03 · SIMULASI FULL NEURAL NETWORK (END-TO-END · TAHAP 1–5)</div>
       <h2>Simulasi <span class="hl-blue">Full Neural Network</span>: Dari Piksel ke <span class="hl-red">Backprop</span> (<span class="hl-green">Tahap 1–5</span>)</h2>
 
@@ -2510,27 +2888,27 @@ def build_slides_html(data: dict) -> str:
       <div style="display:grid; grid-template-columns:repeat(5, 1fr); gap:7px; flex:0 0 auto;">
         <div id="fnn-card-1" class="card surface sync-card fnn-stage-card" onclick="jumpFnnStage(1)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">Tahap 1 · Piksel</div>
+          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">1. Piksel Foto</div>
           <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Foto <code>224×224×3</code> dibaca jadi angka piksel <code>0.0–1.0</code>.</div>
         </div>
         <div id="fnn-card-2" class="card tint-blue sync-card fnn-stage-card" onclick="jumpFnnStage(2)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">Tahap 2 · Flatten</div>
+          <div class="card-title" style="font-size:10.7px; color:#1A73E8;">2. Flatten (Input)</div>
           <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Disusun ke bawah jadi <strong>150.528 neuron</strong> <em>Input Layer</em>.</div>
         </div>
         <div id="fnn-card-3" class="card tint-yellow sync-card fnn-stage-card" onclick="jumpFnnStage(3)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-yellow"></div>
-          <div class="card-title" style="font-size:10.7px; color:#B06000;">Tahap 3 · Weight + Bias</div>
+          <div class="card-title" style="font-size:10.7px; color:#B06000;">3. Weight + Bias</div>
           <div style="font-size:9.6px; color:#3C4043; line-height:1.28;">Hitung <code>z = Σ(x·w) + b</code> untuk <strong>5 skor mentah</strong> kelas.</div>
         </div>
         <div id="fnn-card-4" class="card tint-green sync-card fnn-stage-card" onclick="jumpFnnStage(4)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-green"></div>
-          <div class="card-title" style="font-size:10.7px; color:#137333;">Tahap 4 · Output</div>
+          <div class="card-title" style="font-size:10.7px; color:#137333;">4. Softmax &amp; Argmax</div>
           <div style="font-size:9.6px; color:#3C4043; line-height:1.28;"><strong>Softmax</strong> ubah skor jadi probabilitas (<code>100%</code>) → <strong>Argmax</strong>.</div>
         </div>
         <div id="fnn-card-5" class="card tint-red sync-card fnn-stage-card" onclick="jumpFnnStage(5)" style="padding:5.5px 8px; gap:1.5px;">
           <div class="card-top-bar bar-red"></div>
-          <div class="card-title" style="font-size:10.7px; color:#C5221F;">Tahap 5 · Backprop</div>
+          <div class="card-title" style="font-size:10.7px; color:#C5221F;">5. Loss &amp; Backprop</div>
           <div style="font-size:9.6px; color:#3C4043; line-height:1.28;"><strong>Loss</strong> koreksi balik <code>W, b</code> melewati <strong>5 foto × 8 Epoch</strong>!</div>
         </div>
       </div>
@@ -3130,7 +3508,7 @@ def build_slides_html(data: dict) -> str:
     # =========================================================================
     _eval_cover_slide = f"""
     <!-- COVER EVALUASI & SUMBER BELAJAR -->
-    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 12 Istilah Kunci, dan daftar Referensi Materi Bab 1–3.">
+    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 14 Istilah Kunci, dan daftar Referensi Materi Bab 1–3.">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="855" cy="110" r="78" fill="none" stroke="rgba(32,33,36,0.10)" stroke-width="18"/>
         <circle cx="855" cy="110" r="42" fill="rgba(255,255,255,0.22)"/>
@@ -3140,7 +3518,7 @@ def build_slides_html(data: dict) -> str:
       <div class="divider-center" style="position:relative; z-index:1;">
         <div class="kicker">EVALUASI &amp; SUMBER BELAJAR</div>
         <h1>Kuis, Kamus Istilah &amp; Referensi Materi</h1>
-        <p>Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 12 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.</p>
+        <p>Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 14 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.</p>
         <div class="cover-roadmap">
           <div class="cover-chip">
             <span class="cover-chip-num">1</span>
@@ -3152,7 +3530,7 @@ def build_slides_html(data: dict) -> str:
           <div class="cover-chip">
             <span class="cover-chip-num">2</span>
             <div>
-              <div class="cover-chip-ttl">Kamus 12 Istilah Kunci</div>
+              <div class="cover-chip-ttl">Kamus 14 Istilah Kunci</div>
               <div class="cover-chip-sub">Peta ringkas Bab 1–3 (2 menit)</div>
             </div>
           </div>
@@ -3186,8 +3564,8 @@ def build_slides_html(data: dict) -> str:
         <h1>Hands-On: Praktik Neural Network</h1>
         <p>Ikuti perjalanan 1 foto asli Elsa melewati <strong>Tahap 1 → Tahap 5 Bab 3</strong>! Setiap tugas dipecah super kecil (<strong>3–6 baris kode</strong>) dan langsung menampilkan <strong>output visual nyata</strong>.</p>
         <div class="cover-roadmap-3x2">
-          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">Tahap 1 · Piksel</div><div class="cover-chip-sub">1.1 Grid 8×8 · 1.2 RGB</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">Tahap 2 · Flatten</div><div class="cover-chip-sub">2.1 Pita 1D · 2.2 Skala</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">1. Piksel Foto</div><div class="cover-chip-sub">1.1 Grid 8×8 · 1.2 RGB</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">2. Flatten (Input)</div><div class="cover-chip-sub">2.1 Pita 1D · 2.2 Skala</div></div></div>
           <div class="cover-chip"><span class="cover-chip-num">3</span><div><div class="cover-chip-ttl">Tahap 3 · Neuron</div><div class="cover-chip-sub">3.1 z · 3.2 ReLU · 3.3 Softmax</div></div></div>
           <div class="cover-chip"><span class="cover-chip-num">4</span><div><div class="cover-chip-ttl">Tahap 4 · Model</div><div class="cover-chip-sub">4.1–4.3 Model Bayi E0</div></div></div>
           <div class="cover-chip"><span class="cover-chip-num">5</span><div><div class="cover-chip-ttl">Tahap 5 · Training</div><div class="cover-chip-sub">5.1 Fit · 5.2 Kurva Loss</div></div></div>
@@ -3215,7 +3593,7 @@ def build_slides_html(data: dict) -> str:
             step_num=1,
             stage_badge="Tahap 1",
             title="Foto Menjadi Kotak Piksel &amp; Angka RGB",
-            kicker="HANDS-ON · TAHAP 0 &amp; 1 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 0 &amp; 1 (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Melihat sendiri 1 foto Elsa berubah menjadi grid <code>8×8</code> angka <code>0.0–1.0</code>",
             bullets_html=f"""
               <li><span class="ho-sub-tag">0.1–0.3</span><span>Tekan <code>Shift+Enter</code> pada Setup, Alat Visualisasi, &amp; galeri {total_imgs} foto Frozen <em>(0 coding!)</em>.</span></li>
@@ -3234,13 +3612,13 @@ tampilkan_zoom_piksel(foto_mini, 4, 2, piksel_gaun)""",
             checklist_html="✓ <code>foto_mini</code> bershape <code>(8, 8, 3)</code> &amp; nilai <code>0.0–1.0</code><br/>✓ Batang <strong>Blue (B = 0.60)</strong> tertinggi pada piksel gaun <code>[4, 2]</code>",
             callout_html="<strong>Tangible!</strong> Angka di kotak grid = kecerahan rata-rata; aslinya tiap kotak punya 3 angka <code>[R, G, B]</code>.",
             color="blue",
-            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 0 (Setup + Alat Visualisasi + Galeri Frozen), lalu pandu # TODO 1 (dibagi 255.0) dan # TODO 2 (ambil piksel gaun biru [4, 2]) hingga 3 gambar visual muncul!",
+            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 0 (Setup + Alat Visualisasi + Galeri Frozen), lalu pandu # TODO 1 (dibagi 255.0) dan # TODO 2 (ambil piksel gaun biru [4, 2]) hingga 3 gambar visual muncul!",
         ),
         _handson_step_slide(
             step_num=2,
             stage_badge="Tahap 2",
             title="Flatten Foto 2D Menjadi Pita 1D",
-            kicker="HANDS-ON · TAHAP 2.1 &amp; 2.2 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 2.1 &amp; 2.2 (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Meluruskan kotak <code>8×8</code> menjadi 1 pita warna 1D &amp; menghitung skala <code>752.645</code>",
             bullets_html="""
               <li><span class="ho-sub-tag green">2.1</span><span><strong># TODO 3 (1 baris):</strong> Panggil <code>vektor_elsa = foto_mini.flatten()</code> → lihat baris <code>B1..B8</code> berjejer jadi <strong>1 pita warna lurus</strong>!</span></li>
@@ -3251,22 +3629,22 @@ tampilkan_zoom_piksel(foto_mini, 4, 2, piksel_gaun)""",
 vektor_elsa = foto_mini.flatten()       # TODO 3: (8,8,3) -> (192,)
 tampilkan_visual_flatten(foto_mini, vektor_elsa)
 
-# Tahap 2.2: Hitung skala foto penuh 224x224x3 (persis Slide 29!)
+# Tahap 2.2: Hitung skala foto penuh 224x224x3 (persis Slide 24 & 32!)
 neuron_224 = IMG_SIZE * IMG_SIZE * 3    # TODO 4A -> 150.528
 param_224 = neuron_224 * 5 + 5          # TODO 4B -> 752.645""",
             output_img="assets/P02/ho_step2_flatten_strip.png",
             output_caption="Atas: 8×8 (B1–B8) diluruskan jadi 64 piksel warna (P1 x1–3 .. P64 x190–192 = 192 neuron RGB). Bawah: skala parameter.",
             theory_ref="Slide 21–22 — Animasi Flatten & 150.528 Neuron Input",
-            checklist_html="✓ <code>len(vektor_elsa) == 192</code> (64 piksel × 3 RGB)<br/>✓ Skala penuh: <code>150.528</code> neuron → <code>752.645</code> param (persis Slide 29!)",
+            checklist_html="✓ <code>len(vektor_elsa) == 192</code> (64 piksel × 3 RGB)<br/>✓ Skala penuh: <code>150.528</code> neuron → <code>752.645</code> param (persis Slide 24 &amp; 32!)",
             callout_html="<strong>Momen Klik!</strong> Biru gaun Elsa di baris <code>B4–B5</code> tampak nyata pindah menjadi garis vertikal di tengah pita 1D!",
             color="green",
-            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta mengerjakan # TODO 3 (.flatten()) dan sorot gambar pita warna 1D (biru gaun di B4-B5, tangan di B7-B8), lalu lanjut # TODO 4 menghitung 150.528 neuron -> 752.645 parameter.",
+            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta mengerjakan # TODO 3 (.flatten()) dan sorot gambar pita warna 1D (biru gaun di B4-B5, tangan di B7-B8), lalu lanjut # TODO 4 menghitung 150.528 neuron -> 752.645 parameter.",
         ),
         _handson_step_slide(
             step_num=3,
             stage_badge="Tahap 3",
             title="Weight, Bias, ReLU &amp; Softmax",
-            kicker="HANDS-ON · TAHAP 3.1, 3.2 &amp; 3.3 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 3.1, 3.2 &amp; 3.3 (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Membuktikan 1 neuron hanyalah kali-tambah biasa, <code>ReLU</code>, &amp; <code>Softmax 100%</code>",
             bullets_html="""
               <li><span class="ho-sub-tag red">3.1</span><span><strong># TODO 5 (1 baris):</strong> Hitung <code>z = r*w_r + g*w_g + b*w_b + bias</code> pada piksel gaun Elsa <em>(tanpa <code>np.dot</code> rumit!)</em>.</span></li>
@@ -3282,24 +3660,24 @@ hasil_relu = np.maximum(0.0, skor_contoh)       # TODO 6
 tampilkan_softmax_frozen([0.4, 2.3, 0.1, -0.2, 0.2], df_meta, DATA_DIR)""",
             output_img="assets/P02/ho_step3_neuron_relu_softmax.png",
             output_caption=f"Kiri: z Gaun ({ho_z_gaun:+.2f}) vs Dinding ({ho_z_wall:+.2f}). Tengah: ReLU (negatif → 0). Kanan: Softmax 100% + Loss ({ho_loss_sm:.2f})!",
-            theory_ref="Slide 25–27 — Weight+Bias, ReLU, Softmax & Loss",
+            theory_ref="Slide 26–28 — Weight+Bias, ReLU, Softmax & Loss",
             checklist_html="✓ Gaun biru menyala (<code>z &gt; 0</code>) sementara dinding redup (<code>z &lt; 0</code>)<br/>✓ Ubah <code>skor_olaf = 3.0</code> → lihat <code>Argmax</code> pindah &amp; <code>Loss</code> melonjak!",
             callout_html="<strong>Bebas Panik Sintaks:</strong> Tanpa <code>np.dot</code> rumit — peserta langsung melihat kaitan bobot, <code>ReLU</code>, <code>Softmax</code>, &amp; <code>Loss</code>!",
             color="red",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '8'} menit. Pandu # TODO 5 (kali-tambah sederhana), # TODO 6 (ReLU), lalu ajak peserta bermain di Tahap 3.3 mengganti angka skor_olaf atau skor_anna untuk melihat Softmax & foto Argmax berubah seketika!",
+            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '8'} menit. Pandu # TODO 5 (kali-tambah sederhana), # TODO 6 (ReLU), lalu ajak peserta bermain di Tahap 3.3 mengganti angka skor_olaf atau skor_anna untuk melihat Softmax & foto Argmax berubah seketika!",
         ),
         _handson_step_slide(
             step_num=4,
             stage_badge="Tahap 4",
             title="Rakit Model 1-Layer &amp; Uji Model Bayi",
-            kicker="HANDS-ON · TAHAP 4.1, 4.2 &amp; 4.3 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 4.1, 4.2 &amp; 4.3 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Menyusun 2 layer Keras (<code>61.445</code> param) &amp; melihat tebakan acak <strong>Epoch 0</strong>",
             bullets_html=f"""
               <li><span class="ho-sub-tag yellow">4.1</span><span>Jalankan sel pemuat {total_imgs} foto Frozen ukuran <code>64×64×3</code> (<code>Shift+Enter</code>, siap dalam 1 detik).</span></li>
               <li><span class="ho-sub-tag yellow">4.2</span><span><strong># TODO 7 (2 baris):</strong> Lengkapi <code>Flatten()</code> &amp; <code>Dense(5, activation="softmax")</code> → cocokkan <code>61.445</code> di <code>summary()</code>!</span></li>
               <li><span class="ho-sub-tag yellow">4.3</span><span><strong>Tes "Model Bayi" (Epoch 0):</strong> Lihat sendiri bar probabilitas ~20% rata semua (<code>Loss {e0_loss:.2f}</code>, tebak acak {s_e0}/5)!</span></li>
             """,
-            code_snippet="""# Tahap 4.2: Rakit Neural Network 1-Layer persis diagram Slide 29
+            code_snippet="""# Tahap 4.2: Rakit Neural Network 1-Layer persis diagram Slide 24 & 32
 model_nn = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(64, 64, 3)),
     tf.keras.layers.Flatten(),                        # TODO 7A
@@ -3309,17 +3687,17 @@ model_nn = tf.keras.Sequential([
 tampilkan_tebakan_model(model_nn, X_5foto, y_5foto)""",
             output_img="assets/P02/ho_step4_baby_model.png",
             output_caption=f"Epoch 0 (Bobot Acak): Model belum belajar — bar probabilitas ~20% merata, akurasi awal {e0_acc:.1f}% ({s_e0}/5 benar).",
-            theory_ref="Slide 29 — Input → Flatten → Dense(5, Softmax)",
+            theory_ref="Slide 24 & 32 — Dense(5, Softmax) & Weight Init (S30)",
             checklist_html="✓ <code>model_nn.summary()</code> tampil tepat <strong>61.445</strong> parameter<br/>✓ Grafik Epoch 0 menunjukkan bar ~20% rata (tebak acak)",
             callout_html="<strong>Kenapa perlu Training?</strong> Melihat &ldquo;Model Bayi&rdquo; menebak acak di Epoch 0 bikin peserta langsung paham fungsi <code>model.fit()</code>!",
             color="yellow",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 7 (Flatten + Dense(5, softmax)) dan cocokkan angka 61.445 di model.summary(), lalu jalankan Tahap 4.3 agar peserta melihat tebakan acak Model Bayi (Epoch 0, Loss {e0_loss:.2f}).",
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 7 (Flatten + Dense(5, softmax)) dan cocokkan angka 61.445 di model.summary(), lalu jalankan Tahap 4.3 agar peserta melihat tebakan acak Model Bayi (Epoch 0, Loss {e0_loss:.2f}).",
         ),
         _handson_step_slide(
             step_num=5,
             stage_badge="Tahap 5",
             title="Latih Model (model.fit) &amp; Kurva Loss",
-            kicker="HANDS-ON · TAHAP 5.1 &amp; 5.2 (10 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 5.1 &amp; 5.2 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Menjalankan siklus <strong>Backprop + Gradient Descent</strong> &amp; melihat <em>Loss</em> turun",
             bullets_html=f"""
               <li><span class="ho-sub-tag">5.1</span><span><strong># TODO 8 (1 baris):</strong> Panggil <code>model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16)</code> ({e_end} epoch di kelas, 2 saat smoke test).</span></li>
@@ -3335,17 +3713,17 @@ history = model_nn.fit(                               # TODO 8
 tampilkan_kurva_training(history, simpan_ke=RESULTS_DIR / "p02_nn_loss_curve.png")""",
             output_img="assets/P02/ho_step5_loss_curve.png",
             output_caption=f"Hasil nyata 1-Layer NN pada {total_imgs} foto Frozen: Loss turun mulus ({e1_loss:.2f} → {e_end_loss:.2f}) & Akurasi naik ke {e_end_acc:.1f}%.",
-            theory_ref="Slide 28–29 — Siklus Backpropagation, Gradient Descent & Epoch",
+            theory_ref="Slide 29–31 — Backprop, Adam, Batch Size & Epoch",
             checklist_html="✓ Kurva merah <strong>Loss</strong> turun mulus dari Epoch 1 → 20<br/>✓ File <code>results/p02_nn_loss_curve.png</code> tersimpan otomatis",
             callout_html="<strong>Ingat metodologi:</strong> Pembagian data <em>train/val/test</em> resmi bebas <em>leakage</em> (Group Split) akan dipelajari tuntas di <strong>P05</strong>.",
             color="blue",
-            notes=f"Alokasi waktu: {'10' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 8 menjalankan model_nn.fit() selama 20 epoch (~2 detik) dan plot kurva Loss turun ({e1_loss:.2f} -> {e_end_loss:.2f}) serta Akurasi naik ke {e_end_acc:.1f}%!",
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 8 menjalankan model_nn.fit() selama 20 epoch (~2 detik) dan plot kurva Loss turun ({e1_loss:.2f} -> {e_end_loss:.2f}) serta Akurasi naik ke {e_end_acc:.1f}%!",
         ),
         _handson_step_slide(
             step_num=6,
             stage_badge="Tahap 5.3–5.4",
             title="Uji Tebak &amp; Peta Bobot ΔW",
-            kicker="HANDS-ON · TAHAP 5.3, 5.4 &amp; BONUS (9 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
+            kicker="HANDS-ON · TAHAP 5.3, 5.4 &amp; BONUS (8,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Menguji model menebak 5 foto Frozen &amp; mengintip isi otak bobot <code>ΔW</code>",
             bullets_html=f"""
               <li><span class="ho-sub-tag green">5.3</span><span><strong>Before vs After:</strong> Bandingkan tebakan Epoch 0 ({s_e0}/5) vs Epoch {e_end} (<strong>{s_end}/5 benar ✓</strong>) pada 5 karakter Frozen!</span></li>
@@ -3359,11 +3737,11 @@ tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="SESUDAH BELAJAR")
 tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             output_img="assets/P02/ho_step6_predict_and_weights.png",
             output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar! Bawah: peta ΔW menunjukkan area fokus tiap neuron (jembatan ke CNN P03).",
-            theory_ref="Jembatan P02 → P03 (CNN) & P05 (Anti-Leakage Split)",
+            theory_ref="Slide 31 (Overfitting) → P03 (CNN) & P05 (Split)",
             checklist_html=f"✓ Tebakan naik dari <strong>{s_e0}/5 → {s_end}/5</strong> &amp; siluet muncul di peta <code>ΔW</code><br/>✓ Cek jujur <code>polos vs ramai</code> mengungkap risiko <em>shortcut learning</em>!",
             callout_html="<strong>Momen Aha!</strong> Model 1-layer cenderung menghafal posisi piksel &amp; latar — inilah alasan kita butuh <strong>CNN (P03)</strong> &amp; <strong>Group Split (P05)</strong>!",
             color="green",
-            notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 5.3 (Before vs After {s_e0}/5 -> {s_end}/5 benar) dan Tahap 5.4 (heatmap Fokus Bobot ΔW). Tunjuk langsung area kuning menyala di tengah heatmap sebagai jembatan alami menuju P03 (CNN)!",
+            notes=f"Alokasi waktu: {'8.5' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 5.3 (Before vs After {s_e0}/5 -> {s_end}/5 benar) dan Tahap 5.4 (heatmap Fokus Bobot ΔW). Tunjuk langsung area kuning menyala di tengah heatmap sebagai jembatan alami menuju P03 (CNN)!",
         ),
     ]
 
@@ -3382,11 +3760,13 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
     ]
     _dict_b3 = [
         ("Input Layer &amp; Flatten", "<code>Flatten</code> meluruskan foto <code>H×W×C</code> menjadi 1 kolom vektor piksel penerima input (<code>150.528</code> neuron).", 21, "input layer flatten piksel vektor 150528"),
-        ("Neuron, Weight &amp; Bias", "Unit hitung inti: tiap input dikali bobot (<code>W</code>) lalu ditambah pergeseran ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>.", 25, "neuron weight bias bobot ambang"),
-        ("ReLU &amp; Softmax", "Fungsi aktivasi: <code>ReLU</code> memangkas negatif jadi <code>0</code>; <code>Softmax</code> mengubah skor jadi probabilitas total <code>100%</code>.", 26, "relu sigmoid softmax aktivasi probabilitas"),
-        ("Forward Pass &amp; Argmax", "Aliran hitung maju dari piksel foto → Softmax, lalu <code>Argmax</code> memilih kelas berpeluang tertinggi.", 27, "forward pass argmax prediksi output"),
-        ("Loss Function", "Skor hukuman seberapa jauh prediksi model dari label asli (<code>−ln P</code> — makin kecil makin baik!).", 28, "loss function error hukuman cross entropy"),
-        ("Backprop, GD &amp; Epoch", "<code>Backpropagation</code> melacak asal salah; <code>Gradient Descent</code> menggeser <code>W, b</code> tiap putaran <code>Epoch</code>.", 29, "backpropagation gradient descent epoch learning rate training"),
+        ("Dense &amp; Parameter", "Lapisan <em>Fully Connected</em>: semua input tersambung ke semua output; <code>Parameter = (In×Out) + Bias</code>.", 24, "dense fully connected parameter weight bias 61445 752645"),
+        ("Neuron, Weight &amp; Bias", "Unit hitung inti: tiap input dikali bobot (<code>W</code>) lalu ditambah ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>.", 26, "neuron weight bias bobot ambang"),
+        ("ReLU, Sigmoid/Tanh &amp; Softmax", "Aktivasi non-linear: <code>ReLU</code> (negatif→<code>0</code>), <code>Sigmoid/Tanh</code>, &amp; <code>Softmax</code> (peluang total <code>100%</code>).", 27, "relu sigmoid tanh softmax aktivasi probabilitas"),
+        ("Argmax &amp; Loss Function", "<code>Argmax</code> pilih peluang tertinggi; <code>Loss (−ln P)</code> mengukur seberapa salah tebakan dari label asli.", 28, "forward pass argmax loss function error cross entropy"),
+        ("Backprop &amp; Gradient Descent", "<code>Backpropagation</code> melacak sumber salah; <code>Gradient Descent</code> menggeser <code>W, b</code> menuruni bukit <em>Loss</em>.", 29, "backpropagation gradient descent training"),
+        ("LR, Init &amp; Optimizer (Adam)", "<em>Weight Init</em> = mulai bobot acak; <em>Learning Rate</em> = besar langkah; <code>Adam</code> = optimizer adaptif.", 30, "learning rate weight initialization optimizer adam sgd"),
+        ("Batch Size, Epoch &amp; Overfitting", "<code>Batch</code> = paket foto per update (<code>Step</code>); <code>Epoch</code> = 1 putaran penuh; <em>Overfitting</em> = hafal latar/latihan.", 31, "batch size step iteration epoch overfitting underfitting generalization"),
     ]
     def _render_dict_rows(items, ch, cls):
         return "\n            ".join(
@@ -3399,7 +3779,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
         )
     _glossary_html = f"""
     <!-- KAMUS ISTILAH (2-COLUMN GROUPED DICTIONARY LIST + FILTER + SEARCH + SLIDE JUMP) -->
-    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 12 istilah asli Bab 1–3 dalam format kamus 2 kolom. Gunakan tombol filter Bab, kotak cari istilah, atau klik kode slide (S08–S29) jika peserta ingin langsung menengok ulang visualnya.">
+    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 14 istilah asli Bab 1–3 dalam format kamus 2 kolom. Gunakan tombol filter Bab, kotak cari istilah, atau klik kode slide (S08–S29) jika peserta ingin langsung menengok ulang visualnya.">
       <div class="gloss-head-row">
         <div>
           <div class="kicker">GLOSARIUM RINGKAS · TEORI NEURAL NETWORK</div>
@@ -3411,10 +3791,10 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <input type="text" id="gloss-search-inp" class="gloss-search" placeholder="Cari istilah..." oninput="searchGlossary(this.value)" />
           </div>
           <div class="gloss-filter-bar">
-            <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (12)</button>
+            <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (14)</button>
             <button type="button" class="gloss-fbtn" data-ch="1" onclick="filterGlossary('1', this)">Bab 1 (2)</button>
             <button type="button" class="gloss-fbtn" data-ch="2" onclick="filterGlossary('2', this)">Bab 2 (4)</button>
-            <button type="button" class="gloss-fbtn" data-ch="3" onclick="filterGlossary('3', this)">Bab 3 (6)</button>
+            <button type="button" class="gloss-fbtn" data-ch="3" onclick="filterGlossary('3', this)">Bab 3 (8)</button>
           </div>
         </div>
       </div>
@@ -3443,7 +3823,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
           <div class="dict-group grow">
             <div class="dict-group-head b3">
               <span>BAB 3 · ALUR MESIN NEURAL NETWORK</span>
-              <span class="dict-group-cnt">6 istilah</span>
+              <span class="dict-group-cnt">8 istilah</span>
             </div>
             <div class="dict-list">
               {_render_dict_rows(_dict_b3, "3", "b3")}
@@ -3720,7 +4100,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             data_title="Kuis 5/5 — Backpropagation & Gradient Descent",
             kicker="EVALUASI CEPAT · KUIS 5 / 5 (BAB 3 · TAHAP 5)",
             title_html='Proses Koreksi Bobot: <span class="hl-blue">Backprop &amp; Gradient Descent</span>',
-            question_html="Saat simulasi training Epoch 1 → Epoch 8 di Slide 29, <em>Mean Loss</em> turun dari <strong><code>1.70 → 0.21</code></strong>. Pasangan proses apa yang mengoreksi bobot <strong><code>W &amp; b</code></strong> agar tebakan makin akurat?",
+            question_html="Saat simulasi training Epoch 1 → Epoch 8 di Slide 32, <em>Mean Loss</em> turun dari <strong><code>1.70 → 0.21</code></strong>. Pasangan proses apa yang mengoreksi bobot <strong><code>W &amp; b</code></strong> agar tebakan makin akurat?",
             choices=[
                 "<strong>A.</strong> Flatten + Argmax (meluruskan piksel lalu memilih skor tertinggi)",
                 "<strong>B.</strong> Backpropagation + Gradient Descent (melacak sumber error mundur lalu menggeser <code>W &amp; b</code> menuruni bukit <em>Loss</em>)",
@@ -3811,7 +4191,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
       </div>
       <div class="finale-banner">
         <div style="font-size:12.6px; color:#E8EAED;">
-          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 37–38</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
+          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 40–41</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
         </div>
         <div style="font-size:12px; font-style:italic; color:#9AA0A6; white-space:nowrap;">&ldquo;Memahami 1 neuron dengan jernih adalah kunci memahami jaringan jutaan parameter.&rdquo;</div>
       </div>
@@ -3899,7 +4279,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">3Blue1Brown — But what is a Neural Network?</span><span class="ref-tag must">Wajib</span></div>
           </div>
           <div class="ref-desc">Visual paling jernih untuk melihat langsung bagaimana piksel gambar masuk ke <em>Input Layer</em>, dikali bobot (<em>weight</em>), ditambah <em>bias</em>, hingga prediksi!</div>
-          <div class="ref-card-foot"><span class="ref-url">youtube.com/watch?v=aircAruvnKk ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 1–4 (S20–S27)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/watch?v=aircAruvnKk ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 1–4 (S20–S28)</span></div>
         </a>
         <a class="ref-card-rich acc-yellow" href="https://playground.tensorflow.org/" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -3915,7 +4295,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">3Blue1Brown — Playlist Neural Networks (Bab 1–4)</span><span class="ref-tag">Video</span></div>
           </div>
           <div class="ref-desc">Seri lengkap 4 episode: membedah <em>Loss Function</em>, cara kerja <em>Gradient Descent</em> menuruni lembah error, hingga intuisi <em>Backpropagation</em>.</div>
-          <div class="ref-card-foot"><span class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_... ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 5 (S28–S29)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_... ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 5 (S29–S32)</span></div>
         </a>
         <a class="ref-card-rich acc-green" href="https://keras.io/guides/sequential_model/" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -3923,7 +4303,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">Keras Official — The Sequential Model Guide [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
           </div>
           <div class="ref-desc">Panduan resmi menyusun layer <code>Sequential</code>, <code>Flatten</code>, dan <code>Dense(..., activation="softmax")</code> di Keras 3 beserta cara membaca <code>summary()</code>.</div>
-          <div class="ref-card-foot"><span class="ref-url">keras.io/guides/sequential_model/ ↗</span><span class="ref-ctx-pill">Hands-On Tahap 4–5 (S43–S45)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">keras.io/guides/sequential_model/ ↗</span><span class="ref-ctx-pill">Hands-On Tahap 4–5 (S46–S48)</span></div>
         </a>
         <a class="ref-card-rich acc-green" href="https://3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -7708,7 +8088,7 @@ def build_extra_js(data: dict) -> str:
       _tmDrawOverlay();
       tmRaf = requestAnimationFrame(_tickTm);
     }}
-    resetTmSim();
+    tmPhotoIdx = 1; setTmMode('after');
 
     // =========================================================================
     // SIMULATOR #5 (Slide 25): SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP 4.1 (WEIGHT + BIAS)
@@ -8236,7 +8616,7 @@ def build_extra_js(data: dict) -> str:
           // Center box: Live ReLU Curve Machine!
           h += `<rect x="174" y="6" width="240" height="206" rx="12" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>`;
           h += `<text x="294" y="22" text-anchor="middle" font-family="Poppins, Arial" font-size="9.4" font-weight="700" fill="#C5221F">TAHAP 4.2 · MESIN ReLU</text>`;
-          h += `<text x="294" y="34" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">f(z) = max(0, z)  (Hidden Layer)</text>`;
+          h += `<text x="294" y="34" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">f(z) = max(0, z)  (Lapisan Fitur)</text>`;
           // Embedded crisp mini SVG coordinate plot (x=186..402, y=44..186)
           const gx0 = 188, gx1 = 400, gy0 = 46, gy1 = 182;
           const xTo = (v) => gx0 + ((Math.max(-4.2, Math.min(4.2, v)) + 4.2) / 8.4) * (gx1 - gx0);
@@ -8976,7 +9356,7 @@ def build_extra_js(data: dict) -> str:
       // =========================================================================
       h += `<g opacity="${{colOp(1)}}">`;
       h += `<rect id="fnn-col-1" x="4" y="28" width="124" height="250" rx="13" fill="#F8F9FA" stroke="${{colStroke(1, '#4285F4')}}" stroke-width="${{colSw(1)}}"/>`;
-      h += `<rect x="18" y="36" width="96" height="16" rx="8" fill="#E8F0FE"/><text x="66" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.6" font-weight="800" fill="#1A73E8">TAHAP 1 · PIKSEL</text>`;
+      h += `<rect x="18" y="36" width="96" height="16" rx="8" fill="#E8F0FE"/><text x="66" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.6" font-weight="800" fill="#1A73E8">LANGKAH 1 · PIKSEL</text>`;
       h += `<text x="66" y="65" text-anchor="middle" font-family="Poppins, Arial" font-size="9.6" font-weight="700" fill="#202124">Foto ${{clsName}}</text>`;
       h += `<defs><clipPath id="fnn-ph-clip"><rect x="20" y="74" width="92" height="92" rx="10"/></clipPath></defs>`;
       h += `<image id="fnn-photo-el" href="${{FULL_NN_DATA.thumbs[fnnPhotoIdx]}}" x="20" y="74" width="92" height="92" preserveAspectRatio="xMidYMid slice" clip-path="url(#fnn-ph-clip)"/>`;
@@ -9006,7 +9386,7 @@ def build_extra_js(data: dict) -> str:
       // =========================================================================
       h += `<g opacity="${{colOp(2)}}">`;
       h += `<rect id="fnn-col-2" x="154" y="28" width="158" height="250" rx="13" fill="#E8F0FE" stroke="${{colStroke(2, '#4285F4')}}" stroke-width="${{colSw(2)}}"/>`;
-      h += `<rect x="179" y="36" width="108" height="16" rx="8" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1"/><text x="233" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.5" font-weight="800" fill="#1A73E8">TAHAP 2 · INPUT LAYER</text>`;
+      h += `<rect x="179" y="36" width="108" height="16" rx="8" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1"/><text x="233" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.5" font-weight="800" fill="#1A73E8">LANGKAH 2 · INPUT LAYER</text>`;
       for (let i = 0; i < 7; i++) {{
         if (i === 3) {{
           h += `<rect id="fnn-in-3" x="163" y="${{inY[3] - 11.5}}" width="140" height="23" rx="7" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.3" stroke-dasharray="4,2"/>`;
@@ -9051,7 +9431,7 @@ def build_extra_js(data: dict) -> str:
       // =========================================================================
       h += `<g opacity="${{colOp(3)}}">`;
       h += `<rect id="fnn-col-3" x="382" y="28" width="196" height="250" rx="13" fill="#FEF7E0" stroke="${{colStroke(3, '#FBBC04')}}" stroke-width="${{colSw(3)}}"/>`;
-      h += `<rect x="404" y="36" width="152" height="16" rx="8" fill="#FFFFFF" stroke="#FDE293" stroke-width="1"/><text x="480" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#B06000">TAHAP 3 · WEIGHT + BIAS</text>`;
+      h += `<rect x="404" y="36" width="152" height="16" rx="8" fill="#FFFFFF" stroke="#FDE293" stroke-width="1"/><text x="480" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#B06000">LANGKAH 3 · WEIGHT + BIAS</text>`;
       h += `<text x="480" y="63" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" fill="#5F6368">z = Σ(x·w) + b  (5 Skor Mentah)</text>`;
 
       let maxZIdx = 0;
@@ -9087,7 +9467,7 @@ def build_extra_js(data: dict) -> str:
       // =========================================================================
       h += `<g opacity="${{colOp(4)}}">`;
       h += `<rect id="fnn-col-4" x="608" y="28" width="212" height="250" rx="13" fill="#E6F4EA" stroke="${{colStroke(4, '#34A853')}}" stroke-width="${{colSw(4)}}"/>`;
-      h += `<rect x="640" y="36" width="148" height="16" rx="8" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1"/><text x="714" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#137333">TAHAP 4 · OUTPUT (SOFTMAX)</text>`;
+      h += `<rect x="640" y="36" width="148" height="16" rx="8" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1"/><text x="714" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="#137333">LANGKAH 4 · OUTPUT (SOFTMAX)</text>`;
       h += `<text x="714" y="63" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.3" fill="#5F6368">e^z / Σe^z (100%) → Argmax</text>`;
 
       for (let j = 0; j < 5; j++) {{
@@ -9128,7 +9508,7 @@ def build_extra_js(data: dict) -> str:
       const c5Base = !isCorrect ? '#EA4335' : (isConf ? '#34A853' : '#FBBC04');
       h += `<g opacity="${{colOp(5)}}">`;
       h += `<rect id="fnn-col-5" x="844" y="28" width="202" height="250" rx="13" fill="${{c5Fill}}" stroke="${{colStroke(5, isBackprop ? '#EA4335' : c5Base)}}" stroke-width="${{colSw(5)}}"/>`;
-      h += `<rect x="872" y="36" width="146" height="16" rx="8" fill="#FFFFFF" stroke="${{isBackprop ? '#EA4335' : '#DADCE0'}}" stroke-width="1"/><text x="945" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="${{isBackprop ? '#C5221F' : '#202124'}}">TAHAP 5 · LOSS &amp; EPOCH</text>`;
+      h += `<rect x="872" y="36" width="146" height="16" rx="8" fill="#FFFFFF" stroke="${{isBackprop ? '#EA4335' : '#DADCE0'}}" stroke-width="1"/><text x="945" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="7.4" font-weight="800" fill="${{isBackprop ? '#C5221F' : '#202124'}}">LANGKAH 5 · LOSS &amp; EPOCH</text>`;
 
       // Live Loss & Error Box (compact height 54px so 5-char scoreboard fits cleanly below!)
       const errPct = Math.max(0, 100 - ph.probs[fnnPhotoIdx]);
@@ -9653,30 +10033,220 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
     // =========================================================================
     // SIMULATOR #9 (Slide 35): Gradient Descent & Learning Rate
     // =========================================================================
-    let gdMode = 'ideal';
-    const GD_CFGS = {{
-      small: {{
-        lr: 0.03, title: 'LR Kecil (0.03) — Turun Sangat Pelan', cls: 'callout yellow', lossColor: '#B06000',
-        note: '<strong>Terlalu Pelan:</strong> Setelah 8 langkah dari <code>w=-2.8</code>, posisi masih jauh dari dasar lembah (butuh banyak epoch).',
-      }},
-      ideal: {{
-        lr: 0.20, title: 'LR Ideal (0.20) — Mulus ke Dasar Lembah', cls: 'callout green', lossColor: '#137333',
-        note: '<strong>Pas!</strong> Dalam 8 langkah, bobot meluncur cepat &amp; tepat menuju dasar lembah (<code>Loss ≈ 0.002</code>).',
-      }},
-      large: {{
-        lr: 1.06, title: 'LR Terlalu Besar (1.06) — Memantul Liar!', cls: 'callout red', lossColor: '#C5221F',
-        note: '<strong>Bahaya Divergen!</strong> Langkah kebesaran membuat bobot melompati dasar lembah hingga <em>Loss</em> malah makin meledak.',
-      }},
-    }};
-    function setGdMode(m) {{
-      gdMode = m;
-      document.querySelectorAll('#gd-presets button').forEach((b) => {{
-        b.classList.toggle('outline', b.dataset.gd !== m);
+    // =========================================================================
+    // SIMULATOR SLIDE 30: INTERACTIVE 60FPS WEIGHT INIT, LR & SGD vs ADAM
+    // =========================================================================
+    const GD_MAX_STEPS = 10;
+    let gdMode = 'ideal';          // 'small' | 'ideal' | 'large' | 'custom'
+    let gdOpt = 'sgd';             // 'sgd' | 'adam' | 'duel'
+    let gdLr = 0.20;
+    let gdStartW = -3.0;           // Weight Initialization (Epoch 0)
+    let gdCurStep = GD_MAX_STEPS;  // 0..GD_MAX_STEPS
+    let gdAnimT = 1.0;             // 0..1 smooth interpolation for active hop
+    let gdTimer = null;
+    let gdRaf = null;
+
+    function _setGdSyncCards(activeIdx) {{
+      const colors = ['', 'sync-yellow', 'sync-blue', 'sync-green'];
+      [1, 2, 3].forEach((k) => {{
+        const el = document.getElementById('gd-sc-' + k);
+        if (!el) return;
+        el.classList.remove('sync-on', 'sync-dim', 'sync-yellow', 'sync-blue', 'sync-green');
+        if (activeIdx === 0) return;
+        if (k === activeIdx) el.classList.add('sync-on', colors[k]);
+        else el.classList.add('sync-dim');
       }});
+    }}
+
+    function _computeSgdPath(w0, lr, steps) {{
+      const pts = [{{ w: w0, loss: w0 * w0 }}];
+      let w = w0;
+      for (let s = 1; s <= steps; s++) {{
+        const grad = 2 * w;
+        w = w - lr * grad;
+        pts.push({{ w, loss: w * w }});
+      }}
+      return pts;
+    }}
+
+    function _computeAdamPath(w0, lr, steps) {{
+      // True Adam update (m, v + bias correction) with adaptive step scaling so
+      // learners clearly observe Adam accelerating tiny LR & taming giant LR!
+      const pts = [{{ w: w0, loss: w0 * w0 }}];
+      let w = w0, m = 0, v = 0;
+      const b1 = 0.72, b2 = 0.90, eps = 1e-8;
+      // Adaptive effective step bounded nicely to show real Adam stability vs SGD
+      const alpha = Math.min(0.62, Math.max(0.42, 0.35 + lr * 0.26));
+      for (let t = 1; t <= steps; t++) {{
+        const g = 2 * w;
+        m = b1 * m + (1 - b1) * g;
+        v = b2 * v + (1 - b2) * g * g;
+        const mHat = m / (1 - Math.pow(b1, t));
+        const vHat = v / (1 - Math.pow(b2, t));
+        w = w - alpha * mHat / (Math.sqrt(vHat) + eps);
+        pts.push({{ w, loss: w * w }});
+      }}
+      return pts;
+    }}
+
+    function _stopGdPlay() {{
+      if (gdTimer) {{ clearInterval(gdTimer); gdTimer = null; }}
+      if (gdRaf) {{ cancelAnimationFrame(gdRaf); gdRaf = null; }}
+      const btn = document.getElementById('gd-btn-play');
+      if (btn) btn.textContent = '▶ Play';
+    }}
+
+    function _animateSingleHop() {{
+      if (gdRaf) cancelAnimationFrame(gdRaf);
+      const t0 = performance.now();
+      const dur = 360;
+      const tick = (now) => {{
+        const raw = Math.min(1, (now - t0) / dur);
+        // Smooth cubic ease-out
+        gdAnimT = 1 - Math.pow(1 - raw, 3);
+        renderGdCanvas();
+        if (raw < 1) {{
+          gdRaf = requestAnimationFrame(tick);
+        }} else {{
+          gdRaf = null;
+        }}
+      }};
+      gdAnimT = 0;
+      gdRaf = requestAnimationFrame(tick);
+    }}
+
+    function setGdMode(m) {{
+      _stopGdPlay();
+      if (m === 'duel') {{
+        gdMode = 'small';
+        gdLr = 0.04;
+        gdOpt = 'duel';
+        gdStartW = -3.0;
+        gdCurStep = GD_MAX_STEPS;
+        gdAnimT = 1.0;
+        _setGdSyncCards(3);
+      }} else {{
+        gdMode = m;
+        gdLr = m === 'small' ? 0.03 : (m === 'ideal' ? 0.20 : 1.06);
+        if (m === 'small' || m === 'large') gdOpt = 'sgd';
+        gdCurStep = GD_MAX_STEPS;
+        gdAnimT = 1.0;
+        _setGdSyncCards(gdOpt === 'sgd' ? 2 : 3);
+      }}
+      _syncGdControls();
       renderGdCanvas();
     }}
+
+    function setGdOptimizer(opt) {{
+      _stopGdPlay();
+      gdOpt = opt;
+      if (gdCurStep === 0) gdCurStep = GD_MAX_STEPS;
+      gdAnimT = 1.0;
+      _setGdSyncCards(opt === 'sgd' ? 2 : 3);
+      _syncGdControls();
+      renderGdCanvas();
+    }}
+
+    function setGdLrSlider(val) {{
+      _stopGdPlay();
+      gdLr = Number(val);
+      gdMode = Math.abs(gdLr - 0.03) < 0.005 ? 'small' : (Math.abs(gdLr - 0.20) < 0.005 ? 'ideal' : (Math.abs(gdLr - 1.06) < 0.005 ? 'large' : 'custom'));
+      if (gdCurStep === 0) gdCurStep = GD_MAX_STEPS;
+      gdAnimT = 1.0;
+      _setGdSyncCards(2);
+      _syncGdControls();
+      renderGdCanvas();
+    }}
+
+    function randomizeGdStart() {{
+      _stopGdPlay();
+      // Pick clear non-zero random starting point on left or right slope
+      const candidates = [-3.6, -3.1, -2.5, -1.9, 2.2, 2.8, 3.4];
+      let nextW = candidates[Math.floor(Math.random() * candidates.length)];
+      if (Math.abs(nextW - gdStartW) < 0.35) nextW = -gdStartW;
+      gdStartW = Number(nextW.toFixed(1));
+      gdCurStep = 0;
+      gdAnimT = 1.0;
+      _setGdSyncCards(1);
+      _syncGdControls();
+      renderGdCanvas();
+    }}
+
+    function resetGdSim() {{
+      _stopGdPlay();
+      gdCurStep = 0;
+      gdAnimT = 1.0;
+      _setGdSyncCards(1);
+      _syncGdControls();
+      renderGdCanvas();
+    }}
+
+    function stepGdSim() {{
+      _stopGdPlay();
+      gdCurStep = (gdCurStep >= GD_MAX_STEPS) ? 1 : (gdCurStep + 1);
+      _setGdSyncCards(gdOpt === 'sgd' ? 2 : 3);
+      _syncGdControls();
+      _animateSingleHop();
+    }}
+
+    function toggleGdPlay() {{
+      if (gdTimer) {{
+        _stopGdPlay();
+        return;
+      }}
+      if (gdCurStep >= GD_MAX_STEPS) gdCurStep = 0;
+      const btn = document.getElementById('gd-btn-play');
+      if (btn) btn.textContent = '■ Stop';
+      _setGdSyncCards(gdOpt === 'sgd' ? 2 : 3);
+      gdCurStep = Math.min(GD_MAX_STEPS, gdCurStep + 1);
+      _syncGdControls();
+      _animateSingleHop();
+      gdTimer = setInterval(() => {{
+        if (gdCurStep >= GD_MAX_STEPS) {{
+          _stopGdPlay();
+          return;
+        }}
+        gdCurStep += 1;
+        _syncGdControls();
+        _animateSingleHop();
+      }}, 560);
+    }}
+
+    function clickGdCanvas(ev) {{
+      const canvas = document.getElementById('gd-canvas');
+      if (!canvas) return;
+      _stopGdPlay();
+      const rect = canvas.getBoundingClientRect();
+      const px = ((ev.clientX - rect.left) / rect.width) * canvas.width;
+      const padL = 48, padR = 16, pw = canvas.width - padL - padR, maxX = 4.4;
+      const wRaw = ((px - padL) / pw) * (2 * maxX) - maxX;
+      const wClamped = Math.max(-3.9, Math.min(3.9, wRaw));
+      gdStartW = Math.abs(wClamped) < 0.3 ? (wClamped < 0 ? -0.6 : 0.6) : Number(wClamped.toFixed(1));
+      gdCurStep = 0;
+      gdAnimT = 1.0;
+      _setGdSyncCards(1);
+      _syncGdControls();
+      renderGdCanvas();
+    }}
+
+    function _syncGdControls() {{
+      document.querySelectorAll('#gd-presets button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.gd !== gdMode);
+      }});
+      document.querySelectorAll('#gd-opt-tabs button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.opt !== gdOpt);
+      }});
+      const sl = document.getElementById('gd-lr-slider');
+      if (sl) sl.value = gdLr.toFixed(2);
+      const lv = document.getElementById('gd-lr-val');
+      if (lv) {{
+        lv.textContent = gdLr.toFixed(2);
+        lv.style.color = gdLr >= 1.0 ? '#C5221F' : (gdLr <= 0.06 ? '#B06000' : '#1A73E8');
+        lv.style.background = gdLr >= 1.0 ? '#FCE8E6' : (gdLr <= 0.06 ? '#FEF7E0' : '#E8F0FE');
+      }}
+    }}
+
     function renderGdCanvas() {{
-      const cfg = GD_CFGS[gdMode];
       const canvas = document.getElementById('gd-canvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
@@ -9684,30 +10254,103 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       ctx.clearRect(0, 0, W, H);
       ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
 
-      const pts = [];
-      let w = -2.8;
-      for (let step = 0; step <= 8; step++) {{
-        pts.push({{ w, loss: w * w }});
-        w = w - cfg.lr * (2 * w);
-      }}
-      const last = pts[pts.length - 1];
-      document.getElementById('gd-title').textContent = cfg.title;
-      document.getElementById('gd-end-w').textContent = last.w.toFixed(2);
-      const lossEl = document.getElementById('gd-end-loss');
-      lossEl.textContent = last.loss.toFixed(3);
-      lossEl.style.color = cfg.lossColor;
-      const noteEl = document.getElementById('gd-note');
-      noteEl.className = cfg.cls;
-      noteEl.innerHTML = cfg.note;
+      const sgdAll = _computeSgdPath(gdStartW, gdLr, GD_MAX_STEPS);
+      const adamAll = _computeAdamPath(gdStartW, gdLr, GD_MAX_STEPS);
+      const curSgd = sgdAll[gdCurStep];
+      const curAdam = adamAll[gdCurStep];
 
-      const padL = 48, padR = 16, padT = 18, padB = 34;
+      // Update top title, telemetry pills, and explanation callout
+      const titleEl = document.getElementById('gd-title');
+      const stepEl = document.getElementById('gd-step-txt');
+      const wLbl = document.getElementById('gd-w-lbl');
+      const wEl = document.getElementById('gd-end-w');
+      const lLbl = document.getElementById('gd-loss-lbl');
+      const lossEl = document.getElementById('gd-end-loss');
+      const noteEl = document.getElementById('gd-note');
+
+      if (stepEl) stepEl.textContent = `t = ${{gdCurStep}} / ${{GD_MAX_STEPS}}`;
+
+      if (gdOpt === 'duel') {{
+        if (titleEl) titleEl.textContent = `Duel SGD vs Adam ★ (LR=${{gdLr.toFixed(2)}}, Mulai w₀=${{gdStartW.toFixed(1)}})`;
+        if (wLbl) wLbl.textContent = 'SGD Loss:';
+        if (wEl) {{ wEl.textContent = curSgd.loss.toFixed(2); wEl.style.color = curSgd.loss > 1.5 ? '#C5221F' : '#1A73E8'; }}
+        if (lLbl) lLbl.textContent = 'Adam ★ Loss:';
+        if (lossEl) {{ lossEl.textContent = curAdam.loss.toFixed(3); lossEl.style.color = '#137333'; }}
+        if (noteEl) {{
+          noteEl.className = 'callout green';
+          noteEl.innerHTML = gdCurStep === 0
+            ? `<strong>Epoch 0 (Weight Init w₀=${{gdStartW.toFixed(1)}}):</strong> Klik <strong>▶ Play</strong> agar <code>SGD</code> (biru) dan <code>Adam ★</code> (hijau) berlomba turun ke dasar lembah!`
+            : `<strong>Hasil Duel (t=${{gdCurStep}}):</strong> Dengan LR sama (<code>${{gdLr.toFixed(2)}}</code>), <strong><code>Adam ★</code></strong> (Loss <code>${{curAdam.loss.toFixed(3)}}</code>) adaptif &amp; stabil dibanding <code>SGD</code> (Loss <code>${{curSgd.loss.toFixed(2)}}</code>)!`;
+        }}
+      }} else if (gdOpt === 'adam') {{
+        if (titleEl) titleEl.textContent = `Optimizer Adam ★ (LR=${{gdLr.toFixed(2)}}) — Langkah Adaptif Stabil`;
+        if (wLbl) wLbl.textContent = 'Weight (w):';
+        if (wEl) {{ wEl.textContent = curAdam.w.toFixed(2); wEl.style.color = '#202124'; }}
+        if (lLbl) lLbl.textContent = 'Loss Adam:';
+        if (lossEl) {{ lossEl.textContent = curAdam.loss.toFixed(3); lossEl.style.color = '#137333'; }}
+        if (noteEl) {{
+          noteEl.className = 'callout green';
+          noteEl.innerHTML = gdCurStep === 0
+            ? `<strong>Weight Initialization (Epoch 0):</strong> Bobot mulai acak di <code>w₀=${{gdStartW.toFixed(1)}}</code> (Loss <code>${{curAdam.loss.toFixed(2)}}</code>). Klik <strong>▶ Play</strong> untuk melihat <code>Adam ★</code> meluncur!`
+            : `<strong>Adam ★ (Adaptif):</strong> Mengatur besar langkah otomatis berdasarkan riwayat gradien sehingga mulus menuju dasar lembah (<code>Loss = ${{curAdam.loss.toFixed(3)}}</code>) — inilah optimizer default Hands-On kita!`;
+        }}
+      }} else {{
+        const isDiv = gdLr >= 1.0;
+        const isSlow = gdLr <= 0.06;
+        if (titleEl) {{
+          titleEl.textContent = isDiv
+            ? `LR Terlalu Besar (${{gdLr.toFixed(2)}}) — Memantul Liar!`
+            : (isSlow ? `LR Kecil (${{gdLr.toFixed(2)}}) — Turun Sangat Pelan` : `LR Ideal (${{gdLr.toFixed(2)}}) — Mulus ke Dasar Lembah`);
+        }}
+        if (wLbl) wLbl.textContent = 'Weight (w):';
+        if (wEl) {{ wEl.textContent = curSgd.w.toFixed(2); wEl.style.color = '#202124'; }}
+        if (lLbl) lLbl.textContent = 'Nilai Loss:';
+        if (lossEl) {{
+          lossEl.textContent = curSgd.loss.toFixed(3);
+          lossEl.style.color = isDiv ? '#C5221F' : (isSlow ? '#B06000' : '#137333');
+        }}
+        if (noteEl) {{
+          if (gdCurStep === 0) {{
+            noteEl.className = 'callout yellow';
+            noteEl.innerHTML = `<strong>Weight Initialization (Epoch 0):</strong> Bobot mulai acak di <code>w₀=${{gdStartW.toFixed(1)}}</code> (<code>Loss = ${{curSgd.loss.toFixed(2)}}</code>). Klik <strong>▶ Play</strong> atau <strong>⏭ +1 Langkah</strong>!`;
+          }} else if (isDiv) {{
+            noteEl.className = 'callout red';
+            noteEl.innerHTML = `<strong>Bahaya Divergen (LR ≥ 1.0)!</strong> Langkah kebesaran membuat bobot melompati dasar lembah hingga <em>Loss</em> meledak jadi <code>${{curSgd.loss.toFixed(2)}}</code>! Coba klik <strong>Duel SGD vs Adam</strong>!`;
+          }} else if (isSlow) {{
+            noteEl.className = 'callout yellow';
+            noteEl.innerHTML = `<strong>Terlalu Pelan:</strong> Setelah ${{gdCurStep}} langkah, bobot baru bergeser sedikit ke <code>w=${{curSgd.w.toFixed(2)}}</code> (<code>Loss=${{curSgd.loss.toFixed(2)}}</code>) — butuh sangat banyak epoch!`;
+          }} else {{
+            noteEl.className = 'callout green';
+            noteEl.innerHTML = `<strong>Pas!</strong> Dalam ${{gdCurStep}} langkah dari <code>w₀=${{gdStartW.toFixed(1)}}</code>, bobot meluncur cepat &amp; tepat menuju dasar lembah (<code>Loss = ${{curSgd.loss.toFixed(3)}}</code>)!`;
+          }}
+        }}
+      }}
+
+      // Coordinate system
+      const padL = 48, padR = 16, padT = 22, padB = 30;
       const pw = W - padL - padR, ph = H - padT - padB;
       const maxX = 4.4, maxY = 19.5;
       const toX = (xv) => padL + ((Math.max(-maxX, Math.min(maxX, xv)) + maxX) / (2 * maxX)) * pw;
       const toY = (yv) => padT + ph - (Math.min(maxY, yv) / maxY) * ph;
 
+      // Soft grid + shaded target zone around w = 0
+      ctx.fillStyle = 'rgba(52,168,83,0.08)';
+      ctx.fillRect(toX(-0.55), padT, toX(0.55) - toX(-0.55), ph);
+      ctx.strokeStyle = '#EEF0F3'; ctx.lineWidth = 1;
+      for (let gy = 5; gy <= 15; gy += 5) {{
+        const yy = toY(gy);
+        ctx.beginPath(); ctx.moveTo(padL, yy); ctx.lineTo(padL + pw, yy); ctx.stroke();
+      }}
+      ctx.setLineDash([4, 4]);
+      ctx.strokeStyle = '#A8DAB5'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(toX(0), padT); ctx.lineTo(toX(0), padT + ph); ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Border frame
       ctx.strokeStyle = '#DADCE0'; ctx.lineWidth = 1.2; ctx.strokeRect(padL, padT, pw, ph);
-      ctx.strokeStyle = '#5F6368'; ctx.lineWidth = 2.8;
+
+      // Parabola L(w) = w^2
+      ctx.strokeStyle = '#5F6368'; ctx.lineWidth = 2.6;
       ctx.beginPath();
       for (let i = 0; i <= 160; i++) {{
         const xv = -maxX + (i / 160) * (2 * maxX);
@@ -9716,33 +10359,657 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       }}
       ctx.stroke();
 
+      // Target Minimum Dot at w = 0
       ctx.fillStyle = '#34A853';
       ctx.beginPath(); ctx.arc(toX(0), toY(0), 6.5, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.8; ctx.stroke();
 
-      const pCol = gdMode === 'ideal' ? '#1A73E8' : gdMode === 'small' ? '#E37400' : '#EA4335';
-      ctx.strokeStyle = pCol; ctx.lineWidth = 2.4;
+      // Helper to draw a trajectory up to gdCurStep with smooth hop interpolation
+      const drawPath = (allPts, col, labelTag, yOffset) => {{
+        const shown = allPts.slice(0, gdCurStep + 1);
+        // Compute animated head position
+        let headX, headY;
+        if (gdCurStep > 0 && gdAnimT < 1) {{
+          const p0 = shown[gdCurStep - 1], p1 = shown[gdCurStep];
+          const wInterp = p0.w + (p1.w - p0.w) * gdAnimT;
+          const lInterp = p0.loss + (p1.loss - p0.loss) * gdAnimT;
+          headX = toX(wInterp); headY = toY(lInterp);
+        }} else {{
+          headX = toX(shown[shown.length - 1].w); headY = toY(shown[shown.length - 1].loss);
+        }}
+
+        // Polyline path
+        if (shown.length > 1) {{
+          ctx.strokeStyle = col; ctx.lineWidth = 2.4;
+          ctx.beginPath();
+          for (let i = 0; i < shown.length - 1; i++) {{
+            const px = toX(shown[i].w), py = toY(shown[i].loss);
+            if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+          }}
+          ctx.lineTo(headX, headY);
+          ctx.stroke();
+        }}
+
+        // Past breadcrumb dots
+        for (let i = 0; i < shown.length - 1; i++) {{
+          const px = toX(shown[i].w), py = toY(shown[i].loss);
+          ctx.fillStyle = i === 0 ? '#202124' : '#FFFFFF';
+          ctx.strokeStyle = col; ctx.lineWidth = 1.8;
+          ctx.beginPath(); ctx.arc(px, py, i === 0 ? 4.8 : 3.6, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+        }}
+
+        // Active glowing ball
+        ctx.fillStyle = col; ctx.globalAlpha = 0.22;
+        ctx.beginPath(); ctx.arc(headX, headY, 13, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 1.0;
+        ctx.fillStyle = col; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(headX, headY, 7.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+
+        // Active label pill
+        if (labelTag) {{
+          ctx.font = '700 10px Roboto Mono'; ctx.textAlign = 'center';
+          const lx = Math.max(padL + 44, Math.min(padL + pw - 44, headX));
+          const ly = headY < padT + 26 ? headY + 21 + yOffset : Math.max(padT + 14, headY - 14 - yOffset);
+          ctx.fillStyle = col;
+          ctx.fillText(labelTag, lx, ly);
+        }}
+      }};
+
+      const sgdCol = gdLr >= 1.0 ? '#EA4335' : (gdLr <= 0.06 ? '#E37400' : '#1A73E8');
+      if (gdOpt === 'sgd') {{
+        drawPath(sgdAll, sgdCol, gdCurStep === 0 ? 'Mulai (t=0)' : `t=${{gdCurStep}}`, 0);
+      }} else if (gdOpt === 'adam') {{
+        drawPath(adamAll, '#137333', gdCurStep === 0 ? 'Mulai (t=0)' : `Adam t=${{gdCurStep}}`, 0);
+      }} else {{
+        drawPath(sgdAll, sgdCol, `SGD (t=${{gdCurStep}})`, 0);
+        drawPath(adamAll, '#137333', `Adam ★`, 13);
+      }}
+
+      // Start marker label at t=0 if already moved
+      if (gdCurStep > 0) {{
+        const sx = toX(gdStartW), sy = toY(gdStartW * gdStartW);
+        ctx.fillStyle = '#5F6368'; ctx.font = '700 9.6px Roboto Mono'; ctx.textAlign = 'center';
+        ctx.fillText(`Mulai w₀=${{gdStartW.toFixed(1)}}`, Math.max(padL + 52, Math.min(padL + pw - 52, sx)), Math.max(padT + 14, sy - 11));
+      }}
+
+      // Top-center subtle live formula HUD inside canvas
+      ctx.fillStyle = '#F8F9FA';
+      ctx.strokeStyle = '#E0E3E7'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(padL + pw / 2 - 126, padT + 5, 252, 21, 10); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#3C4043'; ctx.font = '700 9.8px Roboto Mono'; ctx.textAlign = 'center';
+      ctx.fillText(gdOpt === 'duel' ? '● SGD (Konstan)   vs   ● Adam ★ (Adaptif)' : `w_baru = w_lama − (${{gdLr.toFixed(2)}}) × Gradien`, padL + pw / 2, padT + 19);
+
+      // Axis labels
+      ctx.fillStyle = '#202124'; ctx.font = '700 10.6px Roboto'; ctx.textAlign = 'center';
+      ctx.fillText('Nilai Weight (w) — Target Minimum di w = 0', padL + pw / 2, H - 7);
+      ctx.save();
+      ctx.translate(14, padT + ph / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.fillStyle = '#5F6368'; ctx.font = '700 10.2px Roboto';
+      ctx.fillText('Loss (Kesalahan)', 0, 0);
+      ctx.restore();
+    }}
+    _syncGdControls();
+    renderGdCanvas();
+
+    // =========================================================================
+    // SIMULATOR SLIDE 31A: 3-STAGE VISUAL PIPELINE (STACK -> NN+RAM -> UPDATE W,b)
+    // =========================================================================
+    const BS_TOTAL = {total_imgs};
+    let bsSize = 16;
+    let bsDone = 3; // default live mid-epoch (Batch #3 inside NN!) so beginners immediately see how it works!
+    let bsTimer = null;
+
+    function _stopBsPlay() {{
+      if (bsTimer) {{ clearInterval(bsTimer); bsTimer = null; }}
+      const btn = document.getElementById('bs-btn-play');
+      if (btn) btn.textContent = '▶ Play 1 Epoch';
+    }}
+
+    function renderBsSvg(nBatches, photosDone) {{
+      const svg = document.getElementById('bs-svg');
+      if (!svg) return;
+      const isIdle = bsDone === 0;
+      const isDoneAll = bsDone >= nBatches;
+      const curBatchCnt = isIdle ? 0 : (bsDone === nBatches ? (BS_TOTAL - (nBatches - 1) * bsSize) : bsSize);
+      const remainPhotos = Math.max(0, BS_TOTAL - photosDone);
+      const pctEpoch = Math.round((photosDone / BS_TOTAL) * 100);
+
+      // RAM Load visual calibration per batch_size
+      const ramCfg = bsSize <= 8
+        ? {{ pct: 18, lbl: 'RAM: Hemat (18%)', col: '#34A853', bg: '#E6F4EA' }}
+        : bsSize <= 16
+        ? {{ pct: 36, lbl: 'RAM: Pas ★ (36%)', col: '#1A73E8', bg: '#E8F0FE' }}
+        : bsSize <= 32
+        ? {{ pct: 64, lbl: 'RAM: Sedang (64%)', col: '#E37400', bg: '#FEF7E0' }}
+        : {{ pct: 98, lbl: 'RAM: PENUH! (98%)', col: '#EA4335', bg: '#FCE8E6' }};
+
+      const actStroke = isIdle ? '#DADCE0' : (isDoneAll ? '#34A853' : '#FBBC04');
+      const actFill = isIdle ? '#F8F9FA' : (isDoneAll ? '#E6F4EA' : '#FEF7E0');
+      const arr1Col = isIdle ? '#BDC1C6' : '#4285F4';
+      const arr2Col = isIdle ? '#BDC1C6' : '#34A853';
+
+      let h = '';
+      // --- STAGE 1: TUMPUKAN 143 FOTO (x=4..128) ---
+      h += `<rect x="4" y="6" width="124" height="142" rx="11" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.8"/>`;
+      h += `<text x="66" y="23" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="800" fill="#1A73E8">1. TUMPUKAN FOTO</text>`;
+
+      // Visual stacked photo cards
+      h += `<rect x="26" y="34" width="80" height="54" rx="7" fill="#C6DAFC" stroke="#8AB4F8" stroke-width="1.2"/>`;
+      h += `<rect x="22" y="39" width="80" height="54" rx="7" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.2"/>`;
+      h += `<rect x="18" y="44" width="80" height="54" rx="7" fill="#FFFFFF" stroke="#1A73E8" stroke-width="1.6"/>`;
+      // Tiny Frozen color dots grid inside top photo card
+      const dotCols = ['#4285F4', '#EA4335', '#FBBC04', '#34A853', '#5F6368'];
+      for (let r = 0; r < 2; r++) {{
+        for (let c = 0; c < 4; c++) {{
+          h += `<rect x="${{26 + c * 17}}" y="${{52 + r * 14}}" width="13" height="10" rx="2.5" fill="${{dotCols[(r * 4 + c) % 5]}}" opacity="0.78"/>`;
+        }}
+      }}
+      h += `<text x="58" y="92" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="800" fill="#1A73E8">${{BS_TOTAL}} foto Frozen</text>`;
+      h += `<text x="66" y="114" text-anchor="middle" font-family="Roboto, Arial" font-size="8.6" font-weight="700" fill="#3C4043">Dipecah jadi ${{nBatches}} paket</text>`;
+      h += `<rect x="18" y="121" width="96" height="19" rx="6" fill="#FFFFFF" stroke="#C6DAFC"/>`;
+      h += `<text x="66" y="133.5" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="#5F6368">Sisa: ${{remainPhotos}} foto</text>`;
+
+      // Arrow 1 -> 2 (Ambil Batch)
+      h += `<line x1="130" y1="76" x2="162" y2="76" stroke="${{arr1Col}}" stroke-width="2.6"/>`;
+      h += `<polygon points="160,70 170,76 160,82" fill="${{arr1Col}}"/>`;
+      h += `<rect x="129" y="49" width="42" height="20" rx="5" fill="#FFFFFF" stroke="${{arr1Col}}" stroke-width="1.1"/>`;
+      h += `<text x="150" y="61.5" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" font-weight="800" fill="${{arr1Col}}">${{bsSize}} foto</text>`;
+
+      // --- STAGE 2: MESIN NEURAL NETWORK + METERAN RAM (x=172..314) ---
+      h += `<rect x="172" y="6" width="142" height="142" rx="11" fill="${{actFill}}" stroke="${{actStroke}}" stroke-width="2"/>`;
+      h += `<text x="243" y="23" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="800" fill="#202124">2. MESIN NEURAL NET</text>`;
+
+      // Active batch pill inside NN
+      h += `<rect x="184" y="31" width="118" height="36" rx="8" fill="#FFFFFF" stroke="${{actStroke}}" stroke-width="1.5"/>`;
+      if (isIdle) {{
+        h += `<text x="243" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="9.5" font-weight="800" fill="#5F6368">Menunggu Batch</text>`;
+        h += `<text x="243" y="60" text-anchor="middle" font-family="Roboto, Arial" font-size="8" fill="#80868B">Klik ▶ Play / +1 Batch</text>`;
+      }} else {{
+        h += `<text x="243" y="47" text-anchor="middle" font-family="Poppins, Arial" font-size="9.6" font-weight="800" fill="${{isDoneAll ? '#137333' : '#B06000'}}">Batch #${{bsDone}} (${{curBatchCnt}} foto)</text>`;
+        h += `<text x="243" y="60" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.6" font-weight="700" fill="#3C4043">Forward → Loss → Backprop</text>`;
+      }}
+
+      // Live RAM Load Meter!
+      h += `<rect x="184" y="75" width="118" height="38" rx="7" fill="#FFFFFF" stroke="#E0E3E7"/>`;
+      h += `<text x="191" y="88" font-family="Poppins, Arial" font-size="8.1" font-weight="800" fill="${{ramCfg.col}}">${{ramCfg.lbl}}</text>`;
+      h += `<rect x="191" y="95" width="104" height="10" rx="5" fill="#EEF0F3"/>`;
+      const ramW = Math.max(8, Math.round(104 * (isIdle ? 0.05 : ramCfg.pct / 100)));
+      h += `<rect x="191" y="95" width="${{ramW}}" height="10" rx="5" fill="${{ramCfg.col}}"/>`;
+
+      // Cycle explanation footer in Stage 2
+      h += `<text x="243" y="128" text-anchor="middle" font-family="Roboto, Arial" font-size="8.2" font-weight="700" fill="#3C4043">1 Batch masuk = <tspan fill="#1A73E8">1 Step</tspan></text>`;
+      h += `<text x="243" y="140" text-anchor="middle" font-family="Roboto, Arial" font-size="7.8" fill="#5F6368">Beban memori ikut batch_size</text>`;
+
+      // Arrow 2 -> 3 (+1 Update W,b)
+      h += `<line x1="316" y1="76" x2="346" y2="76" stroke="${{arr2Col}}" stroke-width="2.6"/>`;
+      h += `<polygon points="344,70 354,76 344,82" fill="${{arr2Col}}"/>`;
+      h += `<rect x="317" y="49" width="36" height="20" rx="5" fill="#FFFFFF" stroke="${{arr2Col}}" stroke-width="1.1"/>`;
+      h += `<text x="335" y="62" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" font-weight="800" fill="${{arr2Col}}">+1× W,b</text>`;
+
+      // --- STAGE 3: UPDATE BOBOT W & b + PROGRESS 1 EPOCH (x=356..466) ---
+      h += `<rect x="356" y="6" width="110" height="142" rx="11" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>`;
+      h += `<text x="411" y="23" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="800" fill="#137333">3. KOREKSI W &amp; b</text>`;
+
+      h += `<rect x="366" y="31" width="90" height="52" rx="9" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1.4"/>`;
+      h += `<text x="411" y="57" text-anchor="middle" font-family="Poppins, Arial" font-size="22" font-weight="800" fill="${{isDoneAll ? '#137333' : '#1A73E8'}}">${{bsDone}}×</text>`;
+      h += `<text x="411" y="74" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.2" font-weight="700" fill="#5F6368">dari ${{nBatches}} Step</text>`;
+
+      // Epoch Progress inside Stage 3
+      h += `<text x="411" y="100" text-anchor="middle" font-family="Poppins, Arial" font-size="8.2" font-weight="800" fill="${{isDoneAll ? '#137333' : '#3C4043'}}">${{isDoneAll ? 'Epoch 1 ✓ Selesai!' : `Progress Epoch: ${{pctEpoch}}%`}}</text>`;
+      h += `<rect x="368" y="107" width="86" height="10" rx="5" fill="#FFFFFF" stroke="#A8DAB5"/>`;
+      h += `<rect x="368" y="107" width="${{Math.round(86 * pctEpoch / 100)}}" height="10" rx="5" fill="${{isDoneAll ? '#34A853' : '#4285F4'}}"/>`;
+      h += `<text x="411" y="132" text-anchor="middle" font-family="Roboto, Arial" font-size="7.8" fill="#3C4043">Selesai ${{nBatches}} Step</text>`;
+      h += `<text x="411" y="142" text-anchor="middle" font-family="Roboto, Arial" font-size="7.8" font-weight="700" fill="#137333">= 1 Epoch Penuh!</text>`;
+
+      svg.innerHTML = h;
+    }}
+
+    function renderBsUI() {{
+      const nBatches = Math.ceil(BS_TOTAL / bsSize);
+      bsDone = Math.max(0, Math.min(nBatches, bsDone));
+      const photosDone = bsDone === nBatches ? BS_TOTAL : bsDone * bsSize;
+
+      document.querySelectorAll('#bs-size-tabs button').forEach((b) => {{
+        b.classList.toggle('outline', Number(b.dataset.bs) !== bsSize);
+      }});
+
+      const pill = document.getElementById('bs-status-pill');
+      if (pill) {{
+        if (bsDone === 0) {{
+          pill.textContent = `Siap · 0/${{nBatches}} Step`;
+          pill.style.color = '#5F6368'; pill.style.background = '#F1F3F4';
+        }} else if (bsDone < nBatches) {{
+          pill.textContent = `Proses Batch #${{bsDone}} (${{bsDone}}/${{nBatches}} Step)`;
+          pill.style.color = '#B06000'; pill.style.background = '#FEF7E0';
+        }} else {{
+          pill.textContent = `Epoch 1 ✓ (${{nBatches}}/${{nBatches}} Step)`;
+          pill.style.color = '#137333'; pill.style.background = '#E6F4EA';
+        }}
+      }}
+
+      const tc = document.getElementById('bs-title-code');
+      if (tc) tc.textContent = `batch_size=${{bsSize}}`;
+      const progTxt = document.getElementById('bs-photo-prog');
+      if (progTxt) progTxt.textContent = `${{photosDone}} / ${{BS_TOTAL}} foto (${{Math.round(photosDone * 100 / BS_TOTAL)}}%)`;
+
+      const eqBar = document.getElementById('bs-eq-bar');
+      if (eqBar) {{
+        eqBar.innerHTML = `<span style="color:#3C4043;">⌈${{BS_TOTAL}} / ${{bsSize}}⌉ = <strong style="color:#1A73E8;">${{nBatches}} Step/Epoch</strong></span>`
+          + `<span style="color:#137333; font-weight:800;">20 Epoch = ${{nBatches * 20}}× koreksi W,b</span>`;
+      }}
+
+      const call = document.getElementById('bs-callout');
+      if (call) {{
+        if (bsSize === 143) {{
+          call.innerHTML = `<strong>Full Batch (143 foto sekaligus):</strong> Meteran RAM langsung <strong>PENUH (98%)</strong> dan bobot W &amp; b <strong>cuma dikoreksi 1×</strong> per epoch!`;
+        }} else if (bsSize === 8) {{
+          call.innerHTML = `<strong>Batch Kecil (8 foto):</strong> RAM sangat hemat (<strong>18%</strong>) dan bobot dikoreksi <strong>18× per epoch</strong> (lebih sering tapi lebih berisik).`;
+        }} else if (bsSize === 32) {{
+          call.innerHTML = `<strong>Batch Sedang (32 foto):</strong> RAM sedang (<strong>64%</strong>), hanya butuh <strong>5 Step/Epoch</strong> (100× koreksi dalam 20 epoch).`;
+        }} else {{
+          call.innerHTML = `<strong>Standar Hands-On (batch_size=16):</strong> RAM aman (<strong>36%</strong>) dan bobot W &amp; b dikoreksi <strong>9× tiap 1 Epoch</strong> (batch terakhir sisa 15 foto)!`;
+        }}
+      }}
+
+      renderBsSvg(nBatches, photosDone);
+
+      // Compact clickable batch pills strip
+      const grid = document.getElementById('bs-grid');
+      if (!grid) return;
+      let html = '';
+      for (let i = 1; i <= nBatches; i++) {{
+        const cnt = (i === nBatches) ? (BS_TOTAL - (nBatches - 1) * bsSize) : bsSize;
+        const isDone = i <= bsDone;
+        const isActive = i === bsDone && bsDone > 0 && bsDone < nBatches;
+        const bg = isActive ? '#FEF7E0' : (isDone ? '#E6F4EA' : '#F8F9FA');
+        const bd = isActive ? '1.8px solid #FBBC04' : (isDone ? '1.2px solid #34A853' : '1px solid #DADCE0');
+        const tx = isActive ? '#B06000' : (isDone ? '#137333' : '#5F6368');
+        html += `<div onclick="clickBsBatch(${{i}})" title="Batch #${{i}} (${{cnt}} foto)" style="cursor:pointer; flex:1 1 auto; min-width:${{nBatches > 10 ? '28px' : '40px'}}; background:${{bg}}; border:${{bd}}; border-radius:6px; padding:2.5px 4px; text-align:center; font-family:var(--font-code); font-size:8.4px; font-weight:800; color:${{tx}};">`
+          + `B${{i}}${{isActive ? ' ●' : (isDone ? ' ✓' : '')}}</div>`;
+      }}
+      grid.innerHTML = html;
+    }}
+
+    function setBatchSizeSim(sz) {{
+      _stopBsPlay();
+      bsSize = sz;
+      const nBatches = Math.ceil(BS_TOTAL / bsSize);
+      bsDone = nBatches === 1 ? 1 : Math.min(3, nBatches);
+      renderBsUI();
+    }}
+
+    function clickBsBatch(i) {{
+      _stopBsPlay();
+      bsDone = i;
+      renderBsUI();
+    }}
+
+    function resetBsSim() {{
+      _stopBsPlay();
+      bsDone = 0;
+      renderBsUI();
+    }}
+
+    function stepBsSim() {{
+      _stopBsPlay();
+      const nBatches = Math.ceil(BS_TOTAL / bsSize);
+      bsDone = (bsDone >= nBatches) ? 1 : (bsDone + 1);
+      renderBsUI();
+    }}
+
+    function toggleBsPlay() {{
+      if (bsTimer) {{ _stopBsPlay(); return; }}
+      const nBatches = Math.ceil(BS_TOTAL / bsSize);
+      if (bsDone >= nBatches) bsDone = 0;
+      const btn = document.getElementById('bs-btn-play');
+      if (btn) btn.textContent = '■ Stop';
+      bsDone += 1;
+      renderBsUI();
+      bsTimer = setInterval(() => {{
+        if (bsDone >= nBatches) {{ _stopBsPlay(); return; }}
+        bsDone += 1;
+        renderBsUI();
+      }}, nBatches > 10 ? 250 : 460);
+    }}
+
+    // =========================================================================
+    // SIMULATOR SLIDE 31B: INDEPENDENT PLAY (UNDERFIT / GOOD FIT / OVERFIT) + ALL
+    // =========================================================================
+    let fitScenario = 'good';  // 'under' | 'good' | 'over' | 'all'
+    let fitEpoch = 30;         // 1..30 (for independent modes) or 1..50 (for 'all')
+    let fitTimer = null;
+
+    function _fitMaxEp() {{
+      return fitScenario === 'all' ? 50 : 30;
+    }}
+
+    function _fitPlayLabel() {{
+      if (fitScenario === 'under') return '▶ Play Underfit';
+      if (fitScenario === 'good')  return '▶ Play Good Fit';
+      if (fitScenario === 'over')  return '▶ Play Overfit';
+      return '▶ Play 1→50';
+    }}
+
+    function _stopFitPlay() {{
+      if (fitTimer) {{ clearInterval(fitTimer); fitTimer = null; }}
+      const btn = document.getElementById('fit-btn-play');
+      if (btn) btn.textContent = _fitPlayLabel();
+    }}
+
+    function _fitCurvesFor(scen, ep) {{
+      if (scen === 'under') {{
+        // Model terlalu sederhana: Train & Val Loss sama-sama mandek tinggi!
+        const trainLoss = 1.06 + 0.62 * Math.exp(-ep / 6.5);
+        const valLoss   = 1.13 + 0.58 * Math.exp(-ep / 6.5);
+        const trainAcc  = Math.round(35 + 22 * (1 - Math.exp(-ep / 7.0)));
+        const valAcc    = Math.round(33 + 20 * (1 - Math.exp(-ep / 7.0)));
+        return {{ trainLoss, valLoss, trainAcc, valAcc }};
+      }}
+      if (scen === 'good') {{
+        // Model ideal: Train & Val Loss sama-sama turun mulus & rapat!
+        const trainLoss = 0.21 + 1.46 * Math.exp(-ep / 7.2);
+        const valLoss   = 0.26 + 1.44 * Math.exp(-ep / 7.5);
+        const trainAcc  = Math.min(92, Math.round(34 + 58 * (1 - Math.exp(-ep / 7.5))));
+        const valAcc    = Math.min(89, Math.round(32 + 57 * (1 - Math.exp(-ep / 7.8))));
+        return {{ trainLoss, valLoss, trainAcc, valAcc }};
+      }}
+      if (scen === 'over') {{
+        // Model terlalu hafal: Train Loss jatuh dekat 0, Val Loss balik naik tajam (bentuk U)!
+        const trainLoss = 0.04 + 1.62 * Math.exp(-ep / 6.2);
+        const valBase   = 0.32 + 1.38 * Math.exp(-ep / 5.6);
+        const overBump  = ep > 11 ? 0.0034 * Math.pow(ep - 11, 1.92) : 0;
+        const valLoss   = Math.min(1.80, valBase + overBump);
+        const trainAcc  = Math.min(99, Math.round(36 + 63 * (1 - Math.exp(-ep / 6.5))));
+        let valAcc      = Math.round(34 + 50 * (1 - Math.exp(-ep / 5.5)));
+        if (ep > 11) valAcc = Math.max(54, valAcc - Math.round((ep - 11) * 1.55));
+        return {{ trainLoss, valLoss, trainAcc, valAcc }};
+      }}
+      // 'all': Alur nyambung 1..50 (Underfit -> Good Fit -> Overfit)
+      const trainLoss = 1.65 * Math.exp(-ep / 9.5) + 0.04;
+      const valBase   = 1.68 * Math.exp(-ep / 10.2) + 0.24;
+      const overBump  = ep > 20 ? 0.00145 * Math.pow(ep - 20, 1.92) : 0;
+      const valLoss   = Math.min(1.85, valBase + overBump);
+      const trainAcc  = Math.min(99, Math.round(34 + 65 * (1 - Math.exp(-ep / 10.5))));
+      let valAcc      = Math.round(32 + 57 * (1 - Math.exp(-ep / 9.5)));
+      if (ep > 22) valAcc = Math.max(54, valAcc - Math.round((ep - 22) * 1.15));
+      return {{ trainLoss, valLoss, trainAcc, valAcc }};
+    }}
+
+    function _activeFitZone() {{
+      if (fitScenario !== 'all') return fitScenario;
+      if (fitEpoch <= 8) return 'under';
+      if (fitEpoch <= 25) return 'good';
+      return 'over';
+    }}
+
+    function renderFitCanvas() {{
+      const canvas = document.getElementById('fit-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const W = canvas.width, H = canvas.height;
+      ctx.clearRect(0, 0, W, H);
+      ctx.fillStyle = '#FFFFFF'; ctx.fillRect(0, 0, W, H);
+
+      const maxEp = _fitMaxEp();
+      fitEpoch = Math.max(1, Math.min(maxEp, fitEpoch));
+      const zone = _activeFitZone();
+      const stats = _fitCurvesFor(fitScenario, fitEpoch);
+
+      // Update tabs, play label, slider & badges
+      document.querySelectorAll('#fit-tabs button').forEach((b) => {{
+        b.classList.toggle('outline', b.dataset.fit !== fitScenario);
+      }});
+      const btn = document.getElementById('fit-btn-play');
+      if (btn && !fitTimer) btn.textContent = _fitPlayLabel();
+
+      const sl = document.getElementById('fit-ep-slider');
+      if (sl) {{
+        sl.max = String(maxEp);
+        sl.value = String(fitEpoch);
+        sl.style.accentColor = zone === 'good' ? '#34A853' : (zone === 'under' ? '#EA4335' : '#E37400');
+      }}
+      const ev = document.getElementById('fit-ep-val');
+      if (ev) {{
+        ev.textContent = `${{fitEpoch}}/${{maxEp}}`;
+        ev.style.color = zone === 'good' ? '#137333' : (zone === 'under' ? '#C5221F' : '#B06000');
+        ev.style.background = zone === 'good' ? '#E6F4EA' : (zone === 'under' ? '#FCE8E6' : '#FEF7E0');
+      }}
+
+      const zt = document.getElementById('fit-zone-title');
+      if (zt) {{
+        if (fitScenario === 'under') {{
+          zt.textContent = `Mode Underfitting (Epoch ${{fitEpoch}}/30) — Model Terlalu Sederhana`;
+          zt.style.color = '#C5221F';
+        }} else if (fitScenario === 'good') {{
+          zt.textContent = `Mode Good Fit ✓ (Epoch ${{fitEpoch}}/30) — Belajar Seimbang!`;
+          zt.style.color = '#137333';
+        }} else if (fitScenario === 'over') {{
+          zt.textContent = `Mode Overfitting ⚠️ (Epoch ${{fitEpoch}}/30) — Menghafal Data Latih!`;
+          zt.style.color = '#B06000';
+        }} else {{
+          if (zone === 'under') {{ zt.textContent = `Alur Nyambung · Zona Underfit (Epoch ${{fitEpoch}}/50)`; zt.style.color = '#C5221F'; }}
+          else if (zone === 'good') {{ zt.textContent = `Alur Nyambung · Zona Good Fit ✓ (Epoch ${{fitEpoch}}/50)`; zt.style.color = '#137333'; }}
+          else {{ zt.textContent = `Alur Nyambung · Zona Overfit ⚠️ (Epoch ${{fitEpoch}}/50)`; zt.style.color = '#B06000'; }}
+        }}
+      }}
+
+      const accTr = document.getElementById('fit-acc-tr');
+      const accVal = document.getElementById('fit-acc-val');
+      if (accTr) accTr.textContent = `${{stats.trainAcc}}%`;
+      if (accVal) {{
+        const valGood = (zone === 'good') || (fitScenario === 'over' && fitEpoch <= 11);
+        accVal.textContent = valGood ? `${{stats.valAcc}}% ✓` : `${{stats.valAcc}}% ⚠️`;
+        accVal.style.color = valGood ? '#137333' : '#C5221F';
+      }}
+
+      const call = document.getElementById('fit-callout');
+      if (call) {{
+        if (fitScenario === 'under' || (fitScenario === 'all' && zone === 'under')) {{
+          call.className = 'callout red';
+          call.innerHTML = fitScenario === 'under'
+            ? `<strong>Underfitting (Mandiri · Epoch ${{fitEpoch}}/30):</strong> Model terlalu sederhana — meski dilatih 30 epoch, garis tetap kaku &amp; <strong>Train (${{stats.trainAcc}}%) maupun Val (${{stats.valAcc}}%) sama-sama rendah</strong>!`
+            : `<strong>Zona Underfitting (Epoch ${{fitEpoch}}):</strong> Model baru mulai belajar sehingga garis pola masih datar — salah di latihan (${{stats.trainAcc}}%) maupun foto baru (${{stats.valAcc}}%)!`;
+        }} else if (fitScenario === 'good' || (fitScenario === 'all' && zone === 'good')) {{
+          call.className = 'callout green';
+          call.innerHTML = `<strong>Good Fit / Generalization ✓:</strong> Train Loss &amp; Val Loss <strong>turun bersama &amp; tetap rapat</strong> — akurat di latihan (<code>${{stats.trainAcc}}%</code>) <strong>DAN</strong> foto baru (<code>${{stats.valAcc}}%</code>)! Di <strong>P05</strong> kita pisah <code>train/val/test</code>.`;
+        }} else {{
+          call.className = 'callout yellow';
+          call.innerHTML = `<strong>Overfitting (Hafal Latar!):</strong> Train Loss jatuh ke <code>${{stats.trainLoss.toFixed(2)}}</code> (<code>${{stats.trainAcc}}%</code>), tapi <strong>Val Loss berbalik naik ke <code>${{stats.valLoss.toFixed(2)}}</code> &amp; foto baru anjlok (<code>${{stats.valAcc}}%</code>)</strong>! Solusi: <em>Group Split</em> (P05) &amp; <em>CNN</em> (P03).`;
+        }}
+      }}
+
+      // --- LEFT SUB-CHART: PATTERN FIT ---
+      const lx0 = 14, ly0 = 22, lw = 224, lh = 220;
+      ctx.fillStyle = '#FAFBFC'; ctx.strokeStyle = '#E0E3E7'; ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.roundRect(lx0, ly0, lw, lh, 8); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#3C4043'; ctx.font = '700 10px Poppins, Arial'; ctx.textAlign = 'center';
+      ctx.fillText('Pola yang Dipelajari Model', lx0 + lw / 2, 13);
+
+      const trPts = [
+        [0.10, 0.25], [0.22, 0.50], [0.34, 0.62], [0.46, 0.78],
+        [0.58, 0.66], [0.70, 0.56], [0.82, 0.34], [0.91, 0.28],
+      ];
+      const valPts = [[0.28, 0.58], [0.52, 0.72], [0.76, 0.44]];
+      const toLX = (u) => lx0 + 12 + u * (lw - 24);
+      const toLY = (v) => ly0 + lh - 14 - v * (lh - 28);
+
+      // Compute morphed pattern curve independently per scenario!
+      let alphaGood = 0, alphaOver = 0, tiltUnder = 0;
+      if (fitScenario === 'under') {{
+        // Stays linear! Only tilts slightly from horizontal to best-fit straight line
+        tiltUnder = Math.min(1, fitEpoch / 12);
+        alphaGood = 0.08 * Math.min(1, fitEpoch / 25);
+        alphaOver = 0;
+      }} else if (fitScenario === 'good') {{
+        // Smoothly bends from straight line -> clean parabola (NEVER zig-zags!)
+        alphaGood = Math.min(1, Math.max(0, (fitEpoch - 1) / 14));
+        alphaOver = 0;
+      }} else if (fitScenario === 'over') {{
+        // Bends quickly by Epoch 10, then zig-zags aggressively from Epoch 11 -> 30!
+        alphaGood = Math.min(1, Math.max(0, (fitEpoch - 1) / 9));
+        alphaOver = Math.min(1.15, Math.max(0, (fitEpoch - 10) / 16));
+      }} else {{
+        alphaGood = Math.min(1, Math.max(0, (fitEpoch - 2) / 14));
+        alphaOver = Math.min(1, Math.max(0, (fitEpoch - 22) / 22));
+      }}
+
+      const curveCol = zone === 'good' ? '#34A853' : (zone === 'under' ? '#EA4335' : '#E37400');
+      ctx.strokeStyle = curveCol; ctx.lineWidth = 2.6;
       ctx.beginPath();
-      pts.forEach((p, idx) => {{ const px = toX(p.w), py = toY(p.loss); if (idx === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }});
+      for (let i = 0; i <= 100; i++) {{
+        const u = i / 100;
+        const yUnder = 0.47 + (0.04 + 0.06 * tiltUnder) * (u - 0.5);
+        const yGood = 0.74 - 2.35 * Math.pow(u - 0.49, 2);
+        const wiggle = 0.16 * Math.sin((u - 0.08) * Math.PI * 6.5) * Math.sin(u * Math.PI);
+        const yMix = yUnder * (1 - alphaGood) + yGood * alphaGood + alphaOver * wiggle;
+        const px = toLX(u), py = toLY(Math.max(0.05, Math.min(0.95, yMix)));
+        if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+      }}
       ctx.stroke();
 
-      pts.forEach((p, idx) => {{
-        const px = toX(p.w), py = toY(p.loss);
-        ctx.fillStyle = idx === 0 ? '#202124' : idx === pts.length - 1 ? pCol : '#FFFFFF';
-        ctx.strokeStyle = pCol; ctx.lineWidth = 2;
-        ctx.beginPath(); ctx.arc(px, py, idx === pts.length - 1 ? 6.5 : 4.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-        if (idx === 0 || idx === pts.length - 1) {{
-          ctx.fillStyle = '#202124'; ctx.font = '700 10.5px Roboto Mono'; ctx.textAlign = 'center';
-          const lblX = idx === 0
-            ? Math.max(padL + 46, px - 36)
-            : Math.max(padL + 46, Math.min(padL + pw - 46, px));
-          const lblY = idx === pts.length - 1 && py < padT + 26 ? py + 22 : Math.max(padT + 14, py - 12);
-          ctx.fillText(idx === 0 ? 'Mulai (t=0)' : 'Akhir (t=8)', lblX, lblY);
-        }}
+      trPts.forEach(([u, v]) => {{
+        ctx.fillStyle = '#4285F4'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.4;
+        ctx.beginPath(); ctx.arc(toLX(u), toLY(v), 4.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       }});
-      ctx.fillStyle = '#202124'; ctx.font = '700 11px Roboto'; ctx.textAlign = 'center';
-      ctx.fillText('Nilai Weight (w) — Target Minimum di w = 0', padL + pw / 2, H - 6);
+      valPts.forEach(([u, v]) => {{
+        const cx = toLX(u), cy = toLY(v), r = 5.2;
+        ctx.fillStyle = '#137333'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r, cy);
+        ctx.closePath(); ctx.fill(); ctx.stroke();
+      }});
+
+      ctx.fillStyle = '#5F6368'; ctx.font = '600 8.8px Roboto, Arial'; ctx.textAlign = 'center';
+      ctx.fillText(
+        zone === 'under' ? 'Garis tetap kaku (tidak bisa melengkung)'
+          : (zone === 'good' ? 'Kurva halus cocok di ● & ★!' : (alphaOver < 0.15 ? 'Mulai melengkung, siap menghafal...' : 'Zig-zag hafal ● tapi meleset di ★!')),
+        lx0 + lw / 2, H - 7
+      );
+
+      // --- RIGHT SUB-CHART: TRAIN vs VAL LOSS ---
+      const rx0 = 268, ry0 = 22, rw = 238, rh = 220;
+      ctx.fillStyle = '#FAFBFC'; ctx.strokeStyle = '#E0E3E7'; ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.roundRect(rx0, ry0, rw, rh, 8); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#3C4043'; ctx.font = '700 10px Poppins, Arial'; ctx.textAlign = 'center';
+      ctx.fillText('Kurva Train Loss vs Val Loss', rx0 + rw / 2, 13);
+
+      const toRX = (ep) => rx0 + 16 + ((ep - 1) / (maxEp - 1)) * (rw - 26);
+      const toRY = (ls) => ry0 + rh - 14 - (Math.min(1.9, ls) / 1.9) * (rh - 26);
+
+      // Subtle background tint tailored to scenario!
+      if (fitScenario === 'under') {{
+        ctx.fillStyle = 'rgba(234,67,53,0.06)';
+        ctx.fillRect(rx0 + 2, ry0 + 2, rw - 4, toRY(0.95) - ry0);
+      }} else if (fitScenario === 'good') {{
+        ctx.fillStyle = 'rgba(52,168,83,0.08)';
+        ctx.fillRect(toRX(12), ry0 + 2, toRX(30) - toRX(12), rh - 4);
+      }} else if (fitScenario === 'over') {{
+        ctx.fillStyle = 'rgba(52,168,83,0.07)';
+        ctx.fillRect(toRX(7), ry0 + 2, toRX(13) - toRX(7), rh - 4);
+        ctx.fillStyle = 'rgba(234,67,53,0.09)';
+        ctx.fillRect(toRX(13), ry0 + 2, toRX(30) - toRX(13), rh - 4);
+      }} else {{
+        ctx.fillStyle = 'rgba(52,168,83,0.10)';
+        ctx.fillRect(toRX(12), ry0 + 2, toRX(25) - toRX(12), rh - 4);
+        ctx.fillStyle = 'rgba(234,67,53,0.08)';
+        ctx.fillRect(toRX(25), ry0 + 2, toRX(50) - toRX(25), rh - 4);
+      }}
+
+      // Faint full preview curves
+      ['trainLoss', 'valLoss'].forEach((key, ki) => {{
+        ctx.strokeStyle = ki === 0 ? 'rgba(66,133,244,0.20)' : 'rgba(234,67,53,0.20)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        for (let e = 1; e <= maxEp; e++) {{
+          const px = toRX(e), py = toRY(_fitCurvesFor(fitScenario, e)[key]);
+          if (e === 1) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }}
+        ctx.stroke();
+      }});
+
+      // Active solid curves up to fitEpoch
+      ['trainLoss', 'valLoss'].forEach((key, ki) => {{
+        ctx.strokeStyle = ki === 0 ? '#1A73E8' : '#EA4335';
+        ctx.lineWidth = 2.6;
+        ctx.beginPath();
+        for (let e = 1; e <= fitEpoch; e++) {{
+          const px = toRX(e), py = toRY(_fitCurvesFor(fitScenario, e)[key]);
+          if (e === 1) ctx.moveTo(px, py); else ctx.lineTo(px, py);
+        }}
+        ctx.stroke();
+      }});
+
+      // Vertical Epoch cursor + active dots
+      const cx = toRX(fitEpoch);
+      ctx.setLineDash([3, 3]); ctx.strokeStyle = '#5F6368'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(cx, ry0 + 4); ctx.lineTo(cx, ry0 + rh - 4); ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#1A73E8'; ctx.beginPath(); ctx.arc(cx, toRY(stats.trainLoss), 4.6, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#EA4335'; ctx.beginPath(); ctx.arc(cx, toRY(stats.valLoss), 4.6, 0, Math.PI * 2); ctx.fill();
+
+      // Crisp non-overlapping legend pill at top-right (or bottom-left when Val is high on right!)
+      const legY = (fitScenario === 'over' && fitEpoch > 20) ? (ry0 + rh - 38) : (ry0 + 6);
+      const legX = (fitScenario === 'over' && fitEpoch > 20) ? (rx0 + 8) : (rx0 + rw - 88);
+      ctx.fillStyle = 'rgba(255,255,255,0.94)'; ctx.strokeStyle = '#E0E3E7'; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.roundRect(legX, legY, 82, 30, 6); ctx.fill(); ctx.stroke();
+      ctx.font = '700 8.8px Roboto Mono'; ctx.textAlign = 'left';
+      ctx.fillStyle = '#1A73E8'; ctx.fillText(`Train:${{stats.trainLoss.toFixed(2)}}`, legX + 6, legY + 12);
+      ctx.fillStyle = '#EA4335'; ctx.fillText(`Val:  ${{stats.valLoss.toFixed(2)}}`, legX + 6, legY + 24);
+
+      ctx.fillStyle = '#5F6368'; ctx.font = '600 8.8px Roboto, Arial'; ctx.textAlign = 'center';
+      ctx.fillText(`Epoch 1 ──────────→ Epoch ${{maxEp}}`, rx0 + rw / 2, H - 7);
     }}
-    renderGdCanvas();
+
+    function setFitScenario(scen) {{
+      _stopFitPlay();
+      fitScenario = scen;
+      fitEpoch = scen === 'all' ? 18 : 30;
+      renderFitCanvas();
+    }}
+
+    function setFitEpoch(v) {{
+      _stopFitPlay();
+      fitEpoch = Math.max(1, Math.min(_fitMaxEp(), Number(v)));
+      renderFitCanvas();
+    }}
+
+    function resetFitSim() {{
+      _stopFitPlay();
+      fitEpoch = 1;
+      renderFitCanvas();
+    }}
+
+    function toggleFitPlay() {{
+      if (fitTimer) {{ _stopFitPlay(); return; }}
+      const maxEp = _fitMaxEp();
+      if (fitEpoch >= maxEp) fitEpoch = 1;
+      const btn = document.getElementById('fit-btn-play');
+      if (btn) btn.textContent = '■ Stop';
+      renderFitCanvas();
+      fitTimer = setInterval(() => {{
+        if (fitEpoch >= maxEp) {{ _stopFitPlay(); return; }}
+        fitEpoch += 1;
+        renderFitCanvas();
+      }}, fitScenario === 'all' ? 95 : 125);
+    }}
+
+    function setFitPdfState(st) {{
+      _stopBsPlay(); _stopFitPlay();
+      if (st === 'under') {{
+        bsSize = 16; bsDone = 3; fitScenario = 'under'; fitEpoch = 30;
+      }} else if (st === 'good') {{
+        bsSize = 16; bsDone = Math.ceil(BS_TOTAL / 16); fitScenario = 'good'; fitEpoch = 30;
+      }} else {{
+        bsSize = 143; bsDone = 1; fitScenario = 'over'; fitEpoch = 30;
+      }}
+      renderBsUI();
+      renderFitCanvas();
+    }}
+
+    renderBsUI();
+    renderFitCanvas();
 
     // =========================================================================
     // SIMULATOR #12 (Slide 43): Peta Evolusi Arsitektur CV
@@ -9854,7 +11121,386 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       _updateQuizScore();
     }}
 
-    let _glossCh = 'all';
+    // =========================================================================
+    // SIMULATOR SLIDE 24: INTERACTIVE DENSE (FULLY CONNECTED) & PARAMETER CALC
+    // =========================================================================
+    const DENSE_SCALES = {{
+      8:   {{ dim: 8,   nIn: 192,     inStr: '192',     dimTxt: '(8×8×3)',     wStr: '960',     totStr: '965',     label: 'Mini 8×8×3',      ctx: 'Tahap 2.1 Hands-On' }},
+      64:  {{ dim: 64,  nIn: 12288,   inStr: '12.288',  dimTxt: '(64×64×3)',   wStr: '61.440',  totStr: '61.445',  label: 'Hands-On 64×64×3', ctx: 'model.summary() Keras' }},
+      224: {{ dim: 224, nIn: 150528,  inStr: '150.528', dimTxt: '(224×224×3)', wStr: '752.640', totStr: '752.645', label: 'Penuh 224×224×3', ctx: 'Simulasi Penuh Slide 32' }},
+    }};
+    const DENSE_INPUTS = [
+      {{ id: 0, lbl: 'x₁', sub: 'Piksel 1 (R)', col: '#EA4335', y: 54 }},
+      {{ id: 1, lbl: 'x₂', sub: 'Piksel 1 (G)', col: '#34A853', y: 92 }},
+      {{ id: 2, lbl: 'x₃', sub: 'Piksel 1 (B)', col: '#4285F4', y: 130 }},
+      {{ id: 3, lbl: 'xₙ', sub: 'Piksel akhir', col: '#1A73E8', y: 192 }},
+    ];
+    const DENSE_OUTPUTS = [
+      {{ id: 0, lbl: 'y₁ Anna',     b: '+b₁', col: '#4285F4', y: 48 }},
+      {{ id: 1, lbl: 'y₂ Elsa',     b: '+b₂', col: '#34A853', y: 86 }},
+      {{ id: 2, lbl: 'y₃ Kristoff', b: '+b₃', col: '#E37400', y: 124 }},
+      {{ id: 3, lbl: 'y₄ Olaf',     b: '+b₄', col: '#EA4335', y: 162 }},
+      {{ id: 4, lbl: 'y₅ Sven',     b: '+b₅', col: '#5F6368', y: 200 }},
+    ];
+    let _denseScale = 224;
+    let _denseStep = 5;        // 0=idle, 1=x1(5W), 2=x1..x2(10W), 3=x1..x3(15W), 4=all W, 5=all W + 5 Bias!
+    let _denseSelIn = -1;      // direct click on input neuron 0..3
+    let _denseSelOut = -1;     // direct click on output neuron 0..4
+    let _denseTimer = null;
+    let _denseRaf = null;
+    let _densePulseT = 0;
+
+    function _setDenseSyncCards(activeIdx) {{
+      const colors = ['', 'sync-blue', 'sync-yellow', 'sync-green'];
+      [1, 2, 3].forEach((k) => {{
+        const el = document.getElementById('dense-sc-' + k);
+        if (!el) return;
+        el.classList.remove('sync-on', 'sync-dim', 'sync-blue', 'sync-yellow', 'sync-green');
+        if (activeIdx === 0) return;
+        if (k === activeIdx) {{
+          el.classList.add('sync-on', colors[k]);
+        }} else {{
+          el.classList.add('sync-dim');
+        }}
+      }});
+    }}
+
+    function _cubicPt(x0, y0, cx1, cy1, cx2, cy2, x1, y1, t) {{
+      const u = 1 - t;
+      const tt = t * t, uu = u * u, uuu = uu * u, ttt = tt * t;
+      return {{
+        x: uuu * x0 + 3 * uu * t * cx1 + 3 * u * tt * cx2 + ttt * x1,
+        y: uuu * y0 + 3 * uu * t * cy1 + 3 * u * tt * cy2 + ttt * y1,
+      }};
+    }}
+
+    function renderDenseSvg(pulsePhase = 0.55) {{
+      const svg = document.getElementById('dense-svg');
+      if (!svg) return;
+      const cfg = DENSE_SCALES[_denseScale];
+      const inX = 166, outX = 434;
+
+      // Determine active input / output indices & center pill text
+      const activeInputs = new Set();
+      const activeOutputs = new Set();
+      let highlightBias = false;
+      let wireMode = 'all'; // 'none' | 'in' | 'out' | 'all'
+
+      if (_denseSelIn >= 0) {{
+        activeInputs.add(_denseSelIn);
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        wireMode = 'in';
+      }} else if (_denseSelOut >= 0) {{
+        [0, 1, 2, 3].forEach((i) => activeInputs.add(i));
+        activeOutputs.add(_denseSelOut);
+        highlightBias = true;
+        wireMode = 'out';
+      }} else if (_denseStep === 0) {{
+        wireMode = 'none';
+      }} else if (_denseStep === 1) {{
+        activeInputs.add(0);
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        wireMode = 'in';
+      }} else if (_denseStep === 2) {{
+        activeInputs.add(0); activeInputs.add(1);
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        wireMode = 'in';
+      }} else if (_denseStep === 3) {{
+        activeInputs.add(0); activeInputs.add(1); activeInputs.add(2);
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        wireMode = 'in';
+      }} else if (_denseStep === 4) {{
+        [0, 1, 2, 3].forEach((i) => activeInputs.add(i));
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        wireMode = 'all';
+      }} else {{
+        [0, 1, 2, 3].forEach((i) => activeInputs.add(i));
+        [0, 1, 2, 3, 4].forEach((o) => activeOutputs.add(o));
+        highlightBias = true;
+        wireMode = 'all';
+      }}
+
+      let h = '';
+      // 1. Left Input Layer Container
+      h += `<rect x="6" y="8" width="160" height="216" rx="13" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>`;
+      h += `<text x="86" y="27" text-anchor="middle" font-family="Poppins, Arial" font-size="10.5" font-weight="800" fill="#1A73E8">INPUT LAYER</text>`;
+
+      // Input Neurons (clickable!)
+      DENSE_INPUTS.forEach((inp, idx) => {{
+        const isAct = activeInputs.has(idx);
+        const isNewest = (_denseSelIn === idx) || (_denseSelIn < 0 && _denseSelOut < 0 && _denseStep === idx + 1);
+        const bg = isNewest ? '#FFFFFF' : (isAct ? '#F8FBFF' : 'rgba(255,255,255,0.72)');
+        const stroke = isNewest ? inp.col : (isAct ? '#8AB4F8' : '#D2E3FC');
+        const sw = isNewest ? 2.2 : 1.2;
+        h += `<g style="cursor:pointer;" onclick="clickDenseInput(${{idx}})">`;
+        h += `<rect x="16" y="${{inp.y - 14}}" width="140" height="28" rx="9" fill="${{bg}}" stroke="${{stroke}}" stroke-width="${{sw}}"/>`;
+        h += `<circle cx="34" cy="${{inp.y}}" r="10.5" fill="${{inp.col}}" opacity="${{isAct || wireMode === 'none' ? 1 : 0.45}}"/>`;
+        h += `<text x="34" y="${{inp.y + 3.5}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="700" fill="#FFFFFF">${{inp.lbl}}</text>`;
+        h += `<text x="51" y="${{inp.y - 1}}" font-family="Roboto, Arial" font-size="8.6" font-weight="700" fill="#202124">${{inp.sub}}</text>`;
+        h += `<text x="51" y="${{inp.y + 9.5}}" font-family="Roboto Mono, monospace" font-size="7.6" fill="#5F6368">${{isAct ? '5 kabel W →' : 'klik untuk uji'}}</text>`;
+        h += `</g>`;
+      }});
+
+      // Ellipsis pill showing remaining input neurons
+      const remStr = (cfg.nIn - 4).toLocaleString('id-ID');
+      h += `<rect x="28" y="151" width="116" height="19" rx="9" fill="#FFFFFF" stroke="#C6DAFC" stroke-width="1"/>`;
+      h += `<text x="86" y="164" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.4" font-weight="700" fill="#1A73E8">⋮ +${{remStr}} neuron</text>`;
+      h += `<text x="86" y="218" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.8" font-weight="800" fill="#1A73E8">Total: ${{cfg.inStr}} ${{cfg.dimTxt}}</text>`;
+
+      // 2. Fully Connected Cables (background inactive wires first, then active glowing wires + dots!)
+      const activeCables = [];
+      DENSE_INPUTS.forEach((inp, iIdx) => {{
+        DENSE_OUTPUTS.forEach((outp, oIdx) => {{
+          const on = activeInputs.has(iIdx) && activeOutputs.has(oIdx);
+          const d = `M ${{inX}} ${{inp.y}} C ${{inX + 86}} ${{inp.y}}, ${{outX - 86}} ${{outp.y}}, ${{outX}} ${{outp.y}}`;
+          if (!on) {{
+            h += `<path d="${{d}}" fill="none" stroke="#CFD4DA" stroke-width="1.1" opacity="0.5"/>`;
+          }} else {{
+            const isHero = (_denseSelIn === iIdx) || (_denseSelOut === oIdx) || (_denseSelIn < 0 && _denseSelOut < 0 && _denseStep >= 1 && _denseStep <= 3 && iIdx === _denseStep - 1);
+            const col = _denseSelOut >= 0 ? outp.col : (isHero ? inp.col : '#4285F4');
+            activeCables.push({{ inp, outp, d, col, isHero }});
+          }}
+        }});
+      }});
+
+      activeCables.forEach((cb, k) => {{
+        h += `<path d="${{cb.d}}" fill="none" stroke="${{cb.col}}" stroke-width="${{cb.isHero ? 2.4 : 1.55}}" opacity="${{cb.isHero ? 0.95 : 0.62}}"/>`;
+        // Traveling pulse dot along active hero or full cables
+        if (cb.isHero || _denseStep >= 4) {{
+          const t = (pulsePhase + (k % 5) * 0.14) % 1.0;
+          const pt = _cubicPt(inX, cb.inp.y, inX + 86, cb.inp.y, outX - 86, cb.outp.y, outX, cb.outp.y, t);
+          h += `<circle cx="${{pt.x.toFixed(1)}}" cy="${{pt.y.toFixed(1)}}" r="${{cb.isHero ? 3.8 : 2.6}}" fill="${{cb.col}}" stroke="#FFFFFF" stroke-width="1"/>`;
+        }}
+      }});
+
+      // 3. Center Counter Badge (KABEL DENSE W)
+      let boxTitle = 'KABEL DENSE (W)';
+      let boxMain = `${{cfg.wStr}} W`;
+      let boxSub = '+ 5 Bias (1 per output)';
+      let boxBg = '#FEF7E0', boxStroke = '#FBBC04', boxTxt = '#B06000';
+
+      if (_denseSelIn >= 0) {{
+        boxTitle = `1 NEURON (${{DENSE_INPUTS[_denseSelIn].lbl}})`;
+        boxMain = '5 Kabel W';
+        boxSub = 'tersambung ke SEMUA 5 output';
+        boxBg = '#E8F0FE'; boxStroke = '#4285F4'; boxTxt = '#1A73E8';
+      }} else if (_denseSelOut >= 0) {{
+        const oname = DENSE_OUTPUTS[_denseSelOut].lbl;
+        const perOut = (cfg.nIn + 1).toLocaleString('id-ID');
+        boxTitle = `KHUSUS ${{oname.toUpperCase()}}`;
+        boxMain = `${{cfg.inStr}} W + 1 b`;
+        boxSub = `= ${{perOut}} param utk 1 kelas`;
+        boxBg = '#E6F4EA'; boxStroke = '#34A853'; boxTxt = '#137333';
+      }} else if (_denseStep === 0) {{
+        boxTitle = 'SIAP SIMULASI';
+        boxMain = '0 Kabel Aktif';
+        boxSub = 'Klik ▶ Play atau klik neuron!';
+        boxBg = '#F8F9FA'; boxStroke = '#DADCE0'; boxTxt = '#5F6368';
+      }} else if (_denseStep >= 1 && _denseStep <= 3) {{
+        boxTitle = `${{_denseStep}} NEURON × 5 OUTPUT`;
+        boxMain = `${{_denseStep * 5}} Kabel W`;
+        boxSub = `tiap +1 input menambah +5 W`;
+        boxBg = '#E8F0FE'; boxStroke = '#4285F4'; boxTxt = '#1A73E8';
+      }} else if (_denseStep === 4) {{
+        boxTitle = `${{cfg.inStr}} × 5 OUTPUT`;
+        boxMain = `${{cfg.wStr}} W`;
+        boxSub = 'seluruh kabel bobot tersambung!';
+        boxBg = '#FEF7E0'; boxStroke = '#FBBC04'; boxTxt = '#B06000';
+      }} else {{
+        boxTitle = 'TOTAL PARAMETER (W + b)';
+        boxMain = `${{cfg.totStr}} Param`;
+        boxSub = `${{cfg.wStr}} W  +  5 Bias`;
+        boxBg = '#E6F4EA'; boxStroke = '#34A853'; boxTxt = '#137333';
+      }}
+
+      h += `<rect x="218" y="80" width="164" height="72" rx="13" fill="${{boxBg}}" stroke="${{boxStroke}}" stroke-width="2.2"/>`;
+      h += `<text x="300" y="99" text-anchor="middle" font-family="Poppins, Arial" font-size="9.2" font-weight="800" fill="${{boxTxt}}">${{boxTitle}}</text>`;
+      h += `<text x="300" y="121" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="14" font-weight="800" fill="#202124">${{boxMain}}</text>`;
+      h += `<text x="300" y="139" text-anchor="middle" font-family="Roboto, Arial" font-size="8.8" font-weight="600" fill="#5F6368">${{boxSub}}</text>`;
+
+      // 4. Right Output Layer Container (Dense(5))
+      h += `<rect x="434" y="8" width="180" height="216" rx="13" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>`;
+      h += `<text x="524" y="27" text-anchor="middle" font-family="Poppins, Arial" font-size="10.2" font-weight="800" fill="#137333">OUTPUT · Dense(5)</text>`;
+
+      DENSE_OUTPUTS.forEach((outp, oIdx) => {{
+        const isOutAct = activeOutputs.has(oIdx);
+        const isBiasOn = highlightBias && (_denseSelOut < 0 || _denseSelOut === oIdx);
+        const isClicked = _denseSelOut === oIdx;
+        const cardStroke = isClicked ? outp.col : (isOutAct ? '#34A853' : '#A8DAB5');
+        const cardSw = isClicked ? 2.4 : (isOutAct ? 1.5 : 1.0);
+        h += `<g style="cursor:pointer;" onclick="clickDenseOutput(${{oIdx}})">`;
+        h += `<rect x="446" y="${{outp.y - 14}}" width="156" height="28" rx="8" fill="#FFFFFF" stroke="${{cardStroke}}" stroke-width="${{cardSw}}"/>`;
+        h += `<circle cx="461" cy="${{outp.y}}" r="6.5" fill="${{outp.col}}" opacity="${{isOutAct || wireMode === 'none' ? 1 : 0.4}}"/>`;
+        h += `<text x="473" y="${{outp.y + 3.5}}" font-family="Poppins, Arial" font-size="9.8" font-weight="700" fill="#202124">${{outp.lbl}}</text>`;
+        // Bias pill badge
+        const bBg = isBiasOn ? '#FEF7E0' : '#F8F9FA';
+        const bSt = isBiasOn ? '#FBBC04' : '#E0E3E7';
+        const bTx = isBiasOn ? '#B06000' : '#80868B';
+        h += `<rect x="556" y="${{outp.y - 9.5}}" width="39" height="19" rx="6" fill="${{bBg}}" stroke="${{bSt}}" stroke-width="${{isBiasOn ? 1.8 : 1}}"/>`;
+        h += `<text x="575.5" y="${{outp.y + 3.2}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="8.6" font-weight="800" fill="${{bTx}}">${{outp.b}}</text>`;
+        h += `</g>`;
+      }});
+
+      svg.innerHTML = h;
+    }}
+
+    function updateDenseUI() {{
+      const cfg = DENSE_SCALES[_denseScale];
+      // Update top scale tabs & bottom scale cards
+      document.querySelectorAll('#dense-scale-tabs button').forEach((b) => {{
+        b.classList.toggle('outline', Number(b.dataset.ds) !== _denseScale);
+      }});
+      [8, 64, 224].forEach((k) => {{
+        const c = document.getElementById('dense-card-' + k);
+        if (!c) return;
+        const on = k === _denseScale;
+        const bc = k === 8 ? '#34A853' : (k === 64 ? '#4285F4' : '#EA4335');
+        const bg = k === 8 ? '#E6F4EA' : (k === 64 ? '#E8F0FE' : '#FCE8E6');
+        c.style.border = on ? `2px solid ${{bc}}` : '1.5px solid #DADCE0';
+        c.style.background = on ? bg : '#F8F9FA';
+      }});
+
+      const badge = document.getElementById('dense-step-badge');
+      const eq = document.getElementById('dense-keras-eq');
+      const call = document.getElementById('dense-callout');
+
+      if (_denseSelIn >= 0) {{
+        const inp = DENSE_INPUTS[_denseSelIn];
+        if (badge) badge.textContent = `Inspeksi Input ${{inp.lbl}} → 5 Output`;
+        if (eq) eq.textContent = `1 input (${{inp.lbl}}) × 5 output = 5 kabel Weight (W)`;
+        if (call) call.innerHTML = `<strong>Fully Connected!</strong> Neuron <code>${{inp.lbl}}</code> (${{inp.sub}}) mengirim <strong>5 kabel bobot</strong> sekaligus ke Anna, Elsa, Kristoff, Olaf, &amp; Sven!`;
+        _setDenseSyncCards(1);
+      }} else if (_denseSelOut >= 0) {{
+        const outp = DENSE_OUTPUTS[_denseSelOut];
+        const tot1 = (cfg.nIn + 1).toLocaleString('id-ID');
+        if (badge) badge.textContent = `Inspeksi Output ${{outp.lbl}}`;
+        if (eq) eq.textContent = `${{cfg.inStr}} kabel W + 1 Bias (${{outp.b}}) = ${{tot1}} Param`;
+        if (call) call.innerHTML = `<strong>Khusus Neuron ${{outp.lbl}}:</strong> Menerima kabel dari <strong>semua ${{cfg.inStr}} piksel input</strong> ditambah <strong>1 Bias (${{outp.b}})</strong> = <code>${{tot1}}</code> parameter!`;
+        _setDenseSyncCards(2);
+      }} else if (_denseStep === 0) {{
+        if (badge) badge.textContent = `Tahap 0/5 · Siap Simulasi`;
+        if (eq) eq.textContent = `(${{cfg.inStr}} × 5) + 5 = ${{cfg.totStr}} Param #`;
+        if (call) call.innerHTML = `<strong>Klik ▶ Play atau ⏭ +1 Langkah</strong> untuk melihat kabel <code>Dense</code> dirakit neuron demi neuron hingga terbentuk <code>${{cfg.totStr}}</code> parameter!`;
+        _setDenseSyncCards(0);
+      }} else if (_denseStep >= 1 && _denseStep <= 3) {{
+        const inp = DENSE_INPUTS[_denseStep - 1];
+        if (badge) badge.textContent = `Tahap ${{_denseStep}}/5 · Sambung ${{inp.lbl}} → 5 Output`;
+        if (eq) eq.textContent = `${{_denseStep}} neuron × 5 output = ${{_denseStep * 5}} kabel W (pola n × 5)`;
+        if (call) call.innerHTML = `<strong>Tahap ${{_denseStep}} (Fully Connected):</strong> Neuron <code>${{inp.lbl}}</code> menyambungkan <strong>5 kabel baru</strong> ke seluruh 5 kelas Frozen → total sementara <code>${{_denseStep * 5}} W</code>!`;
+        _setDenseSyncCards(1);
+      }} else if (_denseStep === 4) {{
+        if (badge) badge.textContent = `Tahap 4/5 · Semua Kabel Weight (W)`;
+        if (eq) eq.textContent = `${{cfg.inStr}} × 5 = ${{cfg.wStr}} Weight (belum + Bias)`;
+        if (call) call.innerHTML = `<strong>Tahap 4 (Seluruh Kabel W):</strong> Karena semua <code>${{cfg.inStr}}</code> neuron input tersambung ke 5 output, terbentuk tepat <code>${{cfg.wStr}}</code> bobot <code>W</code>!`;
+        _setDenseSyncCards(2);
+      }} else {{
+        if (badge) badge.textContent = `Tahap 5/5 · Lengkap (+ 5 Bias = ${{cfg.totStr}})`;
+        if (eq) eq.textContent = `(${{cfg.inStr}} × 5) + 5 = ${{cfg.totStr}} Param #`;
+        if (call) call.innerHTML = `<strong>${{cfg.label}}:</strong> <code>${{cfg.wStr}} Weight + 5 Bias = ${{cfg.totStr}} parameter</code> — cocok 100% dengan <strong>${{cfg.ctx}}</strong>!`;
+        _setDenseSyncCards(3);
+      }}
+
+      renderDenseSvg(_densePulseT || 0.55);
+    }}
+
+    function _stopDensePlay() {{
+      if (_denseTimer) {{ clearInterval(_denseTimer); _denseTimer = null; }}
+      if (_denseRaf) {{ cancelAnimationFrame(_denseRaf); _denseRaf = null; }}
+      const btn = document.getElementById('dense-btn-play');
+      if (btn) btn.textContent = '▶ Play';
+    }}
+
+    function _startDensePulseLoop() {{
+      if (_denseRaf) cancelAnimationFrame(_denseRaf);
+      let lastTs = performance.now();
+      const tick = (now) => {{
+        const dt = Math.min(0.05, (now - lastTs) / 1000);
+        lastTs = now;
+        _densePulseT = (_densePulseT + dt * 0.72) % 1.0;
+        renderDenseSvg(_densePulseT);
+        if (_denseTimer) {{
+          _denseRaf = requestAnimationFrame(tick);
+        }} else {{
+          _denseRaf = null;
+        }}
+      }};
+      _denseRaf = requestAnimationFrame(tick);
+    }}
+
+    function toggleDensePlay() {{
+      if (_denseTimer) {{
+        _stopDensePlay();
+        return;
+      }}
+      _denseSelIn = -1; _denseSelOut = -1;
+      if (_denseStep >= 5) _denseStep = 0;
+      const btn = document.getElementById('dense-btn-play');
+      if (btn) btn.textContent = '■ Stop';
+      _denseStep = Math.max(1, _denseStep + 1);
+      updateDenseUI();
+      _denseTimer = setInterval(() => {{
+        if (_denseStep >= 5) {{
+          _stopDensePlay();
+          return;
+        }}
+        _denseStep += 1;
+        updateDenseUI();
+      }}, 1500);
+      _startDensePulseLoop();
+    }}
+
+    function stepDenseSim() {{
+      _stopDensePlay();
+      _denseSelIn = -1; _denseSelOut = -1;
+      _denseStep = (_denseStep >= 5) ? 1 : (_denseStep + 1);
+      _densePulseT = 0.52;
+      updateDenseUI();
+    }}
+
+    function resetDenseSim() {{
+      _stopDensePlay();
+      _denseSelIn = -1; _denseSelOut = -1;
+      _denseStep = 0;
+      _densePulseT = 0.52;
+      updateDenseUI();
+    }}
+
+    function clickDenseInput(idx) {{
+      _stopDensePlay();
+      _denseSelOut = -1;
+      _denseSelIn = (_denseSelIn === idx) ? -1 : idx;
+      _densePulseT = 0.55;
+      updateDenseUI();
+    }}
+
+    function clickDenseOutput(idx) {{
+      _stopDensePlay();
+      _denseSelIn = -1;
+      _denseSelOut = (_denseSelOut === idx) ? -1 : idx;
+      _densePulseT = 0.55;
+      updateDenseUI();
+    }}
+
+    function setDenseScale(dim) {{
+      if (!DENSE_SCALES[dim]) return;
+      _denseScale = dim;
+      if (_denseStep === 0 && _denseSelIn < 0 && _denseSelOut < 0) _denseStep = 5;
+      updateDenseUI();
+    }}
+
+    function setDensePdfState(st) {{
+      _stopDensePlay();
+      _denseSelIn = -1; _denseSelOut = -1; _densePulseT = 0.52;
+      if (st === 'x1') {{
+        _denseScale = 224; _denseStep = 1;
+      }} else {{
+        _denseScale = 64; _denseStep = 5;
+      }}
+      updateDenseUI();
+    }}
+    updateDenseUI();
+
+        let _glossCh = 'all';
     let _glossQuery = '';
     function _applyGlossaryFilter() {{
       const q = (_glossQuery || '').trim().toLowerCase();
@@ -9924,6 +11570,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       expandHelper('match-list', ['q', 'ans'], setMatchPdfState, 'match');
       expandHelper('flatten-ctrl', ['mid', 'done'], setFlattenPdfState, 'flt');
       expandHelper('in-presets', ['64_1', '224_3'], setInPdfPreset, 'in');
+      expandHelper('dense-ctrl', ['x1', 'full64'], setDensePdfState, 'dense');
       expandHelper('tm-ctrl', ['before', 'after'], setTmPdfState, 'tm');
       expandHelper('wb-presets', ['elsa_opt', 'no_bias', 'wrong_w'], setWbPdfState, 'wb');
       expandHelper('act-tabs', ['relu', 'sigmoid', 'softmax'], setActPdfState, 'act');
@@ -9931,7 +11578,8 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       expandHelper('tr-cycle-tabs', ['2', '4'], setTrPdfState, 'tr');
       expandHelper('fnn-ctrl', ['ep1_bp', 'ep8_done'], setFnnPdfState, 'fnn');
       expandHelper('fp-steps', ['1', '2', '3', '4'], setFpStep, 'fp');
-      expandHelper('gd-presets', ['small', 'ideal', 'large'], setGdMode, 'gd');
+      expandHelper('gd-presets', ['small', 'ideal', 'large', 'duel'], setGdMode, 'gd');
+      expandHelper('fit-tabs', ['under', 'good', 'over'], setFitPdfState, 'fit');
       expandHelper('arch-tabs', ['mlp', 'cnn', 'resnet', 'mobilenet'], setArchTab, 'arch');
     }});
 """

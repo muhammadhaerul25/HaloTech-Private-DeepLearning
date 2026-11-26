@@ -30,7 +30,7 @@
       "tint": "#FCE8E6",
       "title": "Teori Neural Network",
       "description": "Memahami AI vs ML vs DL, 4 tugas Computer Vision, serta bedah tuntas cara kerja Neural Network dari 1 piksel sampai Backpropagation & simulasi end-to-end.",
-      "topics": ["AI/ML/DL", "4 CV Tasks", "Neuron → MLP", "Backpropagation"],
+      "topics": ["AI/ML/DL", "4 CV Tasks", "Dense & Softmax", "Backprop & Adam"],
       "duration": "120 menit",
       "status": "available",
       "links": {
