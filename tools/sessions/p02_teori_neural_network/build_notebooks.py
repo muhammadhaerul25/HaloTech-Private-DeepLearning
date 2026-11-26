@@ -17,6 +17,8 @@ Teori Neural Network (Visual-First, Mikro-Task Berurutan Tahap 0 -> Tahap 5.4).
 
 from __future__ import annotations
 
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -153,7 +155,8 @@ def tampilkan_timbangan_neuron(r, g, b, w_r, w_g, w_b, bias, z, piksel_dinding=N
         ax.text(0.98, 0.94, f"Pembanding — Piksel Dinding [0,0]: z = {z_wall:+.2f}",
                 transform=ax.transAxes, ha="right", va="top", fontsize=8.8, fontweight="bold", color="#5F6368",
                 bbox=dict(boxstyle="round,pad=0.3", facecolor="#F8F9FA", edgecolor="#DADCE0"))
-    ax.set_ylim(min(vals) - 0.45, max(vals) + 0.55)
+    ax.set_ylim(min(vals) - 0.55, max(vals) + 0.88)
+    ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
     ax.set_title("Timbangan 1 Neuron: Bobot Biru Positif Membuat Gaun Elsa Menyala!", fontweight="bold")
     ax.grid(axis="y", linestyle="--", alpha=0.35)
     plt.tight_layout()
@@ -1001,8 +1004,82 @@ print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur Neural Networ
     return cells
 
 
+def _execute_notebook_outputs() -> None:
+    """Execute full solution notebook (30 epochs) & student prefix cells so outputs match P01."""
+    import nbformat
+
+    env = os.environ.copy()
+    env["SMOKE_TEST"] = "0"
+    env["TF_CPP_MIN_LOG_LEVEL"] = "2"
+
+    sol_path = SESSION.notebook_solution_path
+    stu_path = SESSION.notebook_student_path
+    tmp_sol_exec = sol_path.parent / f"_tmp_exec_sol_{SESSION.id}.ipynb"
+    tmp_stu = SESSION.material_dir / f"_tmp_exec_stu_{SESSION.id}.ipynb"
+    tmp_stu_out = SESSION.material_dir / f"_tmp_write_stu_{SESSION.id}.ipynb"
+
+    # 1. Execute complete solution notebook into ignored temp file, then atomically replace
+    try:
+        subprocess.run(
+            [
+                sys.executable, "-m", "nbconvert",
+                "--to", "notebook", "--execute",
+                "--ExecutePreprocessor.timeout=300",
+                "--output", tmp_sol_exec.name,
+                str(sol_path.resolve()),
+            ],
+            cwd=str(ROOT_DIR),
+            env=env,
+            check=True,
+        )
+        nb_sol = nbformat.read(tmp_sol_exec, as_version=4)
+        for idx, cell in enumerate(nb_sol.cells):
+            if cell.cell_type == "code":
+                errs = [o for o in cell.get("outputs", []) if o.get("output_type") == "error"]
+                assert not errs, f"Error on solution cell {idx}: {errs}"
+        tmp_sol_exec.replace(sol_path)
+        print(f"Executed with outputs: {sol_path} ({len(nb_sol.cells)} cells)")
+    finally:
+        tmp_sol_exec.unlink(missing_ok=True)
+
+    # 2. Execute student prefix cells strictly before the first # TODO cell
+    nb_stu = nbformat.read(stu_path, as_version=4)
+    first_todo = next(
+        i for i, c in enumerate(nb_stu.cells)
+        if c.cell_type == "code" and "# TODO" in c.get("source", "")
+    )
+    prefix_nb = nbformat.v4.new_notebook(metadata=nb_stu.metadata)
+    prefix_nb.cells = nb_stu.cells[:first_todo]
+    try:
+        nbformat.write(prefix_nb, tmp_stu)
+        subprocess.run(
+            [
+                sys.executable, "-m", "nbconvert",
+                "--to", "notebook", "--execute", "--inplace",
+                "--ExecutePreprocessor.timeout=180",
+                str(tmp_stu.resolve()),
+            ],
+            cwd=str(ROOT_DIR),
+            env=env,
+            check=True,
+        )
+        prefix_done = nbformat.read(tmp_stu, as_version=4)
+        for i in range(first_todo):
+            if nb_stu.cells[i].cell_type == "code":
+                nb_stu.cells[i]["outputs"] = prefix_done.cells[i].get("outputs", [])
+                nb_stu.cells[i]["execution_count"] = prefix_done.cells[i].get("execution_count")
+        nbformat.write(nb_stu, tmp_stu_out)
+        tmp_stu_out.replace(stu_path)
+        prefix_code_n = sum(1 for c in nb_stu.cells[:first_todo] if c.cell_type == "code")
+        print(f"Executed prefix outputs: {stu_path} ({prefix_code_n} cells before # TODO 1)")
+    finally:
+        tmp_stu.unlink(missing_ok=True)
+        tmp_stu_out.unlink(missing_ok=True)
+
+
 def main() -> None:
     build_notebook_pair(SESSION, build_cells)
+    _execute_notebook_outputs()
 
 
 if __name__ == "__main__":

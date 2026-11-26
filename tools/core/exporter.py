@@ -229,6 +229,7 @@ def export_pdf(session: SessionConfig) -> dict:
         raise FileNotFoundError(f"HTML tidak ditemukan: {session.html_path}")
 
     tmp_html = session.material_dir / f"_tmp_print_{session.id}.html"
+    tmp_pdf = session.material_dir / f"_tmp_print_{session.id}.pdf"
     raw_html = session.html_path.read_text(encoding="utf-8")
     inject_block = (
         f"<style>{PRINT_OVERRIDE_CSS}</style>\n"
@@ -245,12 +246,15 @@ def export_pdf(session: SessionConfig) -> dict:
             "--disable-gpu",
             "--no-pdf-header-footer",
             "--virtual-time-budget=5000",
-            f"--print-to-pdf={session.pdf_path.resolve()}",
+            f"--print-to-pdf={tmp_pdf.resolve()}",
             tmp_html.resolve().as_uri(),
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        session.pdf_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_pdf.replace(session.pdf_path)
     finally:
         tmp_html.unlink(missing_ok=True)
+        tmp_pdf.unlink(missing_ok=True)
 
     pages = count_pdf_pages(session.pdf_path)
     size_mb = session.pdf_path.stat().st_size / (1024 * 1024)
@@ -421,7 +425,12 @@ def export_pptx(session: SessionConfig, explanations: dict[int, list[str]] | Non
             sld.notes_slide.notes_text_frame.text = "\n".join(notes_lines)
 
         session.pptx_path.parent.mkdir(parents=True, exist_ok=True)
-        prs.save(session.pptx_path)
+        tmp_pptx = session.material_dir / f"_tmp_pptx_{session.id}.pptx"
+        try:
+            prs.save(tmp_pptx)
+            tmp_pptx.replace(session.pptx_path)
+        finally:
+            tmp_pptx.unlink(missing_ok=True)
         size_mb = session.pptx_path.stat().st_size / (1024 * 1024)
         print(f"PPTX HD 100% Sinkron HTML/PDF berhasil dibuat: {session.pptx_path} ({len(slides_data)} slide | {size_mb:.2f} MB)")
         return {"path": str(session.pptx_path), "slides": len(slides_data), "size_mb": round(size_mb, 2)}
@@ -584,6 +593,7 @@ def export_presenter_script(session: SessionConfig, explanations: dict[int, list
     """
 
     tmp_html = session.material_dir / f"_tmp_presenter_script_{session.id}.html"
+    tmp_pdf = session.material_dir / f"_tmp_presenter_script_{session.id}.pdf"
     raw_html = session.html_path.read_text(encoding="utf-8")
     inject_block = (
         f"<style>{PRESENTER_OVERRIDE_CSS}</style>\n"
@@ -600,12 +610,15 @@ def export_presenter_script(session: SessionConfig, explanations: dict[int, list
             "--disable-gpu",
             "--no-pdf-header-footer",
             "--virtual-time-budget=4500",
-            f"--print-to-pdf={session.presenter_script_path.resolve()}",
+            f"--print-to-pdf={tmp_pdf.resolve()}",
             tmp_html.resolve().as_uri(),
         ]
         subprocess.run(cmd, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        session.presenter_script_path.parent.mkdir(parents=True, exist_ok=True)
+        tmp_pdf.replace(session.presenter_script_path)
     finally:
         tmp_html.unlink(missing_ok=True)
+        tmp_pdf.unlink(missing_ok=True)
 
     pages = count_pdf_pages(session.presenter_script_path)
     size_mb = session.presenter_script_path.stat().st_size / (1024 * 1024)
