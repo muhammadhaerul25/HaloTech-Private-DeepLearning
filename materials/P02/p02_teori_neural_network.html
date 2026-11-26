@@ -1243,8 +1243,8 @@
         <button class="btn-ui" data-ml="rule" onclick="setMlTab('rule')">1. Pemrograman Tradisional (Aturan Manual)</button>
         <button class="btn-ui outline" data-ml="ml" onclick="setMlTab('ml')">2. Machine Learning (Training → Prediksi)</button>
       </div>
-      <div class="split-60-40">
-        <div class="card surface" style="justify-content:center; align-items:center; gap:12px; padding:14px 16px;">
+      <div class="split-60-40" style="flex:1; min-height:0; align-items:stretch;">
+        <div class="card surface" style="justify-content:space-between; align-items:center; gap:10px; padding:13px 15px;">
           <div class="card-top-bar bar-red"></div>
           <div style="display:flex; align-items:center; gap:10px; width:100%; background:#FFFFFF; border:1px solid #DADCE0; border-radius:11px; padding:7px 10px;">
             <img src="assets/P02/thumb_elsa.jpg" alt="Elsa" style="width:40px; height:40px; border-radius:8px; object-fit:cover; border:2px solid #4285F4;"/>
@@ -1252,16 +1252,17 @@
             <img src="assets/P02/thumb_anna.jpg" alt="Anna" style="width:40px; height:40px; border-radius:8px; object-fit:cover; border:2px solid #EA4335;"/>
             <div style="font-size:11.6px; color:#3C4043; line-height:1.35;"><strong>Data Nyata Proyek (143 Foto):</strong><br/>Bandingkan alur program aturan manual vs alur belajar Machine Learning!</div>
           </div>
-          <div id="ml-diagram" style="width:100%; flex:1; display:flex; align-items:center;"></div>
+          <div id="ml-diagram" style="width:100%; flex:1; display:flex; align-items:center; justify-content:center;"></div>
         </div>
-        <div class="card" style="justify-content:space-between;">
-          <div class="card-top-bar bar-blue"></div>
+        <div class="card" style="justify-content:space-between; gap:10px; padding:15px 17px;">
+          <div class="card-top-bar bar-blue" id="ml-bar"></div>
           <div>
             <span class="pill blue" id="ml-badge">ATURAN MANUAL</span>
-            <div class="card-title" id="ml-title" style="margin-top:8px;">Manusia Menulis Semua Aturan</div>
+            <div class="card-title" id="ml-title" style="margin-top:6px; font-size:16px;">Manusia Menulis Semua Aturan</div>
           </div>
-          <div class="card-body" id="ml-desc" style="font-size:13.5px;"></div>
-          <div class="callout" id="ml-callout"></div>
+          <div class="card-body" id="ml-desc" style="font-size:12.8px; line-height:1.45;"></div>
+          <div id="ml-extra"></div>
+          <div class="callout" id="ml-callout" style="padding:8px 11px; font-size:12px;"></div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>07 / 49</span></div>
@@ -1276,28 +1277,32 @@
         <button class="btn-ui outline" data-vnn="ml" onclick="setVnnMode('ml')">2. Recap: ML</button>
         <button class="btn-ui" data-vnn="dl" onclick="setVnnMode('dl')">3. Deep Learning (DL) ← Proyek Kita</button>
       </div>
-      <div class="split-40-60">
-        <div class="canvas-box" style="justify-content:center;">
-          <svg id="vnn-svg" viewBox="0 0 360 320" style="width:100%; max-height:310px;">
+      <div class="split-40-60" style="flex:1; min-height:0; align-items:stretch;">
+        <div class="canvas-box" style="justify-content:space-between; padding:12px 14px; gap:6px;">
+          <svg id="vnn-svg" viewBox="0 0 360 320" style="width:100%; flex:1; max-height:340px;">
             <circle id="vnn-c-ai" cx="180" cy="160" r="148" fill="#E8F0FE" stroke="#4285F4" stroke-width="3" style="cursor:pointer;" onclick="setVnnMode('ai')"/>
             <text x="180" y="52" text-anchor="middle" font-family="Poppins" font-size="11.8" font-weight="700" fill="#1A73E8" style="pointer-events:none;">Artificial Intelligence (AI)</text>
             <circle id="vnn-c-ml" cx="180" cy="186" r="106" fill="#FCE8E6" stroke="#EA4335" stroke-width="3" style="cursor:pointer;" onclick="setVnnMode('ml')"/>
             <text x="180" y="122" text-anchor="middle" font-family="Poppins" font-size="10.8" font-weight="700" fill="#C5221F" style="pointer-events:none;">Machine Learning (ML)</text>
-            <circle id="vnn-c-dl" cx="180" cy="214" r="62" fill="#E6F4EA" stroke="#34A853" stroke-width="3.5" style="cursor:pointer;" onclick="setVnnMode('dl')"/>
+            <circle id="vnn-c-dl" cx="180" cy="214" r="62" fill="#E6F4EA" stroke="#34A853" stroke-width="4.5" style="cursor:pointer;" onclick="setVnnMode('dl')"/>
             <text x="180" y="207" text-anchor="middle" font-family="Poppins" font-size="12.2" font-weight="700" fill="#137333" style="pointer-events:none;">Deep Learning</text>
             <text x="180" y="225" text-anchor="middle" font-family="Roboto Mono" font-size="9.8" font-weight="700" fill="#137333" style="pointer-events:none;">(Neural Network)</text>
           </svg>
+          <div style="font-size:10.5px; color:#5F6368; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:999px; padding:3px 12px; text-align:center;">
+            <strong>Interaktif:</strong> Klik langsung lingkaran <code>AI</code>, <code>ML</code>, atau <code>DL</code> di atas!
+          </div>
         </div>
-        <div class="card surface" style="justify-content:space-between; gap:8px;">
+        <div class="card surface" style="justify-content:space-between; gap:8px; padding:14px 16px;">
           <div class="card-top-bar bar-green" id="vnn-bar"></div>
           <div>
             <span class="pill green" id="vnn-pill">DEEP LEARNING (DL)</span>
-            <div class="card-title" id="vnn-title" style="margin-top:6px;">ML dengan Neural Network Berlapis Banyak</div>
+            <div class="card-title" id="vnn-title" style="margin-top:5px;">ML dengan Neural Network Berlapis Banyak</div>
           </div>
           <div id="vnn-illus" style="background:#FFFFFF; border:1px solid #DADCE0; border-radius:11px; padding:7px 10px;"></div>
-          <div class="card-body" id="vnn-body" style="font-size:13px;"></div>
-          <div class="mini-box" id="vnn-frozen" style="font-size:12px;"></div>
-          <div class="callout green" id="vnn-callout" style="font-size:12.5px;"></div>
+          <div class="card-body" id="vnn-body" style="font-size:12.6px;"></div>
+          <div class="mini-box" id="vnn-frozen" style="font-size:11.8px; padding:8px 11px;"></div>
+          <div class="mini-box" id="vnn-extra" style="font-size:11.5px; padding:8px 11px; background:#F8F9FA; border-color:#DADCE0;"></div>
+          <div class="callout green" id="vnn-callout" style="font-size:12px; padding:8px 11px;"></div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>08 / 49</span></div>
@@ -1401,8 +1406,41 @@
         </div>
         <div id="qa-bab1-vis" class="card surface" style="justify-content:center; align-items:center; text-align:center; gap:8px; padding:14px 16px;">
           <div class="card-top-bar bar-blue"></div>
-          <div class="vis-q" style="width:100%;"><div style="display:flex; gap:7px; justify-content:center; margin-bottom:10px;"><img src="assets/P02/thumb_anna.jpg" style="width:62px; height:62px; border-radius:10px; object-fit:cover; border:2px solid #EA4335;"/><img src="assets/P02/thumb_elsa.jpg" style="width:62px; height:62px; border-radius:10px; object-fit:cover; border:2px solid #4285F4;"/><img src="assets/P02/thumb_olaf.jpg" style="width:62px; height:62px; border-radius:10px; object-fit:cover; border:2px solid #34A853;"/></div><svg viewBox="0 0 220 120" style="width:205px; height:112px; display:block; margin:0 auto;"><circle cx="110" cy="60" r="54" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/><text x="110" y="23" text-anchor="middle" font-family="Poppins" font-size="10" font-weight="700" fill="#1A73E8">AI</text><circle cx="110" cy="68" r="37" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/><text x="110" y="45" text-anchor="middle" font-family="Poppins" font-size="9.5" font-weight="700" fill="#C5221F">ML</text><circle cx="110" cy="77" r="21" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/><text x="110" y="81" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="700" fill="#137333">?</text></svg><div style="margin-top:6px; font-size:12.5px; color:#5F6368;">Foto Frozen masuk langsung ke Neural Network — di lapis mana posisinya?</div></div>
-          <div class="vis-a" style="width:100%;"><svg viewBox="0 0 220 130" style="width:210px; height:122px; display:block; margin:0 auto;"><circle cx="110" cy="65" r="58" fill="#E8F0FE" stroke="#4285F4" stroke-width="2" opacity="0.7"/><text x="110" y="24" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="700" fill="#1A73E8">AI</text><circle cx="110" cy="74" r="40" fill="#FCE8E6" stroke="#EA4335" stroke-width="2" opacity="0.8"/><text x="110" y="49" text-anchor="middle" font-family="Poppins" font-size="10" font-weight="700" fill="#C5221F">ML</text><circle cx="110" cy="84" r="24" fill="#34A853" stroke="#FFFFFF" stroke-width="2.5"/><text x="110" y="88" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#FFFFFF">DL ★</text></svg><div class="mini-box" style="margin-top:8px; background:#E6F4EA; border-color:#A8DAB5;"><strong>Tepat (DL ⊂ ML ⊂ AI)!</strong> Deep Learning langsung belajar fitur dari piksel mentah foto Frozen.</div></div>
+          <div class="vis-q" style="width:100%;"><div style="display:flex; flex-direction:column; gap:12px; width:100%; align-items:center;">
+              <span class="pill blue" style="font-size:10px; padding:3px 10px;">CEK PEMAHAMAN BAB 1 · PETA AI ⊃ ML ⊃ DL</span>
+              <div style="display:flex; gap:6px; justify-content:center; width:100%;">
+                <img src="assets/P02/thumb_anna.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #EA4335;"/>
+                <img src="assets/P02/thumb_elsa.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #4285F4;"/>
+                <img src="assets/P02/thumb_kristoff.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #FBBC04;"/>
+                <img src="assets/P02/thumb_olaf.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #34A853;"/>
+                <img src="assets/P02/thumb_sven.jpg" style="width:58px; height:58px; border-radius:10px; object-fit:cover; border:2px solid #1A73E8;"/>
+              </div>
+              <svg viewBox="0 0 260 156" style="width:255px; height:152px; display:block;">
+                <circle cx="130" cy="78" r="72" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.4"/>
+                <text x="130" y="27" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="800" fill="#1A73E8">AI</text>
+                <circle cx="130" cy="90" r="50" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.4"/>
+                <text x="130" y="59" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="800" fill="#C5221F">ML</text>
+                <circle cx="130" cy="103" r="28" fill="#E6F4EA" stroke="#34A853" stroke-width="2.6"/>
+                <text x="130" y="108" text-anchor="middle" font-family="Poppins" font-size="15" font-weight="800" fill="#137333">?</text>
+              </svg>
+              <div style="font-size:12px; color:#5F6368; background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:8px 12px; width:100%; text-align:center; line-height:1.4;">
+                Piksel mentah 5 karakter Frozen → <strong>Neural Network</strong> → di lapis mana posisinya?
+              </div>
+            </div></div>
+          <div class="vis-a" style="width:100%;"><div style="display:flex; flex-direction:column; gap:11px; width:100%; align-items:center;">
+              <span class="pill green" style="font-size:10px; padding:3px 10px;">TEPAT! DL ⊂ ML ⊂ AI ✓</span>
+              <svg viewBox="0 0 260 164" style="width:260px; height:164px; display:block;">
+                <circle cx="130" cy="82" r="76" fill="#E8F0FE" stroke="#4285F4" stroke-width="2.4" opacity="0.82"/>
+                <text x="130" y="28" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="800" fill="#1A73E8">AI</text>
+                <circle cx="130" cy="95" r="53" fill="#FCE8E6" stroke="#EA4335" stroke-width="2.4" opacity="0.88"/>
+                <text x="130" y="61" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="800" fill="#C5221F">ML</text>
+                <circle cx="130" cy="110" r="31" fill="#34A853" stroke="#FFFFFF" stroke-width="3"/>
+                <text x="130" y="114" text-anchor="middle" font-family="Poppins" font-size="13.5" font-weight="800" fill="#FFFFFF">DL ★</text>
+              </svg>
+              <div class="mini-box" style="background:#E6F4EA; border-color:#A8DAB5; width:100%; text-align:left; font-size:12px; line-height:1.42; padding:9px 12px;">
+                <strong>Posisi Tepat (DL ⊂ ML ⊂ AI):</strong> Karena Deep Learning berada di dalam ML &amp; AI, proyek Frozen kita sekaligus bagian dari <strong>ML</strong> dan <strong>AI</strong> — belajar fitur otomatis langsung dari piksel mentah!
+              </div>
+            </div></div>
         </div>
       </div>
       <div class="slide-footer"><span>Teori Neural Network — AI/ML/DL, CV Tasks & Backprop</span><span>10 / 49</span></div>
@@ -4390,12 +4428,14 @@ history = model_nn.fit(                               <span class="tok-todo"># T
       const badge = document.getElementById('ml-badge');
       const title = document.getElementById('ml-title');
       const desc = document.getElementById('ml-desc');
+      const extra = document.getElementById('ml-extra');
+      const bar = document.getElementById('ml-bar');
       const call = document.getElementById('ml-callout');
       if (!diag) return;
 
       if (mode === 'rule') {
         diag.innerHTML = `
-          <svg viewBox="0 0 490 270" style="width:100%; height:265px; display:block;">
+          <svg viewBox="0 0 490 270" style="width:100%; height:100%; max-height:310px; display:block;">
             <rect x="8" y="16" width="474" height="175" rx="14" fill="#FFFFFF" stroke="#F6AEA9" stroke-width="1.6"/>
             <text x="24" y="38" font-family="Poppins" font-size="11.5" font-weight="700" fill="#C5221F">ALUR PEMROGRAMAN TRADISIONAL (ATURAN MANUAL)</text>
             <rect x="24" y="56" width="132" height="54" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
@@ -4417,14 +4457,16 @@ history = model_nn.fit(                               <span class="tok-todo"># T
             <text x="245" y="227" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#C5221F">Masalah pada Foto Dunia Nyata:</text>
             <text x="245" y="246" text-anchor="middle" font-family="Roboto" font-size="11" fill="#3C4043">Begitu cahaya redup atau latar rak ramai, aturan warna manual langsung gagal!</text>
           </svg>`;
+        if (bar) bar.className = 'card-top-bar bar-red';
         badge.className = 'pill red'; badge.textContent = 'PEMROGRAMAN TRADISIONAL';
         title.textContent = 'Manusia Menulis Semua Aturan';
         desc.innerHTML = '<ul><li>Programmer harus memikirkan sendiri setiap syarat aturan (mis. <code>if-else</code>).</li><li>Cocok untuk aturan pasti (kalkulator, pajak), tetapi <strong>mustahil</strong> untuk membedakan ribuan variasi foto figurine!</li></ul>';
+        if (extra) extra.innerHTML = '<div style="background:#FCE8E6; border:1px solid #F6AEA9; border-radius:11px; padding:9px 11px; display:flex; flex-direction:column; gap:5px; font-size:11.6px; color:#3C4043;"><div style="font-family:var(--font-title); font-size:11px; font-weight:800; color:#C5221F;">3 Penyebab Aturan Manual Gagal di Foto:</div><div>• <strong>Cahaya berubah:</strong> angka RGB biru gaun Elsa ikut turun di foto redup.</div><div>• <strong>Sudut &amp; jarak:</strong> figurin miring atau lebih kecil mengubah semua koordinat piksel.</div><div>• <strong>Latar rak ramai:</strong> benda biru di belakang ikut memicu aturan <code>if biru</code>!</div></div>';
         call.className = 'callout red';
-        call.innerHTML = '<strong>Batasnya:</strong> Setiap kali cahaya, sudut, atau latar foto berubah, aturan manual langsung patah.';
+        call.innerHTML = '<strong>Solusinya?</strong> Klik Tab <strong>2. Machine Learning</strong> agar komputer belajar pola sendiri dari contoh!';
       } else {
         diag.innerHTML = `
-          <svg viewBox="0 0 490 270" style="width:100%; height:265px; display:block;">
+          <svg viewBox="0 0 490 270" style="width:100%; height:100%; max-height:310px; display:block;">
             <!-- Stage 1: Training -->
             <rect x="8" y="8" width="474" height="148" rx="14" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1.8"/>
             <text x="24" y="28" font-family="Poppins" font-size="11" font-weight="700" fill="#137333">TAHAP 1 · TRAINING (BELAJAR DARI CONTOH + KUNCI JAWABAN)</text>
@@ -4459,14 +4501,16 @@ history = model_nn.fit(                               <span class="tok-todo"># T
             <text x="422" y="221" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="700" fill="#FFFFFF">Prediksi</text>
             <text x="422" y="238" text-anchor="middle" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#34A853">"Elsa!"</text>
           </svg>`;
+        if (bar) bar.className = 'card-top-bar bar-green';
         badge.className = 'pill green'; badge.textContent = 'MACHINE LEARNING (SUPERVISED)';
         title.textContent = 'Belajar Pola dari Contoh & Kunci Jawaban';
-        desc.innerHTML = '<ul><li><strong>Supervised Learning:</strong> kita memberi data latihan beserta kunci jawabannya (<em>label</em>) ke algoritma matematika &amp; statistik.</li><li>Hasil training berupa <strong>Model</strong> yang langsung bisa dipakai menebak <strong>foto baru</strong> yang belum pernah dilihat!</li></ul>';
+        desc.innerHTML = '<ul><li>Kita memberi data latihan beserta kunci jawabannya (<em>label</em>), lalu algoritma ML menghasilkan <strong>Model</strong> untuk menebak <strong>foto baru</strong>!</li></ul>';
+        if (extra) extra.innerHTML = '<div style="background:#F8F9FA; border:1.2px solid #DADCE0; border-radius:11px; padding:9px 11px; display:flex; flex-direction:column; gap:5.5px; font-size:11.3px; color:#3C4043;"><div style="font-family:var(--font-title); font-size:10.8px; font-weight:800; color:#202124;">3 Paradigma Belajar Machine Learning:</div><div style="background:#E6F4EA; border:1px solid #A8DAB5; border-radius:7px; padding:4.5px 8px;"><strong style="color:#137333;">1. Supervised Learning ★ (Proyek Frozen):</strong> belajar dari <code>Foto + Label</code>.</div><div>• <strong>2. Unsupervised Learning:</strong> tanpa label — mengelompokkan pola mirip (<em>clustering</em>).</div><div>• <strong>3. Reinforcement Learning:</strong> belajar lewat <em>trial &amp; error</em> + skor hadiah (<em>reward</em>).</div></div>';
         call.className = 'callout green';
         call.innerHTML = '<strong>Hasil:</strong> Makin beragam contoh fotonya (polos &amp; ramai), makin tangguh pola yang dipelajari model.';
       }
     }
-    setMlTab('ml');
+    setMlTab('rule');
 
     // =========================================================================
     // SIMULATOR #2 (Slide 10): Lingkaran Bersarang AI ⊃ ML ⊃ DL
@@ -4478,7 +4522,8 @@ history = model_nn.fit(                               <span class="tok-todo"># T
         illus: '<div style="display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px;"><span class="pill blue" style="font-size:10.5px; padding:3px 9px;">AI Catur (Minimax)</span><span class="pill blue" style="font-size:10.5px; padding:3px 9px;">Navigasi Rute (A*)</span><span class="pill blue" style="font-size:10.5px; padding:3px 9px;">Expert System</span><span class="pill green" style="font-size:10.5px; padding:3px 9px;">ML &amp; DL</span></div>',
         body: '<ul><li>Lingkaran terluar yang mencakup seluruh pendekatan AI — mulai dari <strong>AI Klasik</strong> (pencarian &amp; logika) hingga <strong>AI Modern</strong> (ML &amp; DL).</li></ul>',
         frozen: '<strong>Posisi di Peta:</strong> Semua sistem ML &amp; DL berada di dalam lingkaran AI (tetapi bukan automasi statis seperti kalkulator).',
-        call: '<strong>Klik Tab 2 &amp; 3</strong> untuk masuk lebih dalam ke cabang ML dan Deep Learning!',
+        extra: '<strong>Ingat Pembeda Slide 06:</strong> Kalkulator &amp; Excel = <em>Bukan AI</em> (statis); AI Klasik = pencarian logika (<code>A*</code>, catur); AI Modern = belajar dari data.',
+        call: '<strong>Klik lingkaran ML / DL</strong> untuk masuk lebih dalam ke cabang belajar dari data!',
       },
       ml: {
         pill: 'RECAP · MACHINE LEARNING (ML)', pillCls: 'pill red', barCls: 'card-top-bar bar-red', callCls: 'callout red',
@@ -4486,7 +4531,8 @@ history = model_nn.fit(                               <span class="tok-todo"># T
         illus: '<div style="display:flex; align-items:center; justify-content:center; gap:7px; font-family:var(--font-code); font-size:10.5px;"><span style="background:#FCE8E6; color:#C5221F; padding:3px 8px; border-radius:6px; font-weight:700;">Fitur Manual</span><span>→</span><span style="background:#FEF7E0; color:#B06000; padding:3px 8px; border-radius:6px; font-weight:700;">Algoritma Statistik</span><span>→</span><span style="background:#202124; color:#FFF; padding:3px 8px; border-radius:6px; font-weight:700;">Model</span></div>',
         body: '<ul><li>Belajar pola dari contoh data menggunakan algoritma statistik (<em>Decision Tree, Random Forest, SVM</em>).</li></ul>',
         frozen: '<strong>Batasan pada foto:</strong> Manusia masih perlu mengekstrak fitur manual dulu (kita bedah tajam perbedaannya di slide berikutnya!).',
-        call: '<strong>Klik Tab 3 (Deep Learning)</strong> untuk melihat solusi khusus bagi foto &amp; video.',
+        extra: '<strong>Kapan ML Klasik Dipilih?</strong> Sangat unggul &amp; cepat untuk data <strong>tabel terstruktur</strong> (Excel/CSV: harga rumah, skor kredit, transaksi).',
+        call: '<strong>Klik lingkaran DL</strong> untuk melihat solusi khusus bagi foto &amp; video!',
       },
       dl: {
         pill: 'DEEP LEARNING (DL)', pillCls: 'pill green', barCls: 'card-top-bar bar-green', callCls: 'callout green',
@@ -4494,6 +4540,7 @@ history = model_nn.fit(                               <span class="tok-todo"># T
         illus: '<div style="display:flex; align-items:center; justify-content:center; gap:9px;"><img src="assets/P02/thumb_elsa.jpg" style="width:36px; height:36px; border-radius:7px; object-fit:cover; border:1.5px solid #4285F4;"/><span style="font-weight:700; color:#137333;">→</span><span style="background:#34A853; color:#FFF; padding:4px 10px; border-radius:7px; font-family:var(--font-title); font-size:11px; font-weight:700;">Neural Network (Belajar Fitur Otomatis)</span><span style="font-weight:700; color:#137333;">→</span><span style="background:#E6F4EA; border:1.5px solid #34A853; color:#137333; padding:3px 8px; border-radius:7px; font-family:var(--font-title); font-size:11px; font-weight:700;">Elsa!</span></div>',
         body: '<ul><li>Memakai <strong>Neural Network</strong> bertingkat yang otomatis mempelajari ciri langsung dari piksel mentah (tepi → bentuk → objek).</li><li>Sangat unggul untuk data tidak terstruktur: <strong>foto, video, suara, dan teks</strong>.</li></ul>',
         frozen: '<strong>Contoh di Proyek Frozen:</strong> Memasukkan foto <code>(224,224,3)</code> langsung ke <strong>Neural Network berlapis banyak</strong> untuk menebak Anna, Elsa, Kristoff, Olaf, atau Sven!',
+        extra: '<strong>Kenapa Disebut &ldquo;Deep&rdquo;?</strong> Karena menumpuk lapisan fitur bertingkat (<em>piksel → tepi → bentuk → karakter</em>). Di <strong>P02</strong> kita bedah dulu fondasi 1 lapisan hingga tuntas sebelum banyak lapisan (CNN) di <strong>P03–P04</strong>!',
         call: '<strong>Posisi proyek kita:</strong> Kita bekerja tepat di jantung <strong>Deep Learning untuk Computer Vision</strong>.',
       },
     };
@@ -4507,6 +4554,9 @@ history = model_nn.fit(                               <span class="tok-todo"># T
       document.getElementById('vnn-c-ai').setAttribute('opacity', m === 'ai' ? '1' : '0.45');
       document.getElementById('vnn-c-ml').setAttribute('opacity', m === 'ml' ? '1' : '0.55');
       document.getElementById('vnn-c-dl').setAttribute('opacity', m === 'dl' ? '1' : '0.6');
+      document.getElementById('vnn-c-ai').setAttribute('stroke-width', m === 'ai' ? '5' : '2.5');
+      document.getElementById('vnn-c-ml').setAttribute('stroke-width', m === 'ml' ? '5' : '2.5');
+      document.getElementById('vnn-c-dl').setAttribute('stroke-width', m === 'dl' ? '5' : '2.5');
       document.getElementById('vnn-pill').className = c.pillCls;
       document.getElementById('vnn-pill').textContent = c.pill;
       document.getElementById('vnn-bar').className = c.barCls;
@@ -4515,6 +4565,7 @@ history = model_nn.fit(                               <span class="tok-todo"># T
       if (illusEl) illusEl.innerHTML = c.illus || '';
       document.getElementById('vnn-body').innerHTML = c.body;
       document.getElementById('vnn-frozen').innerHTML = c.frozen;
+      const exEl = document.getElementById('vnn-extra'); if (exEl) exEl.innerHTML = c.extra || '';
       const callEl = document.getElementById('vnn-callout');
       callEl.className = c.callCls;
       callEl.innerHTML = c.call;
