@@ -316,7 +316,7 @@ if HIDE_SLIDES_28_40:
     SLIDE_EXPLANATIONS: dict[int, list[str]] = {}
     _new_idx = 1
     _post_bab3_order = (
-        [55, 54, 58, 59, 46, 47, 48, 49, 50, 51, 52, 56]
+        [55, 54, 58, 59, 46, 47, 48, 49, 50, 51, 52, 56, 57]
         if HIDE_BAB4_ARCH
         else list(range(41, 60))
     )
@@ -441,16 +441,21 @@ if HIDE_SLIDES_28_40:
             continue
         elif _orig_idx == 56 and HIDE_BAB4_ARCH:
             _notes = [
-                "**Tujuan Slide (3 menit — Grand Finale 3 Poin Utama):** Mengunci seluruh sesi **P02 — Teori Neural Network** dalam 3 pilar rapi di slide gelap beserta jembatan menuju **P03 (Arsitektur Neural Network & Konvolusi CNN)**.",
-                "• **Naskah Pengajar:** Bacakan 3 pilar: (01) Peta AI/ML/DL & Image Classification; (02) 5 Tahap runtut 1 Piksel → Flatten → Dense & Weight+Bias → Softmax → Backprop, LR/Adam & Batch/Overfitting; (03) Neural Network 1-Layer terbukti di Keras (`61.445` / `752.645` param) sebagai jembatan alami menuju **P03 (Arsitektur & CNN)**. Ingatkan pula Slide 41–42 untuk belajar mandiri.",
+                f"**Tujuan Slide (2 menit — Rangkuman Inti 3 Poin Utama):** Mengunci seluruh sesi **P02 — Teori Neural Network** dalam 3 pilar terstruktur beserta visual proyek Frozen, alur 5 tahap Bab 3, capaian nyata Hands-On {_HO_EPOCHS} Epoch, dan jembatan ke **P03 — Arsitektur Neural Network**.",
+                f"• **Naskah Pengajar:** Bacakan 3 pilar: (01) AI Klasik vs Modern, peta `AI ⊃ ML ⊃ DL`, & *Multi-Class Image Classification* 5 karakter Frozen; (02) 5 Tahap runtut (`Piksel → Flatten → Dense(5) 752.645 → ReLU/Sigmoid/Tanh/Softmax → Backprop, Adam, LR, Batch & Overfitting`); (03) Hands-On 1-Layer nyata (`Loss {_HO_E1_LOSS} → {_HO_END_LOSS}`, `{_HO_S0}/5 → {_HO_SEND}/5 ✓`, `Polos {_HO_POLOS_ACC}% vs Ramai {_HO_RAMAI_ACC}%`) menjadi alasan kuat lanjut ke **P03 (Arsitektur Neural Network)** & **P05 (Group Split)**. Ingatkan Kamus Slide 40, Referensi Slide 41–42, dan menyimpan `results/p02_nn_loss_curve.png` sebelum berpindah ke Slide Penutup.",
             ]
         elif _orig_idx == 57:
-            _notes[0] = (
-                "**Tujuan Slide (2 menit):** Menutup kelas dengan apresiasi, tugas ringan mandiri opsional, dan preview menarik untuk **P03 (Arsitektur Neural Network & Konvolusi CNN)**."
+            _notes = (
+                [
+                    "**Tujuan Slide (1 menit — Closing & Key Quote):** Menutup sesi P02 dengan kutipan penutup yang tenang, apresiasi hangat atas kerja keras peserta menuntaskan teori & Hands-On 30 Epoch, serta undangan antusias ke **P03 — Arsitektur Neural Network**.",
+                    "• **Naskah Pengajar:** Bacakan kutipan penutup dengan santai, beri apresiasi spesifik atas momen terbaik peserta selama kuis dan praktik notebook hari ini, tanyakan apakah ada pertanyaan terakhir, lalu tutup dengan pesan pembuka menuju P03!",
+                ]
                 if HIDE_BAB4_ARCH
-                else _notes[0]
+                else [
+                    _notes[0],
+                    _notes[-1].replace("Slide 58–59", "Slide 47–48"),
+                ]
             )
-            _notes[-1] = _notes[-1].replace("Slide 58–59", "Slide 33–34" if HIDE_BAB4_ARCH else "Slide 47–48")
         SLIDE_EXPLANATIONS[_new_idx] = _notes
         _new_idx += 1
         if _orig_idx == 23:

@@ -495,12 +495,18 @@ EXTRA_CSS = """
     .ho-term-bar { background: #1E2128; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2E323A; }
     .ho-term-pre { margin: 0; padding: 8px 11px; font-family: var(--font-code); font-size: 10.9px; line-height: 1.42; color: #A8DAB5; white-space: pre-wrap; }
 
-    /* Slide 42 Dark Finale */
+    /* Slide 50 White Finale (Balanced 3-Pillar Cards + Checklists + Mini Visuals) */
     .finale-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; flex: 1; min-height: 0; margin-top: 8px; }
-    .finale-card { background: #292A2D; border: 1px solid #3C4043; border-radius: 15px; padding: 15px 17px; color: #FFFFFF; display: flex; flex-direction: column; justify-content: flex-start; gap: 9px; position: relative; overflow: hidden; }
-    .finale-top { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
-    .finale-pill { margin-top: auto; background: rgba(255,255,255,0.06); border: 1px solid #45474A; border-radius: 9px; padding: 7px 10px; font-size: 11.2px; color: #E8EAED; line-height: 1.35; }
-    .finale-banner { margin-top: 11px; background: #292A2D; border: 1px solid #3C4043; border-left: 5px solid #34A853; border-radius: 13px; padding: 11px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .finale-card { background: #FFFFFF; border: 1.5px solid #DADCE0; border-radius: 15px; padding: 14px 16px; color: #202124; display: flex; flex-direction: column; justify-content: space-between; gap: 8px; position: relative; overflow: hidden; box-shadow: 0 3px 12px rgba(32,33,36,0.05); }
+    .finale-top { display: flex; align-items: center; justify-content: space-between; margin-top: 2px; }
+    .finale-pts { margin: 0; padding-left: 15px; display: flex; flex-direction: column; gap: 9px; font-size: 12.2px; line-height: 1.44; color: #3C4043; }
+    .finale-pts strong { color: #202124; }
+    .finale-strip { background: #F8F9FA; border: 1.2px solid #E0E3E7; border-radius: 9px; padding: 7px 10px; display: flex; align-items: center; justify-content: space-between; gap: 4px; }
+    .finale-pill { background: #F8F9FA; border: 1.2px solid #DADCE0; border-radius: 9px; padding: 7px 10px; font-size: 11px; color: #202124; line-height: 1.32; }
+    .finale-pill.blue { background: #E8F0FE; border-color: #C6DAFC; color: #174EA6; }
+    .finale-pill.green { background: #E6F4EA; border-color: #A8DAB5; color: #137333; }
+    .finale-pill.yellow { background: #FEF7E0; border-color: #FDE293; color: #202124; }
+    .finale-banner { margin-top: 10px; background: #F8F9FA; border: 1.4px solid #DADCE0; border-left: 5px solid #34A853; border-radius: 13px; padding: 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
 """
 
 
@@ -699,6 +705,7 @@ def _handson_step_slide(
 
 def build_slides_html(data: dict) -> str:
     total_imgs = data["total_images"]
+    e_end = int(data.get("handson_metrics", {}).get("epochs", 30))
     ho_m = data.get("handson_metrics", {})
     e0_loss = ho_m.get("epoch0_loss", 1.71)
     e0_acc = ho_m.get("epoch0_acc_pct", 24.5)
@@ -914,7 +921,7 @@ def build_slides_html(data: dict) -> str:
                 <span class="step-title">Hands-On Notebook &amp; Rangkuman Penutup</span>
                 <span class="pill dark" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~58,5 menit</span>
               </div>
-              <div class="step-desc">5 tahap mikro-task visual-first NumPy &amp; Keras pada foto Frozen (55,5m) → 3 Poin Utama (3m).</div>
+              <div class="step-desc">5 tahap mikro-task visual-first NumPy &amp; Keras pada foto Frozen (55,5m) → 3 Poin Utama &amp; Penutup (3m).</div>
             </div>
           </div>
         </div>
@@ -3246,7 +3253,7 @@ def build_slides_html(data: dict) -> str:
             <!-- Live Summary Equation Bar -->
             <div id="bs-eq-bar" style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 8px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-code); font-size:9.3px;">
               <span style="color:#3C4043;">⌈{total_imgs} / 16⌉ = <strong style="color:#1A73E8;">{(total_imgs + 15) // 16} Step/Epoch</strong></span>
-              <span style="color:#137333; font-weight:800;">20 Epoch = {((total_imgs + 15) // 16) * 20}× update W,b</span>
+              <span style="color:#137333; font-weight:800;">{e_end} Epoch = {((total_imgs + 15) // 16) * e_end}× update W,b</span>
             </div>
           </div>
 
@@ -4209,7 +4216,7 @@ tampilkan_tebakan_model(model_nn, X_5ramai, y_5ramai, judul="TES FOTO RAMAI")
 # Tahap 5.4 (Bonus Aha!): Intip area piksel yg diingat bobot ΔW
 tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             output_img="assets/P02/ho_step6_predict_and_weights.png",
-            output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar Epoch {e_end}! Bawah: peta ΔW menunjukkan area fokus tiap neuron (jembatan ke CNN P03).",
+            output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar Epoch {e_end}! Bawah: overlay ΔW di atas foto memperjelas fokus figurin, tangan, &amp; latar (jembatan ke CNN P03).",
             theory_ref="Slide 31–32 (LR, Overfitting) → P03 (CNN) & P05 (Split)",
             checklist_html=f"✓ Tebakan naik <strong>{s_e0}/5 → {s_end}/5</strong> &amp; uji visual <code>X_5ramai</code> tampil<br/>✓ Skor <code>ramai ({all_ramai_acc:.1f}%)</code> mengungkap hafalan latar (<em>shortcut</em>)!",
             callout_html="<strong>Momen Aha!</strong> Model 1-layer menghafal posisi &amp; warna latar ramai — itulah alasan kita butuh <strong>CNN (P03)</strong> &amp; <strong>Group Split (P05)</strong>!",
@@ -4625,50 +4632,116 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
     ]
     _quiz_html = "\n".join(_quiz_slides)
 
-    # Slide 42: Grand Finale Dark Slide (zero premature Hidden/MLP leakage + balanced top alignment + finale strip)
+    # Slide 50: Clean White 3 Poin Utama (2 menit, synced to Bab 1-3, Hands-On E30, & P03 bridge)
+    _ho_steps_n = (total_imgs + 15) // 16
     _summary_html = f"""
-    <!-- 3 POIN UTAMA (DARK FINALE) -->
-    <section class="slide dark" data-title="3 Poin Utama Hari Ini" data-notes="Alokasi waktu: 3 menit. Rangkum seluruh sesi Teori Neural Network menjadi 3 pilar utama agar mudah diingat setelah kelas selesai sekaligus beri preview singkat menuju P03 (Arsitektur Neural Network &amp; Konvolusi CNN).">
-      <div class="kicker">RANGKUMAN INTI · TEORI NEURAL NETWORK</div>
-      <h2>3 Poin Utama yang <span style="color:var(--yellow);">Wajib Dibawa Pulang</span></h2>
-      <div class="finale-grid">
+    <!-- 3 POIN UTAMA HARI INI (WHITE) -->
+    <section class="slide" data-title="3 Poin Utama Hari Ini" data-notes="Alokasi waktu: 2 menit. Rangkum seluruh sesi Teori Neural Network menjadi 3 pilar utama yang padat (Bab 1–2, Bab 3 5 Tahap, dan hasil nyata Hands-On 30 Epoch + jembatan ke P03 Arsitektur Neural Network &amp; CNN) sebelum ditutup oleh Slide Penutup." style="background: radial-gradient(circle at 88% 18%, rgba(66,133,244,0.06) 0%, rgba(52,168,83,0.04) 42%, #FFFFFF 100%);">
+      <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
+        <circle cx="910" cy="64" r="46" fill="none" stroke="#E8F0FE" stroke-width="14"/>
+        <circle cx="910" cy="64" r="18" fill="#FEF7E0"/>
+      </svg>
+      <div class="kicker" style="position:relative; z-index:1;">RANGKUMAN INTI · TEORI NEURAL NETWORK</div>
+      <h2 style="position:relative; z-index:1;">3 Poin Utama yang <span class="hl-blue">Wajib Dibawa Pulang</span></h2>
+      <div class="finale-grid" style="position:relative; z-index:1;">
         <div class="finale-card">
           <div class="card-top-bar bar-blue"></div>
           <div class="finale-top">
-            <div class="big-num" style="color:var(--blue); font-size:34px;">01</div>
-            <span class="pill blue" style="font-size:9.8px; padding:2px 8px;">BAB 1 &amp; BAB 2</span>
+            <div class="big-num" style="color:#1A73E8; font-size:32px;">01</div>
+            <span class="pill blue" style="font-size:9.6px; padding:2px 8px;">BAB 1 &amp; BAB 2</span>
           </div>
-          <div class="card-title" style="color:#FFF; font-size:16px;">Peta Besar AI &amp; CV Jelas</div>
-          <div class="card-body" style="color:#BDC1C6; font-size:13px;">Proyek klasifikasi 5 karakter Frozen berada di ranah <strong>Deep Learning</strong> (<code>AI ⊃ ML ⊃ DL</code>) dengan jenis tugas <strong>Multi-Class Image Classification</strong>.</div>
-          <div class="finale-pill">🎯 <strong>Output:</strong> 1 label kelas + probabilitas 5 karakter (<code>100%</code>)</div>
+          <div class="card-title" style="color:#202124; font-size:15.5px;">Peta Besar AI &amp; Tugas CV Jelas</div>
+          <ul class="finale-pts">
+            <li><strong>AI Klasik vs Modern:</strong> AI modern (<code>AI ⊃ ML ⊃ DL</code>) melakukan <em>Feature Learning</em> otomatis dari piksel, bukan aturan <code>if-else</code> kaku.</li>
+            <li><strong>4 Tugas CV:</strong> Berbeda dari <em>Detection</em>, <em>Segmentation</em>, &amp; <em>Tracking</em>, proyek Frozen = <strong>Multi-Class Image Classification</strong> (<code>5</code> kelas).</li>
+          </ul>
+          <div class="finale-strip" style="justify-content:space-around;">
+            <img src="assets/P02/thumb_anna.jpg" alt="Anna" style="width:32px; height:32px; border-radius:7px; object-fit:cover; border:1.5px solid #4285F4;"/>
+            <img src="assets/P02/thumb_elsa.jpg" alt="Elsa" style="width:32px; height:32px; border-radius:7px; object-fit:cover; border:1.5px solid #34A853;"/>
+            <img src="assets/P02/thumb_kristoff.jpg" alt="Kristoff" style="width:32px; height:32px; border-radius:7px; object-fit:cover; border:1.5px solid #FBBC04;"/>
+            <img src="assets/P02/thumb_olaf.jpg" alt="Olaf" style="width:32px; height:32px; border-radius:7px; object-fit:cover; border:1.5px solid #EA4335;"/>
+            <img src="assets/P02/thumb_sven.jpg" alt="Sven" style="width:32px; height:32px; border-radius:7px; object-fit:cover; border:1.5px solid #1A73E8;"/>
+          </div>
+          <div class="finale-pill blue">🎯 <strong>Output:</strong> 1 label kelas + peluang 5 karakter (<code>100%</code>)</div>
         </div>
+
         <div class="finale-card">
           <div class="card-top-bar bar-green"></div>
           <div class="finale-top">
-            <div class="big-num" style="color:var(--green); font-size:34px;">02</div>
-            <span class="pill green" style="font-size:9.8px; padding:2px 8px;">BAB 3 · 5 TAHAP</span>
+            <div class="big-num" style="color:#137333; font-size:32px;">02</div>
+            <span class="pill green" style="font-size:9.6px; padding:2px 8px;">BAB 3 · 5 TAHAP</span>
           </div>
-          <div class="card-title" style="color:#FFF; font-size:16px;">Neural Network = 5 Tahap Runtut</div>
-          <div class="card-body" style="color:#BDC1C6; font-size:13px;">Dimulai dari <strong>1 Piksel → 1 Neuron</strong>, diluruskan lewat <strong>Flatten</strong> menjadi <em>Input Layer</em>, dihitung <code>W·x + b → Softmax</code>, lalu belajar via <strong>Backpropagation &amp; Gradient Descent</strong>.</div>
-          <div class="finale-pill">🔄 <strong>Siklus Belajar:</strong> Mean Loss turun <code>1.70 → 0.21</code> dalam 8 <em>Epoch</em></div>
+          <div class="card-title" style="color:#202124; font-size:15.5px;">Neural Network = 5 Tahap Runtut</div>
+          <ul class="finale-pts">
+            <li><strong>Arsitektur Dasar:</strong> <code>1 Piksel</code> → <code>Flatten (150.528)</code> → <strong><code>Dense(5)</code></strong> (<code>752.645 param</code>) → <code>z = W·x + b</code>.</li>
+            <li><strong>Aktivasi &amp; Training:</strong> <code>ReLU, Sigmoid, Tanh, Softmax</code> → ukur error (<code>Loss</code>) → koreksi bobot via <strong>Backprop, <code>Adam</code>, LR, &amp; Batch</strong> (waspadai <em>Overfitting</em>).</li>
+          </ul>
+          <div class="finale-strip" style="font-family:var(--font-code); font-size:9.4px; font-weight:700; color:#137333; padding:10px 9px;">
+            <span>Piksel</span><span>→</span><span>Flatten</span><span>→</span><span>Dense</span><span>→</span><span>Softmax</span><span>→</span><span style="color:#1A73E8;">Backprop</span>
+          </div>
+          <div class="finale-pill green">🔄 <strong>Simulasi S33:</strong> Loss <code>1.70 → 0.21</code> (<code>5/5 ✓ · E8</code>)</div>
         </div>
+
         <div class="finale-card">
           <div class="card-top-bar bar-red"></div>
           <div class="finale-top">
-            <div class="big-num" style="color:var(--yellow); font-size:34px;">03</div>
-            <span class="pill yellow" style="font-size:9.8px; padding:2px 8px;">HANDS-ON → P03</span>
+            <div class="big-num" style="color:#E37400; font-size:32px;">03</div>
+            <span class="pill yellow" style="font-size:9.6px; padding:2px 8px;">HANDS-ON → P03</span>
           </div>
-          <div class="card-title" style="color:#FFF; font-size:16px;">Terbukti di Kode → Siap ke P03!</div>
-          <div class="card-body" style="color:#BDC1C6; font-size:13px;">Kamu baru saja membangun <strong>Neural Network 1-Layer</strong> nyata (<code>61.445</code> / <code>752.645</code> param) di Keras! Di <strong>P03</strong>, kita pelajari arsitektur berlapis &amp; <strong>CNN</strong> yang jauh lebih akurat membaca foto 2D.</div>
-          <div class="finale-pill">🚀 <strong>Berikutnya:</strong> P03 — Arsitektur Neural Network &amp; CNN</div>
+          <div class="card-title" style="color:#202124; font-size:15.5px;">Terbukti di Kode → Siap ke P03!</div>
+          <ul class="finale-pts">
+            <li><strong>Keras 1-Layer ({e_end} Epoch):</strong> Pada {total_imgs} foto (<code>Batch 16 = {_ho_steps_n} Step</code>), Loss turun <code>{e1_loss:.2f} → {e_end_loss:.2f}</code> ({e_end_acc:.1f}%) &amp; tebak showcase <strong>{s_e0}/5 → {s_end}/5 ✓</strong>!</li>
+            <li><strong>Alasan ke CNN:</strong> Peta bobot <code>ΔW</code> &amp; skor <code>polos ({all_polos_acc:.1f}%)</code> vs <code>ramai ({all_ramai_acc:.1f}%)</code> membuktikan jaringan 1-layer menghafal posisi &amp; latar (<em>shortcut</em>).</li>
+          </ul>
+          <div class="finale-strip" style="font-family:var(--font-code); font-size:9px; font-weight:700; color:#3C4043; padding:10px 9px; white-space:nowrap;">
+            <span style="color:#1A73E8;">P02: 1-Layer</span><span>→</span><strong style="color:#C5221F;">P03: Arsitektur NN</strong><span>→</span><span style="color:#137333;">P05: Split</span>
+          </div>
+          <div class="finale-pill yellow">🚀 <strong>Berikutnya:</strong> P03 — Arsitektur Neural Network</div>
         </div>
       </div>
-      <div class="finale-banner">
-        <div style="font-size:12.6px; color:#E8EAED;">
-          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 41–42</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
+      <div class="finale-banner" style="position:relative; z-index:1;">
+        <div style="font-size:12.2px; color:#202124;">
+          <strong style="color:#137333;">✓ Fondasi P02 Tuntas!</strong> &nbsp;·&nbsp; Kamus 16 Istilah: <strong style="color:#1A73E8;">Slide 40</strong> &nbsp;·&nbsp; Referensi: <strong style="color:#B06000;">Slide 41–42</strong> &nbsp;·&nbsp; Simpan <code>results/p02_nn_loss_curve.png</code>.
         </div>
-        <div style="font-size:12px; font-style:italic; color:#9AA0A6; white-space:nowrap;">&ldquo;Memahami 1 neuron dengan jernih adalah kunci memahami jaringan jutaan parameter.&rdquo;</div>
+        <div style="font-size:11.6px; font-style:italic; color:#5F6368; white-space:nowrap;">&ldquo;Memahami 1 neuron dengan jernih adalah kunci memahami jaringan jutaan parameter.&rdquo;</div>
       </div>
+      <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
+    </section>
+"""
+
+    _closing_html = f"""
+    <!-- CLOSING & KEY QUOTE (CRISP WHITE) -->
+    <section class="slide" data-title="Closing &amp; Key Quote" data-notes="Alokasi waktu: 1 menit. Tutup sesi P02 dengan kutipan penutup yang tenang, apresiasi hangat atas keberhasilan peserta menuntaskan teori NN hingga training Keras 30 Epoch, serta undangan menuju P03 (Arsitektur Neural Network)." style="background: radial-gradient(circle at 84% 24%, rgba(66,133,244,0.09) 0%, rgba(234,67,53,0.05) 36%, rgba(52,168,83,0.06) 68%, #FFFFFF 100%); justify-content: space-between;">
+      <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
+        <circle cx="885" cy="84" r="24" fill="#E8F0FE" stroke="#4285F4" stroke-width="2" opacity="0.8"/>
+        <rect x="64" y="408" width="22" height="22" rx="7" transform="rotate(18 75 419)" fill="#FCE8E6" stroke="#EA4335" stroke-width="2" opacity="0.78"/>
+        <polygon points="884,412 899,438 869,438" fill="#E6F4EA" stroke="#34A853" stroke-width="2" opacity="0.82"/>
+        <circle cx="96" cy="96" r="12" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2" opacity="0.85"/>
+      </svg>
+
+      <div style="position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <span style="font-family:var(--font-title); font-size:12px; font-weight:700; letter-spacing:1.8px; color:#5F6368;">CLOSING · P02</span>
+          <span style="background:#E6F4EA; border:1px solid #A8DAB5; color:#137333; font-family:var(--font-title); font-size:10.5px; font-weight:700; padding:3px 10px; border-radius:999px;">✓ Fondasi Selesai</span>
+        </div>
+        <div style="display:flex; gap:7px; align-items:center;">
+          <span style="width:10px; height:10px; border-radius:50%; background:#4285F4;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#EA4335;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#FBBC04;"></span>
+          <span style="width:10px; height:10px; border-radius:50%; background:#34A853;"></span>
+        </div>
+      </div>
+
+      <div style="position:relative; z-index:1; margin:auto 0; display:flex; flex-direction:column; align-items:center; text-align:center; gap:18px; padding:0 48px;">
+        <h1 style="font-family:var(--font-title); font-size:clamp(25px,2.55vw,32px); font-weight:700; line-height:1.38; color:#202124; max-width:850px; margin:0; letter-spacing:-0.3px;">
+          <span style="color:#1A73E8;">Neural Network</span> bekerja dengan cara sederhana: membaca angka piksel, <span style="color:#EA4335;">mengukur kesalahan</span>, lalu memperbarui bobotnya sampai akurat.
+        </h1>
+        <div style="height:4px; width:240px; border-radius:999px; background:linear-gradient(90deg, #4285F4 0%, #EA4335 35%, #FBBC04 70%, #34A853 100%); margin:2px 0;"></div>
+        <p style="font-size:15.5px; color:#5F6368; max-width:820px; line-height:1.5; margin:0;">
+          Terima kasih sudah mengikuti sesi <strong style="color:#202124;">P02 — Teori Neural Network</strong>. Sampai jumpa di <strong style="color:#137333;">P03 — Arsitektur Neural Network</strong>!
+        </p>
+      </div>
+
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 """
@@ -4811,7 +4884,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
     </section>
 """
     if HIDE_BAB4_ARCH:
-        # Urutan final 42 slide: Bab 1-3 -> Cover Kuis/Kamus/Ref -> Kuis -> Kamus -> Referensi -> Cover Hands-On -> Hands-On 1-6 -> 3 Poin Utama
+        # Urutan final 51 slide: Bab 1-3 -> Cover Kuis/Kamus/Ref -> Kuis -> Kamus -> Referensi -> Cover Hands-On -> Hands-On 1-6 -> 3 Poin Utama -> Closing
         s.append(_eval_cover_slide)
         s.append(_quiz_html)
         s.append(_glossary_html)
@@ -4819,6 +4892,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
         s.append(_break_slide)
         s.extend(_handson_slides)
         s.append(_summary_html)
+        s.append(_closing_html)
     else:
         s.append(_break_slide)
         s.extend(_handson_slides)
@@ -4840,6 +4914,7 @@ def build_extra_js(data: dict) -> str:
     tm_json = json.dumps(data["training_math_demo"], ensure_ascii=False)
     fnn_json = json.dumps(data["full_nn_demo"], ensure_ascii=False)
     total_imgs = data["total_images"]
+    e_end = int(data.get("handson_metrics", {}).get("epochs", 30))
     return f"""
     const FROZEN_CHAR_DATA = {cs_json};
     const MINI_FP = {fp_json};
@@ -11307,20 +11382,21 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       const progTxt = document.getElementById('bs-photo-prog');
       if (progTxt) progTxt.textContent = `${{photosDone}} / ${{BS_TOTAL}} foto (${{Math.round(photosDone * 100 / BS_TOTAL)}}%)`;
 
+      const BS_EPOCHS = {e_end};
       const eqBar = document.getElementById('bs-eq-bar');
       if (eqBar) {{
         eqBar.innerHTML = `<span style="color:#3C4043;">⌈${{BS_TOTAL}} / ${{bsSize}}⌉ = <strong style="color:#1A73E8;">${{nBatches}} Step/Epoch</strong></span>`
-          + `<span style="color:#137333; font-weight:800;">20 Epoch = ${{nBatches * 20}}× koreksi W,b</span>`;
+          + `<span style="color:#137333; font-weight:800;">${{BS_EPOCHS}} Epoch = ${{nBatches * BS_EPOCHS}}× koreksi W,b</span>`;
       }}
 
       const call = document.getElementById('bs-callout');
       if (call) {{
-        if (bsSize === 143) {{
-          call.innerHTML = `<strong>Full Batch (143 foto sekaligus):</strong> Meteran RAM langsung <strong>PENUH (98%)</strong> dan bobot W &amp; b <strong>cuma dikoreksi 1×</strong> per epoch!`;
+        if (bsSize >= BS_TOTAL) {{
+          call.innerHTML = `<strong>Full Batch (${{BS_TOTAL}} foto sekaligus):</strong> Meteran RAM langsung <strong>PENUH (98%)</strong> dan bobot W &amp; b <strong>cuma dikoreksi 1×</strong> per epoch!`;
         }} else if (bsSize === 8) {{
-          call.innerHTML = `<strong>Batch Kecil (8 foto):</strong> RAM sangat hemat (<strong>18%</strong>) dan bobot dikoreksi <strong>18× per epoch</strong> (lebih sering tapi lebih berisik).`;
+          call.innerHTML = `<strong>Batch Kecil (8 foto):</strong> RAM sangat hemat (<strong>18%</strong>) dan bobot dikoreksi <strong>${{nBatches}}× per epoch</strong> (lebih sering tapi lebih berisik).`;
         }} else if (bsSize === 32) {{
-          call.innerHTML = `<strong>Batch Sedang (32 foto):</strong> RAM sedang (<strong>64%</strong>), hanya butuh <strong>5 Step/Epoch</strong> (100× koreksi dalam 20 epoch).`;
+          call.innerHTML = `<strong>Batch Sedang (32 foto):</strong> RAM sedang (<strong>64%</strong>), hanya butuh <strong>${{nBatches}} Step/Epoch</strong> (${{nBatches * BS_EPOCHS}}× koreksi dalam ${{BS_EPOCHS}} epoch).`;
         }} else {{
           const rem16 = BS_TOTAL % 16 || 16;
           call.innerHTML = `<strong>Standar Hands-On (batch_size=16):</strong> RAM aman (<strong>36%</strong>) dan bobot W &amp; b dikoreksi <strong>${{nBatches}}× tiap 1 Epoch</strong> (batch terakhir sisa ${{rem16}} foto)!`;

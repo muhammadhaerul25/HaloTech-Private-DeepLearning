@@ -10,7 +10,7 @@ Teori Neural Network (Visual-First, Mikro-Task Berurutan Tahap 0 -> Tahap 5.4).
   * Tahap 2 (2.1–2.2): Visual 2D 8x8 -> Pita 1D 64 piksel warna (P1 x1-3 .. P64 x190-192) + Grafik skala parameter
   * Tahap 3 (3.1–3.3): Timbangan 1 Neuron (Gaun Biru vs Dinding!) + ReLU + Softmax 5 foto Frozen & Loss (−ln P)!
   * Tahap 4 (4.1–4.3): Bangun Neural Network 1-Layer Keras + Uji "Model Bayi" (Epoch 0 acak!)
-  * Tahap 5 (5.1–5.4): Training 20 Epoch + Kurva Loss/Akurasi + Before vs After + Polos vs Ramai (Shortcut) + Peta ΔW!
+  * Tahap 5 (5.1–5.4): Training 30 Epoch (Batch=16 → 9 Step) + Kurva Loss/Akurasi + Before vs After + Polos vs Ramai (Shortcut) + Overlay Peta ΔW!
 - 8 latihan `# TODO` super achievable (1–2 baris) + `assert` + 8 sel `<details>` Hint & Jawaban.
 - Versi solusi lolos 100% dieksekusi dengan `SMOKE_TEST=1`.
 """
@@ -80,12 +80,14 @@ def tampilkan_piksel_grid(foto_asli, foto_mini, pr=4, pc=2):
             ax2.text(c, r, f"{lum:.1f}", ha="center", va="center", fontsize=8, fontweight="bold",
                      color="#FFFFFF" if lum < 0.54 else "#202124")
     ax2.add_patch(patches.Rectangle((pc - 0.5, pr - 0.5), 1, 1, lw=2.8, edgecolor="#EA4335", facecolor="none"))
+    ax2.set_xticks(range(foto_mini.shape[1])); ax2.set_yticks(range(foto_mini.shape[0]))
     ax2.set_title("Grid 8×8 (Angka = kecerahan · tiap kotak punya 3 nilai R, G, B)", fontweight="bold", color="#1A73E8", fontsize=10.5)
     plt.tight_layout()
     plt.show()
 
 def tampilkan_zoom_piksel(foto_mini, pr, pc, rgb):
     r_v, g_v, b_v = float(rgb[0]), float(rgb[1]), float(rgb[2])
+    dom = ["Merah (R)", "Hijau (G)", "Biru (B)"][int(np.argmax([r_v, g_v, b_v]))]
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8.4, 3.2), gridspec_kw={"width_ratios": [1, 1.85]})
     ax1.imshow(np.ones((10, 10, 3)) * np.array([r_v, g_v, b_v]))
     ax1.set_title(f"Warna Asli Piksel [{pr}, {pc}]\\nRGB = [{r_v:.2f}, {g_v:.2f}, {b_v:.2f}]", fontweight="bold", fontsize=10)
@@ -94,7 +96,8 @@ def tampilkan_zoom_piksel(foto_mini, pr, pc, rgb):
     for bar, v in zip(bars, [r_v, g_v, b_v]):
         ax2.text(bar.get_x() + bar.get_width() / 2, v + 0.03, f"{v:.2f}", ha="center", fontweight="bold")
     ax2.set_ylim(0, 1.15); ax2.set_ylabel("Nilai (0.0 – 1.0)")
-    ax2.set_title("3 Angka Pembentuk 1 Piksel RGB (Biru Paling Tinggi!)", fontweight="bold", color="#137333")
+    ax2.set_title(f"3 Angka Pembentuk 1 Piksel RGB ({dom} Dominan!)", fontweight="bold", color="#137333")
+    ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
     ax2.grid(axis="y", linestyle="--", alpha=0.35)
     plt.tight_layout()
     plt.show()
@@ -121,14 +124,16 @@ def tampilkan_visual_flatten(foto_mini, vektor_mini):
     plt.show()
 
 def tampilkan_skala_parameter(neuron_224, param_224):
+    k = len(CLASS_NAMES)
     labels = ["Mini 8×8×3\\n(192 neuron)", "Hands-On 64×64×3\\n(12.288 neuron)", f"Penuh 224×224×3\\n({neuron_224:,} neuron)"]
-    vals = [192 * 5 + 5, 12288 * 5 + 5, param_224]
+    vals = [192 * k + k, 12288 * k + k, param_224]
     fig, ax = plt.subplots(figsize=(8.8, 2.8))
     bars = ax.barh(labels, vals, color=["#34A853", "#4285F4", "#EA4335"], height=0.55)
     ax.set_xscale("log"); ax.set_xlim(100, 30_000_000); ax.invert_yaxis()
     for b, v in zip(bars, vals):
         ax.text(v * 1.25, b.get_y() + b.get_height() / 2, f"{v:,} parameter (W+b)", va="center", fontweight="bold")
     ax.set_title("Perbandingan Total Parameter Neural Network 1-Layer (Skala Log)", fontweight="bold")
+    ax.spines["top"].set_visible(False); ax.spines["right"].set_visible(False)
     ax.grid(axis="x", linestyle="--", alpha=0.35)
     plt.tight_layout()
     plt.show()
@@ -156,15 +161,43 @@ def tampilkan_timbangan_neuron(r, g, b, w_r, w_g, w_b, bias, z, piksel_dinding=N
 
 def tampilkan_relu(skor_awal, hasil_relu):
     xx = np.arange(len(skor_awal))
-    fig, ax = plt.subplots(figsize=(7.2, 2.9))
-    ax.bar(xx - 0.18, skor_awal, width=0.34, color="#DADCE0", edgecolor="#5F6368", label="Sebelum ReLU")
-    ax.bar(xx + 0.18, hasil_relu, width=0.34, color="#34A853", edgecolor="#137333", label="Sesudah ReLU")
-    ax.axhline(0, color="#202124", lw=1)
-    ax.set_xticks(xx); ax.set_xticklabels([f"{v:+.1f}" for v in skor_awal])
-    ax.set_title("Efek Aktivasi ReLU: Semua Angka Negatif Dipangkas Jadi 0", fontweight="bold", color="#137333")
-    ax.legend(); ax.grid(axis="y", linestyle="--", alpha=0.35)
+    hasil_tanh = np.tanh(skor_awal)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.2, 3.0))
+    ax1.bar(xx - 0.18, skor_awal, width=0.34, color="#DADCE0", edgecolor="#5F6368", label="Sebelum")
+    ax1.bar(xx + 0.18, hasil_relu, width=0.34, color="#34A853", edgecolor="#137333", label="Sesudah ReLU")
+    ax1.axhline(0, color="#202124", lw=1)
+    ax1.set_xticks(xx); ax1.set_xticklabels([f"{v:+.1f}" for v in skor_awal])
+    ax1.set_title("ReLU: Angka Negatif → 0 (Slide 28)", fontweight="bold", color="#137333")
+    ax1.spines["top"].set_visible(False); ax1.spines["right"].set_visible(False)
+    ax1.legend(fontsize=8.5); ax1.grid(axis="y", linestyle="--", alpha=0.35)
+    ax2.bar(xx - 0.18, skor_awal, width=0.34, color="#DADCE0", edgecolor="#5F6368", label="Sebelum")
+    ax2.bar(xx + 0.18, hasil_tanh, width=0.34, color="#4285F4", edgecolor="#1A73E8", label="Sesudah Tanh")
+    ax2.axhline(0, color="#202124", lw=1)
+    ax2.set_xticks(xx); ax2.set_xticklabels([f"{v:+.1f}" for v in skor_awal])
+    ax2.set_title("Pembanding Tanh: Rentang −1 s/d +1 (Slide 28)", fontweight="bold", color="#1A73E8")
+    ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
+    ax2.legend(fontsize=8.5); ax2.grid(axis="y", linestyle="--", alpha=0.35)
     plt.tight_layout()
     plt.show()
+
+def muat_dataset_frozen(df_meta, data_dir, small_size=64):
+    """Muat seluruh foto Frozen secara dinamis + siapkan 5 contoh polos & 5 ramai."""
+    label_to_idx = {nama: i for i, nama in enumerate(CLASS_NAMES)}
+    X_all, y_all, cond_all = [], [], []
+    idx_polos, idx_ramai = {}, {}
+    for _, row in df_meta.iterrows():
+        im = _buka_foto_aman(data_dir / row["file"]).resize((small_size, small_size), Image.Resampling.LANCZOS)
+        X_all.append(np.array(im, dtype=np.float32) / 255.0)
+        y_all.append(label_to_idx[row["kelas"]])
+        cond_all.append(row["kondisi"])
+        if row["kondisi"] == "polos" and row["kelas"] not in idx_polos:
+            idx_polos[row["kelas"]] = len(X_all) - 1
+        if row["kondisi"] == "ramai" and row["kelas"] not in idx_ramai:
+            idx_ramai[row["kelas"]] = len(X_all) - 1
+    X_all, y_all, cond_all = np.array(X_all), np.array(y_all), np.array(cond_all)
+    samp_polos = (X_all[[idx_polos[k] for k in CLASS_NAMES]], y_all[[idx_polos[k] for k in CLASS_NAMES]])
+    samp_ramai = (X_all[[idx_ramai[k] for k in CLASS_NAMES]], y_all[[idx_ramai[k] for k in CLASS_NAMES]])
+    return X_all, y_all, cond_all, samp_polos, samp_ramai
 
 def tampilkan_softmax_frozen(skor_5kelas, df_meta, data_dir, label_asli="elsa"):
     z = np.array(skor_5kelas, dtype=np.float64)
@@ -225,15 +258,20 @@ def tampilkan_kurva_training(history, simpan_ke=None):
     losses = history.history["loss"]
     accs = [a * 100.0 for a in history.history["accuracy"]]
     ep = list(range(1, len(losses) + 1))
+    xt = [1, 5, 10, 15, 20, 25, 30] if len(ep) >= 10 else ep
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(10.5, 3.6))
-    ax1.plot(ep, losses, marker="o", color="#EA4335", lw=2.3)
+    ax1.plot(ep, losses, marker="o", color="#EA4335", lw=2.2, markersize=4.5)
     ax1.fill_between(ep, losses, min(losses) * 0.85, color="#EA4335", alpha=0.09)
-    ax1.set_title("Kurva Loss Turun (Makin Kecil Makin Baik)", fontweight="bold")
-    ax1.set_xlabel("Epoch"); ax1.set_ylabel("Cross-Entropy Loss"); ax1.grid(True, linestyle="--", alpha=0.35)
-    ax2.plot(ep, accs, marker="s", color="#34A853", lw=2.3)
+    ax1.set_title(f"Kurva Loss Turun (E1: {losses[0]:.2f} → E{len(ep)}: {losses[-1]:.2f})", fontweight="bold")
+    ax1.set_xlabel("Epoch"); ax1.set_ylabel("Cross-Entropy Loss"); ax1.set_xticks(xt)
+    ax1.spines["top"].set_visible(False); ax1.spines["right"].set_visible(False)
+    ax1.grid(True, linestyle="--", alpha=0.35)
+    ax2.plot(ep, accs, marker="s", color="#34A853", lw=2.2, markersize=4.5)
     ax2.fill_between(ep, accs, 0, color="#34A853", alpha=0.09)
-    ax2.set_title("Kurva Akurasi Naik", fontweight="bold")
-    ax2.set_xlabel("Epoch"); ax2.set_ylabel("Akurasi (%)"); ax2.set_ylim(0, 105); ax2.grid(True, linestyle="--", alpha=0.35)
+    ax2.set_title(f"Kurva Akurasi Naik (E1: {accs[0]:.1f}% → E{len(ep)}: {accs[-1]:.1f}%)", fontweight="bold")
+    ax2.set_xlabel("Epoch"); ax2.set_ylabel("Akurasi (%)"); ax2.set_ylim(0, 105); ax2.set_xticks(xt)
+    ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
+    ax2.grid(True, linestyle="--", alpha=0.35)
     plt.tight_layout()
     if simpan_ke is not None:
         fig.savefig(simpan_ke, dpi=150)
@@ -246,14 +284,37 @@ def tampilkan_peta_bobot(model, W_awal, X_samp):
     for i in range(5):
         axes[0, i].imshow(X_samp[i]); axes[0, i].axis("off")
         axes[0, i].set_title(f"Contoh {CLASS_NAMES[i].capitalize()}", fontweight="bold", fontsize=9.5)
+        gray_bg = np.dot(X_samp[i][..., :3], [0.299, 0.587, 0.114])
         w_img = W_delta[:, i].reshape(X_samp.shape[1], X_samp.shape[2], 3)
         w_mag = np.mean(np.abs(w_img), axis=2)
-        hi = max(float(np.percentile(w_mag, 98)), 1e-6)
-        axes[1, i].imshow(np.clip(w_mag / hi, 0.0, 1.0), cmap="inferno"); axes[1, i].axis("off")
-        axes[1, i].set_title(f"Fokus Bobot ΔW: {CLASS_NAMES[i].capitalize()}", fontweight="bold", fontsize=9, color="#1A73E8")
-    plt.suptitle("Mengintip Isi Otak Model: Area Piksel Mana yang Paling Diingat Tiap Neuron?", fontweight="bold")
+        hi = max(float(np.percentile(w_mag, 98.5)), 1e-6)
+        w_norm = np.clip(w_mag / hi, 0.0, 1.0)
+        w_rgba = plt.get_cmap("inferno")(w_norm)
+        w_rgba[..., 3] = np.clip(0.08 + 0.84 * (w_norm ** 0.9), 0.08, 0.92)
+        axes[1, i].imshow(gray_bg, cmap="gray", vmin=0.0, vmax=1.05)
+        axes[1, i].imshow(w_rgba, interpolation="bilinear"); axes[1, i].axis("off")
+        axes[1, i].set_title(f"Fokus ΔW (Overlay): {CLASS_NAMES[i].capitalize()}", fontweight="bold", fontsize=9, color="#1A73E8")
+    plt.suptitle("Mengintip Isi Otak Model: Area Piksel Mana yang Paling Diingat Tiap Neuron? (Overlay di Atas Foto)", fontweight="bold")
     plt.tight_layout()
     plt.show()
+
+def tampilkan_eksperimen_lr(X_data, y_data, history_dasar, lr_baru=0.01, epochs=30, seed=42):
+    tf.keras.utils.set_random_seed(seed)
+    h, w, c = X_data.shape[1:]
+    model_coba = tf.keras.Sequential([
+        tf.keras.layers.Input(shape=(h, w, c)),
+        tf.keras.layers.Flatten(),
+        tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),
+    ])
+    model_coba.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=lr_baru),
+                       loss="sparse_categorical_crossentropy", metrics=["accuracy"])
+    hist_coba = model_coba.fit(X_data, y_data, epochs=epochs, batch_size=16, verbose=0)
+    plt.figure(figsize=(8.0, 3.2))
+    plt.plot(range(1, epochs + 1), history_dasar.history["loss"], marker="o", label="LR Standar (0.0005)", color="#34A853", lw=2.2)
+    plt.plot(range(1, epochs + 1), hist_coba.history["loss"], marker="x", label=f"LR Eksperimen ({lr_baru})", color="#EA4335", lw=2.2)
+    plt.title("Perbandingan Kurva Loss: Pengaruh Learning Rate (Slide 31)", fontweight="bold")
+    plt.xlabel("Epoch"); plt.ylabel("Cross-Entropy Loss"); plt.legend(); plt.grid(True, linestyle="--", alpha=0.35)
+    plt.tight_layout(); plt.show()
 
 print("✅ Alat Visualisasi P02 siap dipakai!")
 '''
@@ -671,24 +732,12 @@ Kita pakai ukuran ringkas `64×64×3` (`12.288` piksel) agar training selesai da
             """
 # Muat seluruh foto Frozen ke ukuran 64x64 (skala 0.0-1.0) secara dinamis
 SMALL_SIZE = 64
-label_to_idx = {nama: i for i, nama in enumerate(CLASS_NAMES)}
-X_frozen, y_frozen, kondisi_frozen = [], [], []
-idx_polos, idx_ramai = {}, {}
-
-for _, row in df_meta.iterrows():
-    im = _buka_foto_aman(DATA_DIR / row["file"]).resize((SMALL_SIZE, SMALL_SIZE), Image.Resampling.LANCZOS)
-    X_frozen.append(np.array(im, dtype=np.float32) / 255.0)
-    y_frozen.append(label_to_idx[row["kelas"]])
-    kondisi_frozen.append(row["kondisi"])
-    if row["kondisi"] == "polos" and row["kelas"] not in idx_polos:
-        idx_polos[row["kelas"]] = len(X_frozen) - 1
-    if row["kondisi"] == "ramai" and row["kelas"] not in idx_ramai:
-        idx_ramai[row["kelas"]] = len(X_frozen) - 1
-
-X_frozen, y_frozen, kondisi_frozen = np.array(X_frozen), np.array(y_frozen), np.array(kondisi_frozen)
-X_5foto, y_5foto = X_frozen[[idx_polos[k] for k in CLASS_NAMES]], y_frozen[[idx_polos[k] for k in CLASS_NAMES]]
-X_5ramai, y_5ramai = X_frozen[[idx_ramai[k] for k in CLASS_NAMES]], y_frozen[[idx_ramai[k] for k in CLASS_NAMES]]
-print("Siap dilatih! Shape X_frozen:", X_frozen.shape, "| Jumlah kelas:", len(CLASS_NAMES))
+X_frozen, y_frozen, kondisi_frozen, (X_5foto, y_5foto), (X_5ramai, y_5ramai) = muat_dataset_frozen(
+    df_meta, DATA_DIR, small_size=SMALL_SIZE
+)
+n_polos = int((kondisi_frozen == "polos").sum())
+n_ramai = int((kondisi_frozen == "ramai").sum())
+print(f"Siap dilatih! Total: {len(X_frozen)} foto ({n_polos} polos, {n_ramai} ramai) | Shape: {X_frozen.shape}")
 """
         )
     )
@@ -716,7 +765,7 @@ model_nn.compile(
 expected_p = (SMALL_SIZE * SMALL_SIZE * 3 * len(CLASS_NAMES)) + len(CLASS_NAMES)
 assert model_nn.count_params() == expected_p, f"Parameter harus {expected_p:,}, didapat {model_nn.count_params():,}"
 model_nn.summary()
-print("✅ Tahap 4.2 selesai! Cocok 100% dengan rumus 12.288 x 5 + 5 = 61.445 parameter!")
+print(f"✅ Tahap 4.2 selesai! Cocok 100% dengan rumus = {expected_p:,} parameter!")
 """,
         solution_code="""
 tf.keras.utils.set_random_seed(SEED)
@@ -736,7 +785,7 @@ model_nn.compile(
 expected_p = (SMALL_SIZE * SMALL_SIZE * 3 * len(CLASS_NAMES)) + len(CLASS_NAMES)
 assert model_nn.count_params() == expected_p, f"Parameter harus {expected_p:,}, didapat {model_nn.count_params():,}"
 model_nn.summary()
-print("✅ Tahap 4.2 selesai! Cocok 100% dengan rumus 12.288 x 5 + 5 = 61.445 parameter!")
+print(f"✅ Tahap 4.2 selesai! Cocok 100% dengan rumus = {expected_p:,} parameter!")
 """,
         hint_code='tf.keras.layers.Flatten(),\ntf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),',
         hint_label="Tugas 4.2",
@@ -836,26 +885,18 @@ assert loss_plot_path.exists()
     cells.append(
         md(
             """
-### Tahap 5.3: Momen "Aha!" — Bandingkan **Before vs After** + Tes Foto **Polos vs Ramai**!
+### Tahap 5.3: Momen "Aha!" — Bandingkan **Before vs After** + Tes Foto **Polos vs Ramai**! *(Sesuai Slide 49)*
 Lihat bagaimana bar probabilitas yang tadinya rata (~20% di Tahap 4.3) sekarang menebak tepat **5/5 karakter**!  
-Setelah itu kita uji pula pada 5 foto **`ramai`** (`X_5ramai`) dan membandingkan akurasi keseluruhan **`polos` vs `ramai`** — perhatikan mengapa akurasi foto `ramai` pada data latih justru bisa tampak sangat tinggi (*indikasi hafalan latar / Overfitting · Slide 32*)!
+Lalu mari uji juga pada 5 foto berlatar **`ramai`** (`X_5ramai`).
 """
         )
     )
     cells.append(
         code(
             """
-# Uji kembali model pada 5 foto polos yang sama (bandingkan dengan Tahap 4.3!)
+# Uji kembali 5 foto polos (Before vs After) lalu uji 5 foto berlatar RAMAI!
 tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul=f"SESUDAH BELAJAR — 5 Foto Polos (Epoch {EPOCHS})")
-
-# Uji juga pada 5 foto berlatar RAMAI (menggunakan X_5ramai yang disiapkan di Tahap 4.1!)
 tampilkan_tebakan_model(model_nn, X_5ramai, y_5ramai, judul=f"TES JUJUR — 5 Foto Latar Ramai (Epoch {EPOCHS})")
-
-# Cek akurasi seluruh foto polos vs ramai (observasi awal menuju Slide 32 Overfitting, P03 CNN & P05 Split)
-_, acc_polos = model_nn.evaluate(X_frozen[kondisi_frozen == "polos"], y_frozen[kondisi_frozen == "polos"], verbose=0)
-_, acc_ramai = model_nn.evaluate(X_frozen[kondisi_frozen == "ramai"], y_frozen[kondisi_frozen == "ramai"], verbose=0)
-print(f"Observasi jujur di data latih — Polos = {acc_polos*100:.1f}% | Ramai = {acc_ramai*100:.1f}%")
-print("Catatan kritis: Kenapa 'ramai' tinggi saat diuji di data latih sendiri? Karena jaringan 1-layer cenderung menghafal pola latar belakang warna-warni (shortcut learning / overfitting) — wajib diuji adil dengan Group Split (P05) & diselesaikan dengan CNN (P03)!")
 """
         )
     )
@@ -863,16 +904,36 @@ print("Catatan kritis: Kenapa 'ramai' tinggi saat diuji di data latih sendiri? K
     cells.append(
         md(
             """
-### Tahap 5.4 *(Bonus Visual)*: Mengintip Isi Otak Bobot `ΔW` yang Dipelajari Model!
-Karena model kita hanya 1-Layer (`64×64×3 → 5`), kita bisa mengubah balik perubahan bobot (`W_akhir - W_awal`) menjadi peta panas `64×64`!  
-**Area terang menyala** menunjukkan bagian piksel mana yang paling diingat neuron untuk masing-masing karakter — sekaligus memperlihatkan mengapa saat figurin bergeser atau latar berubah, kita butuh **CNN (P03)**!
+### Cek Akurasi `Polos` vs `Ramai` pada Data Latih *(Indikasi Shortcut Learning · Slide 32 & 49)*
+Mengapa skor foto `ramai` tampak tinggi saat diuji pada data latih? Karena jaringan 1-layer menghafal warna latar rak (*overfitting / shortcut*) — pembagian data **Group Split (P05)** & arsitektur **CNN (P03)** akan menyelesaikan ini!
 """
         )
     )
     cells.append(
         code(
             """
-# Visualisasikan peta perubahan bobot (W_akhir - W_awal) tiap karakter Frozen
+# Hitung & bandingkan akurasi keseluruhan foto polos vs ramai
+_, acc_polos = model_nn.evaluate(X_frozen[kondisi_frozen == "polos"], y_frozen[kondisi_frozen == "polos"], verbose=0)
+_, acc_ramai = model_nn.evaluate(X_frozen[kondisi_frozen == "ramai"], y_frozen[kondisi_frozen == "ramai"], verbose=0)
+print(f"Akurasi di data latih -> Polos = {acc_polos*100:.1f}% | Ramai = {acc_ramai*100:.1f}%")
+assert 0.0 <= acc_polos <= 1.0 and 0.0 <= acc_ramai <= 1.0
+"""
+        )
+    )
+
+    cells.append(
+        md(
+            """
+### Tahap 5.4 *(Bonus Visual)*: Mengintip Isi Otak Bobot `ΔW` Overlay di Atas Foto *(Sesuai Slide 49!)*
+Karena model kita hanya 1-Layer (`64×64×3 → 5`), kita dapat memvisualisasikan perubahan bobot (`W_akhir - W_awal`) langsung **di atas foto grayscale asli**!  
+**Area terang menyala** menandai bagian figurin, jari pemegang, dan jejak latar belakang yang paling diingat neuron — alasan kuat kenapa kita beralih ke **CNN di P03**!
+"""
+        )
+    )
+    cells.append(
+        code(
+            """
+# Visualisasikan overlay peta perubahan bobot (W_akhir - W_awal) di atas foto Frozen
 tampilkan_peta_bobot(model_nn, W_awal, X_5foto)
 """
         )
@@ -883,7 +944,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)
             """
 ---
 ### Bonus Eksperimen Bebas *(Opsional)*: Ubah 1 Angka `LEARNING_RATE_COBA` *(Persis Slide 31!)*
-Coba ganti `LEARNING_RATE_COBA` ke **`0.01`** *(langkah kebesaran / kurva memantul liar)* atau **`0.00005`** *(langkah kekecilan / sangat lambat)* lalu tekan `Shift+Enter` untuk melihat dampaknya dibanding `LR Standar (0.0005)`!
+Coba ganti `LEARNING_RATE_COBA` ke **`0.01`** *(langkah kebesaran / kurva memantul)* atau **`0.00005`** *(langkah kekecilan / sangat lambat)* lalu tekan `Shift+Enter` untuk membandingkan kurva Loss terhadap `LR Standar (0.0005)`!
 """
         )
     )
@@ -892,23 +953,20 @@ Coba ganti `LEARNING_RATE_COBA` ke **`0.01`** *(langkah kebesaran / kurva memant
             """
 # Ubah 1 angka ini (mis. 0.01 atau 0.00005) lalu tekan Shift+Enter!
 LEARNING_RATE_COBA = 0.01
+tampilkan_eksperimen_lr(X_frozen, y_frozen, history, lr_baru=LEARNING_RATE_COBA, epochs=EPOCHS, seed=SEED)
+print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur Neural Network di P03!")
+"""
+        )
+    )
 
-tf.keras.utils.set_random_seed(SEED)
-model_coba = tf.keras.Sequential([
-    tf.keras.layers.Input(shape=(SMALL_SIZE, SMALL_SIZE, 3)),
-    tf.keras.layers.Flatten(),
-    tf.keras.layers.Dense(len(CLASS_NAMES), activation="softmax"),
-])
-model_coba.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=LEARNING_RATE_COBA),
-                   loss="sparse_categorical_crossentropy", metrics=["accuracy"])
-hist_coba = model_coba.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=0)
-
-plt.figure(figsize=(7.5, 3.2))
-plt.plot(history.history["loss"], marker="o", label="LR Standar (0.0005)", color="#34A853", lw=2.2)
-plt.plot(hist_coba.history["loss"], marker="x", label=f"LR Eksperimen ({LEARNING_RATE_COBA})", color="#EA4335", lw=2.2)
-plt.title("Perbandingan Kurva Loss: Pengaruh Learning Rate"); plt.xlabel("Epoch"); plt.ylabel("Loss")
-plt.legend(); plt.grid(True, linestyle="--", alpha=0.35); plt.tight_layout(); plt.show()
-print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur & CNN di P03!")
+    cells.append(
+        md(
+            """
+---
+## Ringkasan Penutup Hands-On *(Selaras Slide 50–51)*
+- **Piksel → Flatten → Dense(5) → Softmax → Backprop:** Seluruh rangkaian teori **Bab 3** sudah terbukti berjalan nyata pada dataset **Disney Frozen Figurine**!
+- **Hasil Penting Hari Ini:** Model 1-Layer belajar dari tebak acak (`Epoch 0`) hingga melesat menebak benar dan menyimpan grafik kurva di `results/p02_nn_loss_curve.png`.
+- **Siap ke P03:** Dari overlay `ΔW` kita melihat model 1-layer masih mengandalkan posisi & latar — di **P03 — Arsitektur Neural Network** kita melangkah ke arsitektur jaringan yang lebih tepat!
 """
         )
     )

@@ -1031,12 +1031,17 @@ def generate_handson_visuals(data: dict, elsa_thumb: Image.Image) -> dict:
         axes[0, i].set_xticks([]); axes[0, i].set_yticks([])
         axes[0, i].set_title(f"{CLASSES[i].capitalize()} → {CLASSES[pred_i].capitalize()} ({conf:.0f}%) {'✓' if ok else '✗'}", fontsize=7.3, fontweight="bold", color=t_col)
 
+        gray_bg = np.dot(X_all[idx_s][..., :3], [0.299, 0.587, 0.114])
         w_img = W_delta[:, i].reshape(SMALL, SMALL, 3)
         w_mag = np.mean(np.abs(w_img), axis=2)  # Where neuron focuses most strongly!
-        w_hi = max(float(np.percentile(w_mag, 98)), 1e-6)
-        axes[1, i].imshow(np.clip(w_mag / w_hi, 0.0, 1.0), cmap="inferno")
+        w_hi = max(float(np.percentile(w_mag, 98.5)), 1e-6)
+        w_norm = np.clip(w_mag / w_hi, 0.0, 1.0)
+        w_rgba = plt.get_cmap("inferno")(w_norm)
+        w_rgba[..., 3] = np.clip(0.08 + 0.84 * (w_norm ** 0.9), 0.08, 0.92)
+        axes[1, i].imshow(gray_bg, cmap="gray", vmin=0.0, vmax=1.05)
+        axes[1, i].imshow(w_rgba, interpolation="bilinear")
         axes[1, i].set_xticks([]); axes[1, i].set_yticks([])
-        axes[1, i].set_title(f"Fokus Bobot ΔW: {CLASSES[i].capitalize()}", fontsize=7.2, fontweight="bold", color=COLORS["blue_dark"])
+        axes[1, i].set_title(f"Fokus ΔW (Overlay): {CLASSES[i].capitalize()}", fontsize=7.0, fontweight="bold", color=COLORS["blue_dark"])
 
     fig.suptitle(f"Sesudah Belajar (Epoch {n_ep} · Loss {losses[-1]:.2f} · Akurasi {accs[-1]:.1f}%) & Peta Fokus Bobot ΔW", fontsize=8.9, fontweight="bold", color="#137333", y=0.98)
     fig.subplots_adjust(left=0.03, right=0.97, top=0.82, bottom=0.04)
