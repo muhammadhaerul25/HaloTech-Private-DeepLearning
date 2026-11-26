@@ -483,6 +483,15 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     elsa_arr = np.array(elsa_thumb)
     elsa_mask, (ex, ey, ew, eh) = _extract_figurine_mask(elsa_arr, y_max=170, dist_thresh=24.0)
     elsa_masked_img = _overlay_mask(elsa_arr, elsa_mask, COLORS["green"], alpha=0.52)
+    p02_data["cv_elsa_bbox"] = [int(ex), int(ey), int(ew), int(eh)]
+
+    # Transparent RGBA silhouette mask + white contour overlay for interactive/animated Slide 12
+    rgba_overlay = np.zeros((elsa_arr.shape[0], elsa_arr.shape[1], 4), dtype=np.uint8)
+    fg_px = elsa_mask > 0
+    rgba_overlay[fg_px] = [52, 168, 83, 148]
+    contours_ov, _ = cv2.findContours(elsa_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    cv2.drawContours(rgba_overlay, contours_ov, -1, (255, 255, 255, 255), 3)
+    Image.fromarray(rgba_overlay, mode="RGBA").save(ASSETS_DIR / "02e_elsa_silhouette_overlay.png")
 
     fig, axes = plt.subplots(1, 4, figsize=(11.8, 3.95), dpi=190)
     titles = [
@@ -542,6 +551,7 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     olaf_thumb = Image.open(ASSETS_DIR / "thumb_olaf.jpg").convert("RGB")
     olaf_arr = np.array(olaf_thumb)
     olaf_mask, (ox, oy, ow, oh) = _extract_figurine_mask(olaf_arr, y_max=114, dist_thresh=18.0)
+    p02_data["cv_olaf_bbox"] = [int(ox), int(oy), int(ow), int(oh)]
 
     # Create clean 2-figurine composite (220x440)
     comp_det = np.concatenate([elsa_arr, olaf_arr], axis=1)
@@ -562,11 +572,24 @@ def generate_charts(p02_data: dict, elsa_thumb: Image.Image) -> None:
     fig.savefig(ASSETS_DIR / "02b_object_detection_demo.png", dpi=190, facecolor="#FFFFFF", bbox_inches="tight", pad_inches=0.06)
     plt.close(fig)
 
-    # 2c. Semantic vs Instance Segmentation on 2 Real Olafs side-by-side
+    # 2c. Semantic vs Instance Segmentation on 2 Real Olafs side-by-side (+ transparent RGBA overlays for S15 loop)
     two_olaf = np.concatenate([olaf_arr, olaf_arr[:, ::-1, :]], axis=1)
     olaf_mask_flip = olaf_mask[:, ::-1]
     mask_both = np.concatenate([olaf_mask, olaf_mask_flip], axis=1)
+    mask_left = np.concatenate([olaf_mask, np.zeros_like(olaf_mask)], axis=1)
+    mask_right = np.concatenate([np.zeros_like(olaf_mask), olaf_mask_flip], axis=1)
     sem_img = _overlay_mask(two_olaf, mask_both, COLORS["blue"], alpha=0.52)
+
+    def _save_rgba_mask(mask_arr: np.ndarray, rgb_tuple: tuple[int, int, int], out_name: str) -> None:
+        ov = np.zeros((mask_arr.shape[0], mask_arr.shape[1], 4), dtype=np.uint8)
+        ov[mask_arr > 0] = [rgb_tuple[0], rgb_tuple[1], rgb_tuple[2], 148]
+        cnts, _ = cv2.findContours(mask_arr, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cv2.drawContours(ov, cnts, -1, (255, 255, 255, 255), 3)
+        Image.fromarray(ov, mode="RGBA").save(ASSETS_DIR / out_name)
+
+    _save_rgba_mask(mask_both, (66, 133, 244), "02f_olaf_semantic_overlay.png")
+    _save_rgba_mask(mask_left, (52, 168, 83), "02g_olaf1_instance_overlay.png")
+    _save_rgba_mask(mask_right, (234, 67, 53), "02h_olaf2_instance_overlay.png")
 
     inst_img = _overlay_mask(two_olaf, np.concatenate([olaf_mask, np.zeros_like(olaf_mask)], axis=1), COLORS["green"], alpha=0.52)
     inst_img = _overlay_mask(inst_img, np.concatenate([np.zeros_like(olaf_mask), olaf_mask_flip], axis=1), COLORS["red"], alpha=0.52)
@@ -949,8 +972,9 @@ def generate_handson_visuals(data: dict, elsa_thumb: Image.Image) -> dict:
     fig.savefig(ASSETS_DIR / "ho_step4_baby_model.png", dpi=180, facecolor="#FFFFFF")
     plt.close(fig)
 
-    # Train 20 real epochs (monotonic curve E1 -> E20 & clear weight silhouettes!)
-    n_ep = 20
+    # Train 30 real epochs (monotonic curve E1 -> E30, Loss < 1.0, 5/5 showcase correct!)
+    n_ep = 30
+    steps_per_ep = int(np.ceil(len(X_all) / 16))
     hist = model.fit(X_all, y_all, epochs=n_ep, batch_size=16, verbose=0)
     losses = [float(v) for v in hist.history["loss"]]
     accs = [float(v) * 100.0 for v in hist.history["accuracy"]]
@@ -959,29 +983,33 @@ def generate_handson_visuals(data: dict, elsa_thumb: Image.Image) -> dict:
     _, acc_polos_all = model.evaluate(X_all[cond_all == "polos"], y_all[cond_all == "polos"], verbose=0)
     _, acc_ramai_all = model.evaluate(X_all[cond_all == "ramai"], y_all[cond_all == "ramai"], verbose=0)
 
-    # HO-5: Tahap 5.1 & 5.2 — Kurva Training Loss & Accuracy (20 Epoch Nyata)
+    # HO-5: Tahap 5.1 & 5.2 — Kurva Training Loss & Accuracy (30 Epoch Nyata)
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8.8, 3.05), dpi=180)
     ep = list(range(1, n_ep + 1))
-    ax1.plot(ep, losses, marker="o", color=COLORS["red"], lw=2.2, markersize=4.5)
+    xt = [1, 5, 10, 15, 20, 25, 30]
+    ax1.plot(ep, losses, marker="o", color=COLORS["red"], lw=2.2, markersize=4.0)
     ax1.fill_between(ep, losses, min(losses) * 0.85, color=COLORS["red"], alpha=0.10)
-    ax1.annotate(f"E1: {losses[0]:.2f}", (1, losses[0]), textcoords="offset points", xytext=(9, -3), fontsize=8.0, fontweight="bold", color="#C5221F",
-                 bbox=dict(boxstyle="round,pad=0.2", facecolor="#FCE8E6", edgecolor=COLORS["red"], lw=0.8))
-    ax1.annotate(f"E{n_ep}: {losses[-1]:.2f}", (n_ep, losses[-1]), textcoords="offset points", xytext=(-58, 16), fontsize=8.2, fontweight="bold", color="#137333",
-                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9))
-    ax1.set_title(f"Kurva Loss Turun Mulus (Epoch 1 → {n_ep})", fontsize=9.2, fontweight="bold", color=COLORS["dark"])
+    ax1.annotate(f"E1: {losses[0]:.2f}", (1, losses[0]), textcoords="offset points", xytext=(10, -4), fontsize=8.0, fontweight="bold", color="#C5221F",
+                 bbox=dict(boxstyle="round,pad=0.2", facecolor="#FCE8E6", edgecolor=COLORS["red"], lw=0.8),
+                 arrowprops=dict(arrowstyle="->", color=COLORS["red"], lw=0.9))
+    ax1.annotate(f"E{n_ep}: {losses[-1]:.2f}", (n_ep, losses[-1]), textcoords="offset points", xytext=(-62, 26), fontsize=8.2, fontweight="bold", color="#137333",
+                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9),
+                 arrowprops=dict(arrowstyle="->", color=COLORS["green"], lw=1.0))
+    ax1.set_title(f"Kurva Loss Turun (Epoch 1 → {n_ep} · Batch 16 = {steps_per_ep} Step/Ep)", fontsize=8.7, fontweight="bold", color=COLORS["dark"])
     ax1.set_xlabel("Epoch", fontsize=8); ax1.set_ylabel("Cross-Entropy Loss", fontsize=8)
-    ax1.set_xticks([1, 5, 10, 15, 20]); ax1.grid(True, linestyle="--", alpha=0.35)
+    ax1.set_xticks(xt); ax1.grid(True, linestyle="--", alpha=0.35)
     ax1.spines["top"].set_visible(False); ax1.spines["right"].set_visible(False)
 
-    ax2.plot(ep, accs, marker="s", color=COLORS["green"], lw=2.2, markersize=4.5)
+    ax2.plot(ep, accs, marker="s", color=COLORS["green"], lw=2.2, markersize=4.0)
     ax2.fill_between(ep, accs, 0, color=COLORS["green"], alpha=0.10)
-    ax2.annotate(f"E1: {accs[0]:.1f}%", (1, accs[0]), textcoords="offset points", xytext=(9, -15), fontsize=8.0, fontweight="bold", color=COLORS["muted"],
+    ax2.annotate(f"E1: {accs[0]:.1f}%", (1, accs[0]), textcoords="offset points", xytext=(10, -15), fontsize=8.0, fontweight="bold", color=COLORS["muted"],
                  bbox=dict(boxstyle="round,pad=0.2", facecolor="#F8F9FA", edgecolor="#DADCE0", lw=0.8))
-    ax2.annotate(f"E{n_ep}: {accs[-1]:.1f}%", (n_ep, accs[-1]), textcoords="offset points", xytext=(-64, 12), fontsize=8.2, fontweight="bold", color="#137333",
-                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9))
-    ax2.set_title(f"Kurva Akurasi Naik (Epoch 1 → {n_ep})", fontsize=9.2, fontweight="bold", color=COLORS["dark"])
+    ax2.annotate(f"E{n_ep}: {accs[-1]:.1f}%", (n_ep, accs[-1]), textcoords="offset points", xytext=(-68, 14), fontsize=8.2, fontweight="bold", color="#137333",
+                 bbox=dict(boxstyle="round,pad=0.22", facecolor="#E6F4EA", edgecolor=COLORS["green"], lw=0.9),
+                 arrowprops=dict(arrowstyle="->", color=COLORS["green"], lw=1.0))
+    ax2.set_title(f"Kurva Akurasi Naik ({len(X_all)} Foto Frozen · Optimizer Adam)", fontsize=8.7, fontweight="bold", color=COLORS["dark"])
     ax2.set_xlabel("Epoch", fontsize=8); ax2.set_ylabel("Akurasi (%)", fontsize=8)
-    ax2.set_xticks([1, 5, 10, 15, 20]); ax2.set_ylim(0, min(105, max(85, max(accs) + 20)))
+    ax2.set_xticks(xt); ax2.set_ylim(0, min(105, max(94, max(accs) + 20)))
     ax2.grid(True, linestyle="--", alpha=0.35)
     ax2.spines["top"].set_visible(False); ax2.spines["right"].set_visible(False)
 

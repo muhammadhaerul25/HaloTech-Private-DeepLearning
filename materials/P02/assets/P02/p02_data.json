@@ -3046,6 +3046,18 @@
       }
     ]
   },
+  "cv_elsa_bbox": [
+    55,
+    59,
+    55,
+    114
+  ],
+  "cv_olaf_bbox": [
+    66,
+    41,
+    53,
+    76
+  ],
   "handson_metrics": {
     "elsa_px_pos": [
       4,
@@ -3059,17 +3071,17 @@
     "neuron_z": 0.37,
     "wall_z": -0.15,
     "softmax_loss_demo": 0.38,
-    "epochs": 20,
+    "epochs": 30,
     "epoch0_loss": 1.71,
     "epoch0_acc_pct": 24.5,
     "epoch1_loss": 3.03,
     "epoch1_acc_pct": 16.8,
-    "epoch_end_loss": 1.11,
-    "epoch_end_acc_pct": 61.5,
-    "all_polos_acc_pct": 61.8,
-    "all_ramai_acc_pct": 92.7,
+    "epoch_end_loss": 0.89,
+    "epoch_end_acc_pct": 76.9,
+    "all_polos_acc_pct": 77.5,
+    "all_ramai_acc_pct": 95.1,
     "sample_e0_correct": 2,
-    "sample_end_correct": 3,
+    "sample_end_correct": 5,
     "sample_ramai_correct": 5
   }
 }

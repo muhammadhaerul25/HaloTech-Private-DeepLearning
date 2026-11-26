@@ -1,7 +1,7 @@
 """Generator notebook peserta & kunci jawaban untuk Hands-on P02:
 Teori Neural Network (Visual-First, Mikro-Task Berurutan Tahap 0 -> Tahap 5.4).
 
-100% selaras Bab 3 (Slide 20–29 & Slide 39–45) — TANPA konsep Hidden Layer / MLP:
+100% selaras Bab 3 (Slide 20–33 & Slide 43–49) — TANPA konsep Hidden Layer / MLP:
 - 1 sel kerja peserta = 3–8 baris super bersih (kode plotting dipisah ke Alat Visualisasi di Tahap 0.2).
 - EXIF-safe (`ImageOps.exif_transpose`), sorted deterministik (`sort_values("file")`), ramah pemula
   dengan pesan `assert` diagnostik Bahasa Indonesia & refleksi `Apa yang perlu diperhatikan?` di tiap tahap.
@@ -270,30 +270,30 @@ def build_cells(is_solution: bool) -> list:
             """
 # Hands-on P02: Teori Neural Network *(Visual-First · Mikro-Task)*
 
-**Durasi Hands-on:** ±55 menit (Tahap 0 → Tahap 5.4, selaras **Bab 3 Slide 20–32** & **Slide 42–48**)  
+**Durasi Hands-on:** ±55 menit (Tahap 0 → Tahap 5.4, selaras **Bab 3 Slide 20–33** & **Slide 43–49**)  
 **Dataset Proyek Utama:** **Disney Frozen Figurine (`data/frozen_v1/`)** — 5 kelas (`anna, elsa, kristoff, olaf, sven`), dibaca secara **dinamis** dari `DATA_DIR` dan `metadata.csv`.  
 **Gaya Kode:** Super ramah pemula — kode grafik sudah dirapikan ke **Alat Visualisasi Siap Pakai** sehingga setiap sel kerja Anda cuma **3–7 baris** dan langsung memunculkan **output gambar nyata**!
 
 ### Peta Perjalanan 1 Foto Elsa (100% Cerminan Bab 3):
 - **Tahap 0 (Persiapan):** Setup 3 tahap, muat alat visualisasi, & intip galeri 5 karakter Frozen *(0 coding, tinggal `Shift+Enter`)*.
-- **Tahap 1 (Slide 20 & 43 — Piksel → Angka):**
+- **Tahap 1 (Slide 20 & 44 — Piksel → Angka):**
   - `1.1` Ubah foto Elsa ke grid mini `8×8` & normalisasi `/ 255.0` (`# TODO 1`)
   - `1.2` Ambil 1 piksel di gaun biru Elsa `[4, 2]` & lihat nilai **R, G, B** (`# TODO 2`)
-- **Tahap 2 (Slide 21–24 & 44 — Flatten, Dense & Parameter):**
+- **Tahap 2 (Slide 21–24 & 45 — Flatten, Dense & Parameter):**
   - `2.1` Luruskan foto `8×8` jadi **pita 1D piksel berwarna** (`P1 x1–3 .. P64 x190–192`) dengan `.flatten()` (`# TODO 3`)
   - `2.2` Hitung skala neuron `224×224×3` (`150.528`) & total kabel `Dense` `W + b` (`752.645`) (`# TODO 4`)
-- **Tahap 3 (Slide 26–28 & 45 — Weight, Bias, ReLU, Softmax & Loss):**
+- **Tahap 3 (Slide 27–29 & 46 — Weight, Bias, Aktivasi, Softmax & Loss):**
   - `3.1` Hitung 1 neuron pakai rumus kali-tambah biasa `r*w_r + g*w_g + b*w_b + bias` & bandingkan **Gaun Biru vs Dinding** (`# TODO 5`)
   - `3.2` Pangkas angka minus jadi `0` dengan `ReLU` (`# TODO 6`)
   - `3.3` Mainkan angka skor mentah & lihat **5 foto Frozen + bar `Softmax 100%` + `Loss (−ln P)`**!
-- **Tahap 4 (Slide 24, 30 & 46 — Bangun Model 1-Layer `Dense` & Tes "Model Bayi"):**
+- **Tahap 4 (Slide 24, 31 & 47 — Bangun Model 1-Layer `Dense` & Tes "Model Bayi"):**
   - `4.1` Muat seluruh foto Frozen `64×64`
   - `4.2` Susun 2 layer Keras (`Flatten` + `Dense(5, softmax)`) & cek `61.445` parameter (`# TODO 7`)
   - `4.3` **Uji tebakan "Model Bayi" (Epoch 0 — *Weight Initialization* acak!)**
-- **Tahap 5 (Slide 29–32 & 47–48 — Training, Adam, Batch Size, Overfitting & Intip Bobot):**
-  - `5.1` Latih model `20` Epoch (`model.fit`) (`# TODO 8`)
-  - `5.2` Plot kurva **Loss turun** & **Akurasi naik**
-  - `5.3` **Bandingkan Tebakan Before (Epoch 0) vs After (Epoch 20)** + cek jujur **Polos vs Ramai (*Shortcut Learning*)**!
+- **Tahap 5 (Slide 30–33 & 48–49 — Training, Adam, Batch Size, Overfitting & Intip Bobot):**
+  - `5.1` Latih model `30` Epoch (`model.fit`, `Batch=16 → 9 Step/Epoch`) (`# TODO 8`)
+  - `5.2` Plot kurva **Loss turun** (`< 1.0`) & **Akurasi naik**
+  - `5.3` **Bandingkan Tebakan Before (Epoch 0) vs After (Epoch 30)** + **Tes Visual 5 Foto Ramai (`X_5ramai`)** & cek **Polos vs Ramai (*Shortcut Learning*)**!
   - `5.4` *(Bonus Aha!)* **Intip Peta Fokus Bobot `ΔW`** yang dipelajari tiap karakter + eksperimen ubah 1 angka *Learning Rate*!
 
 > **Cara Menjalankan:** Tekan `Shift + Enter` berurutan dari atas ke bawah. Pada versi peserta, lengkapi hanya bagian bertanda `# TODO` (1–2 baris per tugas!).
@@ -347,13 +347,13 @@ tampilkan_galeri_frozen(df_meta, DATA_DIR)
     )
 
     # =========================================================================
-    # TAHAP 1: PIKSEL FOTO -> ANGKA (1.1 & 1.2 · SLIDE 20 & 43)
+    # TAHAP 1: PIKSEL FOTO -> ANGKA (1.1 & 1.2 · SLIDE 20 & 44)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 1 (9 menit): Foto Menjadi Kotak Piksel & Angka RGB *(Sesuai Slide 20 & 43)*
+## Tahap 1 (9 menit): Foto Menjadi Kotak Piksel & Angka RGB *(Sesuai Slide 20 & 44)*
 
 ### Tahap 1.1: Kecilkan Foto Elsa ke Grid `8×8` & Normalisasi ke `0.0–1.0`
 Pertama, kita buka **1 foto asli Elsa** dan mengecilkannya ke `8×8` kotak agar kita bisa melihat **angka di dalam setiap piksel** dengan mata telanjang!
@@ -406,7 +406,7 @@ print("✅ Tahap 1.1 selesai!")
         cells,
         is_solution=is_solution,
         title="Tugas 1.2 (`# TODO 2`): Intip 1 Piksel Gaun Biru Elsa `[4, 2]` (3 Angka RGB)",
-        instruction_md="Ambil 1 kotak piksel di baris `4`, kolom `2` dari `foto_mini` (`foto_mini[4, 2]`). Perhatikan batang warna **Blue (B)** yang paling tinggi (`0.60`) karena itu warna gaun biru Elsa!",
+        instruction_md="Ambil 1 kotak piksel di baris `4`, kolom `2` dari `foto_mini` (`foto_mini[4, 2]`). Perhatikan batang warna **Blue (B)** yang paling tinggi karena itu warna gaun biru Elsa!",
         student_code="""
 # TODO 2: Ambil 1 piksel di baris 4, kolom 2 dari foto_mini
 piksel_gaun = None  # TODO: foto_mini[4, 2]
@@ -441,13 +441,13 @@ print("✅ Tahap 1.2 selesai!")
     )
 
     # =========================================================================
-    # TAHAP 2: FLATTEN FOTO 2D -> PITA 1D & SKALA INPUT LAYER (2.1 & 2.2 · SLIDE 21–24 & 44)
+    # TAHAP 2: FLATTEN FOTO 2D -> PITA 1D & SKALA INPUT LAYER (2.1 & 2.2 · SLIDE 21–24 & 45)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 2 (9 menit): *Flatten* Foto 2D Menjadi Pita 1D *(Sesuai Slide 21–24 & 44)*
+## Tahap 2 (9 menit): *Flatten* Foto 2D Menjadi Pita 1D *(Sesuai Slide 21–24 & 45)*
 
 ### Tahap 2.1: Lihat Langsung Foto `8×8` Diluruskan Menjadi Pita 1D!
 *Input Layer* Neural Network hanya menerima **1 deretan angka lurus (1D)**. Mari potong baris `B1` sampai `B8` dan jajarkan menjadi 1 pita warna panjang dengan `.flatten()`!
@@ -490,7 +490,7 @@ print("✅ Tahap 2.1 selesai!")
         cells,
         is_solution=is_solution,
         title="Tugas 2.2 (`# TODO 4`): Hitung Skala Foto Penuh `224×224×3` (`752.645` Parameter)",
-        instruction_md="Jika foto berukuran penuh `224×224×3` (seperti Slide 24 & 32), hitung `neuron_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)`, lalu lihat grafik perbandingannya!",
+        instruction_md="Jika foto berukuran penuh `224×224×3` (seperti Slide 24 & 33), hitung `neuron_224 = IMG_SIZE * IMG_SIZE * 3` dan `param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)`, lalu lihat grafik perbandingannya!",
         student_code="""
 # TODO 4A: Hitung jumlah neuron input untuk foto penuh 224 x 224 x 3
 neuron_224 = None  # TODO: IMG_SIZE * IMG_SIZE * 3
@@ -500,7 +500,7 @@ param_224 = None   # TODO: neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_224 == 150_528, f"Harusnya 224*224*3 = 150.528, didapat {neuron_224}"
 assert param_224 == 752_645, f"Harusnya 150.528*5 + 5 = 752.645, didapat {param_224}"
-print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 32!)")
+print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 33!)")
 tampilkan_skala_parameter(neuron_224, param_224)
 print("✅ Tahap 2.2 selesai!")
 """,
@@ -511,7 +511,7 @@ param_224 = neuron_224 * len(CLASS_NAMES) + len(CLASS_NAMES)
 
 assert neuron_224 == 150_528, f"Harusnya 224*224*3 = 150.528, didapat {neuron_224}"
 assert param_224 == 752_645, f"Harusnya 150.528*5 + 5 = 752.645, didapat {param_224}"
-print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 32!)")
+print(f"Foto 224x224x3 -> {neuron_224:,} neuron input -> {param_224:,} parameter (persis Slide 24 & 33!)")
 tampilkan_skala_parameter(neuron_224, param_224)
 print("✅ Tahap 2.2 selesai!")
 """,
@@ -529,13 +529,13 @@ print("✅ Tahap 2.2 selesai!")
     )
 
     # =========================================================================
-    # TAHAP 3: WEIGHT, BIAS, ReLU, SOFTMAX & LOSS (3.1, 3.2, 3.3 · SLIDE 26–28 & 45)
+    # TAHAP 3: WEIGHT, BIAS, ReLU, TANH, SOFTMAX & LOSS (3.1–3.3 · SLIDE 27–29 & 46)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 3 (9 menit): Weight, Bias, `ReLU`, `Softmax` & `Loss` *(Sesuai Slide 26–28 & 45)*
+## Tahap 3 (9 menit): Weight, Bias, `ReLU`, `Softmax` & `Loss` *(Sesuai Slide 27–29 & 46)*
 
 ### Tahap 3.1: Hitung 1 Neuron Pakai Kali-Tambah Biasa *(Gaun Biru vs Dinding!)*
 Kita pakai **piksel gaun biru Elsa (`[r, g, b]`)** dari Tahap 1.2!  
@@ -584,8 +584,8 @@ print("✅ Tahap 3.1 selesai!")
     todo_block(
         cells,
         is_solution=is_solution,
-        title="Tugas 3.2 (`# TODO 6`): Coba Fungsi Aktivasi `ReLU` (Pangkas Minus Jadi `0`)",
-        instruction_md="Gunakan `np.maximum(0.0, skor_contoh)` untuk mengubah semua angka negatif menjadi `0` sambil membiarkan angka positif tetap menyala.",
+        title="Tugas 3.2 (`# TODO 6`): Coba Fungsi Aktivasi `ReLU` (& Bandingkan dengan `Tanh` Slide 28)",
+        instruction_md="Gunakan `np.maximum(0.0, skor_contoh)` untuk mengubah semua angka negatif menjadi `0` sambil membiarkan angka positif tetap menyala, lalu bandingkan sekilas dengan `np.tanh(...)` (`−1 s/d +1`).",
         student_code="""
 skor_contoh = np.array([-1.2, -0.4, 0.0, 0.8, 2.1])
 
@@ -595,7 +595,8 @@ hasil_relu = None  # TODO: np.maximum(0.0, skor_contoh)
 assert hasil_relu is not None, "Isi hasil_relu dengan np.maximum(0.0, skor_contoh)"
 assert hasil_relu[0] == 0.0 and np.isclose(hasil_relu[-1], 2.1), "Pastikan negatif jadi 0.0 dan 2.1 tetap 2.1!"
 print("Sebelum ReLU :", skor_contoh)
-print("Sesudah ReLU :", hasil_relu)
+print("Sesudah ReLU :", hasil_relu, "(negatif -> 0)")
+print("Banding Tanh :", np.round(np.tanh(skor_contoh), 2), "(Slide 28: terpusat -1..+1)")
 tampilkan_relu(skor_contoh, hasil_relu)
 print("✅ Tahap 3.2 selesai!")
 """,
@@ -608,7 +609,8 @@ hasil_relu = np.maximum(0.0, skor_contoh)
 assert hasil_relu is not None, "Isi hasil_relu dengan np.maximum(0.0, skor_contoh)"
 assert hasil_relu[0] == 0.0 and np.isclose(hasil_relu[-1], 2.1), "Pastikan negatif jadi 0.0 dan 2.1 tetap 2.1!"
 print("Sebelum ReLU :", skor_contoh)
-print("Sesudah ReLU :", hasil_relu)
+print("Sesudah ReLU :", hasil_relu, "(negatif -> 0)")
+print("Banding Tanh :", np.round(np.tanh(skor_contoh), 2), "(Slide 28: terpusat -1..+1)")
 tampilkan_relu(skor_contoh, hasil_relu)
 print("✅ Tahap 3.2 selesai!")
 """,
@@ -641,14 +643,23 @@ tampilkan_softmax_frozen([skor_anna, skor_elsa, skor_kristoff, skor_olaf, skor_s
         )
     )
 
+    cells.append(
+        md(
+            """
+> 💡 **Apa yang perlu diperhatikan di Tahap 3?**  
+> `Weight + Bias` (kali-tambah) menghitung skor mentah `z`; `ReLU`/`Tanh`/`Sigmoid` membentuk sifat aktivasi non-linear (**Slide 28**); lalu di ujung model Multi-Class, `Softmax` mengubah 5 skor mentah menjadi probabilitas `100%` dan `Cross-Entropy Loss (−ln P)` menghukum tebakan yang salah (**Slide 29**)!
+"""
+        )
+    )
+
     # =========================================================================
-    # TAHAP 4: BANGUN MODEL 1-LAYER KERAS & TES "MODEL BAYI" (4.1–4.3 · SLIDE 24, 30, 32 & 46)
+    # TAHAP 4: BANGUN MODEL 1-LAYER KERAS & TES "MODEL BAYI" (4.1–4.3 · SLIDE 24, 31 & 47)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 4 (9,5 menit): Bangun Neural Network 1-Layer & Uji "Model Bayi" *(Sesuai Slide 24, 30 & 46)*
+## Tahap 4 (9,5 menit): Bangun Neural Network 1-Layer & Uji "Model Bayi" *(Sesuai Slide 24, 31 & 47)*
 
 ### Tahap 4.1: Muat Seluruh Foto Frozen Ukuran `64×64` *(Cukup `Shift + Enter`)*
 Kita pakai ukuran ringkas `64×64×3` (`12.288` piksel) agar training selesai dalam hitungan **2 detik** di laptop atau Google Colab! Sekaligus kita siapkan 5 contoh foto `polos` (`X_5foto`) dan 5 contoh foto `ramai` (`X_5ramai`)!
@@ -710,7 +721,7 @@ print("✅ Tahap 4.2 selesai! Cocok 100% dengan rumus 12.288 x 5 + 5 = 61.445 pa
         solution_code="""
 tf.keras.utils.set_random_seed(SEED)
 
-# Susun Neural Network 1-Layer persis diagram Slide 24 & 32: Input -> Flatten -> Dense(5, softmax)
+# Susun Neural Network 1-Layer persis diagram Slide 24 & 33: Input -> Flatten -> Dense(5, softmax)
 model_nn = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(SMALL_SIZE, SMALL_SIZE, 3)),
     tf.keras.layers.Flatten(),
@@ -734,9 +745,9 @@ print("✅ Tahap 4.2 selesai! Cocok 100% dengan rumus 12.288 x 5 + 5 = 61.445 pa
     cells.append(
         md(
             """
-### Tahap 4.3: Uji Tebakan **"Model Bayi" (Epoch 0 — Belum Dilatih!)**
-Sebelum kita latih, mari simpan salinan bobot acak awalnya (`W_awal`) dan suruh model menebak 5 foto Frozen!  
-Perhatikan garis putus-putus `20%`: karena bobotnya masih acak, tebakan model hampir rata semua seperti melempar dadu!
+### Tahap 4.3: Uji Tebakan **"Model Bayi" (Epoch 0 — *Weight Initialization* Acak, Slide 31!)**
+Sebelum kita latih, mari simpan salinan bobot acak awalnya (`W_awal` dari *Weight Initialization*) dan suruh model menebak 5 foto Frozen!  
+Perhatikan garis putus-putus `20%`: karena bobotnya masih acak (belum mengalami *Gradient Descent*), tebakan model hampir rata semua seperti melempar dadu!
 """
         )
     )
@@ -754,16 +765,16 @@ tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="SEBELUM BELAJAR (Epoc
     )
 
     # =========================================================================
-    # TAHAP 5: TRAINING, KURVA LOSS, BEFORE vs AFTER & INTIP BOBOT (5.1–5.4 · SLIDE 29–32 & 47–48)
+    # TAHAP 5: TRAINING, KURVA LOSS, BEFORE vs AFTER & INTIP BOBOT (5.1–5.4 · SLIDE 30–33 & 48–49)
     # =========================================================================
     cells.append(
         md(
             """
 ---
-## Tahap 5 (18 menit): Latih Model (`model.fit`), Before vs After & Intip Bobot! *(Sesuai Slide 29–32 & 47–48)*
+## Tahap 5 (18 menit): Latih Model (`model.fit`), Before vs After & Intip Bobot! *(Sesuai Slide 30–33 & 48–49)*
 
 ### Tahap 5.1: Jalankan Proses Belajar (`model_nn.fit`)
-Di satu baris perintah `model_nn.fit(...)` ini, Keras menjalankan seluruh siklus **Bab 3** otomatis: **Forward Pass → Hitung Loss → Backpropagation → Gradient Descent** berulang selama `EPOCHS`!  
+Di satu baris perintah `model_nn.fit(..., epochs=EPOCHS, batch_size=16)` ini, Keras menjalankan seluruh siklus **Bab 3**: membagi foto menjadi paket **16 foto (`Batch Size`) → `Step`** (persis **Slide 32**!), lalu mengulang **Forward Pass → Loss → Backprop → Adam Optimizer** selama `EPOCHS`!  
 *(Catatan metodologi: di sesi konsep ini seluruh foto dipakai untuk demo belajar; pembagian `train/val/test` resmi anti-leakage akan kita pelajari tuntas di **P05**.)*
 """
         )
@@ -773,9 +784,11 @@ Di satu baris perintah `model_nn.fit(...)` ini, Keras menjalankan seluruh siklus
         cells,
         is_solution=is_solution,
         title="Tugas 5.1 (`# TODO 8`): Latih Model dengan `model_nn.fit(...)`",
-        instruction_md="Panggil `model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)` dan lihat angka `loss` turun serta `accuracy` naik!",
+        instruction_md="Panggil `model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)` dan perhatikan angka step (`.../9` saat 143 foto), `loss` turun (`< 1.0`), serta `accuracy` naik!",
         student_code="""
-EPOCHS = 2 if SMOKE_TEST else 20
+EPOCHS = 2 if SMOKE_TEST else 30
+steps_per_ep = int(np.ceil(len(X_frozen) / 16))
+print(f"Total foto: {len(X_frozen)} | batch_size=16 -> {steps_per_ep} Step per Epoch (persis Slide 32!)")
 
 # TODO 8: Latih model_nn selama EPOCHS putaran
 history = None  # TODO: model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)
@@ -786,9 +799,11 @@ print(f"Loss Epoch akhir : {history.history['loss'][-1]:.2f}  (turun!)")
 print("✅ Tahap 5.1 selesai!")
 """,
         solution_code="""
-EPOCHS = 2 if SMOKE_TEST else 20
+EPOCHS = 2 if SMOKE_TEST else 30
+steps_per_ep = int(np.ceil(len(X_frozen) / 16))
+print(f"Total foto: {len(X_frozen)} | batch_size=16 -> {steps_per_ep} Step per Epoch (persis Slide 32!)")
 
-# Jalankan siklus belajar Forward Pass -> Loss -> Backprop -> Gradient Descent
+# Jalankan siklus belajar Forward Pass -> Loss -> Backprop -> Gradient Descent (Adam)
 history = model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)
 
 assert history is not None and "loss" in history.history, "Panggil model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1)"
@@ -821,9 +836,9 @@ assert loss_plot_path.exists()
     cells.append(
         md(
             """
-### Tahap 5.3: Momen "Aha!" — Bandingkan Tebakan **Sesudah Belajar** + Cek Jujur **Polos vs Ramai**!
-Lihat bagaimana bar probabilitas yang tadinya rata (~20% di Tahap 4.3) sekarang melonjak memilih karakter yang benar!  
-Lalu amati juga perbandingan jujur skor pada foto **`polos`** vs **`ramai`**!
+### Tahap 5.3: Momen "Aha!" — Bandingkan **Before vs After** + Tes Foto **Polos vs Ramai**!
+Lihat bagaimana bar probabilitas yang tadinya rata (~20% di Tahap 4.3) sekarang menebak tepat **5/5 karakter**!  
+Setelah itu kita uji pula pada 5 foto **`ramai`** (`X_5ramai`) dan membandingkan akurasi keseluruhan **`polos` vs `ramai`** — perhatikan mengapa akurasi foto `ramai` pada data latih justru bisa tampak sangat tinggi (*indikasi hafalan latar / Overfitting · Slide 32*)!
 """
         )
     )
@@ -831,13 +846,16 @@ Lalu amati juga perbandingan jujur skor pada foto **`polos`** vs **`ramai`**!
         code(
             """
 # Uji kembali model pada 5 foto polos yang sama (bandingkan dengan Tahap 4.3!)
-tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul=f"SESUDAH BELAJAR (Epoch {EPOCHS} — Foto Polos)")
+tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul=f"SESUDAH BELAJAR — 5 Foto Polos (Epoch {EPOCHS})")
 
-# Cek jujur akurasi pada seluruh foto polos vs foto ramai (observasi awal sebelum P03 & P05)
+# Uji juga pada 5 foto berlatar RAMAI (menggunakan X_5ramai yang disiapkan di Tahap 4.1!)
+tampilkan_tebakan_model(model_nn, X_5ramai, y_5ramai, judul=f"TES JUJUR — 5 Foto Latar Ramai (Epoch {EPOCHS})")
+
+# Cek akurasi seluruh foto polos vs ramai (observasi awal menuju Slide 32 Overfitting, P03 CNN & P05 Split)
 _, acc_polos = model_nn.evaluate(X_frozen[kondisi_frozen == "polos"], y_frozen[kondisi_frozen == "polos"], verbose=0)
 _, acc_ramai = model_nn.evaluate(X_frozen[kondisi_frozen == "ramai"], y_frozen[kondisi_frozen == "ramai"], verbose=0)
-print(f"Observasi jujur — Akurasi di data latih: Polos = {acc_polos*100:.1f}% | Ramai = {acc_ramai*100:.1f}%")
-print("Catatan kritis: Mengapa 'ramai' bisa tampak tinggi saat dievaluasi di data latih? Karena model 1-layer bisa menghafal warna latar meja/ruangan (shortcut learning) — wajib kita uji adil dengan Group Split di P05 & CNN di P03!")
+print(f"Observasi jujur di data latih — Polos = {acc_polos*100:.1f}% | Ramai = {acc_ramai*100:.1f}%")
+print("Catatan kritis: Kenapa 'ramai' tinggi saat diuji di data latih sendiri? Karena jaringan 1-layer cenderung menghafal pola latar belakang warna-warni (shortcut learning / overfitting) — wajib diuji adil dengan Group Split (P05) & diselesaikan dengan CNN (P03)!")
 """
         )
     )
@@ -864,8 +882,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)
         md(
             """
 ---
-### Bonus Eksperimen Bebas *(Opsional)*: Ubah 1 Angka `LEARNING_RATE_COBA`
-Coba ganti `LEARNING_RATE_COBA` ke **`0.01`** *(terlalu cepat / melompat-lompat)* atau **`0.00005`** *(sangat pelan)* lalu tekan `Shift+Enter` untuk melihat dampaknya pada kurva *Loss*!
+### Bonus Eksperimen Bebas *(Opsional)*: Ubah 1 Angka `LEARNING_RATE_COBA` *(Persis Slide 31!)*
+Coba ganti `LEARNING_RATE_COBA` ke **`0.01`** *(langkah kebesaran / kurva memantul liar)* atau **`0.00005`** *(langkah kekecilan / sangat lambat)* lalu tekan `Shift+Enter` untuk melihat dampaknya dibanding `LR Standar (0.0005)`!
 """
         )
     )
@@ -896,28 +914,28 @@ print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur & CNN di P03!
     )
 
     # =========================================================================
-    # REFERENSI MATERI (SELARAS SLIDE 37–38 · BAB 1, BAB 2 & BAB 3 · docs/PLAN.md)
+    # REFERENSI MATERI (SELARAS SLIDE 41–42 · BAB 1, BAB 2 & BAB 3 · docs/PLAN.md)
     # =========================================================================
     cells.append(
         md(
             """
-## Referensi Materi (Selaras Slide 40–41 · Bab 1, Bab 2 & Bab 3)
+## Referensi Materi (Selaras Slide 41–42 · Bab 1, Bab 2 & Bab 3)
 
 ### Bagian 1 — Bab 1 (AI/ML/DL) & Bab 2 (Computer Vision)
-1. [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course) `[CEK LINK]`
-2. [Coursera — Deep Learning Specialization Course 1](https://www.coursera.org/specializations/deep-learning) `[CEK LINK]`
-3. [StatQuest — Machine Learning & Neural Networks](https://www.youtube.com/@statquest) `[CEK LINK]`
-4. [Coursera (DeepLearning.AI) — Computer Vision Week 1](https://www.coursera.org/learn/convolutional-neural-networks)
-5. [Stanford CS231n — Image Classification Notes](https://cs231n.github.io/classification/) `[CEK LINK]`
-6. [Dokumentasi Pillow (PIL) — Pengolahan Foto & Piksel](https://pillow.readthedocs.io/) `[CEK LINK]`
+1. [Google Machine Learning Crash Course](https://developers.google.com/machine-learning/crash-course) `[CEK LINK]` — *Bab 1: AI Klasik vs Modern & Supervised Learning (Slide 6–7)*
+2. [Coursera — Deep Learning Specialization Course 1](https://www.coursera.org/specializations/deep-learning) `[CEK LINK]` — *Bab 1: ML vs DL & Feature Learning (Slide 7–9)*
+3. [StatQuest — Machine Learning & Neural Networks](https://www.youtube.com/@statquest) `[CEK LINK]` — *Bab 1 & Bab 3: Intuisi Visual ML & Bobot/Aktivasi (Slide 7–9, 27–28)*
+4. [Coursera (DeepLearning.AI) — Computer Vision Week 1](https://www.coursera.org/learn/convolutional-neural-networks) — *Bab 2: 4 Tugas Computer Vision (Slide 12–16)*
+5. [Stanford CS231n — Image Classification Notes](https://cs231n.github.io/classification/) `[CEK LINK]` — *Bab 2: Binary vs Multi-Class Classification (Slide 13)*
+6. [Dokumentasi Pillow (PIL) — Pengolahan Foto & Piksel](https://pillow.readthedocs.io/) `[CEK LINK]` — *Recap P01 & Hands-On Tahap 1 (Slide 3, 44)*
 
 ### Bagian 2 — Bab 3 (Teori Neural Network & Praktik Keras)
-7. [3Blue1Brown — *But what is a Neural Network?*](https://www.youtube.com/watch?v=aircAruvnKk) *(Wajib)*
-8. [3Blue1Brown — *Playlist Neural Networks (Bab 1–4)*](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi)
-9. [3Blue1Brown — *Versi Tulis Neural Networks*](https://3blue1brown.com/lessons/neural-networks)
-10. [TensorFlow Playground](https://playground.tensorflow.org/) `[CEK LINK]`
-11. [Keras Official — *The Sequential Model Guide*](https://keras.io/guides/sequential_model/) `[CEK LINK]`
-12. [Kingma & Ba — *Adam Optimizer* (`arXiv 1412.6980`)](https://arxiv.org/abs/1412.6980) `[CEK LINK]`
+7. [3Blue1Brown — *But what is a Neural Network?*](https://www.youtube.com/watch?v=aircAruvnKk) *(Wajib)* — *Bab 3 Tahap 1–4: Piksel → Flatten → Weight/Bias → Softmax (Slide 20–29)*
+8. [3Blue1Brown — *Playlist Neural Networks (Bab 1–4)*](https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi) — *Bab 3 Tahap 5: Loss, Gradient Descent & Backpropagation (Slide 30–33)*
+9. [3Blue1Brown — *Versi Tulis Neural Networks*](https://3blue1brown.com/lessons/neural-networks) — *Bab 3: Bacaan Santai Forward Pass & Training (Slide 26–30)*
+10. [TensorFlow Playground](https://playground.tensorflow.org/) `[CEK LINK]` — *Bab 3: Aktivasi (ReLU, Sigmoid, Tanh), LR & Overfitting (Slide 28, 31–32)*
+11. [Keras Official — *The Sequential Model Guide*](https://keras.io/guides/sequential_model/) `[CEK LINK]` — *Bab 3 Dense & Hands-On Tahap 4–5 (Slide 24, 47–49)*
+12. [Kingma & Ba — *Adam Optimizer* (`arXiv 1412.6980`)](https://arxiv.org/abs/1412.6980) `[CEK LINK]` — *Bab 3 Optimizer Adam & Hands-On compile() (Slide 31, 47–48)*
 """
         )
     )

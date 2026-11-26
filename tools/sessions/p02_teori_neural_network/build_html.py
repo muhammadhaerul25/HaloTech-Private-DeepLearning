@@ -139,8 +139,129 @@ EXTRA_CSS = """
                   border-color 0.16s ease;
       will-change: transform, box-shadow, opacity;
     }
+    /* Slide 06 Pure CSS Continuous-Loop Animations (zero play button needed; crisp in print) */
+    @keyframes s06Key1 { 0%, 100% { fill: #EA4335; } 8%, 22% { fill: #FBBC04; } 28% { fill: #EA4335; } }
+    @keyframes s06Key2 { 0%, 20% { fill: #EA4335; } 26%, 40% { fill: #FBBC04; } 46%, 100% { fill: #EA4335; } }
+    @keyframes s06Key3 { 0%, 38% { fill: #EA4335; } 44%, 58% { fill: #FBBC04; } 64%, 100% { fill: #EA4335; } }
+    @keyframes s06IvrBox { 0%, 45%, 85%, 100% { stroke: #DADCE0; } 55%, 75% { stroke: #EA4335; } }
+    @keyframes s06OutFlash { 0%, 72%, 100% { fill: #202124; transform: scale(1); } 80%, 92% { fill: #C5221F; transform: scale(1.04); } }
+    @keyframes s06TreeProbe { 0%, 15%, 45%, 100% { opacity: 0.45; } 25%, 35% { opacity: 1; } }
+    @keyframes s06TreeEdge1 { 0%, 15% { stroke-dashoffset: 48; } 42%, 100% { stroke-dashoffset: 0; } }
+    @keyframes s06TreeEdge2 { 0%, 42% { stroke-dashoffset: 40; } 68%, 100% { stroke-dashoffset: 0; } }
+    @keyframes s06NodePulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.22); opacity: 0.9; } }
+    @keyframes s06GoalRing { 0%, 58% { r: 7; opacity: 0; } 72% { r: 7; opacity: 0.85; } 96%, 100% { r: 15; opacity: 0; } }
+    @keyframes s06FlowDash { to { stroke-dashoffset: -24; } }
+    @keyframes s06ThumbA { 0%, 45%, 100% { box-shadow: 0 0 0 2px rgba(66,133,244,0.65); transform: scale(1.04); } 50%, 95% { box-shadow: none; transform: scale(1); } }
+    @keyframes s06ThumbB { 0%, 45% { box-shadow: none; transform: scale(1); } 50%, 95%, 100% { box-shadow: 0 0 0 2px rgba(234,67,53,0.65); transform: scale(1.04); } }
+    @keyframes s06NnStage1 { 0%, 28%, 100% { opacity: 0.95; } 12% { filter: drop-shadow(0 0 4px rgba(66,133,244,0.8)); } }
+    @keyframes s06NnStage2 { 0%, 20%, 62%, 100% { filter: none; } 38%, 50% { filter: drop-shadow(0 0 5px rgba(251,188,4,0.9)); } }
+    @keyframes s06NnStage3 { 0%, 52%, 95%, 100% { filter: none; } 68%, 85% { filter: drop-shadow(0 0 6px rgba(52,168,83,0.95)); } }
+    @keyframes s06OutCard { 0%, 58%, 100% { box-shadow: 0 0 0 0 rgba(52,168,83,0); transform: scale(1); } 72%, 88% { box-shadow: 0 0 0 3px rgba(52,168,83,0.35); transform: scale(1.04); } }
+    .s06-k1 { animation: s06Key1 2.6s ease-in-out infinite; }
+    .s06-k2 { animation: s06Key2 2.6s ease-in-out infinite; }
+    .s06-k3 { animation: s06Key3 2.6s ease-in-out infinite; }
+    .s06-ivr { animation: s06IvrBox 2.6s ease-in-out infinite; }
+    .s06-out { transform-box: fill-box; transform-origin: center; animation: s06OutFlash 2.6s ease-in-out infinite; }
+    .s06-probe { animation: s06TreeProbe 3.0s ease-in-out infinite; }
+    .s06-edge1 { stroke-dasharray: 48; animation: s06TreeEdge1 3.0s ease-out infinite; }
+    .s06-edge2 { stroke-dasharray: 40; animation: s06TreeEdge2 3.0s ease-out infinite; }
+    .s06-pulse { transform-box: fill-box; transform-origin: center; animation: s06NodePulse 1.6s ease-in-out infinite; }
+    .s06-ring { animation: s06GoalRing 3.0s ease-out infinite; }
+    .s06-flow { stroke-dasharray: 5 4; animation: s06FlowDash 1.1s linear infinite; }
+    .s06-flow2 { stroke-dasharray: 5 4; animation: s06FlowDash 1.1s linear infinite; animation-delay: 0.35s; }
+    .s06-ta { animation: s06ThumbA 3.0s ease-in-out infinite; }
+    .s06-tb { animation: s06ThumbB 3.0s ease-in-out infinite; }
+    .s06-n1 { animation: s06NnStage1 3.0s ease-in-out infinite; }
+    .s06-n2 { animation: s06NnStage2 3.0s ease-in-out infinite; }
+    .s06-n3 { animation: s06NnStage3 3.0s ease-in-out infinite; }
+    .s06-outcard { animation: s06OutCard 3.0s ease-in-out infinite; }
+    /* Slide 07 Pure CSS Continuous-Loop Animations (Tab 1 Rule vs Tab 2 ML) */
+    @keyframes s07BoxIn { 0%, 35%, 100% { filter: none; } 10%, 24% { filter: drop-shadow(0 0 6px rgba(66,133,244,0.45)); } }
+    @keyframes s07CpuPulse { 0%, 25%, 70%, 100% { filter: none; transform: scale(1); } 40%, 56% { filter: drop-shadow(0 0 8px rgba(26,115,232,0.55)); transform: scale(1.03); } }
+    @keyframes s07BoxOutRule { 0%, 58%, 100% { filter: none; } 68%, 88% { filter: drop-shadow(0 0 7px rgba(251,188,4,0.65)); } }
+    @keyframes s07BoxOutMl { 0%, 58%, 100% { filter: none; } 68%, 88% { filter: drop-shadow(0 0 8px rgba(52,168,83,0.7)); } }
+    @keyframes s07ModelPulse { 0%, 42%, 95%, 100% { filter: none; transform: scale(1); } 58%, 80% { filter: drop-shadow(0 0 7px rgba(52,168,83,0.55)); transform: scale(1.03); } }
+    .s07-in { animation: s07BoxIn 2.8s ease-in-out infinite; }
+    .s07-cpu { transform-box: fill-box; transform-origin: center; animation: s07CpuPulse 2.8s ease-in-out infinite; }
+    .s07-out-rule { animation: s07BoxOutRule 2.8s ease-in-out infinite; }
+    .s07-out-ml { animation: s07BoxOutMl 3.0s ease-in-out infinite; }
+    .s07-model { transform-box: fill-box; transform-origin: center; animation: s07ModelPulse 3.0s ease-in-out infinite; }
+    .s07-flow { stroke-dasharray: 6 4; animation: s06FlowDash 1.1s linear infinite; }
+    /* Slide 12 Pure CSS Continuous-Loop Animations (4 CV Tasks on Real Elsa Photo) */
+    @keyframes s12ScanBeam { 0%, 10% { top: -18%; opacity: 0; } 20% { opacity: 0.75; } 55% { opacity: 0.75; } 68%, 100% { top: 105%; opacity: 0; } }
+    @keyframes s12LabelPop { 0%, 40%, 100% { transform: scale(1); box-shadow: 0 2px 6px rgba(26,115,232,0.22); } 58%, 82% { transform: scale(1.07); box-shadow: 0 0 0 4px rgba(66,133,244,0.28); } }
+    @keyframes s12BboxLock { 0%, 100% { transform: scale(1); opacity: 1; } 18% { transform: scale(1.12); opacity: 0.7; } 38%, 82% { transform: scale(1); opacity: 1; } }
+    @keyframes s12MaskFade { 0%, 100% { opacity: 0.16; } 35%, 72% { opacity: 0.96; } }
+    @keyframes s12MaskTag { 0%, 30%, 100% { transform: scale(1); } 48%, 76% { transform: scale(1.06); } }
+    @keyframes s12TrackSlide { 0% { transform: translateX(-18px); opacity: 0.85; } 55%, 82% { transform: translateX(0px); opacity: 1; } 100% { transform: translateX(-18px); opacity: 0.85; } }
+    @keyframes s12TrackTrail { 0%, 15% { opacity: 0.15; } 45%, 82% { opacity: 0.75; } 100% { opacity: 0.15; } }
+    .s12-stage-card { background: #FFFFFF; border: 1.5px solid #DADCE0; border-radius: 14px; padding: 10px 14px 10px; display: flex; flex-direction: column; justify-content: space-between; flex: 1; min-height: 0; margin-bottom: 9px; }
+    .s12-panel-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; flex: 1; min-height: 0; align-items: stretch; }
+    .s12-panel { display: flex; flex-direction: column; align-items: center; justify-content: space-between; gap: 4px; min-width: 0; min-height: 0; }
+    .s12-panel-ttl { font-family: var(--font-title); font-size: 11.4px; font-weight: 800; line-height: 1.2; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+    .s12-frame { position: relative; width: 100%; max-width: 230px; aspect-ratio: 1 / 1; border-radius: 10px; overflow: hidden; background: #F1F3F4; flex: 0 1 auto; max-height: 228px; margin: 0 auto; }
+    .s12-frame img.s12-base { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s12-scan { position: absolute; left: 0; right: 0; height: 26%; background: linear-gradient(180deg, rgba(66,133,244,0) 0%, rgba(66,133,244,0.34) 50%, rgba(66,133,244,0) 100%); pointer-events: none; animation: s12ScanBeam 3.0s ease-in-out infinite; }
+    .s12-cls-pill { position: absolute; top: 8px; left: 0; right: 0; margin: 0 auto; width: fit-content; background: #4285F4; color: #FFFFFF; font-family: var(--font-title); font-size: 10.6px; font-weight: 800; padding: 3px 10px; border-radius: 7px; white-space: nowrap; }
+    .s12-cls-pill-inner { animation: s12LabelPop 3.0s ease-in-out infinite; }
+    .s12-bbox-g { transform-box: fill-box; transform-origin: center; animation: s12BboxLock 3.0s ease-in-out infinite; }
+    .s12-mask-ov { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; animation: s12MaskFade 3.0s ease-in-out infinite; }
+    .s12-mask-pill { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); background: #34A853; color: #FFFFFF; font-family: var(--font-title); font-size: 9.8px; font-weight: 800; padding: 2.5px 9px; border-radius: 7px; white-space: nowrap; }
+    .s12-trk-trail { animation: s12TrackTrail 3.0s ease-in-out infinite; }
+    .s12-trk-main { animation: s12TrackSlide 3.0s ease-in-out infinite; }
+    .s12-panel-cap { font-size: 10.2px; color: #3C4043; line-height: 1.28; text-align: center; }
+    /* Slides 13-16 Pure CSS Continuous-Loop Animations (zero Play button; @media print frozen) */
+    @keyframes s13Bar88 { 0% { width: 8%; } 40%, 88% { width: 88%; } 100% { width: 8%; } }
+    @keyframes s13Bar5  { 0% { width: 2%; } 40%, 88% { width: 5%; }  100% { width: 2%; } }
+    @keyframes s13Bar3  { 0% { width: 1%; } 40%, 88% { width: 3%; }  100% { width: 1%; } }
+    @keyframes s13Bar2  { 0% { width: 1%; } 40%, 88% { width: 2%; }  100% { width: 1%; } }
+    @keyframes s13WinGlow { 0%, 38%, 100% { box-shadow: none; } 52%, 82% { box-shadow: 0 0 0 3px rgba(52,168,83,0.35); } }
+    @keyframes s14Sweep { 0%, 8% { left: -12%; opacity: 0; } 18% { opacity: 0.78; } 58% { opacity: 0.78; } 68%, 100% { left: 104%; opacity: 0; } }
+    @keyframes s14Box1 { 0%, 14% { opacity: 0.28; transform: scale(1.09); } 30%, 86% { opacity: 1; transform: scale(1); } 100% { opacity: 0.28; } }
+    @keyframes s14Box2 { 0%, 34% { opacity: 0.25; transform: scale(1.09); } 50%, 86% { opacity: 1; transform: scale(1); } 100% { opacity: 0.25; } }
+    @keyframes s15Inst1 { 0%, 10% { opacity: 0.14; } 26%, 78% { opacity: 0.96; } 94%, 100% { opacity: 0.14; } }
+    @keyframes s15Inst2 { 0%, 36% { opacity: 0.14; } 52%, 84% { opacity: 0.96; } 96%, 100% { opacity: 0.14; } }
+    @keyframes s16F1 { 0%, 30% { background: #FEF7E0; border-color: #FBBC04; box-shadow: 0 4px 12px rgba(251,188,4,0.24); } 34%, 100% { background: #FFFFFF; border-color: #DADCE0; box-shadow: none; } }
+    @keyframes s16F2 { 0%, 32% { background: #FFFFFF; border-color: #DADCE0; box-shadow: none; } 34%, 64% { background: #FEF7E0; border-color: #FBBC04; box-shadow: 0 4px 12px rgba(251,188,4,0.24); } 68%, 100% { background: #FFFFFF; border-color: #DADCE0; box-shadow: none; } }
+    @keyframes s16F3 { 0%, 66% { background: #FFFFFF; border-color: #DADCE0; box-shadow: none; } 68%, 96% { background: #FEF7E0; border-color: #FBBC04; box-shadow: 0 4px 12px rgba(251,188,4,0.24); } 100% { background: #FFFFFF; border-color: #DADCE0; box-shadow: none; } }
+    @keyframes s16Arr1 { 0%, 22%, 45%, 100% { color: #9AA0A6; transform: scale(1); } 30%, 38% { color: #1A73E8; transform: scale(1.28); } }
+    @keyframes s16Arr2 { 0%, 56%, 78%, 100% { color: #9AA0A6; transform: scale(1); } 64%, 72% { color: #1A73E8; transform: scale(1.28); } }
+    @keyframes s16ElsaHop { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-3px); } }
+    .s13-b88 { animation: s13Bar88 3.2s ease-out infinite; }
+    .s13-b5  { animation: s13Bar5 3.2s ease-out infinite; }
+    .s13-b3  { animation: s13Bar3 3.2s ease-out infinite; }
+    .s13-b2  { animation: s13Bar2 3.2s ease-out infinite; }
+    .s13-win-pill { animation: s13WinGlow 3.2s ease-in-out infinite; }
+    .s14-sweep { position: absolute; top: 0; bottom: 0; width: 14%; background: linear-gradient(90deg, rgba(234,67,53,0) 0%, rgba(234,67,53,0.30) 50%, rgba(234,67,53,0) 100%); pointer-events: none; animation: s14Sweep 3.2s ease-in-out infinite; }
+    .s14-box1 { transform-box: fill-box; transform-origin: center; animation: s14Box1 3.2s ease-out infinite; }
+    .s14-box2 { transform-box: fill-box; transform-origin: center; animation: s14Box2 3.2s ease-out infinite; }
+    .s15-inst1 { animation: s15Inst1 3.2s ease-in-out infinite; }
+    .s15-inst2 { animation: s15Inst2 3.2s ease-in-out infinite; }
+    .s16-f1 { animation: s16F1 3.6s linear infinite; }
+    .s16-f2 { animation: s16F2 3.6s linear infinite; }
+    .s16-f3 { animation: s16F3 3.6s linear infinite; }
+    .s16-a1 { animation: s16Arr1 3.6s ease-in-out infinite; }
+    .s16-a2 { animation: s16Arr2 3.6s ease-in-out infinite; }
+    .s16-elsa-hop { animation: s16ElsaHop 1.2s ease-in-out infinite; }
     @media print {
-      .sync-card, .sync-card::after, .sync-bullet { transition: none !important; animation: none !important; }
+      .sync-card, .sync-card::after, .sync-bullet,
+      .s06-k1, .s06-k2, .s06-k3, .s06-ivr, .s06-out,
+      .s06-probe, .s06-edge1, .s06-edge2, .s06-pulse, .s06-ring,
+      .s06-flow, .s06-flow2, .s06-ta, .s06-tb, .s06-n1, .s06-n2, .s06-n3, .s06-outcard,
+      .s07-in, .s07-cpu, .s07-out-rule, .s07-out-ml, .s07-model, .s07-flow,
+      .s12-cls-pill-inner, .s12-bbox-g, .s12-mask-ov, .s12-trk-trail, .s12-trk-main,
+      .s13-b88, .s13-b5, .s13-b3, .s13-b2, .s13-win-pill,
+      .s14-box1, .s14-box2, .s15-inst1, .s15-inst2,
+      .s16-f1, .s16-f2, .s16-f3, .s16-a1, .s16-a2, .s16-elsa-hop {
+        transition: none !important;
+        animation: none !important;
+        stroke-dashoffset: 0 !important;
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+      }
+      .s16-f2 { background: #FEF7E0 !important; border: 2.5px solid #FBBC04 !important; }
+      .s06-ring, .s06-motion-dot, .s07-motion-dot, .s12-scan, .s14-sweep { display: none !important; }
     }
     .sync-card .card-top-bar { transition: height 0.24s ease; }
     .sync-card.sync-dim { opacity: 0.48; transform: translateY(0) scale(0.992); }
@@ -243,30 +364,30 @@ EXTRA_CSS = """
     .gloss-fbtn { font-family: var(--font-title); font-size: 10.5px; font-weight: 700; padding: 4px 10px; border-radius: 999px; border: 1.4px solid #DADCE0; background: #FFFFFF; color: #5F6368; cursor: pointer; transition: all 0.14s ease; }
     .gloss-fbtn:hover { border-color: #4285F4; color: #1A73E8; }
     .gloss-fbtn.active { background: #202124; color: #FFFFFF; border-color: #202124; }
-    .dict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; flex: 1; min-height: 0; align-items: stretch; }
-    .dict-col { display: flex; flex-direction: column; gap: 11px; min-height: 0; }
+    .dict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; flex: 1; min-height: 0; align-items: stretch; }
+    .dict-col { display: flex; flex-direction: column; gap: 9px; min-height: 0; }
     .dict-group { background: #FFFFFF; border: 1.4px solid #DADCE0; border-radius: 13px; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
     .dict-group.grow { flex: 1; }
-    .dict-group-head { display: flex; align-items: center; justify-content: space-between; padding: 7px 13px; font-family: var(--font-title); font-size: 11px; font-weight: 800; letter-spacing: 0.02em; border-bottom: 1px solid #E8EAED; }
+    .dict-group-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 12px; font-family: var(--font-title); font-size: 10.6px; font-weight: 800; letter-spacing: 0.02em; border-bottom: 1px solid #E8EAED; }
     .dict-group-head.b1 { background: #E8F0FE; color: #1A73E8; border-bottom-color: #D2E3FC; }
     .dict-group-head.b2 { background: #FCE8E6; color: #C5221F; border-bottom-color: #FAD2CF; }
     .dict-group-head.b3 { background: #E6F4EA; color: #137333; border-bottom-color: #CEEAD6; }
-    .dict-group-cnt { font-size: 9.6px; font-weight: 700; padding: 1.5px 7px; border-radius: 999px; background: rgba(255,255,255,0.82); }
+    .dict-group-cnt { font-size: 9.4px; font-weight: 700; padding: 1.5px 7px; border-radius: 999px; background: rgba(255,255,255,0.82); }
     .dict-list { display: flex; flex-direction: column; flex: 1; }
     .dict-row {
-      display: grid; grid-template-columns: 144px 1fr auto; gap: 10px; align-items: center;
-      padding: 5.5px 12px; border-bottom: 1px solid #EEF0F3; flex: 1;
+      display: grid; grid-template-columns: 146px 1fr auto; gap: 9px; align-items: center;
+      padding: 4.5px 12px; border-bottom: 1px solid #EEF0F3; flex: 1;
       transition: background 0.14s ease, opacity 0.18s ease;
     }
     .dict-row:nth-child(even) { background: #FAFBFD; }
     .dict-row:last-child { border-bottom: none; }
     .dict-row:hover { background: #F1F6FE; }
     .dict-row.ch-dim { opacity: 0.20; }
-    .dict-term { font-family: var(--font-title); font-size: 11.4px; font-weight: 700; line-height: 1.22; }
+    .dict-term { font-family: var(--font-title); font-size: 11px; font-weight: 700; line-height: 1.2; }
     .dict-term.b1 { color: #1A73E8; }
     .dict-term.b2 { color: #C5221F; }
     .dict-term.b3 { color: #137333; }
-    .dict-def { font-size: 10.9px; line-height: 1.32; color: #3C4043; }
+    .dict-def { font-size: 10.6px; line-height: 1.28; color: #3C4043; }
     .dict-slide-btn {
       font-family: var(--font-code); font-size: 9.4px; font-weight: 700;
       padding: 2.5px 7px; border-radius: 7px; border: 1px solid #DADCE0;
@@ -581,14 +702,17 @@ def build_slides_html(data: dict) -> str:
     ho_m = data.get("handson_metrics", {})
     e0_loss = ho_m.get("epoch0_loss", 1.71)
     e0_acc = ho_m.get("epoch0_acc_pct", 24.5)
-    e1_loss = ho_m.get("epoch1_loss", 2.41)
-    e_end = ho_m.get("epochs", 20)
-    e_end_loss = ho_m.get("epoch_end_loss", 1.04)
-    e_end_acc = ho_m.get("epoch_end_acc_pct", 65.7)
+    e1_loss = ho_m.get("epoch1_loss", 3.03)
+    e_end = ho_m.get("epochs", 30)
+    e_end_loss = ho_m.get("epoch_end_loss", 0.89)
+    e_end_acc = ho_m.get("epoch_end_acc_pct", 76.9)
     s_e0 = ho_m.get("sample_e0_correct", 2)
-    s_end = ho_m.get("sample_end_correct", 4)
-    ho_z_gaun = ho_m.get("neuron_z", 0.33)
-    ho_z_wall = ho_m.get("wall_z", -0.23)
+    s_end = ho_m.get("sample_end_correct", 5)
+    all_polos_acc = ho_m.get("all_polos_acc_pct", 77.5)
+    all_ramai_acc = ho_m.get("all_ramai_acc_pct", 95.1)
+    ho_b_v = ho_m.get("elsa_px_rgb", [0.52, 0.53, 0.60])[2]
+    ho_z_gaun = ho_m.get("neuron_z", 0.37)
+    ho_z_wall = ho_m.get("wall_z", -0.15)
     ho_loss_sm = ho_m.get("softmax_loss_demo", 0.38)
     polos_n = data["polos_count"]
     ramai_n = data["ramai_count"]
@@ -599,7 +723,16 @@ def build_slides_html(data: dict) -> str:
     l0, l1 = fp["logits"]
     p0, p1 = fp["probs"]
     er0, eg0, eb0 = data["elsa_rgb_ends"]["first_rgb"]
+    er1, eg1, eb1 = data["elsa_rgb_ends"]["grid"][1]["norm"]
     er_end, eg_end, eb_end = data["elsa_rgb_ends"]["last_rgb"]
+    cv_ex, cv_ey, cv_ew, cv_eh = data.get("cv_elsa_bbox", [84, 54, 48, 120])
+    cv_tag_y = max(16, cv_ey - 4)
+    cv_ox, cv_oy, cv_ow, cv_oh = data.get("cv_olaf_bbox", [82, 42, 42, 70])
+    cv_otag_y = max(16, cv_oy - 4)
+    dress_idx = int(data["elsa_rgb_ends"].get("dress_idx", 35))
+    dress_px = data["elsa_rgb_ends"]["grid"][dress_idx]
+    dress_gray = float(dress_px["gray"])
+    dress_r, dress_c = int(dress_px["r"]) + 1, int(dress_px["c"]) + 1
 
     s: list[str] = []
 
@@ -729,7 +862,7 @@ def build_slides_html(data: dict) -> str:
     </section>
 
     <!-- 02: AGENDA & LEARNING GOALS (GABUNGAN PETA + ALUR 120M + TUJUAN) -->
-    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 3 bab teori (Bab 1: 9m, Bab 2: 9.5m, Bab 3: 29.5m), kuis 5 soal, kamus 14 istilah &amp; Referensi Materi (7.5m), serta sesi hands-on 5 tahap mikro-task &amp; penutup (58.5m) beserta 3 target belajar utama.">
+    <section class="slide" data-title="Agenda &amp; Learning Goals (120 Menit)" data-notes="Alokasi waktu: 2 menit. Satu slide ringkas yang menyatukan agenda 3 bab teori (Bab 1: 9m, Bab 2: 9.5m, Bab 3: 29.5m), kuis 5 soal, kamus 16 istilah &amp; Referensi Materi (7.5m), serta sesi hands-on 5 tahap mikro-task &amp; penutup (58.5m) beserta 3 target belajar utama.">
       <div class="kicker">SESSION OVERVIEW · 120 MENIT</div>
       <h2>Agenda &amp; <span class="hl-blue">Learning Goals</span></h2>
       <div class="split-60-40" style="flex:1; min-height:0; align-items:stretch;">
@@ -771,7 +904,7 @@ def build_slides_html(data: dict) -> str:
                 <span class="step-title">Kuis 5 Soal, Kamus Istilah &amp; Referensi Materi</span>
                 <span class="pill yellow" style="font-size:10px; padding:2px 8px; white-space:nowrap;">~7,5 menit</span>
               </div>
-              <div class="step-desc">5 slide kuis berilustrasi Bab 1–3, kamus <strong>14 istilah kunci</strong>, dan Referensi Materi Bab 1–3.</div>
+              <div class="step-desc">5 slide kuis berilustrasi Bab 1–3, kamus <strong>16 istilah kunci</strong>, dan Referensi Materi Bab 1–3.</div>
             </div>
           </div>
           <div class="step-item" style="padding:10px 13px; flex:1; align-items:center;">
@@ -953,17 +1086,20 @@ def build_slides_html(data: dict) -> str:
               <rect x="10" y="10" width="66" height="68" rx="8" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>
               <rect x="18" y="18" width="50" height="16" rx="3" fill="#FFFFFF" stroke="#EA4335" stroke-width="1.2"/>
               <text x="62" y="30" text-anchor="end" font-family="Roboto Mono" font-size="9" font-weight="700" fill="#202124">12+8=20</text>
-              <rect x="18" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="24.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" fill="#FFF">1</text>
-              <rect x="36" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="42.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" fill="#FFF">2</text>
-              <rect x="54" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="60.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" fill="#FFF">3</text>
+              <rect class="s06-k1" x="18" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="24.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" font-weight="700" fill="#FFF">1</text>
+              <rect class="s06-k2" x="36" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="42.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" font-weight="700" fill="#FFF">2</text>
+              <rect class="s06-k3" x="54" y="40" width="13" height="11" rx="2" fill="#EA4335"/><text x="60.5" y="48.5" text-anchor="middle" font-family="Roboto Mono" font-size="8" font-weight="700" fill="#FFF">3</text>
               <rect x="18" y="56" width="49" height="13" rx="2" fill="#202124"/><text x="42.5" y="65.5" text-anchor="middle" font-family="Roboto Mono" font-size="7.5" fill="#FFF">FIXED RULE</text>
-              <!-- Rigid flow -->
+              <!-- Rigid flow (base lines + animated signal passing behind Menu IVR) -->
               <line x1="84" y1="44" x2="112" y2="44" stroke="#EA4335" stroke-width="2.2"/><polygon points="110,40 118,44 110,48" fill="#EA4335"/>
-              <rect x="120" y="24" width="64" height="40" rx="8" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.8"/>
+              <line x1="186" y1="44" x2="210" y2="44" stroke="#EA4335" stroke-width="2.2"/><polygon points="208,40 216,44 208,48" fill="#EA4335"/>
+              <circle class="s06-motion-dot" r="4" fill="#FBBC04" stroke="#C5221F" stroke-width="1.5">
+                <animateMotion dur="2.6s" repeatCount="indefinite" path="M82 44 L214 44" keyPoints="0;1" keyTimes="0;1"/>
+              </circle>
+              <rect class="s06-ivr" x="120" y="24" width="64" height="40" rx="8" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.8"/>
               <text x="152" y="41" text-anchor="middle" font-family="Poppins" font-size="9" font-weight="700" fill="#5F6368">Menu IVR</text>
               <text x="152" y="54" text-anchor="middle" font-family="Roboto Mono" font-size="8" fill="#C5221F">Tekan 1/2/3</text>
-              <line x1="186" y1="44" x2="210" y2="44" stroke="#EA4335" stroke-width="2.2"/><polygon points="208,40 216,44 208,48" fill="#EA4335"/>
-              <rect x="218" y="28" width="34" height="32" rx="6" fill="#202124"/>
+              <rect class="s06-out" x="218" y="28" width="34" height="32" rx="6" fill="#202124"/>
               <text x="235" y="47" text-anchor="middle" font-family="Roboto Mono" font-size="8.5" font-weight="700" fill="#FFF">OUT</text>
             </svg>
           </div>
@@ -986,27 +1122,37 @@ def build_slides_html(data: dict) -> str:
             <svg viewBox="0 0 260 88" style="width:100%; height:84px; display:block;">
               <!-- Left: Search Tree (Minimax Chess) -->
               <text x="64" y="13" text-anchor="middle" font-family="Poppins" font-size="8.5" font-weight="700" fill="#1A73E8">Search Tree (Catur)</text>
-              <line x1="64" y1="26" x2="32" y2="50" stroke="#DADCE0" stroke-width="1.8"/>
-              <line x1="64" y1="26" x2="96" y2="50" stroke="#4285F4" stroke-width="2.6"/>
-              <line x1="32" y1="50" x2="18" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
-              <line x1="32" y1="50" x2="46" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
-              <line x1="96" y1="50" x2="82" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
-              <line x1="96" y1="50" x2="110" y2="74" stroke="#4285F4" stroke-width="2.6"/>
-              <circle cx="64" cy="26" r="7" fill="#4285F4"/>
-              <circle cx="32" cy="50" r="6" fill="#BDC1C6"/>
+              <g class="s06-probe">
+                <line x1="64" y1="26" x2="32" y2="50" stroke="#DADCE0" stroke-width="1.8"/>
+                <line x1="32" y1="50" x2="18" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
+                <line x1="32" y1="50" x2="46" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
+                <line x1="96" y1="50" x2="82" y2="74" stroke="#DADCE0" stroke-width="1.5"/>
+                <circle cx="32" cy="50" r="6" fill="#BDC1C6"/>
+                <circle cx="18" cy="74" r="5" fill="#BDC1C6"/>
+                <circle cx="46" cy="74" r="5" fill="#BDC1C6"/>
+                <circle cx="82" cy="74" r="5" fill="#BDC1C6"/>
+              </g>
+              <line x1="64" y1="26" x2="96" y2="50" stroke="#D2E3FC" stroke-width="2.4"/>
+              <line x1="96" y1="50" x2="110" y2="74" stroke="#D2E3FC" stroke-width="2.4"/>
+              <line class="s06-edge1" x1="64" y1="26" x2="96" y2="50" stroke="#4285F4" stroke-width="2.8" stroke-linecap="round"/>
+              <line class="s06-edge2" x1="96" y1="50" x2="110" y2="74" stroke="#4285F4" stroke-width="2.8" stroke-linecap="round"/>
+              <circle class="s06-pulse" cx="64" cy="26" r="7" fill="#4285F4"/>
               <circle cx="96" cy="50" r="7" fill="#4285F4"/>
-              <circle cx="18" cy="74" r="5" fill="#BDC1C6"/>
-              <circle cx="46" cy="74" r="5" fill="#BDC1C6"/>
-              <circle cx="82" cy="74" r="5" fill="#BDC1C6"/>
+              <circle class="s06-ring" cx="110" cy="74" r="7" fill="none" stroke="#34A853" stroke-width="2.2"/>
               <circle cx="110" cy="74" r="7" fill="#34A853"/>
               <!-- Divider -->
               <line x1="132" y1="12" x2="132" y2="78" stroke="#E0E3E7" stroke-width="1.2" stroke-dasharray="3,3"/>
               <!-- Right: A* Map Route -->
               <text x="196" y="13" text-anchor="middle" font-family="Poppins" font-size="8.5" font-weight="700" fill="#1A73E8">Rute Peta (A*)</text>
               <rect x="148" y="22" width="98" height="56" rx="6" fill="#F8F9FA" stroke="#DADCE0" stroke-width="1.4"/>
-              <path d="M158 66 L184 66 L184 42 L214 42 L236 32" fill="none" stroke="#4285F4" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M158 66 L184 66 L184 42 L214 42 L236 32" fill="none" stroke="#D2E3FC" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path class="s06-flow" d="M158 66 L184 66 L184 42 L214 42 L236 32" fill="none" stroke="#4285F4" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
               <circle cx="158" cy="66" r="5" fill="#EA4335"/>
+              <circle class="s06-ring" cx="236" cy="32" r="5.5" fill="none" stroke="#34A853" stroke-width="2"/>
               <circle cx="236" cy="32" r="5.5" fill="#34A853"/>
+              <circle class="s06-motion-dot" r="4.2" fill="#FBBC04" stroke="#1A73E8" stroke-width="1.8">
+                <animateMotion dur="3.0s" repeatCount="indefinite" path="M158 66 L184 66 L184 42 L214 42 L236 32"/>
+              </circle>
               <text x="158" y="76" text-anchor="middle" font-family="Roboto Mono" font-size="7" fill="#C5221F">A</text>
               <text x="236" y="25" text-anchor="middle" font-family="Roboto Mono" font-size="7" fill="#137333">B</text>
             </svg>
@@ -1029,22 +1175,30 @@ def build_slides_html(data: dict) -> str:
           <div style="background:#FFFFFF; border:1px solid #A8DAB5; border-radius:10px; padding:6px 8px; display:flex; align-items:center; justify-content:space-around; gap:6px; height:98px;">
             <div style="display:flex; flex-direction:column; gap:3px; align-items:center;">
               <div style="display:flex; gap:3px;">
-                <img src="assets/P02/thumb_elsa.jpg" alt="Elsa" style="width:32px; height:32px; border-radius:6px; object-fit:cover; border:1.5px solid #4285F4;"/>
-                <img src="assets/P02/thumb_anna.jpg" alt="Anna" style="width:32px; height:32px; border-radius:6px; object-fit:cover; border:1.5px solid #EA4335;"/>
+                <img class="s06-ta" src="assets/P02/thumb_elsa.jpg" alt="Elsa" style="width:32px; height:32px; border-radius:6px; object-fit:cover; border:1.5px solid #4285F4; transition:transform 0.2s;"/>
+                <img class="s06-tb" src="assets/P02/thumb_anna.jpg" alt="Anna" style="width:32px; height:32px; border-radius:6px; object-fit:cover; border:1.5px solid #EA4335; transition:transform 0.2s;"/>
               </div>
               <span style="font-family:var(--font-code); font-size:8.5px; color:#5F6368;">Data Foto</span>
             </div>
             <svg viewBox="0 0 92 70" style="width:86px; height:66px; flex-shrink:0;">
-              <g stroke="#A8DAB5" stroke-width="1.4">
+              <g stroke="#CEEAD6" stroke-width="1.3">
                 <line x1="12" y1="16" x2="46" y2="14"/><line x1="12" y1="16" x2="46" y2="35"/><line x1="12" y1="16" x2="46" y2="56"/>
                 <line x1="12" y1="54" x2="46" y2="14"/><line x1="12" y1="54" x2="46" y2="35"/><line x1="12" y1="54" x2="46" y2="56"/>
                 <line x1="46" y1="14" x2="80" y2="35"/><line x1="46" y1="35" x2="80" y2="35"/><line x1="46" y1="56" x2="80" y2="35"/>
               </g>
-              <circle cx="12" cy="16" r="6" fill="#4285F4"/><circle cx="12" cy="54" r="6" fill="#4285F4"/>
-              <circle cx="46" cy="14" r="6.5" fill="#FBBC04"/><circle cx="46" cy="35" r="6.5" fill="#EA4335"/><circle cx="46" cy="56" r="6.5" fill="#FBBC04"/>
-              <circle cx="80" cy="35" r="7.5" fill="#34A853"/>
+              <g class="s06-flow" stroke="#4285F4" stroke-width="1.5">
+                <line x1="12" y1="16" x2="46" y2="14"/><line x1="12" y1="16" x2="46" y2="35"/>
+                <line x1="12" y1="54" x2="46" y2="35"/><line x1="12" y1="54" x2="46" y2="56"/>
+              </g>
+              <g class="s06-flow2" stroke="#34A853" stroke-width="1.6">
+                <line x1="46" y1="14" x2="80" y2="35"/><line x1="46" y1="35" x2="80" y2="35"/><line x1="46" y1="56" x2="80" y2="35"/>
+              </g>
+              <circle class="s06-n1" cx="12" cy="16" r="6" fill="#4285F4"/><circle class="s06-n1" cx="12" cy="54" r="6" fill="#4285F4"/>
+              <circle class="s06-n2" cx="46" cy="14" r="6.5" fill="#FBBC04"/><circle class="s06-n2" cx="46" cy="35" r="6.5" fill="#EA4335"/><circle class="s06-n2" cx="46" cy="56" r="6.5" fill="#FBBC04"/>
+              <circle class="s06-ring" cx="80" cy="35" r="7.5" fill="none" stroke="#34A853" stroke-width="2"/>
+              <circle class="s06-n3" cx="80" cy="35" r="7.5" fill="#34A853"/>
             </svg>
-            <div style="background:#E6F4EA; border:1.5px solid #34A853; border-radius:8px; padding:4px 7px; text-align:center;">
+            <div class="s06-outcard" style="background:#E6F4EA; border:1.5px solid #34A853; border-radius:8px; padding:4px 7px; text-align:center;">
               <div style="font-family:var(--font-title); font-size:10.5px; font-weight:700; color:#137333;">Elsa!</div>
               <div style="font-family:var(--font-code); font-size:8px; color:#5F6368;">Belajar Pola</div>
             </div>
@@ -1293,8 +1447,66 @@ def build_slides_html(data: dict) -> str:
     <section class="slide" data-title="Bab 2: 4 Task CV pada Satu Foto" data-notes="Alokasi waktu: 1.5 menit. Tunjukkan keempat panel secara berdampingan pada foto asli Elsa agar peserta langsung menangkap beda bentuk output tiap task. Tegaskan bahwa kotak, mask, dan panah adalah ilustrasi buatan kode, bukan hasil model sungguhan.">
       <div class="kicker">BAB 02 · PERBANDINGAN TASK COMPUTER VISION</div>
       <h2>4 Task Computer Vision pada <span class="hl-red">Foto yang Sama</span></h2>
-      <div class="img-box" style="height:auto; flex:1; min-height:0; padding:8px 10px; margin-bottom:10px;">
-        <img src="assets/P02/02_cv_tasks_4panel.png" alt="4 Task Computer Vision pada foto Elsa (Ilustrasi Konsep Buatan Kode)" style="width:100%; height:100%; max-height:335px; object-fit:contain;"/>
+      <div class="s12-stage-card">
+        <div style="text-align:center; font-family:var(--font-title); font-size:12px; font-weight:800; color:#202124; margin-bottom:5px;">4 Tugas Utama Computer Vision pada Foto yang Sama (Ilustrasi Konsep Buatan Kode)</div>
+        <div class="s12-panel-grid">
+          <!-- Panel 1: Image Classification -->
+          <div class="s12-panel">
+            <div class="s12-panel-ttl" style="color:#1A73E8;">1. Image Classification</div>
+            <div class="s12-frame" style="border:2.5px solid #1A73E8;">
+              <img class="s12-base" src="assets/P02/thumb_elsa.jpg" alt="Image Classification Elsa"/>
+              <div class="s12-scan"></div>
+              <div class="s12-cls-pill s12-cls-pill-inner">Label: ELSA</div>
+            </div>
+            <div class="s12-panel-cap"><strong>Output:</strong> 1 Label (&lsquo;Elsa&rsquo;)<br/>untuk seluruh foto</div>
+          </div>
+          <!-- Panel 2: Object Detection -->
+          <div class="s12-panel">
+            <div class="s12-panel-ttl" style="color:#EA4335;">2. Object Detection</div>
+            <div class="s12-frame" style="border:2.5px solid #EA4335;">
+              <img class="s12-base" src="assets/P02/thumb_elsa.jpg" alt="Object Detection Elsa"/>
+              <svg viewBox="0 0 220 220" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+                <g class="s12-bbox-g">
+                  <rect x="{cv_ex}" y="{cv_ey}" width="{cv_ew}" height="{cv_eh}" fill="rgba(234,67,53,0.08)" stroke="#EA4335" stroke-width="3.2"/>
+                  <rect x="{cv_ex}" y="{max(4, cv_tag_y - 16)}" width="74" height="17" rx="3" fill="#EA4335"/>
+                  <text x="{cv_ex + 37}" y="{max(16, cv_tag_y - 4)}" text-anchor="middle" font-family="Poppins" font-size="10.2" font-weight="800" fill="#FFFFFF">Elsa [bbox]</text>
+                </g>
+              </svg>
+            </div>
+            <div class="s12-panel-cap"><strong>Output:</strong> Bounding Box + Label<br/>(apa &amp; di mana)</div>
+          </div>
+          <!-- Panel 3: Semantic & Instance Segmentation -->
+          <div class="s12-panel">
+            <div class="s12-panel-ttl" style="color:#137333;">3. Semantic &amp; Instance Segm.</div>
+            <div class="s12-frame" style="border:2.5px solid #34A853;">
+              <img class="s12-base" src="assets/P02/thumb_elsa.jpg" alt="Segmentation Elsa"/>
+              <img class="s12-mask-ov" src="assets/P02/02e_elsa_silhouette_overlay.png" alt="Mask Silhouette Elsa"/>
+              <div class="s12-mask-pill">Mask #1: Elsa</div>
+            </div>
+            <div class="s12-panel-cap"><strong>Output:</strong> Mask Presisi per Piksel<br/>(mengikuti lekuk objek)</div>
+          </div>
+          <!-- Panel 4: Object Tracking -->
+          <div class="s12-panel">
+            <div class="s12-panel-ttl" style="color:#B06000;">4. Object Tracking</div>
+            <div class="s12-frame" style="border:2.5px solid #B06000;">
+              <img class="s12-base" src="assets/P02/thumb_elsa.jpg" alt="Object Tracking Elsa"/>
+              <svg viewBox="0 0 220 220" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+                <g class="s12-trk-trail">
+                  <rect x="{max(4, cv_ex - 26)}" y="{min(200, cv_ey + 5)}" width="{cv_ew}" height="{cv_eh}" fill="none" stroke="#FBBC04" stroke-width="2" stroke-dasharray="4 3" opacity="0.45"/>
+                  <rect x="{max(4, cv_ex - 13)}" y="{min(200, cv_ey + 2)}" width="{cv_ew}" height="{cv_eh}" fill="none" stroke="#FBBC04" stroke-width="2.2" stroke-dasharray="4 3" opacity="0.72"/>
+                </g>
+                <g class="s12-trk-main">
+                  <rect x="{cv_ex}" y="{cv_ey}" width="{cv_ew}" height="{cv_eh}" fill="none" stroke="#FBBC04" stroke-width="3.2"/>
+                  <rect x="{cv_ex}" y="{max(4, cv_tag_y - 16)}" width="74" height="17" rx="3" fill="#FBBC04"/>
+                  <text x="{cv_ex + 37}" y="{max(16, cv_tag_y - 4)}" text-anchor="middle" font-family="Poppins" font-size="10.2" font-weight="800" fill="#202124">ID #1 · Elsa</text>
+                  <line x1="{max(8, cv_ex - 16)}" y1="{cv_ey + cv_eh * 0.52:.1f}" x2="{cv_ex + cv_ew * 0.48:.1f}" y2="{cv_ey + cv_eh * 0.48:.1f}" stroke="#FBBC04" stroke-width="3" stroke-linecap="round"/>
+                  <polygon points="{cv_ex + cv_ew * 0.48 + 5:.1f},{cv_ey + cv_eh * 0.48 - 1:.1f} {cv_ex + cv_ew * 0.48 - 4:.1f},{cv_ey + cv_eh * 0.48 - 5:.1f} {cv_ex + cv_ew * 0.48 - 3:.1f},{cv_ey + cv_eh * 0.48 + 4:.1f}" fill="#FBBC04"/>
+                </g>
+              </svg>
+            </div>
+            <div class="s12-panel-cap"><strong>Output:</strong> ID #1 Antar-Frame<br/>(melacak gerak di video)</div>
+          </div>
+        </div>
       </div>
       <div class="grid-4" style="gap:10px; flex:0 0 auto;">
         <div class="card tint-blue" style="padding:10px 12px; gap:4px;">
@@ -1328,15 +1540,19 @@ def build_slides_html(data: dict) -> str:
       <div class="split-40-60" style="flex:1; min-height:0; align-items:stretch;">
         <div class="card tint-blue" style="align-items:center; justify-content:space-between; gap:10px; text-align:center; padding:15px 17px;">
           <div class="card-top-bar bar-blue"></div>
-          <img src="assets/P02/thumb_elsa.jpg" alt="Contoh Elsa" style="width:166px; height:166px; object-fit:cover; border-radius:14px; border:3px solid #4285F4; box-shadow:0 4px 14px rgba(66,133,244,0.16);"/>
+          <div style="position:relative; width:166px; height:166px; border-radius:14px; overflow:hidden; border:3px solid #4285F4; box-shadow:0 4px 14px rgba(66,133,244,0.16); background:#F1F3F4;">
+            <img src="assets/P02/thumb_elsa.jpg" alt="Contoh Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+            <div class="s12-scan"></div>
+            <div class="s12-cls-pill s12-cls-pill-inner" style="font-size:10px; padding:2.5px 9px;">Elsa ★ 88%</div>
+          </div>
           <div style="font-family:var(--font-title); font-weight:700; font-size:14.2px; color:#1A73E8;">Output: Label &ldquo;Elsa&rdquo; + Probabilitas (100%)</div>
           <div style="width:100%; background:#FFFFFF; border:1px solid #C6DAFC; border-radius:11px; padding:9px 11px; display:flex; flex-direction:column; gap:4.5px; text-align:left;">
             <div style="font-size:9.8px; color:#5F6368; font-weight:700; margin-bottom:1px;">ILUSTRASI OUTPUT PROBABILITAS (5 KELAS FROZEN):</div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.8px;"><strong style="color:#137333;">Elsa ★</strong><div style="height:10px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:88%; height:100%; background:#34A853;"></div></div><span style="font-family:var(--font-code); text-align:right; color:#137333; font-weight:700;">88%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Anna</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:5%; height:100%; background:#4285F4;"></div></div><span style="font-family:var(--font-code); text-align:right;">5%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Kristoff</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:3%; height:100%; background:#FBBC04;"></div></div><span style="font-family:var(--font-code); text-align:right;">3%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Olaf</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:2%; height:100%; background:#EA4335;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
-            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px;"><span>Sven</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div style="width:2%; height:100%; background:#9AA0A6;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
+            <div class="s13-win-pill" style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.8px; border-radius:6px; padding:1px 3px;"><strong style="color:#137333;">Elsa ★</strong><div style="height:10px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div class="s13-b88" style="width:88%; height:100%; background:#34A853;"></div></div><span style="font-family:var(--font-code); text-align:right; color:#137333; font-weight:700;">88%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px; padding:0 3px;"><span>Anna</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div class="s13-b5" style="width:5%; height:100%; background:#4285F4;"></div></div><span style="font-family:var(--font-code); text-align:right;">5%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px; padding:0 3px;"><span>Kristoff</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div class="s13-b3" style="width:3%; height:100%; background:#FBBC04;"></div></div><span style="font-family:var(--font-code); text-align:right;">3%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px; padding:0 3px;"><span>Olaf</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div class="s13-b2" style="width:2%; height:100%; background:#EA4335;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
+            <div style="display:grid; grid-template-columns:56px 1fr 34px; gap:6px; align-items:center; font-size:10.5px; padding:0 3px;"><span>Sven</span><div style="height:9px; background:#E8F0FE; border-radius:999px; overflow:hidden;"><div class="s13-b2" style="width:2%; height:100%; background:#9AA0A6;"></div></div><span style="font-family:var(--font-code); text-align:right;">2%</span></div>
           </div>
         </div>
         <div class="card surface" style="justify-content:space-between; gap:10px; padding:15px 18px;">
@@ -1378,8 +1594,25 @@ def build_slides_html(data: dict) -> str:
       <div class="split-40-60">
         <div class="card tint-red" style="align-items:center; justify-content:center; gap:14px; text-align:center; padding:16px 16px;">
           <div class="card-top-bar bar-red"></div>
-          <div class="img-box" style="width:100%; height:auto; flex:0 0 auto; padding:8px; border-color:#F6AEA9;">
-            <img src="assets/P02/02b_object_detection_demo.png" alt="Ilustrasi Object Detection dengan foto asli Elsa dan Olaf" style="width:100%; height:auto;"/>
+          <div style="width:100%; background:#FFFFFF; border:1.5px solid #F6AEA9; border-radius:12px; padding:8px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-family:var(--font-title); font-size:11px; font-weight:800; color:#202124;">Ilustrasi Konsep: 2 Objek + 2 Bounding Box Sekaligus</div>
+            <div style="position:relative; width:100%; aspect-ratio:2 / 1; border-radius:8px; overflow:hidden; display:flex; background:#F1F3F4;">
+              <img src="assets/P02/thumb_elsa.jpg" alt="Elsa" style="width:50%; height:100%; object-fit:cover; display:block;"/>
+              <img src="assets/P02/thumb_olaf.jpg" alt="Olaf" style="width:50%; height:100%; object-fit:cover; display:block;"/>
+              <div class="s14-sweep"></div>
+              <svg viewBox="0 0 440 220" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+                <g class="s14-box1">
+                  <rect x="{cv_ex}" y="{cv_ey}" width="{cv_ew}" height="{cv_eh}" fill="rgba(66,133,244,0.10)" stroke="#4285F4" stroke-width="3.2"/>
+                  <rect x="{cv_ex}" y="{max(4, cv_tag_y - 17)}" width="112" height="18" rx="3" fill="#4285F4"/>
+                  <text x="{cv_ex + 5}" y="{max(16, cv_tag_y - 4)}" font-family="Poppins" font-size="10.2" font-weight="800" fill="#FFFFFF">Elsa (x₁,y₁,w₁,h₁)</text>
+                </g>
+                <g class="s14-box2">
+                  <rect x="{220 + cv_ox}" y="{cv_oy}" width="{cv_ow}" height="{cv_oh}" fill="rgba(234,67,53,0.10)" stroke="#EA4335" stroke-width="3.2"/>
+                  <rect x="{220 + cv_ox}" y="{max(4, cv_otag_y - 17)}" width="110" height="18" rx="3" fill="#EA4335"/>
+                  <text x="{220 + cv_ox + 5}" y="{max(16, cv_otag_y - 4)}" font-family="Poppins" font-size="10.2" font-weight="800" fill="#FFFFFF">Olaf (x₂,y₂,w₂,h₂)</text>
+                </g>
+              </svg>
+            </div>
           </div>
           <div class="mini-box" style="width:100%; font-size:11.6px; border-color:#F6AEA9; text-align:left;">
             <strong>Format Output per Objek:</strong> 4 angka koordinat kotak <code>(x, y, w, h)</code> + 1 label kelas (contoh: <code>Elsa</code> &amp; <code>Olaf</code> sekaligus).
@@ -1433,16 +1666,48 @@ def build_slides_html(data: dict) -> str:
               <li><strong>Contoh:</strong> Efek <em>blur background</em> Zoom/Meet, potong stiker di HP, pemetaan tumor di citra medis (MRI/CT-Scan).</li>
             </ul>
           </div>
-          <div class="img-box" style="width:100%; height:auto; flex:0 0 auto; padding:6px; border-color:#A8DAB5;">
-            <img src="assets/P02/02d_elsa_mask_closeup.png" alt="Perbandingan foto asli Elsa dan mask presisi per piksel" style="width:100%; max-height:190px; object-fit:contain;"/>
+          <div style="background:#FFFFFF; border:1.4px solid #A8DAB5; border-radius:11px; padding:6px; display:flex; align-items:center; justify-content:center;">
+            <div style="position:relative; width:100%; max-width:360px; aspect-ratio:2 / 1; border-radius:8px; overflow:hidden; display:flex; background:#F1F3F4;">
+              <div style="position:relative; width:50%; height:100%;">
+                <img src="assets/P02/thumb_elsa.jpg" alt="Foto Asli Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+                <span style="position:absolute; top:6px; left:50%; transform:translateX(-50%); background:#202124; color:#FFF; font-family:var(--font-title); font-size:9.2px; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap;">Foto Asli</span>
+              </div>
+              <div style="width:2.5px; background:#FFFFFF; z-index:3;"></div>
+              <div style="position:relative; width:50%; height:100%;">
+                <img src="assets/P02/thumb_elsa.jpg" alt="Mask Elsa" style="width:100%; height:100%; object-fit:cover; display:block;"/>
+                <img class="s12-mask-ov" src="assets/P02/02e_elsa_silhouette_overlay.png" alt="Mask per Piksel Elsa"/>
+                <span style="position:absolute; top:6px; left:50%; transform:translateX(-50%); background:#34A853; color:#FFF; font-family:var(--font-title); font-size:9.2px; font-weight:700; padding:2px 8px; border-radius:6px; white-space:nowrap;">Mask per Piksel</span>
+              </div>
+            </div>
           </div>
           <div class="callout green" style="font-size:12.2px; margin-top:0;"><strong>Output:</strong> Peta <em>mask</em> per piksel seukuran gambar untuk tiap kelas atau tiap objek.</div>
         </div>
         <div class="card tint-green" style="justify-content:space-between; gap:10px; padding:15px 18px;">
           <div class="card-top-bar bar-blue"></div>
           <div class="card-title">Perbandingan: Semantic vs Instance</div>
-          <div class="img-box" style="width:100%; height:auto; flex:1; min-height:0; padding:8px; border-color:#A8DAB5; display:flex; align-items:center; justify-content:center; background:#FFFFFF;">
-            <img src="assets/P02/02c_semantic_vs_instance_demo.png" alt="Perbandingan Semantic Segmentation vs Instance Segmentation pada 2 foto Olaf" style="width:100%; height:auto; max-height:100%; object-fit:contain;"/>
+          <div style="width:100%; flex:1; min-height:0; background:#FFFFFF; border:1.4px solid #A8DAB5; border-radius:11px; padding:8px; display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:center;">
+            <!-- Left: Semantic Segmentation -->
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:center; text-align:center;">
+              <div style="font-family:var(--font-title); font-size:10.4px; font-weight:800; color:#1A73E8; line-height:1.25;">Semantic Segmentation<br/>2 Olaf = 1 Warna (&lsquo;Olaf&rsquo;)</div>
+              <div style="position:relative; width:100%; aspect-ratio:2 / 1; border-radius:7px; overflow:hidden; display:flex; border:1.5px solid #4285F4; background:#F1F3F4;">
+                <img src="assets/P02/thumb_olaf.jpg" alt="Olaf" style="width:50%; height:100%; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_olaf.jpg" alt="Olaf mirror" style="width:50%; height:100%; object-fit:cover; transform:scaleX(-1); display:block;"/>
+                <img class="s12-mask-ov" src="assets/P02/02f_olaf_semantic_overlay.png" alt="Semantic Mask Olaf"/>
+                <span style="position:absolute; bottom:5px; left:50%; transform:translateX(-50%); background:#4285F4; color:#FFF; font-family:var(--font-title); font-size:8.6px; font-weight:700; padding:1.5px 7px; border-radius:5px; white-space:nowrap;">Semua piksel = kelas &lsquo;Olaf&rsquo;</span>
+              </div>
+            </div>
+            <!-- Right: Instance Segmentation -->
+            <div style="display:flex; flex-direction:column; gap:4px; align-items:center; text-align:center;">
+              <div style="font-family:var(--font-title); font-size:10.4px; font-weight:800; color:#137333; line-height:1.25;">Instance Segmentation<br/>Olaf #1 &amp; Olaf #2 Dipisah!</div>
+              <div style="position:relative; width:100%; aspect-ratio:2 / 1; border-radius:7px; overflow:hidden; display:flex; border:1.5px solid #34A853; background:#F1F3F4;">
+                <img src="assets/P02/thumb_olaf.jpg" alt="Olaf 1" style="width:50%; height:100%; object-fit:cover; display:block;"/>
+                <img src="assets/P02/thumb_olaf.jpg" alt="Olaf 2" style="width:50%; height:100%; object-fit:cover; transform:scaleX(-1); display:block;"/>
+                <img class="s15-inst1" src="assets/P02/02g_olaf1_instance_overlay.png" alt="Instance Mask Olaf 1" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"/>
+                <img class="s15-inst2" src="assets/P02/02h_olaf2_instance_overlay.png" alt="Instance Mask Olaf 2" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; pointer-events:none;"/>
+                <span style="position:absolute; bottom:5px; left:25%; transform:translateX(-50%); background:#34A853; color:#FFF; font-family:var(--font-title); font-size:8.5px; font-weight:700; padding:1.5px 6px; border-radius:5px; white-space:nowrap;">Olaf #1</span>
+                <span style="position:absolute; bottom:5px; left:75%; transform:translateX(-50%); background:#EA4335; color:#FFF; font-family:var(--font-title); font-size:8.5px; font-weight:700; padding:1.5px 6px; border-radius:5px; white-space:nowrap;">Olaf #2</span>
+              </div>
+            </div>
           </div>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div style="background:#FFFFFF; border:1.4px solid #C6DAFC; border-radius:9px; padding:7px 9px; font-size:11px; line-height:1.34;">
@@ -1466,18 +1731,13 @@ def build_slides_html(data: dict) -> str:
           <div class="card-top-bar bar-yellow"></div>
           <div style="display:flex; align-items:center; justify-content:space-between; gap:6px; flex-wrap:wrap;">
             <div class="card-title" style="font-size:14.2px;">Detection + ID Tracking (<code>t = 1 → 2 → 3</code>)</div>
-            <div class="sim-bar pdf-keep-ui" id="trk-ctrl" style="gap:4px;">
-              <button type="button" id="trk-btn-play" class="btn-ui green" onclick="toggleTrkPlay()" style="padding:2.8px 9px; font-size:9.6px;">▶ Play Video</button>
-              <button type="button" class="btn-ui outline" data-tf="1" onclick="setTrkFrame(1)" style="padding:2.5px 7px; font-size:9.3px;">t=1</button>
-              <button type="button" class="btn-ui" data-tf="2" onclick="setTrkFrame(2)" style="padding:2.5px 7px; font-size:9.3px;">t=2</button>
-              <button type="button" class="btn-ui outline" data-tf="3" onclick="setTrkFrame(3)" style="padding:2.5px 7px; font-size:9.3px;">t=3</button>
-            </div>
+            <span class="pill yellow" style="font-size:9.6px; padding:2.5px 9px;">● Auto-Loop Video (t=1 → 2 → 3)</span>
           </div>
           <div style="display:grid; grid-template-columns:1fr 20px 1fr 20px 1fr; align-items:center; gap:6px; flex:1;">
             <!-- Frame t=1 -->
-            <div id="trk-f-1" onclick="setTrkFrame(1)" style="cursor:pointer; background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
+            <div id="trk-f-1" class="s16-f1" style="background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative;">
               <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#5F6368; text-align:center;">Frame t = 1</div>
-              <div style="position:absolute; left:10px; top:34px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
+              <div class="s16-elsa-hop" style="position:absolute; left:10px; top:34px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
                 <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
@@ -1486,11 +1746,11 @@ def build_slides_html(data: dict) -> str:
                 <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:46px; object-fit:cover; display:block;"/>
               </div>
             </div>
-            <div style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
+            <div class="s16-a1" style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
             <!-- Frame t=2 -->
-            <div id="trk-f-2" onclick="setTrkFrame(2)" style="cursor:pointer; background:#FEF7E0; border:2.5px solid #FBBC04; box-shadow:0 4px 12px rgba(251,188,4,0.22); border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
-              <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#B06000; text-align:center;">Frame t = 2 ●</div>
-              <div style="position:absolute; left:46px; top:30px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
+            <div id="trk-f-2" class="s16-f2" style="background:#FEF7E0; border:2.5px solid #FBBC04; box-shadow:0 4px 12px rgba(251,188,4,0.22); border-radius:11px; padding:7px; height:212px; position:relative;">
+              <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#B06000; text-align:center;">Frame t = 2</div>
+              <div class="s16-elsa-hop" style="animation-delay:0.4s; position:absolute; left:46px; top:30px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
                 <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
@@ -1499,11 +1759,11 @@ def build_slides_html(data: dict) -> str:
                 <img src="assets/P02/thumb_olaf.jpg" style="width:100%; height:46px; object-fit:cover; display:block;"/>
               </div>
             </div>
-            <div style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
+            <div class="s16-a2" style="text-align:center; font-size:18px; font-weight:700; color:#1A73E8;">→</div>
             <!-- Frame t=3 -->
-            <div id="trk-f-3" onclick="setTrkFrame(3)" style="cursor:pointer; background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative; transition:all 0.2s;">
+            <div id="trk-f-3" class="s16-f3" style="background:#FFFFFF; border:2px solid #DADCE0; border-radius:11px; padding:7px; height:212px; position:relative;">
               <div style="font-family:var(--font-code); font-size:10px; font-weight:800; color:#5F6368; text-align:center;">Frame t = 3</div>
-              <div style="position:absolute; right:10px; top:26px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
+              <div class="s16-elsa-hop" style="animation-delay:0.8s; position:absolute; right:10px; top:26px; width:74px; border:2.5px solid #FBBC04; border-radius:7px; overflow:hidden; background:#FEF7E0;">
                 <div style="background:#FBBC04; color:#202124; font-family:var(--font-code); font-size:8.3px; font-weight:700; padding:2px 4px; text-align:center;">ID #1 · Elsa</div>
                 <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:56px; object-fit:cover; display:block;"/>
               </div>
@@ -1513,7 +1773,7 @@ def build_slides_html(data: dict) -> str:
               </div>
             </div>
           </div>
-          <div id="trk-status" style="font-size:11.3px; color:#1A73E8; font-weight:700; text-align:center; background:#E8F0FE; border-radius:8px; padding:5px 9px;">Frame t = 2: <code>ID #1</code> (Elsa) bergeser ke tengah, <code>ID #2</code> (Olaf) tetap dikenali dengan ID sama!</div>
+          <div id="trk-status" style="font-size:11.3px; color:#1A73E8; font-weight:700; text-align:center; background:#E8F0FE; border-radius:8px; padding:5px 9px;">Lintasan Video: <code>ID #1</code> (Elsa) bergerak kiri → kanan melintasi 3 frame sambil <code>ID #2</code> (Olaf) tetap dikenali dengan ID sama!</div>
         </div>
         <div class="card" style="justify-content:space-between; gap:10px; padding:15px 17px;">
           <div class="card-top-bar bar-yellow"></div>
@@ -1679,7 +1939,7 @@ def build_slides_html(data: dict) -> str:
     s.append(
         f"""
     <!-- 20: DIMULAI DARI 1 NEURON (1 UNIT PEMEGANG 1 ANGKA PIKSEL) -->
-    <section class="slide" data-title="Bab 3A: Dimulai dari 1 Neuron — 1 Unit Pemegang 1 Angka" data-notes="Alokasi waktu: 1.5 menit. Mulai dari bagian paling kecil dan paling konkret: 1 Neuron adalah 1 unit penyusun Neural Network yang memegang 1 nilai angka. Tunjuk gambar kanan: foto asli Elsa diperbesar jadi kotak piksel 8×8, lalu 1 kotak piksel (pada gaun Elsa) masuk menjadi tepat 1 lingkaran Neuron.">
+    <section class="slide" data-title="Bab 3A: Dimulai dari 1 Neuron — 1 Unit Pemegang 1 Angka" data-notes="Alokasi waktu: 1.5 menit. Mulai dari bagian paling kecil dan paling konkret: 1 Neuron adalah 1 unit penyusun Neural Network yang memegang 1 nilai angka. Tunjuk gambar kanan: foto asli Elsa diperbesar jadi kotak piksel 8×8, lalu 1 kotak piksel pada gaun Elsa (Baris {dress_r}, Kol {dress_c} = {dress_gray:.2f}) masuk menjadi tepat 1 lingkaran Neuron.">
       <div class="kicker">BAB 03 · TAHAP 1 · 1 NEURON</div>
       <h2>Dimulai dari <span class="hl-green">1 Neuron</span>: 1 Unit Pemegang 1 Angka</h2>
       <div class="split-40-60" style="grid-template-columns:0.82fr 1.48fr;">
@@ -1700,7 +1960,7 @@ def build_slides_html(data: dict) -> str:
               <div style="font-weight:700; color:#202124; margin-bottom:5px;">Contoh Nilai Angka dalam 1 Neuron Piksel:</div>
               <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px; text-align:center; font-family:var(--font-code); font-size:10.5px;">
                 <div style="background:#202124; color:#FFFFFF; border-radius:7px; padding:4px 3px;"><strong>0.00</strong><div style="font-family:var(--font-body); font-size:9.3px; opacity:0.85;">Hitam gelap</div></div>
-                <div style="background:#535E96; color:#FFFFFF; border-radius:7px; padding:4px 3px;"><strong>0.42</strong><div style="font-family:var(--font-body); font-size:9.3px; opacity:0.95;">Gaun Elsa</div></div>
+                <div style="background:#535E96; color:#FFFFFF; border-radius:7px; padding:4px 3px;"><strong>{dress_gray:.2f}</strong><div style="font-family:var(--font-body); font-size:9.3px; opacity:0.95;">Gaun Elsa</div></div>
                 <div style="background:#F8F9FA; color:#202124; border:1px solid #DADCE0; border-radius:7px; padding:4px 3px;"><strong>1.00</strong><div style="font-family:var(--font-body); font-size:9.3px; color:#5F6368;">Putih terang</div></div>
               </div>
             </div>
@@ -2130,17 +2390,17 @@ def build_slides_html(data: dict) -> str:
             </g>
             <g id="io-in-3" class="io-in-node" onclick="inspectIoInput(3)"><title>Klik x₄ untuk melihat 5 koneksi ke Output Layer!</title>
               <rect x="12" y="108" width="160" height="22" rx="7" fill="transparent"/>
-              <circle id="io-in-c-3" cx="28" cy="119" r="10" fill="#EA4335" stroke="#FFF" stroke-width="1.5"/><text x="28" y="122" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{er0:.2f}</text>
+              <circle id="io-in-c-3" cx="28" cy="119" r="10" fill="#EA4335" stroke="#FFF" stroke-width="1.5"/><text x="28" y="122" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{er1:.2f}</text>
               <text x="44" y="122" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#202124">x₄</text><text x="64" y="122" font-family="Roboto, Arial" font-size="8.4" fill="#5F6368">Piksel 2 (R)</text>
             </g>
             <g id="io-in-4" class="io-in-node" onclick="inspectIoInput(4)"><title>Klik x₅ untuk melihat 5 koneksi ke Output Layer!</title>
               <rect x="12" y="131" width="160" height="22" rx="7" fill="transparent"/>
-              <circle id="io-in-c-4" cx="28" cy="142" r="10" fill="#34A853" stroke="#FFF" stroke-width="1.5"/><text x="28" y="145" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{eg0:.2f}</text>
+              <circle id="io-in-c-4" cx="28" cy="142" r="10" fill="#34A853" stroke="#FFF" stroke-width="1.5"/><text x="28" y="145" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{eg1:.2f}</text>
               <text x="44" y="145" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#202124">x₅</text><text x="64" y="145" font-family="Roboto, Arial" font-size="8.4" fill="#5F6368">Piksel 2 (G)</text>
             </g>
             <g id="io-in-5" class="io-in-node" onclick="inspectIoInput(5)"><title>Klik x₆ untuk melihat 5 koneksi ke Output Layer!</title>
               <rect x="12" y="154" width="160" height="22" rx="7" fill="transparent"/>
-              <circle id="io-in-c-5" cx="28" cy="165" r="10" fill="#4285F4" stroke="#FFF" stroke-width="1.5"/><text x="28" y="168" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{eb0:.2f}</text>
+              <circle id="io-in-c-5" cx="28" cy="165" r="10" fill="#4285F4" stroke="#FFF" stroke-width="1.5"/><text x="28" y="168" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.8" font-weight="700" fill="#FFF">{eb1:.2f}</text>
               <text x="44" y="168" font-family="Roboto Mono, monospace" font-size="9.2" font-weight="700" fill="#202124">x₆</text><text x="64" y="168" font-family="Roboto, Arial" font-size="8.4" fill="#5F6368">Piksel 2 (B)</text>
             </g>
 
@@ -2343,7 +2603,7 @@ def build_slides_html(data: dict) -> str:
             <div id="dense-card-224" onclick="setDenseScale(224)" style="cursor:pointer; background:#FCE8E6; border:2px solid #EA4335; border-radius:10px; padding:5.5px 8px; text-align:center;">
               <div style="font-family:var(--font-title); font-size:9.8px; font-weight:800; color:#C5221F;">Penuh 224×224×3</div>
               <div style="font-family:var(--font-code); font-size:12px; font-weight:800; color:#202124;">752.645 param</div>
-              <div style="font-size:9px; color:#5F6368;">150.528×5 + 5 (Slide 32)</div>
+              <div style="font-size:9px; color:#5F6368;">150.528×5 + 5 (Slide 33)</div>
             </div>
           </div>
 
@@ -2354,9 +2614,76 @@ def build_slides_html(data: dict) -> str:
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
+"""
+    )
 
-    <!-- 25: SIMULASI TRAINING (MATEMATIKA NYATA 5 FOTO FROZEN -> WEIGHTS+BIAS -> ACTIVATION -> OUTPUT) -->
-    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else ("3" if HIDE_SLIDES_28_40 else "2")} menit. Jawab pertanyaan inti setelah Slide 24 (Dense &amp; Parameter): bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Play agar peserta melihat tiap gambar masuk ke Input Layer utuh 150.528 neuron piksel (224×224×3, tampil x1..x3, elipsis +150.522 piksel lain, x150.526..x150.528), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
+    # NEW Slide 25: BAB 3 TANYA-JAWAB #4 (Parameter Lapisan Dense)
+    s.append(
+        _qa_slide(
+            qa_id="qa-bab3-dense",
+            qa_num=4,
+            kicker="BAB 03 · TANYA-JAWAB #4",
+            title_html='Berapa Total Parameter <span class="hl-blue">Lapisan Dense</span> Ini?',
+            question_html="Misalkan sebuah <em>Input Layer</em> berisi <strong><code>100</code> neuron</strong> dihubungkan penuh (<code>Dense</code>) ke <strong><code>5</code> neuron Output Layer</strong> (5 karakter Frozen). Berapa total parameter (<code>Weight + Bias</code>) di lapisan tersebut?",
+            choices=[
+                "<strong>A.</strong> <code>105</code> parameter (hanya menjumlahkan <code>100 + 5</code>)",
+                "<strong>B.</strong> <code>500</code> parameter (<code>100 × 5</code> kabel bobot, tanpa menghitung <em>Bias</em>)",
+                "<strong>C.</strong> <code>505</code> parameter (<code>(100 × 5) + 5 Bias</code>)",
+            ],
+            answer_html=(
+                "<strong>Jawaban: C — 505 parameter!</strong><br/>"
+                "• <strong>Kabel Weight (<code>W</code>):</strong> Setiap 1 dari <code>100</code> neuron input terhubung ke seluruh <code>5</code> neuron output → <code>100 × 5 = 500 Weight</code>.<br/>"
+                "• <strong>Ambang Bias (<code>b</code>):</strong> Setiap neuron output punya <code>1 Bias</code> → <code>+ 5 Bias</code>.<br/>"
+                "• <strong>Total:</strong> <code>500 + 5 = 505</code> parameter! Rumus yang sama dipakai Keras untuk menghitung <code>61.445</code> &amp; <code>752.645</code>!"
+            ),
+            vis_q_html='''<div style="display:flex; flex-direction:column; gap:10px; width:100%; align-items:center;">
+              <span class="pill blue" style="font-size:10px; padding:3px 10px;">CEK PEMAHAMAN BAB 3 · RUMUS DENSE</span>
+              <svg viewBox="0 0 340 198" style="width:100%; max-width:340px; display:block;">
+                <rect x="8" y="16" width="96" height="166" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+                <text x="56" y="42" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="800" fill="#1A73E8">Input Layer</text>
+                <text x="56" y="102" text-anchor="middle" font-family="Poppins" font-size="22" font-weight="800" fill="#202124">100</text>
+                <text x="56" y="122" text-anchor="middle" font-family="Roboto" font-size="10.5" fill="#5F6368">neuron</text>
+                <line x1="104" y1="52" x2="226" y2="56" stroke="#BDC1C6" stroke-width="1.4"/>
+                <line x1="104" y1="84" x2="226" y2="99" stroke="#BDC1C6" stroke-width="1.4"/>
+                <line x1="104" y1="116" x2="226" y2="142" stroke="#BDC1C6" stroke-width="1.4"/>
+                <line x1="104" y1="148" x2="226" y2="142" stroke="#BDC1C6" stroke-width="1.4"/>
+                <rect x="122" y="75" width="88" height="48" rx="10" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>
+                <text x="166" y="96" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="800" fill="#B06000">Dense(5)</text>
+                <text x="166" y="113" text-anchor="middle" font-family="Roboto Mono" font-size="11" font-weight="800" fill="#202124">? param</text>
+                <rect x="226" y="34" width="106" height="130" rx="12" fill="#E6F4EA" stroke="#34A853" stroke-width="2"/>
+                <text x="279" y="58" text-anchor="middle" font-family="Poppins" font-size="10.5" font-weight="800" fill="#137333">Output Layer</text>
+                <text x="279" y="102" text-anchor="middle" font-family="Poppins" font-size="22" font-weight="800" fill="#202124">5</text>
+                <text x="279" y="122" text-anchor="middle" font-family="Roboto" font-size="10" fill="#5F6368">kelas Frozen (+b)</text>
+              </svg>
+              <div style="font-size:12px; color:#5F6368; text-align:center;">Klik opsi <strong>A / B / C</strong> di kiri dulu, lalu buka jawabannya!</div>
+            </div>''',
+            vis_a_html='''<div style="display:flex; flex-direction:column; gap:10px; width:100%; align-items:center;">
+              <span class="pill green" style="font-size:10px; padding:3px 10px;">RUMUS PASTI: (INPUT × OUTPUT) + BIAS ✓</span>
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%;">
+                <div style="background:#E8F0FE; border:1.5px solid #4285F4; border-radius:10px; padding:9px;">
+                  <div style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#1A73E8;">Kabel Weight (W)</div>
+                  <div style="font-family:var(--font-code); font-size:16px; font-weight:800; color:#202124; margin-top:2px;">100 × 5 = 500</div>
+                </div>
+                <div style="background:#FEF7E0; border:1.5px solid #FBBC04; border-radius:10px; padding:9px;">
+                  <div style="font-family:var(--font-title); font-size:10.5px; font-weight:800; color:#B06000;">Ambang Bias (b)</div>
+                  <div style="font-family:var(--font-code); font-size:16px; font-weight:800; color:#202124; margin-top:2px;">+ 5 Bias</div>
+                </div>
+              </div>
+              <div style="background:#E6F4EA; border:2px solid #34A853; border-radius:11px; padding:9px 12px; width:100%;">
+                <div style="font-family:var(--font-title); font-size:23px; font-weight:800; color:#137333;">Total = 505 Parameter ✓</div>
+                <div style="font-size:11px; color:#3C4043; margin-top:2px;">Sekarang mari lihat bagaimana ratusan ribu parameter ini <strong>dilatih</strong> di Tahap 4!</div>
+              </div>
+            </div>''',
+            notes="Alokasi waktu: 1 menit. Q&A #4 di tengah Bab 3 untuk mengunci rumus parameter Dense = (Input × Output) + Bias sebelum masuk ke Tahap 4 (Simulasi Training).",
+            bar_color="blue",
+            correct_choice="C",
+        )
+    )
+
+    s.append(
+        f"""
+    <!-- 26: SIMULASI TRAINING (MATEMATIKA NYATA 5 FOTO FROZEN -> WEIGHTS+BIAS -> ACTIVATION -> OUTPUT) -->
+    <section class="slide" data-title="Bab 3B: Simulasi Training — Bagaimana Neural Network Mengenali Gambar?" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("3" if HIDE_SLIDES_28_40 else "2")} menit. Jawab pertanyaan inti setelah Slide 24 (Dense &amp; Parameter): bagaimana Neural Network tahu secara matematis bahwa foto ini adalah Elsa? Tunjukkan 5 foto nyata berlabel (Anna, Elsa, Kristoff, Olaf, Sven) di kiri. Klik Sebelum Training (weight acak -> tebakan salah ~20%), lalu klik Play agar peserta melihat tiap gambar masuk ke Input Layer utuh 150.528 neuron piksel (224×224×3, tampil x1..x3, elipsis +150.522 piksel lain, x150.526..x150.528), dikalikan Weight (w) + Bias (b), diubah oleh Softmax (e^z / Σe^z), lalu Target vs Prediksi (Error) mendorong update Weight & Bias sehingga setiap foto mengaktifkan neuron kelasnya masing-masing di Output Layer!">
       <div class="kicker">BAB 03 · TAHAP 4 · SIMULASI TRAINING (ALUR UTUH)</div>
       <h2><span class="hl-green">Simulasi Training</span>: Bagaimana Neural Network Mengenali <span class="hl-blue">Gambar</span>?</h2>
 
@@ -2435,8 +2762,8 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 25: WEIGHT & BIAS — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen pertama dari Slide 25: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
+    <!-- 27: WEIGHT & BIAS — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
+    <section class="slide" data-title="Bab 3B: Weight &amp; Bias — Menimbang Fitur Gambar" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen pertama dari Slide 26: Weight (w) dan Bias (b). Jelaskan secara runtut dari kiri: (1) Apa itu Weight (bobot kepentingan tiap fitur piksel) dan Bias (ambang awal penggeser); (2) Kenapa keduanya wajib ada; (3) Cara kerjanya z = Σ(x·w) + b. Lalu demokan simulator kanan pada 5 foto nyata Frozen: klik 1. Bobot Ideal Elsa -> 2. Tanpa Bias (b=0) untuk membuktikan semua 5 karakter ikut aktif positif tanpa ambang -> 3. Weight Biru Dibalik untuk membuktikan weight mengendalikan ciri apa yang dicari neuron!">
       <div class="kicker">BAB 03 · TAHAP 4.1 · WEIGHT &amp; BIAS</div>
       <h2><span class="hl-blue">Weight</span> &amp; <span class="hl-yellow">Bias</span>: Bagaimana Neural Network Menimbang Fitur Gambar</h2>
 
@@ -2525,8 +2852,8 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 26: ACTIVATION FUNCTION — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
-    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: {"3" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen kedua dari Slide 25: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, 100 layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks; sekaligus mengubah skor bebas menjadi rentang bermakna); (3) fungsi utama: ReLU di lapisan fitur, Sigmoid/Tanh untuk biner/terpusat-0, Softmax untuk multi-kelas. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, dan Softmax!">
+    <!-- 28: ACTIVATION FUNCTION — APA ITU, KENAPA PERLU, CARA KERJA, & SIMULASI DATASET FROZEN -->
+    <section class="slide" data-title="Bab 3B: Activation Function — Non-Linearity &amp; Probabilitas" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "2")} menit. Bedah khusus komponen kedua dari Slide 26: Activation Function. Jelaskan kiri ke kanan: (1) Apa itu (fungsi penyaring/pengubah skor mentah z); (2) Kenapa wajib ada (tanpa non-linearity, menumpuk layer tetap cuma 1 garis lurus yang gagal mengenali bentuk kompleks); (3) 4 fungsi utama: ReLU, Sigmoid, Tanh, dan Softmax. Lalu demokan simulator kanan pada 5 foto nyata Frozen across ReLU, Sigmoid, Tanh, dan Softmax!">
       <div class="kicker">BAB 03 · TAHAP 4.2 · ACTIVATION FUNCTION</div>
       <h2><span class="hl-red">Activation Function</span>: Dari Skor Mentah Menjadi Aktivasi &amp; Peluang</h2>
 
@@ -2544,24 +2871,25 @@ def build_slides_html(data: dict) -> str:
             <div class="card-title" style="font-size:12.6px; color:#1A73E8;">2. Kenapa Wajib Ada?</div>
             <div style="font-size:11.1px; color:#3C4043; line-height:1.38;">
               <div style="margin-bottom:3px;"><strong>Memecah garis lurus (<em>Non-Linearity</em>):</strong> Tanpa aktivasi, menumpuk banyak lapisan neuron tetap setara 1 garis lurus — mustahil mengenali lekuk wajah, rambut, atau gaun!</div>
-              <div><strong>Menstandarkan output:</strong> Mengubah skor bebas (mis. <code>-0.90, +2.13</code>) menjadi rentang jelas (<code>≥ 0</code> atau <code>0–100%</code>).</div>
+              <div><strong>Menstandarkan output:</strong> Mengubah skor bebas (mis. <code>-0.90, +2.13</code>) menjadi rentang jelas (<code>≥ 0</code>, <code>−1..+1</code>, atau <code>0–100%</code>).</div>
             </div>
           </div>
 
-          <div id="act-card-3" class="card tint-green sync-card" style="padding:9px 12px; gap:4px; flex:1; justify-content:center;">
+          <div id="act-card-3" class="card tint-green sync-card" style="padding:8px 12px; gap:3.5px; flex:1; justify-content:center;">
             <div class="card-top-bar bar-green"></div>
-            <div class="card-title" style="font-size:12.6px; color:#137333;">3. Fungsi Aktivasi Utama</div>
-            <div style="font-size:10.6px; color:#3C4043; line-height:1.34; display:flex; flex-direction:column; gap:2.5px;">
-              <div id="act-b-relu" class="sync-bullet">• <strong><code>ReLU</code></strong> <em>(Lapisan Fitur)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
-              <div id="act-b-sigmoid" class="sync-bullet">• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: memeras <code>z</code> ke <code>0–100%</code> (<em>sepupunya</em> <code>Tanh</code>: <code>−1 s/d +1</code>).</div>
-              <div id="act-b-softmax" class="sync-bullet">• <strong><code>Softmax</code></strong> <em>(Output Multi-Kelas)</em>: 5 skor kelas → total tepat <code>100%</code>!</div>
+            <div class="card-title" style="font-size:12.4px; color:#137333;">3. Fungsi Aktivasi Utama</div>
+            <div style="font-size:10.3px; color:#3C4043; line-height:1.32; display:flex; flex-direction:column; gap:2px;">
+              <div id="act-b-relu" class="sync-bullet">• <strong><code>ReLU</code></strong> <em>(Penyaring · P03)</em>: <code>max(0, z)</code> → negatif jadi <code>0</code>, positif lolos.</div>
+              <div id="act-b-sigmoid" class="sync-bullet">• <strong><code>Sigmoid</code></strong> <em>(Output 2 Kelas)</em>: memeras <code>z</code> ke rentang <code>0–100%</code>.</div>
+              <div id="act-b-tanh" class="sync-bullet">• <strong><code>Tanh</code></strong> <em>(Terpusat Nol)</em>: memeras <code>z</code> ke rentang <code>−1 s/d +1</code>.</div>
+              <div id="act-b-softmax" class="sync-bullet">• <strong><code>Softmax</code></strong> <em>(Output 5 Kelas ★)</em>: 5 skor kelas → total tepat <code>100%</code>!</div>
             </div>
           </div>
         </div>
 
-        <!-- RIGHT COLUMN: SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP B (ACTIVATION FUNCTION) PER CHARACTER -->
+        <!-- RIGHT COLUMN: SEAMLESS ZOOM-IN OF TAHAP 4.2 (ACTIVATION FUNCTION) PER CHARACTER -->
         <div class="card" style="padding:8px 11px; gap:5.5px; justify-content:space-between; border:1.5px solid #A8DAB5; box-shadow:0 4px 14px rgba(52,168,83,0.06);">
-          <!-- CONTINUITY MINI-MAP: EXPLICITLY SHOWS WHERE THIS HAPPENS IN SLIDE 24! -->
+          <!-- CONTINUITY MINI-MAP -->
           <div style="display:flex; align-items:center; justify-content:space-between; gap:4px; background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:3.5px 8px; font-size:9.1px; color:#5F6368;">
             <strong style="color:#202124; white-space:nowrap;">📍 Posisi di Tahap 4:</strong>
             <div style="display:flex; align-items:center; gap:3.5px; flex-wrap:nowrap;">
@@ -2573,17 +2901,18 @@ def build_slides_html(data: dict) -> str:
             </div>
           </div>
 
-          <!-- Interactive Auto-Tour + 3 Activation Function Tabs (registered in PDF/PPTX expanders!) -->
+          <!-- Interactive Auto-Tour + 4 Activation Function Tabs (registered in PDF/PPTX expanders!) -->
           <div class="sim-bar pdf-keep-ui" id="act-tabs" style="gap:4px; justify-content:space-between;">
             <div style="display:flex; align-items:center; gap:4px;">
-              <button class="btn-ui" id="act-btn-tour" onclick="playActTour()" style="padding:3px 8px; font-size:9.6px; background:#34A853; border-color:#34A853;">▶ Play</button>
-              <button class="btn-ui outline" id="act-btn-next" onclick="nextActChar()" style="padding:3px 7px; font-size:9.5px; color:#137333; border-color:#A8DAB5;">⏭ Berikutnya</button>
-              <button class="btn-ui outline" onclick="resetActZ()" style="padding:3px 7px; font-size:9.5px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
+              <button class="btn-ui" id="act-btn-tour" onclick="playActTour()" style="padding:3px 8px; font-size:9.5px; background:#34A853; border-color:#34A853;">▶ Play</button>
+              <button class="btn-ui outline" id="act-btn-next" onclick="nextActChar()" style="padding:3px 7px; font-size:9.4px; color:#137333; border-color:#A8DAB5;">⏭ Berikutnya</button>
+              <button class="btn-ui outline" onclick="resetActZ()" style="padding:3px 7px; font-size:9.4px; color:#5F6368; border-color:#DADCE0;">↺ Reset</button>
             </div>
-            <div style="display:flex; align-items:center; gap:4px;">
-              <button class="btn-ui" data-act="relu" onclick="setActTab('relu')" style="padding:3px 7.5px; font-size:9.5px;">1. ReLU</button>
-              <button class="btn-ui outline" data-act="sigmoid" onclick="setActTab('sigmoid')" style="padding:3px 7.5px; font-size:9.5px;">2. Sigmoid</button>
-              <button class="btn-ui outline" data-act="softmax" onclick="setActTab('softmax')" style="padding:3px 7.5px; font-size:9.5px;">3. Softmax</button>
+            <div style="display:flex; align-items:center; gap:3.5px;">
+              <button class="btn-ui" data-act="relu" onclick="setActTab('relu')" style="padding:3px 6.5px; font-size:9.2px;">1. ReLU</button>
+              <button class="btn-ui outline" data-act="sigmoid" onclick="setActTab('sigmoid')" style="padding:3px 6.5px; font-size:9.2px;">2. Sigmoid</button>
+              <button class="btn-ui outline" data-act="tanh" onclick="setActTab('tanh')" style="padding:3px 6.5px; font-size:9.2px;">3. Tanh</button>
+              <button class="btn-ui outline" data-act="softmax" onclick="setActTab('softmax')" style="padding:3px 6.5px; font-size:9.2px;">4. Softmax</button>
             </div>
           </div>
 
@@ -2609,8 +2938,8 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 27: OUTPUT AKHIR — ZOOM-IN TAHAP C (ARGMAX, CONFIDENCE, & EVALUASI ERROR) -->
-    <section class="slide" data-title="Bab 3B: Output Akhir — Keputusan Argmax, Confidence &amp; Evaluasi" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "1.5")} menit. Melengkapi trilogi Zoom-In dari Slide 25 (Tahap 4.1 Slide 26 -> Tahap 4.2 Slide 27 -> Output Akhir Slide 28). Tunjukkan bagaimana 5 probabilitas Softmax diubah menjadi 1 keputusan lewat Argmax, bedakan Confidence Yakin vs Ragu memakai ambang 60%, lalu klik Acak (Belum Latih) agar peserta melihat tebakan salah menghasilkan Error/Loss besar sebagai bahan belajar Training!">
+    <!-- 29: OUTPUT AKHIR — ZOOM-IN TAHAP 4.3 (ARGMAX, CONFIDENCE, & EVALUASI ERROR) -->
+    <section class="slide" data-title="Bab 3B: Output Akhir — Keputusan Argmax, Confidence &amp; Evaluasi" data-notes="Alokasi waktu: {"2.5" if HIDE_BAB4_ARCH else ("2.5" if HIDE_SLIDES_28_40 else "1.5")} menit. Melengkapi trilogi Zoom-In dari Slide 26 (Tahap 4.1 Slide 27 -> Tahap 4.2 Slide 28 -> Output Akhir Slide 29). Tunjukkan bagaimana 5 probabilitas Softmax diubah menjadi 1 keputusan lewat Argmax, bedakan Confidence Yakin vs Ragu memakai ambang 60%, lalu klik Acak (Belum Latih) agar peserta melihat tebakan salah menghasilkan Error/Loss besar sebagai bahan belajar Training!">
       <div class="kicker">BAB 03 · TAHAP 4.3 · OUTPUT AKHIR &amp; ERROR</div>
       <h2><span class="hl-green">Output Akhir</span>: Keputusan <span class="hl-blue">Argmax</span>, <em>Confidence</em> &amp; Cek <em>Error</em></h2>
 
@@ -2697,8 +3026,8 @@ def build_slides_html(data: dict) -> str:
     if HIDE_SLIDES_28_40:
         s.append(
             f"""
-    <!-- 28: SIKLUS BELAJAR UTUH (FORWARD PASS -> LOSS -> BACKPROP & GRADIENT DESCENT -> EPOCH) -->
-    <section class="slide" data-title="Bab 3C: Siklus Belajar Utuh — Forward Pass, Loss, Backprop, Gradient Descent &amp; Epoch" data-notes="Alokasi waktu: 2 menit. Menyambung langsung dari nilai Error dan Loss pada Slide 28 (foto Olaf belum latih: P=11.3%, Loss=2.18). Tunjukkan 4 tahap belajar berulang yang bekerja otomatis saat memanggil model.fit() di Keras: (1) Forward Pass (aliran maju Slide 25-28), (2) Hitung Loss (ukur kesalahan), (3) Backpropagation & Gradient Descent (lacak mundur bobot penyebab salah lalu geser sebesar Learning Rate), dan (4) Ulangi tiap Epoch hingga Loss turun dari 2.18 menjadi 0.23 dan Olaf dikenali 79.2%!">
+    <!-- 30: SIKLUS BELAJAR UTUH (FORWARD PASS -> LOSS -> BACKPROP & GRADIENT DESCENT -> EPOCH) -->
+    <section class="slide" data-title="Bab 3C: Siklus Belajar Utuh — Forward Pass, Loss, Backprop, Gradient Descent &amp; Epoch" data-notes="Alokasi waktu: 2 menit. Menyambung langsung dari nilai Error dan Loss pada Slide 29 (foto Olaf belum latih: P=11.3%, Loss=2.18). Tunjukkan 4 tahap belajar berulang yang bekerja otomatis saat memanggil model.fit() di Keras: (1) Forward Pass (aliran maju Tahap 4.1-4.3), (2) Hitung Loss (ukur kesalahan), (3) Backpropagation & Gradient Descent (lacak mundur bobot penyebab salah lalu geser sebesar Learning Rate), dan (4) Ulangi tiap Epoch hingga Loss turun dari 2.18 menjadi 0.23 dan Olaf dikenali 79.2%!">
       <div class="kicker">BAB 03 · TAHAP 5.1 · SIKLUS BELAJAR UTUH (EPOCH)</div>
       <h2><span class="hl-green">Siklus Belajar Utuh</span>: Dari <span class="hl-red">Loss</span> ke Koreksi Bobot (<span class="hl-blue">Epoch</span>)</h2>
 
@@ -2899,7 +3228,7 @@ def build_slides_html(data: dict) -> str:
           <div style="background:#FFFFFF; border:1px solid #E0E3E7; border-radius:10px; padding:7px 8px; display:flex; flex-direction:column; gap:5.5px; flex:1; justify-content:space-between;">
             <div style="display:flex; justify-content:space-between; align-items:center; font-size:9.4px; color:#5F6368;">
               <span>Alur 1 Epoch (<strong style="color:#202124;">{total_imgs} foto Frozen</strong>):</span>
-              <strong id="bs-photo-prog" style="font-family:var(--font-code); color:#1A73E8;">48 / 143 foto</strong>
+              <strong id="bs-photo-prog" style="font-family:var(--font-code); color:#1A73E8;">48 / {total_imgs} foto</strong>
             </div>
 
             <!-- 3-Stage Animated Visual SVG -->
@@ -2916,8 +3245,8 @@ def build_slides_html(data: dict) -> str:
 
             <!-- Live Summary Equation Bar -->
             <div id="bs-eq-bar" style="background:#F8F9FA; border:1px solid #E0E3E7; border-radius:8px; padding:4.5px 8px; display:flex; justify-content:space-between; align-items:center; font-family:var(--font-code); font-size:9.3px;">
-              <span style="color:#3C4043;">⌈143 / 16⌉ = <strong style="color:#1A73E8;">9 Step/Epoch</strong></span>
-              <span style="color:#137333; font-weight:800;">20 Epoch = 180× update W,b</span>
+              <span style="color:#3C4043;">⌈{total_imgs} / 16⌉ = <strong style="color:#1A73E8;">{(total_imgs + 15) // 16} Step/Epoch</strong></span>
+              <span style="color:#137333; font-weight:800;">20 Epoch = {((total_imgs + 15) // 16) * 20}× update W,b</span>
             </div>
           </div>
 
@@ -2928,7 +3257,7 @@ def build_slides_html(data: dict) -> str:
           </div>
 
           <div id="bs-callout" class="callout" style="padding:5.5px 9px; font-size:10.2px; line-height:1.3;">
-            <strong>Analogi Kartu Soal:</strong> Daripada menunggu 143 soal selesai baru cek jawaban, model mengoreksi diri tiap <strong>16 soal (1 Batch)</strong>!
+            <strong>Analogi Kartu Soal:</strong> Daripada menunggu {total_imgs} soal selesai baru cek jawaban, model mengoreksi diri tiap <strong>16 soal (1 Batch)</strong>!
           </div>
         </div>
 
@@ -2990,8 +3319,8 @@ def build_slides_html(data: dict) -> str:
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
     </section>
 
-    <!-- 32: ULTIMATE BAB 3 — SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 2 -> 3 -> 4 -> 5!) -->
-    <section class="slide" data-title="Bab 3 · Simulasi Full Neural Network (End-to-End Tahap 1–5)" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else "3"} menit. Slide puncak (Ultimate) Bab 3 yang menyatukan seluruh 5 tahap dari Slide 20–31 dalam 1 model Neural Network nyata 1-layer (150.528 Input -> 5 Output Softmax = 752.645 parameter, tanpa konsep yang belum diajarkan!) yang dilatih langsung 8 epoch melewati kelima foto figurin Frozen. Demokan: klik tombol biru Full 8 Epoch agar peserta menyaksikan model melatih Anna, Elsa, Kristoff, Olaf, dan Sven secara bergantian dari Epoch 1 (0/5 benar, Mean Loss 1.70) hingga Epoch 8 (5/5 benar yakin, Mean Loss 0.21) lengkap dengan gelombang merah Backpropagation dan kurva Loss yang turun secara real-time! Atau klik 1 Foto / geser slider Epoch 1–8 / klik kartu tahap bawah untuk membedah 1 karakter pelan-pelan. Lalu lanjut ke Kuis 5 Soal Berilustrasi di Slide 34–38.">
+    <!-- 33: ULTIMATE BAB 3 — SIMULASI FULL NEURAL NETWORK END-TO-END (TAHAP 1 -> 2 -> 3 -> 4 -> 5!) -->
+    <section class="slide" data-title="Bab 3 · Simulasi Full Neural Network (End-to-End Tahap 1–5)" data-notes="Alokasi waktu: {"3.5" if HIDE_BAB4_ARCH else "3"} menit. Slide puncak (Ultimate) Bab 3 yang menyatukan seluruh 5 tahap dari Slide 20–32 dalam 1 model Neural Network nyata 1-layer (150.528 Input -> 5 Output Softmax = 752.645 parameter, tanpa konsep yang belum diajarkan!) yang dilatih langsung 8 epoch melewati kelima foto figurin Frozen. Demokan: klik tombol biru Full 8 Epoch agar peserta menyaksikan model melatih Anna, Elsa, Kristoff, Olaf, dan Sven secara bergantian dari Epoch 1 (0/5 benar, Mean Loss 1.70) hingga Epoch 8 (5/5 benar yakin, Mean Loss 0.21) lengkap dengan gelombang merah Backpropagation dan kurva Loss yang turun secara real-time! Atau klik 1 Foto / geser slider Epoch 1–8 / klik kartu tahap bawah untuk membedah 1 karakter pelan-pelan. Lalu lanjut ke Kuis 5 Soal Berilustrasi di Slide 35–39.">
       <div class="kicker">BAB 03 · SIMULASI FULL NEURAL NETWORK (END-TO-END · TAHAP 1–5)</div>
       <h2>Simulasi <span class="hl-blue">Full Neural Network</span>: Dari Piksel ke <span class="hl-red">Backprop</span> (<span class="hl-green">Tahap 1–5</span>)</h2>
 
@@ -3651,7 +3980,7 @@ def build_slides_html(data: dict) -> str:
     # =========================================================================
     _eval_cover_slide = f"""
     <!-- COVER EVALUASI & SUMBER BELAJAR -->
-    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 14 Istilah Kunci, dan daftar Referensi Materi Bab 1–3.">
+    <section class="slide bg-yellow" data-title="Cover — Kuis, Kamus &amp; Referensi" data-notes="Alokasi waktu: 0.5 menit. Cover pembuka sesi evaluasi singkat setelah Bab 3: kita mulai dari Kuis 5 Soal interaktif, lanjut Kamus 16 Istilah Kunci, dan daftar Referensi Materi Bab 1–3.">
       <svg viewBox="0 0 960 540" style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none; z-index:0;">
         <circle cx="855" cy="110" r="78" fill="none" stroke="rgba(32,33,36,0.10)" stroke-width="18"/>
         <circle cx="855" cy="110" r="42" fill="rgba(255,255,255,0.22)"/>
@@ -3661,7 +3990,7 @@ def build_slides_html(data: dict) -> str:
       <div class="divider-center" style="position:relative; z-index:1;">
         <div class="kicker">EVALUASI &amp; SUMBER BELAJAR</div>
         <h1>Kuis, Kamus Istilah &amp; Referensi Materi</h1>
-        <p>Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 14 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.</p>
+        <p>Uji cepat pemahaman Bab 1–3 lewat 5 soal interaktif, rangkum 16 istilah kunci Teori Neural Network, dan simpan tautan belajar mandiri.</p>
         <div class="cover-roadmap">
           <div class="cover-chip">
             <span class="cover-chip-num">1</span>
@@ -3673,7 +4002,7 @@ def build_slides_html(data: dict) -> str:
           <div class="cover-chip">
             <span class="cover-chip-num">2</span>
             <div>
-              <div class="cover-chip-ttl">Kamus 14 Istilah Kunci</div>
+              <div class="cover-chip-ttl">Kamus 16 Istilah Kunci</div>
               <div class="cover-chip-sub">Peta ringkas Bab 1–3 (2 menit)</div>
             </div>
           </div>
@@ -3705,13 +4034,13 @@ def build_slides_html(data: dict) -> str:
       <div class="divider-center" style="position:relative; z-index:1;">
         <div class="kicker">SESI PRAKTIK VISUAL-FIRST · NOTEBOOK P02</div>
         <h1>Hands-On: Praktik Neural Network</h1>
-        <p>Ikuti perjalanan 1 foto asli Elsa melewati <strong>Tahap 1 → Tahap 5 Bab 3</strong>! Setiap tugas dipecah super kecil (<strong>3–6 baris kode</strong>) dan langsung menampilkan <strong>output visual nyata</strong>.</p>
+        <p>Ikuti perjalanan 1 foto asli Elsa melewati <strong>Tahap 1 → Tahap 5.4 Bab 3</strong>! Setiap tugas dipecah super kecil (<strong>3–6 baris kode</strong>) dan langsung menampilkan <strong>output visual nyata</strong>.</p>
         <div class="cover-roadmap-3x2">
-          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">1. Piksel Foto</div><div class="cover-chip-sub">1.1 Grid 8×8 · 1.2 RGB</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">2. Flatten (Input)</div><div class="cover-chip-sub">2.1 Pita 1D · 2.2 Skala</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">3</span><div><div class="cover-chip-ttl">Tahap 3 · Neuron</div><div class="cover-chip-sub">3.1 z · 3.2 ReLU · 3.3 Softmax</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">4</span><div><div class="cover-chip-ttl">Tahap 4 · Model</div><div class="cover-chip-sub">4.1–4.3 Model Bayi E0</div></div></div>
-          <div class="cover-chip"><span class="cover-chip-num">5</span><div><div class="cover-chip-ttl">Tahap 5 · Training</div><div class="cover-chip-sub">5.1 Fit · 5.2 Kurva Loss</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">1</span><div><div class="cover-chip-ttl">Tahap 1 · Piksel Foto</div><div class="cover-chip-sub">1.1 Grid 8×8 · 1.2 RGB</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">2</span><div><div class="cover-chip-ttl">Tahap 2 · Flatten</div><div class="cover-chip-sub">2.1 Pita 1D · 2.2 Skala</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">3</span><div><div class="cover-chip-ttl">Tahap 3 · Neuron</div><div class="cover-chip-sub">3.1 z · 3.2 ReLU/Tanh · 3.3 Softmax</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">4</span><div><div class="cover-chip-ttl">Tahap 4 · Model Bayi</div><div class="cover-chip-sub">4.1–4.3 Dense &amp; Epoch 0</div></div></div>
+          <div class="cover-chip"><span class="cover-chip-num">5</span><div><div class="cover-chip-ttl">Tahap 5 · Training</div><div class="cover-chip-sub">5.1 Fit (Batch 16) · 5.2 Loss</div></div></div>
           <div class="cover-chip"><span class="cover-chip-num">6</span><div><div class="cover-chip-ttl">Tahap 5.3–5.4</div><div class="cover-chip-sub">Before/After &amp; Bobot ΔW</div></div></div>
         </div>
         <div class="cover-env-strip">📓 p02_teori_neural_network.ipynb &nbsp;·&nbsp; 📁 data/frozen_v1/ ({total_imgs} foto) &nbsp;·&nbsp; 🎨 1 Sel = 1 Visual Nyata</div>
@@ -3752,7 +4081,7 @@ tampilkan_zoom_piksel(foto_mini, 4, 2, piksel_gaun)""",
             output_img="assets/P02/ho_step1_pixel_grid.png",
             output_caption="Foto asli Elsa → Grid 8×8 kotak angka 0.0–1.0 → Zoom piksel gaun [4, 2] dengan kanal Biru (B) paling dominan!",
             theory_ref="Slide 20 — Dimulai dari 1 Piksel → 1 Neuron",
-            checklist_html="✓ <code>foto_mini</code> bershape <code>(8, 8, 3)</code> &amp; nilai <code>0.0–1.0</code><br/>✓ Batang <strong>Blue (B = 0.60)</strong> tertinggi pada piksel gaun <code>[4, 2]</code>",
+            checklist_html=f"✓ <code>foto_mini</code> bershape <code>(8, 8, 3)</code> &amp; nilai <code>0.0–1.0</code><br/>✓ Batang <strong>Blue (B = {ho_b_v:.2f})</strong> tertinggi pada piksel gaun <code>[4, 2]</code>",
             callout_html="<strong>Tangible!</strong> Angka di kotak grid = kecerahan rata-rata; aslinya tiap kotak punya 3 angka <code>[R, G, B]</code>.",
             color="blue",
             notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 0 (Setup + Alat Visualisasi + Galeri Frozen), lalu pandu # TODO 1 (dibagi 255.0) dan # TODO 2 (ambil piksel gaun biru [4, 2]) hingga 3 gambar visual muncul!",
@@ -3772,13 +4101,13 @@ tampilkan_zoom_piksel(foto_mini, 4, 2, piksel_gaun)""",
 vektor_elsa = foto_mini.flatten()       # TODO 3: (8,8,3) -> (192,)
 tampilkan_visual_flatten(foto_mini, vektor_elsa)
 
-# Tahap 2.2: Hitung skala foto penuh 224x224x3 (persis Slide 24 & 32!)
+# Tahap 2.2: Hitung skala foto penuh 224x224x3 (persis Slide 24 & 33!)
 neuron_224 = IMG_SIZE * IMG_SIZE * 3    # TODO 4A -> 150.528
 param_224 = neuron_224 * 5 + 5          # TODO 4B -> 752.645""",
             output_img="assets/P02/ho_step2_flatten_strip.png",
             output_caption="Atas: 8×8 (B1–B8) diluruskan jadi 64 piksel warna (P1 x1–3 .. P64 x190–192 = 192 neuron RGB). Bawah: skala parameter.",
-            theory_ref="Slide 21–22 — Animasi Flatten & 150.528 Neuron Input",
-            checklist_html="✓ <code>len(vektor_elsa) == 192</code> (64 piksel × 3 RGB)<br/>✓ Skala penuh: <code>150.528</code> neuron → <code>752.645</code> param (persis Slide 24 &amp; 32!)",
+            theory_ref="Slide 21–24 — Flatten & Dense Parameter (752.645)",
+            checklist_html="✓ <code>len(vektor_elsa) == 192</code> (64 piksel × 3 RGB)<br/>✓ Skala penuh: <code>150.528</code> neuron → <code>752.645</code> param (persis Slide 24 &amp; 33!)",
             callout_html="<strong>Momen Klik!</strong> Biru gaun Elsa di baris <code>B4–B5</code> tampak nyata pindah menjadi garis vertikal di tengah pita 1D!",
             color="green",
             notes=f"Alokasi waktu: {'9' if HIDE_BAB4_ARCH else '7'} menit. Pandu peserta mengerjakan # TODO 3 (.flatten()) dan sorot gambar pita warna 1D (biru gaun di B4-B5, tangan di B7-B8), lalu lanjut # TODO 4 menghitung 150.528 neuron -> 752.645 parameter.",
@@ -3791,19 +4120,19 @@ param_224 = neuron_224 * 5 + 5          # TODO 4B -> 752.645""",
             goal_html="Membuktikan 1 neuron hanyalah kali-tambah biasa, <code>ReLU</code>, &amp; <code>Softmax 100%</code>",
             bullets_html="""
               <li><span class="ho-sub-tag red">3.1</span><span><strong># TODO 5 (1 baris):</strong> Hitung <code>z = r*w_r + g*w_g + b*w_b + bias</code> pada piksel gaun Elsa <em>(tanpa <code>np.dot</code> rumit!)</em>.</span></li>
-              <li><span class="ho-sub-tag red">3.2</span><span><strong># TODO 6 (1 baris):</strong> Terapkan <code>np.maximum(0.0, skor_contoh)</code> → batang minus langsung rata jadi <code>0</code>!</span></li>
-              <li><span class="ho-sub-tag red">3.3</span><span><strong>Eksperimen Bebas:</strong> Ubah 1 angka (mis. <code>skor_olaf = 3.0</code>) &amp; lihat foto pemenang <code>Argmax</code> berpindah live!</span></li>
+              <li><span class="ho-sub-tag red">3.2</span><span><strong># TODO 6 (1 baris):</strong> Terapkan <code>ReLU</code> via <code>np.maximum(0.0, skor_contoh)</code> &amp; bandingkan sekilas dengan <code>Tanh</code> (<code>S28</code>)!</span></li>
+              <li><span class="ho-sub-tag red">3.3</span><span><strong>Eksperimen Bebas:</strong> Ubah 1 angka (mis. <code>skor_olaf = 3.0</code>) &amp; lihat foto pemenang <code>Argmax</code> + <code>Loss</code> berpindah live!</span></li>
             """,
             code_snippet="""# Tahap 3.1: Hitung 1 neuron (kali-tambah biasa!)
 z = (r * w_r) + (g * w_g) + (b * w_b) + bias   # TODO 5
 tampilkan_timbangan_neuron(r, g, b, w_r, w_g, w_b, bias, z)
 
-# Tahap 3.2 & 3.3: ReLU + eksperimen bebas Softmax 5 karakter
+# Tahap 3.2 & 3.3: ReLU (+ bandingkan Tanh) & eksperimen Softmax
 hasil_relu = np.maximum(0.0, skor_contoh)       # TODO 6
 tampilkan_softmax_frozen([0.4, 2.3, 0.1, -0.2, 0.2], df_meta, DATA_DIR)""",
             output_img="assets/P02/ho_step3_neuron_relu_softmax.png",
             output_caption=f"Kiri: z Gaun ({ho_z_gaun:+.2f}) vs Dinding ({ho_z_wall:+.2f}). Tengah: ReLU (negatif → 0). Kanan: Softmax 100% + Loss ({ho_loss_sm:.2f})!",
-            theory_ref="Slide 26–28 — Weight+Bias, ReLU, Softmax & Loss",
+            theory_ref="Slide 27–29 — Weight+Bias, ReLU/Tanh, Softmax & Loss",
             checklist_html="✓ Gaun biru menyala (<code>z &gt; 0</code>) sementara dinding redup (<code>z &lt; 0</code>)<br/>✓ Ubah <code>skor_olaf = 3.0</code> → lihat <code>Argmax</code> pindah &amp; <code>Loss</code> melonjak!",
             callout_html="<strong>Bebas Panik Sintaks:</strong> Tanpa <code>np.dot</code> rumit — peserta langsung melihat kaitan bobot, <code>ReLU</code>, <code>Softmax</code>, &amp; <code>Loss</code>!",
             color="red",
@@ -3820,7 +4149,7 @@ tampilkan_softmax_frozen([0.4, 2.3, 0.1, -0.2, 0.2], df_meta, DATA_DIR)""",
               <li><span class="ho-sub-tag yellow">4.2</span><span><strong># TODO 7 (2 baris):</strong> Lengkapi <code>Flatten()</code> &amp; <code>Dense(5, activation="softmax")</code> → cocokkan <code>61.445</code> di <code>summary()</code>!</span></li>
               <li><span class="ho-sub-tag yellow">4.3</span><span><strong>Tes "Model Bayi" (Epoch 0):</strong> Lihat sendiri bar probabilitas ~20% rata semua (<code>Loss {e0_loss:.2f}</code>, tebak acak {s_e0}/5)!</span></li>
             """,
-            code_snippet="""# Tahap 4.2: Rakit Neural Network 1-Layer persis diagram Slide 24 & 32
+            code_snippet="""# Tahap 4.2: Rakit Neural Network 1-Layer persis diagram Slide 24 & 33
 model_nn = tf.keras.Sequential([
     tf.keras.layers.Input(shape=(64, 64, 3)),
     tf.keras.layers.Flatten(),                        # TODO 7A
@@ -3830,7 +4159,7 @@ model_nn = tf.keras.Sequential([
 tampilkan_tebakan_model(model_nn, X_5foto, y_5foto)""",
             output_img="assets/P02/ho_step4_baby_model.png",
             output_caption=f"Epoch 0 (Bobot Acak): Model belum belajar — bar probabilitas ~20% merata, akurasi awal {e0_acc:.1f}% ({s_e0}/5 benar).",
-            theory_ref="Slide 24 & 32 — Dense(5, Softmax) & Weight Init (S30)",
+            theory_ref="Slide 24, 31 & 33 — Dense(5, Softmax) & Weight Init",
             checklist_html="✓ <code>model_nn.summary()</code> tampil tepat <strong>61.445</strong> parameter<br/>✓ Grafik Epoch 0 menunjukkan bar ~20% rata (tebak acak)",
             callout_html="<strong>Kenapa perlu Training?</strong> Melihat &ldquo;Model Bayi&rdquo; menebak acak di Epoch 0 bikin peserta langsung paham fungsi <code>model.fit()</code>!",
             color="yellow",
@@ -3843,24 +4172,24 @@ tampilkan_tebakan_model(model_nn, X_5foto, y_5foto)""",
             kicker="HANDS-ON · TAHAP 5.1 &amp; 5.2 (9,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Menjalankan siklus <strong>Backprop + Gradient Descent</strong> &amp; melihat <em>Loss</em> turun",
             bullets_html=f"""
-              <li><span class="ho-sub-tag">5.1</span><span><strong># TODO 8 (1 baris):</strong> Panggil <code>model_nn.fit(X_frozen, y_frozen, epochs=EPOCHS, batch_size=16)</code> ({e_end} epoch di kelas, 2 saat smoke test).</span></li>
+              <li><span class="ho-sub-tag">5.1</span><span><strong># TODO 8 (1 baris):</strong> Panggil <code>model_nn.fit(..., epochs=EPOCHS, batch_size=16)</code> ({e_end} epoch, {(total_imgs + 15) // 16} <em>Step/Epoch</em> persis <strong>S32</strong>!).</span></li>
               <li><span class="ho-sub-tag">5.2</span><span>Jalankan <code>tampilkan_kurva_training(history)</code> → simpan grafik otomatis ke <code>results/p02_nn_loss_curve.png</code>!</span></li>
               <li><span class="ho-sub-tag">Hasil</span><span>Amati nyata: <strong>Loss turun</strong> <code>{e1_loss:.2f} → {e_end_loss:.2f}</code> &amp; <strong>Akurasi naik</strong> <code>{e0_acc:.1f}% → {e_end_acc:.1f}%</code>!</span></li>
             """,
-            code_snippet="""# Tahap 5.1: Jalankan siklus Backprop & Gradient Descent otomatis!
-EPOCHS = 2 if SMOKE_TEST else 20
+            code_snippet=f"""# Tahap 5.1: Jalankan siklus Backprop & Gradient Descent (Adam)!
+EPOCHS = 2 if SMOKE_TEST else {e_end}
 history = model_nn.fit(                               # TODO 8
     X_frozen, y_frozen, epochs=EPOCHS, batch_size=16, verbose=1
 )
 # Tahap 5.2: Plot kurva Loss turun & Akurasi naik
 tampilkan_kurva_training(history, simpan_ke=RESULTS_DIR / "p02_nn_loss_curve.png")""",
             output_img="assets/P02/ho_step5_loss_curve.png",
-            output_caption=f"Hasil nyata 1-Layer NN pada {total_imgs} foto Frozen: Loss turun mulus ({e1_loss:.2f} → {e_end_loss:.2f}) & Akurasi naik ke {e_end_acc:.1f}%.",
-            theory_ref="Slide 29–31 — Backprop, Adam, Batch Size & Epoch",
-            checklist_html="✓ Kurva merah <strong>Loss</strong> turun mulus dari Epoch 1 → 20<br/>✓ File <code>results/p02_nn_loss_curve.png</code> tersimpan otomatis",
+            output_caption=f"Hasil nyata 1-Layer NN pada {total_imgs} foto Frozen ({e_end} Epoch): Loss turun ({e1_loss:.2f} → {e_end_loss:.2f}) & Akurasi naik ke {e_end_acc:.1f}%.",
+            theory_ref="Slide 30–32 — Backprop, Adam, Batch Size & Epoch",
+            checklist_html=f"✓ Kurva merah <strong>Loss</strong> turun di bawah <code>1.0</code> (Epoch 1 → {e_end})<br/>✓ File <code>results/p02_nn_loss_curve.png</code> tersimpan otomatis",
             callout_html="<strong>Ingat metodologi:</strong> Pembagian data <em>train/val/test</em> resmi bebas <em>leakage</em> (Group Split) akan dipelajari tuntas di <strong>P05</strong>.",
             color="blue",
-            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 8 menjalankan model_nn.fit() selama 20 epoch (~2 detik) dan plot kurva Loss turun ({e1_loss:.2f} -> {e_end_loss:.2f}) serta Akurasi naik ke {e_end_acc:.1f}%!",
+            notes=f"Alokasi waktu: {'9.5' if HIDE_BAB4_ARCH else '7.5'} menit. Pandu # TODO 8 menjalankan model_nn.fit() selama {e_end} epoch (~1-2 detik, {(total_imgs + 15) // 16} Step/Epoch) dan plot kurva Loss turun ({e1_loss:.2f} -> {e_end_loss:.2f}) serta Akurasi naik ke {e_end_acc:.1f}%!",
         ),
         _handson_step_slide(
             step_num=6,
@@ -3869,22 +4198,23 @@ tampilkan_kurva_training(history, simpan_ke=RESULTS_DIR / "p02_nn_loss_curve.png
             kicker="HANDS-ON · TAHAP 5.3, 5.4 &amp; BONUS (8,5 MENIT)" if HIDE_BAB4_ARCH else "BAB 05 · HANDS-ON",
             goal_html="Menguji model menebak 5 foto Frozen &amp; mengintip isi otak bobot <code>ΔW</code>",
             bullets_html=f"""
-              <li><span class="ho-sub-tag green">5.3</span><span><strong>Before vs After:</strong> Bandingkan tebakan Epoch 0 ({s_e0}/5) vs Epoch {e_end} (<strong>{s_end}/5 benar ✓</strong>) pada 5 karakter Frozen!</span></li>
+              <li><span class="ho-sub-tag green">5.3</span><span><strong>Before vs After &amp; Ramai:</strong> Polos melesat <code>{s_e0}/5 → {s_end}/5 ✓</code>! Cek juga <code>X_5ramai</code> (Polos <code>{all_polos_acc:.1f}%</code> vs Ramai <code>{all_ramai_acc:.1f}%</code> di data latih).</span></li>
               <li><span class="ho-sub-tag green">5.4</span><span><strong>Intip Peta Bobot <code>ΔW</code>:</strong> Lihat area piksel terang yang paling diingat neuron Anna, Elsa, Kristoff, Olaf, &amp; Sven!</span></li>
-              <li><span class="ho-sub-tag green">Bonus</span><span><em>(Opsional)</em> Ubah 1 angka <code>LEARNING_RATE_COBA = 0.01</code> lalu lihat efek langkah kebesaran pada kurva <em>Loss</em>!</span></li>
+              <li><span class="ho-sub-tag green">Bonus</span><span><em>(Opsional)</em> Ubah <code>LEARNING_RATE_COBA = 0.01</code> (persis <strong>S31</strong>) &amp; lihat kurva memantul!</span></li>
             """,
-            code_snippet="""# Tahap 5.3: Uji kembali model pada 5 foto Frozen (Sesudah Belajar!)
-tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="SESUDAH BELAJAR")
+            code_snippet="""# Tahap 5.3: Uji kembali Polos & cek jujur 5 foto RAMAI!
+tampilkan_tebakan_model(model_nn, X_5foto, y_5foto, judul="POLOS SESUDAH")
+tampilkan_tebakan_model(model_nn, X_5ramai, y_5ramai, judul="TES FOTO RAMAI")
 
 # Tahap 5.4 (Bonus Aha!): Intip area piksel yg diingat bobot ΔW
 tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             output_img="assets/P02/ho_step6_predict_and_weights.png",
-            output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar! Bawah: peta ΔW menunjukkan area fokus tiap neuron (jembatan ke CNN P03).",
-            theory_ref="Slide 31 (Overfitting) → P03 (CNN) & P05 (Split)",
-            checklist_html=f"✓ Tebakan naik dari <strong>{s_e0}/5 → {s_end}/5</strong> &amp; siluet muncul di peta <code>ΔW</code><br/>✓ Cek jujur <code>polos vs ramai</code> mengungkap risiko <em>shortcut learning</em>!",
-            callout_html="<strong>Momen Aha!</strong> Model 1-layer cenderung menghafal posisi piksel &amp; latar — inilah alasan kita butuh <strong>CNN (P03)</strong> &amp; <strong>Group Split (P05)</strong>!",
+            output_caption=f"Atas: {s_end}/5 karakter tepat sesudah belajar Epoch {e_end}! Bawah: peta ΔW menunjukkan area fokus tiap neuron (jembatan ke CNN P03).",
+            theory_ref="Slide 31–32 (LR, Overfitting) → P03 (CNN) & P05 (Split)",
+            checklist_html=f"✓ Tebakan naik <strong>{s_e0}/5 → {s_end}/5</strong> &amp; uji visual <code>X_5ramai</code> tampil<br/>✓ Skor <code>ramai ({all_ramai_acc:.1f}%)</code> mengungkap hafalan latar (<em>shortcut</em>)!",
+            callout_html="<strong>Momen Aha!</strong> Model 1-layer menghafal posisi &amp; warna latar ramai — itulah alasan kita butuh <strong>CNN (P03)</strong> &amp; <strong>Group Split (P05)</strong>!",
             color="green",
-            notes=f"Alokasi waktu: {'8.5' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 5.3 (Before vs After {s_e0}/5 -> {s_end}/5 benar) dan Tahap 5.4 (heatmap Fokus Bobot ΔW). Tunjuk langsung area kuning menyala di tengah heatmap sebagai jembatan alami menuju P03 (CNN)!",
+            notes=f"Alokasi waktu: {'8.5' if HIDE_BAB4_ARCH else '7'} menit. Jalankan Tahap 5.3 (Before vs After {s_e0}/5 -> {s_end}/5 benar + uji visual 5 foto ramai + cek Polos {all_polos_acc:.1f}% vs Ramai {all_ramai_acc:.1f}%) dan Tahap 5.4 (heatmap Fokus Bobot ΔW). Tunjuk area terang pada peta ΔW sebagai jembatan alami menuju P03 (CNN) & P05 (Group Split)!",
         ),
     ]
 
@@ -3892,24 +4222,26 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
 
     # Slide 32: 2-Column Grouped Dictionary List (Bab 1-2 Left | Bab 3 Right, clickable slide jump + search + filter)
     _dict_b1 = [
-        ("AI / ML / DL", "Hierarki subset: AI (bidang luas) ⊃ ML (belajar dari data) ⊃ DL (memakai Neural Network berlapis).", 8, "ai ml dl artificial intelligence machine learning deep learning hierarki"),
-        ("Supervised Learning", "Model belajar dari pasangan <code>Data + Label</code>; DL otomatis menemukan pola fitur dari piksel mentah.", 7, "supervised learning fitur data label"),
+        ("AI Klasik vs AI Modern", "AI Klasik memakai aturan &amp; pencarian manual (<em>Minimax</em>, <em>A*</em>); AI Modern (ML/DL) belajar dari data.", 6, "ai klasik modern bukan ai automasi statis minimax"),
+        ("Supervised Learning", "Paradigma ML belajar dari pasangan <code>Data + Label</code> (beda dari <em>Unsupervised</em> &amp; <em>Reinforcement</em>).", 7, "supervised unsupervised reinforcement learning data label"),
+        ("AI ⊃ ML ⊃ DL", "Hierarki subset: AI (mesin cerdas) ⊃ ML (belajar pola dari data) ⊃ DL (memakai <em>Neural Network</em> berlapis).", 8, "ai ml dl artificial intelligence machine learning deep learning hierarki"),
+        ("Feature Learning (ML vs DL)", "ML klasik butuh ekstraksi fitur manual oleh manusia; DL mempelajari pola fitur otomatis dari piksel.", 9, "ml vs dl feature learning ekstraksi fitur manual otomatis"),
     ]
     _dict_b2 = [
-        ("Image Classification", "Memberi 1 label kategori dan probabilitas pada keseluruhan foto (tugas utama proyek Frozen kita).", 13, "image classification klasifikasi foto label"),
-        ("Object Detection", "Mencari banyak objek sekaligus dalam 1 foto beserta kotak koordinat <em>bounding box</em> + label.", 14, "object detection bounding box deteksi"),
-        ("Segmentation", "Memetakan bentuk per piksel (<em>mask</em>): <em>Semantic</em> per kelas, <em>Instance</em> memisahkan tiap individu objek.", 15, "semantic instance segmentation mask piksel"),
-        ("Object Tracking", "Mendeteksi dan mempertahankan nomor ID objek yang konsisten antar-frame di dalam video.", 16, "object tracking video id frame"),
+        ("Image Classification", "Memberi 1 label + probabilitas untuk 1 foto: <em>Binary</em> (2 kelas) vs <strong>Multi-Class ★</strong> (5 kelas Frozen).", 13, "image classification klasifikasi binary multi-class label"),
+        ("Object Detection", "Mencari banyak objek sekaligus dalam 1 foto beserta kotak <code>[x, y, w, h]</code> + label + yakin (mis. <code>YOLO</code>).", 14, "object detection bounding box yolo deteksi"),
+        ("Segmentation", "Memetakan bentuk per piksel (<em>mask</em>): <em>Semantic</em> per kelas vs <em>Instance</em> pisahkan tiap individu objek.", 15, "semantic instance segmentation mask piksel"),
+        ("Object Tracking", "Mendeteksi objek di tiap frame video lalu mempertahankan nomor ID yang konsisten antar-waktu.", 16, "object tracking video id frame"),
     ]
     _dict_b3 = [
-        ("Input Layer &amp; Flatten", "<code>Flatten</code> meluruskan foto <code>H×W×C</code> menjadi 1 kolom vektor piksel penerima input (<code>150.528</code> neuron).", 21, "input layer flatten piksel vektor 150528"),
-        ("Dense &amp; Parameter", "Lapisan <em>Fully Connected</em>: semua input tersambung ke semua output; <code>Parameter = (In×Out) + Bias</code>.", 24, "dense fully connected parameter weight bias 61445 752645"),
-        ("Neuron, Weight &amp; Bias", "Unit hitung inti: tiap input dikali bobot (<code>W</code>) lalu ditambah ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>.", 26, "neuron weight bias bobot ambang"),
-        ("ReLU, Sigmoid/Tanh &amp; Softmax", "Aktivasi non-linear: <code>ReLU</code> (negatif→<code>0</code>), <code>Sigmoid/Tanh</code>, &amp; <code>Softmax</code> (peluang total <code>100%</code>).", 27, "relu sigmoid tanh softmax aktivasi probabilitas"),
-        ("Argmax &amp; Loss Function", "<code>Argmax</code> pilih peluang tertinggi; <code>Loss (−ln P)</code> mengukur seberapa salah tebakan dari label asli.", 28, "forward pass argmax loss function error cross entropy"),
-        ("Backprop &amp; Gradient Descent", "<code>Backpropagation</code> melacak sumber salah; <code>Gradient Descent</code> menggeser <code>W, b</code> menuruni bukit <em>Loss</em>.", 29, "backpropagation gradient descent training"),
-        ("LR, Init &amp; Optimizer (Adam)", "<em>Weight Init</em> = mulai bobot acak; <em>Learning Rate</em> = besar langkah; <code>Adam</code> = optimizer adaptif.", 30, "learning rate weight initialization optimizer adam sgd"),
-        ("Batch Size, Epoch &amp; Overfitting", "<code>Batch</code> = paket foto per update (<code>Step</code>); <code>Epoch</code> = 1 putaran penuh; <em>Overfitting</em> = hafal latar/latihan.", 31, "batch size step iteration epoch overfitting underfitting generalization"),
+        ("Input Layer &amp; Flatten", "<code>Flatten</code> meluruskan foto <code>H×W×C</code> menjadi 1 kolom vektor piksel Input Layer (<code>224×224×3 = 150.528</code>).", 21, "input layer flatten piksel vektor 150528"),
+        ("Dense &amp; Parameter", "Lapisan <em>Fully Connected</em>: semua input tersambung ke semua output; <code>Param = (In×Out) + Bias</code> (<code>752.645</code>).", 24, "dense fully connected parameter weight bias 61445 752645"),
+        ("Neuron, Weight &amp; Bias", "Unit hitung inti (<em>1 Neuron S20</em>): input dikali bobot (<code>W</code>) lalu ditambah ambang (<code>b</code>): <code>z = Σ(x·w) + b</code>.", 27, "neuron weight bias bobot ambang s20"),
+        ("ReLU, Sigmoid, Tanh &amp; Softmax", "Aktivasi non-linear: <code>ReLU</code> (negatif→<code>0</code>), <code>Sigmoid</code> (<code>0..1</code>), <code>Tanh</code> (<code>−1..+1</code>), &amp; <code>Softmax</code> (total <code>100%</code>).", 28, "relu sigmoid tanh softmax aktivasi probabilitas"),
+        ("Forward Pass, Argmax &amp; Loss", "Alur maju ke prediksi: <code>Argmax</code> pilih skor tertinggi; <code>Cross-Entropy Loss (−ln P)</code> ukur seberapa salah.", 29, "forward pass argmax loss function error cross entropy"),
+        ("Backprop &amp; Gradient Descent", "<code>Backpropagation</code> lacak sumber error mundur; <code>Gradient Descent</code> geser <code>W, b</code> menuruni lembah <em>Loss</em>.", 30, "backpropagation gradient descent training"),
+        ("LR, Init &amp; Optimizer (Adam)", "<em>Weight Init</em> = bobot acak awal; <em>Learning Rate</em> = besar langkah; <code>Adam</code> = optimizer adaptif utama.", 31, "learning rate weight initialization optimizer adam sgd"),
+        ("Batch Size, Epoch &amp; Overfitting", "<code>Batch</code> = paket foto per update (<code>Step</code>); <code>Epoch</code> = 1 putaran penuh; <em>Overfitting</em> = hafal data latihan.", 32, "batch size step iteration epoch overfitting underfitting generalization"),
     ]
     def _render_dict_rows(items, ch, cls):
         return "\n            ".join(
@@ -3922,7 +4254,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
         )
     _glossary_html = f"""
     <!-- KAMUS ISTILAH (2-COLUMN GROUPED DICTIONARY LIST + FILTER + SEARCH + SLIDE JUMP) -->
-    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 14 istilah asli Bab 1–3 dalam format kamus 2 kolom. Gunakan tombol filter Bab, kotak cari istilah, atau klik kode slide (S08–S29) jika peserta ingin langsung menengok ulang visualnya.">
+    <section class="slide" data-title="Kamus Istilah Santai P02" data-notes="Alokasi waktu: 2 menit. Ulas singkat 16 istilah asli Bab 1–3 dalam format kamus 2 kolom (4 istilah Bab 1 + 4 istilah Bab 2 + 8 istilah Bab 3). Gunakan tombol filter Bab, kotak cari istilah, atau klik kode slide (S06–S32) untuk langsung menengok ulang visualnya.">
       <div class="gloss-head-row">
         <div>
           <div class="kicker">GLOSARIUM RINGKAS · TEORI NEURAL NETWORK</div>
@@ -3934,8 +4266,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <input type="text" id="gloss-search-inp" class="gloss-search" placeholder="Cari istilah..." oninput="searchGlossary(this.value)" />
           </div>
           <div class="gloss-filter-bar">
-            <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (14)</button>
-            <button type="button" class="gloss-fbtn" data-ch="1" onclick="filterGlossary('1', this)">Bab 1 (2)</button>
+            <button type="button" class="gloss-fbtn active" data-ch="all" onclick="filterGlossary('all', this)">Semua (16)</button>
+            <button type="button" class="gloss-fbtn" data-ch="1" onclick="filterGlossary('1', this)">Bab 1 (4)</button>
             <button type="button" class="gloss-fbtn" data-ch="2" onclick="filterGlossary('2', this)">Bab 2 (4)</button>
             <button type="button" class="gloss-fbtn" data-ch="3" onclick="filterGlossary('3', this)">Bab 3 (8)</button>
           </div>
@@ -3946,7 +4278,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
           <div class="dict-group">
             <div class="dict-group-head b1">
               <span>BAB 1 · AI, MACHINE LEARNING &amp; DEEP LEARNING</span>
-              <span class="dict-group-cnt">2 istilah</span>
+              <span class="dict-group-cnt">4 istilah</span>
             </div>
             <div class="dict-list">
               {_render_dict_rows(_dict_b1, "1", "b1")}
@@ -3995,8 +4327,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             ],
             answer_html=(
                 "<strong>Jawaban: B — AI ⊃ ML ⊃ DL!</strong><br/>"
-                "• <strong>Mengapa tepat:</strong> <strong>AI</strong> adalah payung terbesar (semua mesin cerdas), <strong>ML</strong> adalah bagian AI yang belajar pola dari data, dan <strong>DL</strong> adalah cabang khusus ML yang memakai <strong>Neural Network</strong> untuk mengekstrak fitur otomatis dari piksel.<br/>"
-                "• <strong>Kenapa A &amp; C keliru:</strong> AI bukan bagian kecil dari ML/DL — sistem aturan klasik (<em>if-else</em>) tetap termasuk AI walau bukan ML maupun DL."
+                "• <strong>Mengapa tepat:</strong> <strong>AI</strong> mencakup <em>AI Klasik</em> (aturan/pencarian manual seperti <code>Minimax</code>/<code>A*</code>) hingga <em>AI Modern</em>; <strong>ML</strong> belajar pola dari data (mis. <em>Supervised Learning</em>); dan <strong>DL</strong> adalah cabang ML berbasis <strong>Neural Network</strong> yang melakukan <em>feature learning</em> otomatis dari piksel mentah (<em>Slide 6–9</em>).<br/>"
+                "• <strong>Kenapa A &amp; C keliru:</strong> AI bukan bagian kecil dari ML/DL — sistem berbasis aturan klasik tetap termasuk AI walau bukan ML."
             ),
             vis_q_html="""
               <svg viewBox="0 0 360 235" style="width:100%; max-width:350px; margin:0 auto; display:block;">
@@ -4048,9 +4380,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             ],
             answer_html=(
                 "<strong>Jawaban: B!</strong><br/>"
-                "• <strong>Image Classification:</strong> Menjawab <em>&ldquo;Ini foto siapa?&rdquo;</em> → keluaran <strong>1 label kelas + probabilitas</strong> untuk keseluruhan foto (persis proyek 5 karakter Frozen kita).<br/>"
-                "• <strong>Object Detection:</strong> Menjawab <em>&ldquo;Ada apa saja &amp; di mana posisinya?&rdquo;</em> → keluaran banyak <strong>kotak <code>(x, y, w, h)</code> + label</strong> tiap objek.<br/>"
-                "• <strong>Kenapa A &amp; C keliru:</strong> Opsi A justru terbalik definisinya, sedangkan keluaran keduanya berbeda struktur."
+                "• <strong>Image Classification:</strong> Menjawab <em>&ldquo;Ini foto siapa?&rdquo;</em> → keluaran <strong>1 label kelas + probabilitas</strong> (di proyek Frozen = <strong>Multi-Class 5 karakter</strong>, beda dari <em>Binary</em> 2 kelas — <em>Slide 13</em>).<br/>"
+                "• <strong>Object Detection:</strong> Menjawab <em>&ldquo;Ada apa saja &amp; di mana?&rdquo;</em> → banyak kotak <strong><code>[x, y, w, h] + label + yakin</code></strong> (contoh: <code>YOLO</code> — <em>Slide 14</em>), beda pula dari <em>Segmentation</em> (mask piksel) &amp; <em>Tracking</em> (ID video)."
             ),
             vis_q_html="""
               <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%;">
@@ -4073,7 +4404,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
                   <div style="background:#E8F0FE; border:1.5px solid #4285F4; border-radius:11px; padding:7px; display:flex; flex-direction:column; justify-content:space-between;">
                     <img src="assets/P02/thumb_elsa.jpg" style="width:100%; height:118px; object-fit:cover; border-radius:7px;"/>
                     <div style="margin-top:5px;">
-                      <div style="font-family:var(--font-title); font-size:10.2px; font-weight:800; color:#1A73E8;">IMAGE CLASSIFICATION</div>
+                      <div style="font-family:var(--font-title); font-size:10.2px; font-weight:800; color:#1A73E8;">MULTI-CLASS CLASSIFICATION</div>
                       <div style="font-size:10px; color:#202124; background:#FFFFFF; border-radius:6px; padding:2px 6px; margin-top:3px; font-weight:700;">1 Label: ELSA (94%)</div>
                     </div>
                   </div>
@@ -4081,12 +4412,12 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
                     <img src="assets/P02/02b_object_detection_demo.png" style="width:100%; height:118px; object-fit:cover; border-radius:7px;"/>
                     <div style="margin-top:5px;">
                       <div style="font-family:var(--font-title); font-size:10.2px; font-weight:800; color:#C5221F;">OBJECT DETECTION</div>
-                      <div style="font-size:10px; color:#202124; background:#FFFFFF; border-radius:6px; padding:2px 6px; margin-top:3px; font-weight:700;">Banyak Kotak + Label</div>
+                      <div style="font-size:10px; color:#202124; background:#FFFFFF; border-radius:6px; padding:2px 6px; margin-top:3px; font-weight:700;">[x, y, w, h] + Label + Yakin</div>
                     </div>
                   </div>
                 </div>
                 <div style="background:#E6F4EA; border:1px solid #A8DAB5; border-radius:8px; padding:6px 10px; font-size:11px; color:#137333; font-weight:600;">
-                  ✓ Proyek Frozen kita = <strong>Image Classification (5 Kelas)</strong>
+                  ✓ Proyek Frozen = <strong>Multi-Class Image Classification (5 Kelas · Slide 13)</strong>
                 </div>
               </div>
             """,
@@ -4110,8 +4441,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             answer_html=(
                 "<strong>Jawaban: B — 30.000 neuron!</strong><br/>"
                 "• <strong>Rumus pasti:</strong> <code>Tinggi × Lebar × Channel = 100 × 100 × 3 = 30.000</code> neuron penerima angka piksel.<br/>"
-                "• <strong>Kenapa A keliru:</strong> <code>10.000</code> hanya cukup untuk gambar hitam-putih (<em>Grayscale</em>, 1 channel) — foto berwarna wajib menyimpan <strong>3 lapisan (R, G, B)</strong>.<br/>"
-                "• <strong>Kaitan proyek Frozen:</strong> Untuk ukuran penuh <code>224×224×3</code>, jumlahnya <code>150.528</code> neuron!"
+                "• <strong>Kenapa A keliru:</strong> <code>10.000</code> hanya untuk gambar <em>Grayscale</em> (1 channel) — foto RGB punya <strong>3 lapisan (R, G, B)</strong>.<br/>"
+                "• <strong>Kaitan Frozen (Slide 21–24):</strong> Untuk <code>224×224×3</code> → <code>150.528</code> neuron input → <code>Dense(5)</code> butuh <strong>752.645 parameter</strong>!"
             ),
             vis_q_html="""
               <svg viewBox="0 0 330 225" style="width:100%; max-width:320px; margin:0 auto; display:block;">
@@ -4150,7 +4481,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
                   <div style="font-family:var(--font-title); font-size:24px; font-weight:800; color:#137333; line-height:1.15;">30.000 Neuron Input ✓</div>
                 </div>
                 <img src="assets/P02/ho_step1_pixel_grid.png" style="width:100%; max-height:105px; object-fit:contain; border-radius:8px; border:1px solid #E0E3E7; background:#FFF; padding:3px;"/>
-                <div style="font-size:10.4px; color:#5F6368;">Skala proyek Frozen (<code>224×224×3</code>) → <strong>150.528 neuron</strong>!</div>
+                <div style="font-size:10.4px; color:#5F6368;">Frozen (<code>224×224×3</code>) → <strong>150.528 neuron</strong> → <code>Dense(5)</code> = <strong>752.645 param</strong> (Slide 21–24)</div>
               </div>
             """,
             notes="Alokasi waktu: 1 menit. Kuis 3/5 (Bab 3 Tahap 2): tekankan kenapa RGB harus dikali 3 (10.000 R + 10.000 G + 10.000 B = 30.000 neuron input).",
@@ -4162,7 +4493,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             qa_num=4,
             quiz_progress_idx=4,
             data_title="Kuis 4/5 — Peran Softmax di Output Layer",
-            kicker="EVALUASI CEPAT · KUIS 4 / 5 (BAB 3 · TAHAP 4)",
+            kicker="EVALUASI CEPAT · KUIS 4 / 5 (BAB 3 · TAHAP 4.2–4.3)",
             title_html='Mengapa Output Layer Memakai <span class="hl-yellow">Softmax</span>?',
             question_html="Di <strong>Output Layer</strong> klasifikasi <strong>5 karakter Frozen</strong> (<em>Anna, Elsa, Kristoff, Olaf, Sven</em>), mengapa kita memasang fungsi aktivasi <strong><code>Softmax</code></strong>?",
             choices=[
@@ -4172,8 +4503,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             ],
             answer_html=(
                 "<strong>Jawaban: A!</strong><br/>"
-                "• <strong>Mengapa tepat:</strong> Skor mentah <code>z = Σ(x·w) + b</code> bisa bernilai bebas (minus atau besar tak terbatas). <strong>Softmax</strong> (<code>e^z / Σe^z</code>) menormalkan kelima skor menjadi <strong>persentase keyakinan (0–100%) yang selalu berjumlah 100%</strong> sehingga mudah dibandingkan &amp; dipilih lewat <code>Argmax</code>.<br/>"
-                "• <strong>Kenapa B &amp; C keliru:</strong> Softmax justru menghasilkan nilai positif <code>(0, 1)</code>, dan tidak pernah mengedit piksel latar foto."
+                "• <strong>Mengapa tepat:</strong> Skor mentah <code>z = Σ(x·w) + b</code> bernilai bebas (bisa minus atau besar). <strong>Softmax</strong> (<code>e^z / Σe^z</code>) menormalkan kelima skor menjadi <strong>peluang (0–100%) berjumlah tepat 100%</strong> untuk dipilih lewat <code>Argmax</code> (<em>Slide 28–29</em>).<br/>"
+                "• <strong>Beda aktivasi lain (Slide 28):</strong> <code>ReLU</code> (negatif→<code>0</code>), <code>Sigmoid</code> (<code>0–100%</code> biner), &amp; <code>Tanh</code> (<code>−1 s/d +1</code> terpusat nol) — sedangkan <em>Output Multi-Class</em> wajib memakai <strong>Softmax</strong>."
             ),
             vis_q_html="""
               <svg viewBox="0 0 330 220" style="width:100%; max-width:320px; margin:0 auto; display:block;">
@@ -4243,7 +4574,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             data_title="Kuis 5/5 — Backpropagation & Gradient Descent",
             kicker="EVALUASI CEPAT · KUIS 5 / 5 (BAB 3 · TAHAP 5)",
             title_html='Proses Koreksi Bobot: <span class="hl-blue">Backprop &amp; Gradient Descent</span>',
-            question_html="Saat simulasi training Epoch 1 → Epoch 8 di Slide 32, <em>Mean Loss</em> turun dari <strong><code>1.70 → 0.21</code></strong>. Pasangan proses apa yang mengoreksi bobot <strong><code>W &amp; b</code></strong> agar tebakan makin akurat?",
+            question_html="Saat simulasi training Epoch 1 → Epoch 8 di Slide 33, <em>Mean Loss</em> turun dari <strong><code>1.70 → 0.21</code></strong>. Pasangan proses apa yang mengoreksi bobot <strong><code>W &amp; b</code></strong> agar tebakan makin akurat?",
             choices=[
                 "<strong>A.</strong> Flatten + Argmax (meluruskan piksel lalu memilih skor tertinggi)",
                 "<strong>B.</strong> Backpropagation + Gradient Descent (melacak sumber error mundur lalu menggeser <code>W &amp; b</code> menuruni bukit <em>Loss</em>)",
@@ -4251,9 +4582,9 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             ],
             answer_html=(
                 "<strong>Jawaban: B — Backpropagation + Gradient Descent!</strong><br/>"
-                "• <strong>Backpropagation:</strong> Berjalan mundur dari nilai <em>Loss</em> untuk menghitung seberapa besar andil tiap bobot <code>W</code> dan bias <code>b</code> terhadap kesalahan.<br/>"
-                "• <strong>Gradient Descent:</strong> Menggeser nilai <code>W &amp; b</code> sedikit demi sedikit sebesar <em>Learning Rate</em> menuju dasar lembah <em>Loss</em>.<br/>"
-                "• <strong>Kenapa A &amp; C keliru:</strong> <em>Resize, Normalisasi, Flatten,</em> dan <em>Argmax</em> hanya memproses data di jalur maju — tidak pernah memperbarui bobot!"
+                "• <strong>Backpropagation:</strong> Berjalan mundur dari nilai <em>Loss</em> untuk menghitung seberapa besar andil tiap bobot <code>W</code> dan bias <code>b</code> terhadap error.<br/>"
+                "• <strong>Gradient Descent:</strong> Menggeser <code>W &amp; b</code> per paket <strong>Batch</strong> (sebesar <em>Learning Rate</em>) menuruni bukit <em>Loss</em> menggunakan optimizer seperti <strong>Adam</strong> (<em>Slide 30–33</em>).<br/>"
+                "• <strong>Kenapa A &amp; C keliru:</strong> <em>Resize, Normalisasi, Flatten,</em> &amp; <em>Argmax</em> hanya memproses jalur maju — tidak memperbarui bobot!"
             ),
             vis_q_html="""
               <svg viewBox="0 0 330 215" style="width:100%; max-width:320px; margin:0 auto; display:block;">
@@ -4283,7 +4614,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
                   </div>
                 </div>
                 <div style="background:#E6F4EA; border:1px solid #A8DAB5; border-radius:8px; padding:5px 9px; font-size:10.8px; color:#137333; font-weight:700;">
-                  🎉 5/5 Kuis Tuntas — lanjut Kamus Istilah &amp; Hands-On!
+                  🎉 5/5 Kuis Tuntas — lanjut Kamus 16 Istilah (Slide 40) &amp; Hands-On!
                 </div>
               </div>
             """,
@@ -4334,7 +4665,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
       </div>
       <div class="finale-banner">
         <div style="font-size:12.6px; color:#E8EAED;">
-          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 40–41</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
+          <strong style="color:#81C995;">✓ Fondasi Teori Neural Network (P02) Tuntas!</strong> &nbsp;·&nbsp; Referensi materi Bab 1–3: <strong style="color:#FDD663;">Slide 41–42</strong> &nbsp;·&nbsp; Simpan grafik Loss dari notebook sebagai catatan.
         </div>
         <div style="font-size:12px; font-style:italic; color:#9AA0A6; white-space:nowrap;">&ldquo;Memahami 1 neuron dengan jernih adalah kunci memahami jaringan jutaan parameter.&rdquo;</div>
       </div>
@@ -4353,15 +4684,15 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-num">1</div>
             <div class="ref-card-head"><span class="ref-title">Google Machine Learning Crash Course [CEK LINK]</span><span class="ref-tag must">Bab 1 · Inti</span></div>
           </div>
-          <div class="ref-desc">Pengantar terstruktur ramah pemula tentang konsep AI, Machine Learning, fitur data, dan cara model belajar dari pasangan <code>Data + Label</code>.</div>
-          <div class="ref-card-foot"><span class="ref-url">developers.google.com/machine-learning/crash-course ↗</span><span class="ref-ctx-pill">Bab 1 · AI, ML &amp; Fitur</span></div>
+          <div class="ref-desc">Pengantar terstruktur ramah pemula tentang AI modern, <em>Supervised Learning</em>, fitur data, &amp; cara model belajar dari pasangan <code>Data + Label</code>.</div>
+          <div class="ref-card-foot"><span class="ref-url">developers.google.com/machine-learning/crash-course ↗</span><span class="ref-ctx-pill">Bab 1 · AI/ML &amp; Supervised (S06–S07)</span></div>
         </a>
         <a class="ref-card-rich acc-red" href="https://www.coursera.org/learn/convolutional-neural-networks" target="_blank" rel="noopener">
           <div class="ref-card-top">
             <div class="ref-num red">4</div>
             <div class="ref-card-head"><span class="ref-title">Coursera (DeepLearning.AI) — Computer Vision Week 1</span><span class="ref-tag">Bab 2 · Video</span></div>
           </div>
-          <div class="ref-desc">Pengantar visual tugas Computer Vision pada foto nyata: membedakan <em>Image Classification</em>, deteksi objek, hingga cara komputer melihat tepi gambar.</div>
+          <div class="ref-desc">Pengantar visual tugas Computer Vision pada foto nyata: <em>Image Classification</em>, deteksi objek, hingga segmentasi &amp; cara komputer melihat tepi gambar.</div>
           <div class="ref-card-foot"><span class="ref-url">coursera.org/learn/convolutional-neural-networks ↗</span><span class="ref-ctx-pill">Bab 2 · 4 Tugas CV (S12–S16)</span></div>
         </a>
         <a class="ref-card-rich acc-blue" href="https://www.coursera.org/specializations/deep-learning" target="_blank" rel="noopener">
@@ -4369,15 +4700,15 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-num">2</div>
             <div class="ref-card-head"><span class="ref-title">Coursera — Deep Learning Specialization Course 1 [CEK LINK]</span><span class="ref-tag doc">Kursus</span></div>
           </div>
-          <div class="ref-desc">Fondasi Neural Networks &amp; Deep Learning dari nol: mengapa pendekatan aturan manual kalah fleksibel dibanding belajar fitur otomatis.</div>
-          <div class="ref-card-foot"><span class="ref-url">coursera.org/specializations/deep-learning ↗</span><span class="ref-ctx-pill">Bab 1 · ML vs DL (S07–S09)</span></div>
+          <div class="ref-desc">Fondasi Neural Networks &amp; Deep Learning dari nol: mengapa aturan manual (AI Klasik) kalah fleksibel dibanding <em>Feature Learning</em> otomatis.</div>
+          <div class="ref-card-foot"><span class="ref-url">coursera.org/specializations/deep-learning ↗</span><span class="ref-ctx-pill">Bab 1 · ML vs DL (S06–S09)</span></div>
         </a>
         <a class="ref-card-rich acc-red" href="https://cs231n.github.io/classification/" target="_blank" rel="noopener">
           <div class="ref-card-top">
             <div class="ref-num red">5</div>
             <div class="ref-card-head"><span class="ref-title">Stanford CS231n — Image Classification Notes [CEK LINK]</span><span class="ref-tag doc">Catatan</span></div>
           </div>
-          <div class="ref-desc">Catatan kuliah visual yang membedah tantangan nyata <em>Image Classification</em> (latar ramai, pencahayaan, sudut kamera) dari piksel ke skor kelas.</div>
+          <div class="ref-desc">Catatan kuliah visual membedah tantangan nyata <em>Image Classification</em> (latar ramai, pencahayaan, sudut kamera) dari piksel ke skor Multi-Class.</div>
           <div class="ref-card-foot"><span class="ref-url">cs231n.github.io/classification/ ↗</span><span class="ref-ctx-pill">Bab 2 · Classification (S13)</span></div>
         </a>
         <a class="ref-card-rich acc-yellow" href="https://www.youtube.com/@statquest" target="_blank" rel="noopener">
@@ -4385,8 +4716,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-num yellow">3</div>
             <div class="ref-card-head"><span class="ref-title">StatQuest — Machine Learning &amp; Neural Networks [CEK LINK]</span><span class="ref-tag">Video</span></div>
           </div>
-          <div class="ref-desc">Penjelasan visual super jelas langkah demi langkah tentang <em>Supervised Learning</em>, klasifikasi multi-kelas, dan intuisi dasar Neural Network.</div>
-          <div class="ref-card-foot"><span class="ref-url">youtube.com/@statquest ↗</span><span class="ref-ctx-pill">Bab 1 &amp; Bab 3 · Intuitif</span></div>
+          <div class="ref-desc">Penjelasan visual super jelas langkah demi langkah tentang <em>Supervised Learning</em>, bobot &amp; bias, fungsi aktivasi, hingga klasifikasi multi-kelas.</div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/@statquest ↗</span><span class="ref-ctx-pill">Bab 1 &amp; 3 (S07–S09, S27–S28)</span></div>
         </a>
         <a class="ref-card-rich acc-green" href="https://pillow.readthedocs.io/" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -4394,7 +4725,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">Dokumentasi Pillow (PIL) — Pengolahan Foto &amp; Piksel [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
           </div>
           <div class="ref-desc">Rujukan resmi membuka foto, mengubah ukuran (<em>resize</em>), membaca kanal <code>RGB</code>, dan mengubah gambar ke array NumPy untuk input Neural Network.</div>
-          <div class="ref-card-foot"><span class="ref-url">pillow.readthedocs.io ↗</span><span class="ref-ctx-pill">Recap &amp; Hands-On Tahap 1</span></div>
+          <div class="ref-card-foot"><span class="ref-url">pillow.readthedocs.io ↗</span><span class="ref-ctx-pill">Recap &amp; Hands-On 1 (S03, S44)</span></div>
         </a>
       </div>
       <div class="ref-route-bar">
@@ -4403,8 +4734,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
           <span class="pill blue" style="font-size:9.6px; padding:2px 8px;">Opsional · Klik kartu untuk membuka</span>
         </div>
         <div class="ref-route-grid">
-          <div class="ref-step-box"><strong style="color:#1A73E8;">Bab 1 (#1, #2, #3):</strong> Memperkuat peta <code>AI ⊃ ML ⊃ DL</code>, cara kerja <em>Supervised Learning</em>, &amp; beda ML vs DL.</div>
-          <div class="ref-step-box"><strong style="color:#C5221F;">Bab 2 (#4, #5):</strong> Memperdalam 4 tugas Computer Vision &amp; tantangan foto polos vs ramai pada <em>Image Classification</em>.</div>
+          <div class="ref-step-box"><strong style="color:#1A73E8;">Bab 1 (#1, #2, #3):</strong> Memperkuat AI Klasik vs Modern, peta <code>AI ⊃ ML ⊃ DL</code>, 3 paradigma ML, &amp; beda ML vs DL.</div>
+          <div class="ref-step-box"><strong style="color:#C5221F;">Bab 2 (#4, #5):</strong> Memperdalam Binary/Multi-Class Classification, Object Detection (<code>YOLO</code>), Segmentation, &amp; Tracking.</div>
           <div class="ref-step-box"><strong style="color:#137333;">Hands-On (#6):</strong> Panduan cepat membuka, <em>resize</em>, &amp; membaca nilai piksel RGB foto Frozen di Python.</div>
         </div>
       </div>
@@ -4412,7 +4743,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
     </section>
 
     <!-- REFERENSI MATERI (2/2) — BAB 3 & HANDS-ON (0 MENIT) -->
-    <section class="slide" data-title="Referensi Materi (2/2) — Bab 3 Neural Network" data-notes="Alokasi waktu: 0 menit. Referensi materi bagian 2 khusus untuk Bab 3 (Neuron, Flatten, Weight+Bias, ReLU, Softmax, Loss, Backpropagation, Gradient Descent & Keras Sequential) sesuai docs/PLAN.md.">
+    <section class="slide" data-title="Referensi Materi (2/2) — Bab 3 Neural Network" data-notes="Alokasi waktu: 0 menit. Referensi materi bagian 2 khusus untuk Bab 3 (Neuron, Flatten, Dense+Param, Weight+Bias, ReLU/Sigmoid/Tanh/Softmax, Loss, Backprop, Gradient Descent, LR/Adam, Batch/Overfitting &amp; Keras Sequential) sesuai docs/PLAN.md.">
       <div class="kicker">REFERENSI MATERI · BAGIAN 2 (BAB 3 · NEURAL NETWORK)</div>
       <h2>Referensi Materi: <span class="hl-green">Teori Neural Network &amp; Praktik Keras</span></h2>
       <div class="ref-grid-full">
@@ -4422,15 +4753,15 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">3Blue1Brown — But what is a Neural Network?</span><span class="ref-tag must">Wajib</span></div>
           </div>
           <div class="ref-desc">Visual paling jernih untuk melihat langsung bagaimana piksel gambar masuk ke <em>Input Layer</em>, dikali bobot (<em>weight</em>), ditambah <em>bias</em>, hingga prediksi!</div>
-          <div class="ref-card-foot"><span class="ref-url">youtube.com/watch?v=aircAruvnKk ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 1–4 (S20–S28)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/watch?v=aircAruvnKk ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 1–4 (S20–S29)</span></div>
         </a>
         <a class="ref-card-rich acc-yellow" href="https://playground.tensorflow.org/" target="_blank" rel="noopener">
           <div class="ref-card-top">
             <div class="ref-num yellow">10</div>
             <div class="ref-card-head"><span class="ref-title">TensorFlow Playground [CEK LINK]</span><span class="ref-tag code">Sandbox</span></div>
           </div>
-          <div class="ref-desc">Eksperimen interaktif langsung di browser tanpa coding: ubah bobot, fungsi aktivasi (<code>ReLU</code>), dan <em>Learning Rate</em> sambil melihat efeknya live!</div>
-          <div class="ref-card-foot"><span class="ref-url">playground.tensorflow.org ↗</span><span class="ref-ctx-pill">Bab 3 · Eksperimen W, b &amp; LR</span></div>
+          <div class="ref-desc">Eksperimen interaktif di browser tanpa coding: ubah bobot, aktivasi (<code>ReLU, Sigmoid, Tanh</code>), &amp; <em>Learning Rate</em> sambil melihat <em>Overfitting</em> live!</div>
+          <div class="ref-card-foot"><span class="ref-url">playground.tensorflow.org ↗</span><span class="ref-ctx-pill">Bab 3 · Aktivasi, LR &amp; Overfit (S28, S31–S32)</span></div>
         </a>
         <a class="ref-card-rich acc-blue" href="https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -4438,7 +4769,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">3Blue1Brown — Playlist Neural Networks (Bab 1–4)</span><span class="ref-tag">Video</span></div>
           </div>
           <div class="ref-desc">Seri lengkap 4 episode: membedah <em>Loss Function</em>, cara kerja <em>Gradient Descent</em> menuruni lembah error, hingga intuisi <em>Backpropagation</em>.</div>
-          <div class="ref-card-foot"><span class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_... ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 5 (S29–S32)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">youtube.com/playlist?list=PLZHQObOWTQDNU6R1_... ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 5 (S30–S33)</span></div>
         </a>
         <a class="ref-card-rich acc-green" href="https://keras.io/guides/sequential_model/" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -4446,7 +4777,7 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">Keras Official — The Sequential Model Guide [CEK LINK]</span><span class="ref-tag code">Dokumentasi</span></div>
           </div>
           <div class="ref-desc">Panduan resmi menyusun layer <code>Sequential</code>, <code>Flatten</code>, dan <code>Dense(..., activation="softmax")</code> di Keras 3 beserta cara membaca <code>summary()</code>.</div>
-          <div class="ref-card-foot"><span class="ref-url">keras.io/guides/sequential_model/ ↗</span><span class="ref-ctx-pill">Hands-On Tahap 4–5 (S46–S48)</span></div>
+          <div class="ref-card-foot"><span class="ref-url">keras.io/guides/sequential_model/ ↗</span><span class="ref-ctx-pill">Dense &amp; Hands-On (S24, S47–S49)</span></div>
         </a>
         <a class="ref-card-rich acc-green" href="https://3blue1brown.com/lessons/neural-networks" target="_blank" rel="noopener">
           <div class="ref-card-top">
@@ -4454,15 +4785,15 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
             <div class="ref-card-head"><span class="ref-title">3Blue1Brown — Versi Tulis Neural Networks</span><span class="ref-tag doc">Artikel</span></div>
           </div>
           <div class="ref-desc">Ringkasan interaktif berbentuk bacaan bergambar — cocok jika ingin mengulang konsep <em>Forward Pass</em>, <em>Weight</em>, &amp; <em>Loss</em> pelan-pelan tanpa video.</div>
-          <div class="ref-card-foot"><span class="ref-url">3blue1brown.com/lessons/neural-networks ↗</span><span class="ref-ctx-pill">Bab 3 · Bacaan Santai</span></div>
+          <div class="ref-card-foot"><span class="ref-url">3blue1brown.com/lessons/neural-networks ↗</span><span class="ref-ctx-pill">Bab 3 · Tahap 4–5 (S26–S30)</span></div>
         </a>
         <a class="ref-card-rich acc-blue" href="https://arxiv.org/abs/1412.6980" target="_blank" rel="noopener">
           <div class="ref-card-top">
             <div class="ref-num">12</div>
             <div class="ref-card-head"><span class="ref-title">Kingma &amp; Ba — Adam Optimizer (arXiv 1412.6980) [CEK LINK]</span><span class="ref-tag doc">Paper</span></div>
           </div>
-          <div class="ref-desc">Paper asli optimizer <strong>Adam</strong> (pengembangan adaptif dari <em>Gradient Descent</em>) yang kita pakai langsung saat <code>compile()</code> di Hands-On Tahap 4!</div>
-          <div class="ref-card-foot"><span class="ref-url">arxiv.org/abs/1412.6980 ↗</span><span class="ref-ctx-pill">Bab 3 &amp; Hands-On · Optimizer</span></div>
+          <div class="ref-desc">Paper asli optimizer <strong>Adam</strong> (pengembangan adaptif dari <em>Gradient Descent</em>) yang kita bandingkan &amp; pakai di <code>compile()</code>!</div>
+          <div class="ref-card-foot"><span class="ref-url">arxiv.org/abs/1412.6980 ↗</span><span class="ref-ctx-pill">Bab 3 &amp; Hands-On (S31, S47–S48)</span></div>
         </a>
       </div>
       <div class="ref-route-bar" style="background:#E6F4EA; border-color:#A8DAB5;">
@@ -4472,8 +4803,8 @@ tampilkan_peta_bobot(model_nn, W_awal, X_5foto)""",
         </div>
         <div class="ref-route-grid">
           <div class="ref-step-box"><strong style="color:#1A73E8;">1. Tonton #7 (±19 menit):</strong> Visualisasi 3Blue1Brown paling jernih memperkuat bayangan piksel → neuron → Softmax.</div>
-          <div class="ref-step-box"><strong style="color:#B06000;">2. Coba #10 (±10 menit):</strong> Mainkan slider bobot, <code>ReLU</code>, &amp; <em>Learning Rate</em> di browser tanpa menulis kode sama sekali.</div>
-          <div class="ref-step-box"><strong style="color:#137333;">3. Baca #11 (±15 menit):</strong> Referensi cepat untuk sintaks <code>Sequential([Flatten(), Dense(...)])</code> di Hands-On!</div>
+          <div class="ref-step-box"><strong style="color:#B06000;">2. Coba #10 (±10 menit):</strong> Mainkan slider bobot, <code>ReLU/Tanh</code>, &amp; <em>Learning Rate</em>, lalu amati efek <em>Overfitting</em> live!</div>
+          <div class="ref-step-box"><strong style="color:#137333;">3. Baca #11 (±15 menit):</strong> Referensi cepat sintaks <code>Sequential([Flatten(), Dense(...)])</code> + <code>Adam</code> untuk Hands-On!</div>
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -4538,21 +4869,42 @@ def build_extra_js(data: dict) -> str:
           <svg viewBox="0 0 490 270" style="width:100%; height:100%; max-height:310px; display:block;">
             <rect x="8" y="16" width="474" height="175" rx="14" fill="#FFFFFF" stroke="#F6AEA9" stroke-width="1.6"/>
             <text x="24" y="38" font-family="Poppins" font-size="11.5" font-weight="700" fill="#C5221F">ALUR PEMROGRAMAN TRADISIONAL (ATURAN MANUAL)</text>
-            <rect x="24" y="56" width="132" height="54" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
-            <text x="90" y="80" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#1A73E8">Data (Foto)</text>
-            <text x="90" y="98" text-anchor="middle" font-family="Roboto" font-size="10.5" fill="#5F6368">Piksel RGB</text>
-            <rect x="24" y="122" width="132" height="54" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>
-            <text x="90" y="145" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#C5221F">Aturan Manual</text>
-            <text x="90" y="163" text-anchor="middle" font-family="Roboto Mono" font-size="10" fill="#C5221F">if biru &gt; 0.6...</text>
-            <line x1="156" y1="83" x2="212" y2="108" stroke="#5F6368" stroke-width="2.4"/>
-            <line x1="156" y1="149" x2="212" y2="124" stroke="#5F6368" stroke-width="2.4"/>
-            <rect x="214" y="84" width="112" height="64" rx="12" fill="#202124"/>
-            <text x="270" y="121" text-anchor="middle" font-family="Poppins" font-size="12.5" font-weight="700" fill="#FFFFFF">Komputer</text>
-            <line x1="326" y1="116" x2="366" y2="116" stroke="#5F6368" stroke-width="2.6"/>
+            <g class="s07-in">
+              <rect x="24" y="56" width="132" height="54" rx="10" fill="#E8F0FE" stroke="#4285F4" stroke-width="2"/>
+              <text x="90" y="80" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#1A73E8">Data (Foto)</text>
+              <text x="90" y="98" text-anchor="middle" font-family="Roboto" font-size="10.5" fill="#5F6368">Piksel RGB</text>
+              <rect x="24" y="122" width="132" height="54" rx="10" fill="#FCE8E6" stroke="#EA4335" stroke-width="2"/>
+              <text x="90" y="145" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#C5221F">Aturan Manual</text>
+              <text x="90" y="163" text-anchor="middle" font-family="Roboto Mono" font-size="10" fill="#C5221F">if biru &gt; 0.6...</text>
+            </g>
+            <line x1="156" y1="83" x2="212" y2="108" stroke="#C6DAFC" stroke-width="2.6"/>
+            <line class="s07-flow" x1="156" y1="83" x2="212" y2="108" stroke="#4285F4" stroke-width="2.2"/>
+            <line x1="156" y1="149" x2="212" y2="124" stroke="#FAD2CF" stroke-width="2.6"/>
+            <line class="s07-flow" x1="156" y1="149" x2="212" y2="124" stroke="#EA4335" stroke-width="2.2"/>
+            <circle class="s07-motion-dot" r="4.2" fill="#4285F4" stroke="#FFFFFF" stroke-width="1.3" opacity="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M156 83 L212 108" keyPoints="0;1;1" keyTimes="0;0.42;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.38;0.44;1" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <circle class="s07-motion-dot" r="4.2" fill="#EA4335" stroke="#FFFFFF" stroke-width="1.3" opacity="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M156 149 L212 124" keyPoints="0;1;1" keyTimes="0;0.42;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.38;0.44;1" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-cpu">
+              <rect x="214" y="84" width="112" height="64" rx="12" fill="#202124"/>
+              <text x="270" y="121" text-anchor="middle" font-family="Poppins" font-size="12.5" font-weight="700" fill="#FFFFFF">Komputer</text>
+            </g>
+            <line x1="326" y1="116" x2="366" y2="116" stroke="#DADCE0" stroke-width="2.8"/>
+            <line class="s07-flow" x1="326" y1="116" x2="366" y2="116" stroke="#5F6368" stroke-width="2.4"/>
             <polygon points="364,110 374,116 364,122" fill="#5F6368"/>
-            <rect x="376" y="84" width="92" height="64" rx="10" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
-            <text x="422" y="113" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#B06000">Jawaban</text>
-            <text x="422" y="131" text-anchor="middle" font-family="Roboto" font-size="10.5" fill="#5F6368">Elsa / Olaf</text>
+            <circle class="s07-motion-dot" r="4.4" fill="#FBBC04" stroke="#B06000" stroke-width="1.4" opacity="0">
+              <animateMotion dur="2.8s" repeatCount="indefinite" path="M326 116 L366 116" keyPoints="0;0;1;1" keyTimes="0;0.50;0.82;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.49;0.52;0.80;0.84;1" dur="2.8s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-out-rule">
+              <rect x="376" y="84" width="92" height="64" rx="10" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>
+              <text x="422" y="113" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#B06000">Jawaban</text>
+              <text x="422" y="131" text-anchor="middle" font-family="Roboto" font-size="10.5" fill="#5F6368">Elsa / Olaf</text>
+            </g>
             <rect x="8" y="204" width="474" height="54" rx="12" fill="#FCE8E6" stroke="#F6AEA9" stroke-width="1.4"/>
             <text x="245" y="227" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#C5221F">Masalah pada Foto Dunia Nyata:</text>
             <text x="245" y="246" text-anchor="middle" font-family="Roboto" font-size="11" fill="#3C4043">Begitu cahaya redup atau latar rak ramai, aturan warna manual langsung gagal!</text>
@@ -4570,22 +4922,43 @@ def build_extra_js(data: dict) -> str:
             <!-- Stage 1: Training -->
             <rect x="8" y="8" width="474" height="148" rx="14" fill="#FFFFFF" stroke="#A8DAB5" stroke-width="1.8"/>
             <text x="24" y="28" font-family="Poppins" font-size="11" font-weight="700" fill="#137333">TAHAP 1 · TRAINING (BELAJAR DARI CONTOH + KUNCI JAWABAN)</text>
-            <rect x="24" y="40" width="132" height="46" rx="9" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.8"/>
-            <text x="90" y="60" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#1A73E8">Data ({total_imgs} Foto)</text>
-            <text x="90" y="76" text-anchor="middle" font-family="Roboto" font-size="10" fill="#5F6368">Contoh latihan</text>
-            <rect x="24" y="96" width="132" height="46" rx="9" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>
-            <text x="90" y="116" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#137333">Label Jawaban</text>
-            <text x="90" y="132" text-anchor="middle" font-family="Roboto Mono" font-size="9.8" fill="#137333">Anna..Sven</text>
-            <line x1="156" y1="63" x2="210" y2="85" stroke="#34A853" stroke-width="2.4"/>
-            <line x1="156" y1="119" x2="210" y2="99" stroke="#34A853" stroke-width="2.4"/>
-            <rect x="212" y="62" width="114" height="60" rx="12" fill="#1A73E8"/>
-            <text x="269" y="89" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">Algoritma</text>
-            <text x="269" y="107" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">ML</text>
-            <line x1="326" y1="92" x2="366" y2="92" stroke="#34A853" stroke-width="2.6"/>
+            <g class="s07-in">
+              <rect x="24" y="40" width="132" height="46" rx="9" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.8"/>
+              <text x="90" y="60" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#1A73E8">Data ({total_imgs} Foto)</text>
+              <text x="90" y="76" text-anchor="middle" font-family="Roboto" font-size="10" fill="#5F6368">Contoh latihan</text>
+              <rect x="24" y="96" width="132" height="46" rx="9" fill="#E6F4EA" stroke="#34A853" stroke-width="1.8"/>
+              <text x="90" y="116" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#137333">Label Jawaban</text>
+              <text x="90" y="132" text-anchor="middle" font-family="Roboto Mono" font-size="9.8" fill="#137333">Anna..Sven</text>
+            </g>
+            <line x1="156" y1="63" x2="210" y2="85" stroke="#CEEAD6" stroke-width="2.6"/>
+            <line class="s07-flow" x1="156" y1="63" x2="210" y2="85" stroke="#4285F4" stroke-width="2.2"/>
+            <line x1="156" y1="119" x2="210" y2="99" stroke="#CEEAD6" stroke-width="2.6"/>
+            <line class="s07-flow" x1="156" y1="119" x2="210" y2="99" stroke="#34A853" stroke-width="2.2"/>
+            <circle class="s07-motion-dot" r="4.0" fill="#4285F4" stroke="#FFFFFF" stroke-width="1.2" opacity="0">
+              <animateMotion dur="3.0s" repeatCount="indefinite" path="M156 63 L210 85" keyPoints="0;1;1" keyTimes="0;0.38;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.35;0.40;1" dur="3.0s" repeatCount="indefinite"/>
+            </circle>
+            <circle class="s07-motion-dot" r="4.0" fill="#34A853" stroke="#FFFFFF" stroke-width="1.2" opacity="0">
+              <animateMotion dur="3.0s" repeatCount="indefinite" path="M156 119 L210 99" keyPoints="0;1;1" keyTimes="0;0.38;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.35;0.40;1" dur="3.0s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-cpu">
+              <rect x="212" y="62" width="114" height="60" rx="12" fill="#1A73E8"/>
+              <text x="269" y="89" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">Algoritma</text>
+              <text x="269" y="107" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">ML</text>
+            </g>
+            <line x1="326" y1="92" x2="366" y2="92" stroke="#CEEAD6" stroke-width="2.8"/>
+            <line class="s07-flow" x1="326" y1="92" x2="366" y2="92" stroke="#34A853" stroke-width="2.4"/>
             <polygon points="364,86 374,92 364,98" fill="#34A853"/>
-            <rect x="376" y="62" width="92" height="60" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2.4"/>
-            <text x="422" y="89" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#137333">Model</text>
-            <text x="422" y="106" text-anchor="middle" font-family="Roboto" font-size="10" fill="#137333">(Pola Terlatih)</text>
+            <circle class="s07-motion-dot" r="4.2" fill="#34A853" stroke="#FFFFFF" stroke-width="1.3" opacity="0">
+              <animateMotion dur="3.0s" repeatCount="indefinite" path="M326 92 L366 92" keyPoints="0;0;1;1" keyTimes="0;0.42;0.74;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.41;0.44;0.72;0.76;1" dur="3.0s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-model">
+              <rect x="376" y="62" width="92" height="60" rx="10" fill="#E6F4EA" stroke="#34A853" stroke-width="2.4"/>
+              <text x="422" y="89" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#137333">Model</text>
+              <text x="422" y="106" text-anchor="middle" font-family="Roboto" font-size="10" fill="#137333">(Pola Terlatih)</text>
+            </g>
 
             <!-- Stage 2: Inference / Prediction -->
             <rect x="8" y="168" width="474" height="94" rx="14" fill="#E8F0FE" stroke="#C6DAFC" stroke-width="1.6"/>
@@ -4593,13 +4966,29 @@ def build_extra_js(data: dict) -> str:
             <rect x="24" y="200" width="132" height="48" rx="9" fill="#FFFFFF" stroke="#4285F4" stroke-width="1.8"/>
             <text x="90" y="221" text-anchor="middle" font-family="Poppins" font-size="11.5" font-weight="700" fill="#1A73E8">Foto Baru</text>
             <text x="90" y="237" text-anchor="middle" font-family="Roboto" font-size="9.8" fill="#5F6368">Belum pernah dilihat</text>
-            <line x1="156" y1="224" x2="210" y2="224" stroke="#1A73E8" stroke-width="2.4"/><polygon points="208,218 218,224 208,230" fill="#1A73E8"/>
-            <rect x="220" y="200" width="106" height="48" rx="9" fill="#34A853"/>
-            <text x="273" y="229" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">Model</text>
-            <line x1="326" y1="224" x2="366" y2="224" stroke="#1A73E8" stroke-width="2.4"/><polygon points="364,218 374,224 364,230" fill="#1A73E8"/>
-            <rect x="376" y="200" width="92" height="48" rx="9" fill="#202124"/>
-            <text x="422" y="221" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="700" fill="#FFFFFF">Prediksi</text>
-            <text x="422" y="238" text-anchor="middle" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#34A853">"Elsa!"</text>
+            <line x1="156" y1="224" x2="210" y2="224" stroke="#C6DAFC" stroke-width="2.6"/>
+            <line class="s07-flow" x1="156" y1="224" x2="210" y2="224" stroke="#1A73E8" stroke-width="2.2"/>
+            <polygon points="208,218 218,224 208,230" fill="#1A73E8"/>
+            <circle class="s07-motion-dot" r="4.2" fill="#4285F4" stroke="#FFFFFF" stroke-width="1.2" opacity="0">
+              <animateMotion dur="3.0s" repeatCount="indefinite" path="M156 224 L214 224" keyPoints="0;0;1;1" keyTimes="0;0.15;0.48;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.14;0.17;0.46;0.50;1" dur="3.0s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-model">
+              <rect x="220" y="200" width="106" height="48" rx="9" fill="#34A853"/>
+              <text x="273" y="229" text-anchor="middle" font-family="Poppins" font-size="12" font-weight="700" fill="#FFFFFF">Model</text>
+            </g>
+            <line x1="326" y1="224" x2="366" y2="224" stroke="#C6DAFC" stroke-width="2.6"/>
+            <line class="s07-flow" x1="326" y1="224" x2="366" y2="224" stroke="#34A853" stroke-width="2.2"/>
+            <polygon points="364,218 374,224 364,230" fill="#1A73E8"/>
+            <circle class="s07-motion-dot" r="4.2" fill="#34A853" stroke="#FFFFFF" stroke-width="1.2" opacity="0">
+              <animateMotion dur="3.0s" repeatCount="indefinite" path="M326 224 L368 224" keyPoints="0;0;1;1" keyTimes="0;0.52;0.86;1" calcMode="linear"/>
+              <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.51;0.54;0.84;0.88;1" dur="3.0s" repeatCount="indefinite"/>
+            </circle>
+            <g class="s07-out-ml">
+              <rect x="376" y="200" width="92" height="48" rx="9" fill="#202124"/>
+              <text x="422" y="221" text-anchor="middle" font-family="Poppins" font-size="11" font-weight="700" fill="#FFFFFF">Prediksi</text>
+              <text x="422" y="238" text-anchor="middle" font-family="Roboto Mono" font-size="10.5" font-weight="700" fill="#34A853">"Elsa!"</text>
+            </g>
           </svg>`;
         if (bar) bar.className = 'card-top-bar bar-green';
         badge.className = 'pill green'; badge.textContent = 'MACHINE LEARNING (SUPERVISED)';
@@ -7834,7 +8223,7 @@ def build_extra_js(data: dict) -> str:
               ? 'Tahap 3: Activation (Softmax)'
               : isTrainPh4
                 ? `Tahap 4: Error → Update w & b (${{Math.round(tmTrainAlpha * 100)}}%)`
-                : (tmTrainAlpha < 0.15 ? 'Weight + Bias: Acak (Epoch 0)' : 'Weight + Bias: Terlatih (150.528 w)');
+                : (tmTrainAlpha < 0.15 ? 'Weight + Bias: Acak (Epoch 0)' : 'Weight + Bias: Terlatih (752.645 param)');
       html += `<rect x="242" y="4" width="254" height="20" rx="8" fill="${{wPillCol}}" stroke="${{wPillStr}}" stroke-width="1.6"/>`;
       html += `<text x="369" y="17.3" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="${{wPillTxt}}">${{wPillLbl}}</text>`;
       html += `<circle cx="242" cy="32.5" r="3.3" fill="#34A853"/>`;
@@ -8321,16 +8710,16 @@ def build_extra_js(data: dict) -> str:
     tmPhotoIdx = 1; setTmMode('after');
 
     // =========================================================================
-    // SIMULATOR #5 (Slide 25): SEAMLESS ZOOM-IN OF SLIDE 24 TAHAP 4.1 (WEIGHT + BIAS)
-    // Uses 100% IDENTICAL 150.528-pixel weights, mid sums, & bias from Slide 24!
+    // SIMULATOR #5 (Slide 27): SEAMLESS ZOOM-IN OF SLIDE 26 TAHAP 4.1 (WEIGHT + BIAS)
+    // Uses 100% IDENTICAL 150.528-pixel weights, mid sums, & bias from Slide 26!
     // =========================================================================
-    const WB_CHAR_NOTES = [
-      '<strong>Zoom-In Tahap 4.1 (Anna · y₁):</strong> <code>150.522 piksel</code> objek menyumbang <code>+2.89</code> (pojok latar <code>w≈0</code>), dikurangi <code>Bias (−0.51)</code> → <strong>z₁ = +2.38</strong> → Softmax <strong>83.0% ✅</strong>!',
-      '<strong>Zoom-In Tahap 4.1 (Elsa · y₂):</strong> <code>150.522 piksel</code> objek gaun biru menyumbang <code>+3.17</code> (pojok latar <code>w≈0</code>), lalu <code>Bias (−1.04)</code> menyeimbangkan jadi <strong>z₂ = +2.13</strong> → Softmax <strong>77.7% ✅</strong>!',
-      '<strong>Zoom-In Tahap 4.1 (Kristoff · y₃):</strong> <code>150.522 piksel</code> objek menyumbang <code>+2.20</code> + <code>Bias (−0.16)</code> → <strong>z₃ = +2.04</strong> → Softmax <strong>75.4% ✅</strong>!',
-      '<strong>Zoom-In Tahap 4.1 (Olaf · y₄):</strong> <code>150.522 piksel</code> objek menyumbang <code>+1.38</code>, diangkat oleh <code>Bias (+0.81)</code> → <strong>z₄ = +2.19</strong> → Softmax <strong>79.2% ✅</strong>!',
-      '<strong>Zoom-In Tahap 4.1 (Sven · y₅):</strong> <code>150.522 piksel</code> objek menyumbang <code>+1.10</code>, dibantu <code>Bias (+0.90)</code> → <strong>z₅ = +2.00</strong> → Softmax <strong>74.9% ✅</strong>!',
-    ];
+    function _wbOptNote(k) {{
+      const clsName = TRAINING_MATH.classes[k];
+      const ev = _tmEval(k, 1.0);
+      const fmt2 = (v) => (v >= 0 ? '+' : '') + v.toFixed(2);
+      const midN = (TRAINING_MATH.n_mid || 150522).toLocaleString('id-ID');
+      return `<strong>Zoom-In Tahap 4.1 (${{clsName}} · y${{k + 1}}):</strong> <code>${{midN}} piksel</code> objek menyumbang <code>${{fmt2(ev.mid[k])}}</code> (pojok latar <code>w≈0</code>), ditambah <code>Bias (${{fmt2(ev.b[k])}})</code> → <strong>z${{k + 1}} = ${{fmt2(ev.z[k])}}</strong> → Softmax <strong>${{ev.probs[k].toFixed(1)}}% ✅</strong>!`;
+    }}
     let wbCharIdx = 1; // default Elsa (matches Slide 24!)
     let wbPresetKey = 'elsa_opt';
     let wbTourTimer = null;
@@ -8406,6 +8795,7 @@ def build_extra_js(data: dict) -> str:
         b.classList.toggle('outline', b.dataset.wb !== key);
       }});
       const p = _wbPresetParams(wbCharIdx, key);
+      _wbApplyInstant(wbCharIdx, key);
       _wbGlideTo(p.wScale, p.b, key);
     }}
 
@@ -8559,12 +8949,12 @@ def build_extra_js(data: dict) -> str:
           h += `<line x1="${{xLeft}}" y1="${{inY[i]}}" x2="${{xNeuronLeft}}" y2="${{nCy}}" stroke="#BDC1C6" stroke-width="1.15" stroke-dasharray="3,2" opacity="0.82"/>`;
         }}
         const topBx = xLeft + (xNeuronLeft - xLeft) * 0.44;
-        const topBy = inY[1] + (nCy - inY[1]) * 0.44 - 12;
+        const topBy = inY[1] + (nCy - inY[1]) * 0.44 - 16;
         h += `<rect x="${{(topBx - 54).toFixed(1)}}" y="${{(topBy - 7.5).toFixed(1)}}" width="108" height="15" rx="4.5" fill="#F1F3F4" stroke="#BDC1C6" stroke-width="1"/>`;
         h += `<text x="${{topBx.toFixed(1)}}" y="${{(topBy + 2.6).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.9" font-weight="700" fill="#5F6368">Piksel sudut: w≈0 (abaikan)</text>`;
 
         const botBx = xLeft + (xNeuronLeft - xLeft) * 0.42;
-        const botBy = inY[5] + (nCy - inY[5]) * 0.42 + 12;
+        const botBy = inY[5] + (nCy - inY[5]) * 0.42 + 16;
         h += `<rect x="${{(botBx - 46).toFixed(1)}}" y="${{(botBy - 7.5).toFixed(1)}}" width="92" height="15" rx="4.5" fill="#F1F3F4" stroke="#BDC1C6" stroke-width="1"/>`;
         h += `<text x="${{botBx.toFixed(1)}}" y="${{(botBy + 2.6).toFixed(1)}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="6.9" font-weight="700" fill="#5F6368">Piksel akhir: w≈0</text>`;
 
@@ -8625,7 +9015,7 @@ def build_extra_js(data: dict) -> str:
       if (ins) {{
         if (presetTag === 'elsa_opt') {{
           ins.className = 'callout green';
-          ins.innerHTML = WB_CHAR_NOTES[k];
+          ins.innerHTML = _wbOptNote(k);
         }} else if (presetTag === 'no_bias') {{
           ins.className = 'callout yellow';
           ins.innerHTML = `<strong>Efek Bias = 0 pada ${{clsName}}:</strong> Tanpa penggeser <code>b${{k + 1}} (${{fmt2(evBase.b[k])}})</code>, skor bergeser dari <code>${{fmt2(evBase.z[k])}}</code> ke <strong>z${{k + 1}} = ${{fmt2(zCur)}}</strong> (Softmax <strong>${{probCur.toFixed(1)}}%</strong>) — coba klik Olaf/Sven untuk lihat peluangnya anjlok tanpa Bias!`;
@@ -8648,9 +9038,10 @@ def build_extra_js(data: dict) -> str:
     // ReLU / Sigmoid / Softmax inside a Zoom-In Pipeline SVG (Tahap A z -> Mesin Aktivasi -> Output)!
     // =========================================================================
     let actTab = 'relu';
-    let actPhotoIdx = 1; // default Elsa (exact match with Slide 24 & 25!)
-    let actManualZ = null; // null = exact Slide 24/25 z; number = live slider override on target neuron z_k
+    let actPhotoIdx = 1; // default Elsa (exact match with Slide 26 & 27!)
+    let actManualZ = null; // null = exact Slide 26/27 z; number = live slider override on target neuron z_k
     let actTourTimer = null;
+    let actInteracted = false;
 
     function _actSetTourBtn(running) {{
       const btn = document.getElementById('act-btn-tour');
@@ -8677,12 +9068,14 @@ def build_extra_js(data: dict) -> str:
 
     function setActPdfState(tab) {{
       _stopActTour();
+      actInteracted = true;
       actPhotoIdx = 1; // Elsa for clean PDF/PPTX export
       setActTab(tab);
     }}
 
     function selectActPhoto(idx) {{
       _stopActTour();
+      actInteracted = true;
       actPhotoIdx = idx;
       actManualZ = null;
       renderActSim();
@@ -8690,6 +9083,7 @@ def build_extra_js(data: dict) -> str:
 
     function nextActChar() {{
       _stopActTour();
+      actInteracted = true;
       actPhotoIdx = (actPhotoIdx + 1) % 5;
       actManualZ = null;
       renderActSim();
@@ -8701,6 +9095,7 @@ def build_extra_js(data: dict) -> str:
         return;
       }}
       _stopActTour();
+      actInteracted = true;
       _actSetTourBtn(true);
       let idx = 0;
       actPhotoIdx = idx;
@@ -8723,6 +9118,7 @@ def build_extra_js(data: dict) -> str:
 
     function onActSlider() {{
       _stopActTour();
+      actInteracted = true;
       const sl = document.getElementById('act-z-slider');
       if (!sl) return;
       actManualZ = parseFloat(sl.value);
@@ -8731,6 +9127,7 @@ def build_extra_js(data: dict) -> str:
 
     function resetActZ() {{
       _stopActTour();
+      actInteracted = false;
       actManualZ = null;
       renderActSim();
     }}
@@ -8741,7 +9138,7 @@ def build_extra_js(data: dict) -> str:
       const k = actPhotoIdx;
       const clsName = cNames[k];
 
-      // Get exact Slide 24/25 raw scores z1..z5 for the selected Frozen photo!
+      // Get exact Slide 26/27 raw scores z1..z5 for the selected Frozen photo!
       const evBase = _tmEval(k, 1.0);
       const zArr = evBase.z.slice();
       const origZk = evBase.z[k];
@@ -8754,9 +9151,10 @@ def build_extra_js(data: dict) -> str:
       const zLbl = document.getElementById('act-z-lbl');
       if (zLbl) zLbl.textContent = `Geser z${{k + 1}} (${{clsName}}):`;
 
-      // Compute outputs for current photo across all 3 functions
+      // Compute outputs for current photo across all 4 functions
       const reluArr = zArr.map((v) => Math.max(0, v));
       const sigK = (1 / (1 + Math.exp(-curZk))) * 100;
+      const tanhK = Math.tanh(curZk);
       const exArr = zArr.map((v) => Math.exp(v));
       const sumEx = exArr.reduce((a, c) => a + c, 0);
       const smArr = exArr.map((v) => (v / sumEx) * 100);
@@ -8772,19 +9170,28 @@ def build_extra_js(data: dict) -> str:
         }} else if (actTab === 'sigmoid') {{
           rEl.textContent = `z=${{fmt2(curZk)}} → ${{sigK.toFixed(1)}}%`;
           rEl.style.color = sigK >= 50 ? '#137333' : '#C5221F';
+        }} else if (actTab === 'tanh') {{
+          rEl.textContent = `z=${{fmt2(curZk)}} → ${{fmt2(tanhK)}}`;
+          rEl.style.color = tanhK >= 0 ? '#137333' : '#C5221F';
         }} else {{
           rEl.textContent = `z=${{fmt2(curZk)}} → ${{smArr[k].toFixed(1)}}%`;
           rEl.style.color = smWin === k ? '#137333' : '#C5221F';
         }}
       }}
 
-      // 0. Sync 3 left explanation cards + highlight active function bullet (ReLU / Sigmoid / Softmax)!
-      const actBulIdx = actTab === 'relu' ? 0 : (actTab === 'sigmoid' ? 1 : 2);
-      _syncCards(['act-b-relu', 'act-b-sigmoid', 'act-b-softmax'], actBulIdx, ['red', 'blue', 'green']);
-      const actCardIdx = actManualZ !== null ? 1 : (actTourTimer !== null ? 2 : -1);
+      // 0. Sync 3 left explanation cards + highlight active function bullet (keep bright at rest!)
+      const actBulIdx = actTab === 'relu' ? 0 : (actTab === 'sigmoid' ? 1 : (actTab === 'tanh' ? 2 : 3));
+      const bulIds = ['act-b-relu', 'act-b-sigmoid', 'act-b-tanh', 'act-b-softmax'];
+      const bulCols = ['red', 'blue', 'yellow', 'green'];
+      if (actInteracted) {{
+        _syncCards(bulIds, actBulIdx, bulCols);
+      }} else {{
+        _syncCards(bulIds, -1, bulCols);
+      }}
+      const actCardIdx = !actInteracted ? -1 : (actManualZ !== null ? 1 : (actTourTimer !== null ? 2 : -1));
       _syncCards(['act-card-1', 'act-card-2', 'act-card-3'], actCardIdx, ['red', 'blue', 'green']);
 
-      // 1. Update 5 Frozen Character Chips (exact Slide 24/25 z -> current Activation output!)
+      // 1. Update 5 Frozen Character Chips (exact Slide 26/27 z -> current Activation output!)
       const chipHost = document.getElementById('act-ds-chips');
       if (chipHost) {{
         chipHost.innerHTML = cNames.map((cls, idx) => {{
@@ -8802,6 +9209,11 @@ def build_extra_js(data: dict) -> str:
             txt = `σ=${{sv.toFixed(0)}}%`;
             bg = sv >= 50 ? '#E6F4EA' : '#FCE8E6';
             col = sv >= 50 ? '#137333' : '#C5221F';
+          }} else if (actTab === 'tanh') {{
+            const tv = Math.tanh(zk);
+            txt = `th=${{tv >= 0 ? '+' : ''}}${{tv.toFixed(2)}}`;
+            bg = tv >= 0 ? '#E6F4EA' : '#FCE8E6';
+            col = tv >= 0 ? '#137333' : '#C5221F';
           }} else {{
             const pv = isAct ? smArr[idx] : evC.probs[idx];
             const ok = isAct ? (smWin === idx) : true;
@@ -8809,7 +9221,7 @@ def build_extra_js(data: dict) -> str:
             bg = ok ? '#E6F4EA' : '#FCE8E6';
             col = ok ? '#137333' : '#C5221F';
           }}
-          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="selectActPhoto(${{idx}})" title="Klik untuk melihat Tahap B (Activation) pada Foto ${{cls}}!">
+          return `<div class="ds-chip${{isAct ? ' active' : ''}}" onclick="selectActPhoto(${{idx}})" title="Klik untuk melihat Tahap 4.2 (Activation) pada Foto ${{cls}}!">
             <img src="${{TRAINING_MATH.thumbs[idx]}}" alt="${{cls}}" style="border-color:${{TM_OUT_COLS[idx]}};"/>
             <span class="c-name">${{cls}}${{isAct ? ' ★' : ''}}</span>
             <span class="c-score" style="background:${{bg}}; color:${{col}};">${{txt}}</span>
@@ -8943,7 +9355,61 @@ def build_extra_js(data: dict) -> str:
           h += `<text x="519" y="182" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="${{isYes ? '#137333' : '#C5221F'}}">${{isYes ? `✅ Prediksi: ${{clsName}}` : `❌ Bukan ${{clsName}}`}}</text>`;
         }}
 
-        // --- TAB 3: Softmax (Output 5 Kelas — 100% IDENTICAL TO SLIDE 24!) ---
+        // --- TAB 3: Tanh (-1 s/d +1) ---
+        else if (actTab === 'tanh') {{
+          h += `<rect x="3" y="24" width="144" height="170" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>`;
+          h += `<text x="75" y="42" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="#B06000">Hasil Tahap 4.1</text>`;
+          h += `<text x="75" y="54" text-anchor="middle" font-family="Roboto, Arial" font-size="7.5" fill="#5F6368">Skor Mentah (${{clsName}})</text>`;
+          h += `<rect x="15" y="72" width="120" height="68" rx="9" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.5"/>`;
+          h += `<text x="75" y="90" text-anchor="middle" font-family="Poppins, Arial" font-size="8.4" font-weight="700" fill="#202124">Skor Mentah z${{k + 1}}</text>`;
+          h += `<text x="75" y="118" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="16" font-weight="800" fill="${{curZk >= 0 ? '#137333' : '#C5221F'}}">${{fmt2(curZk)}}</text>`;
+          h += `<text x="75" y="160" text-anchor="middle" font-family="Roboto, Arial" font-size="7.5" fill="#5F6368">Dipusatkan di 0 agar</text>`;
+          h += `<text x="75" y="172" text-anchor="middle" font-family="Roboto, Arial" font-size="7.5" fill="#5F6368">sinyal minus &amp; plus imbang!</text>`;
+
+          h += `<line x1="147" y1="109" x2="167" y2="109" stroke="#FBBC04" stroke-width="2.6"/><polygon points="165,104 174,109 165,114" fill="#FBBC04"/>`;
+          h += `<line x1="414" y1="109" x2="434" y2="109" stroke="#E37400" stroke-width="2.6"/><polygon points="432,104 441,109 432,114" fill="#E37400"/>`;
+
+          h += `<rect x="174" y="6" width="240" height="206" rx="12" fill="#FEF7E0" stroke="#FBBC04" stroke-width="2"/>`;
+          h += `<text x="294" y="22" text-anchor="middle" font-family="Poppins, Arial" font-size="9.4" font-weight="700" fill="#B06000">TAHAP 4.2 · MESIN Tanh</text>`;
+          h += `<text x="294" y="34" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.8" fill="#5F6368">tanh(z) = −1.0 s/d +1.0 (Terpusat Nol)</text>`;
+          const gx0 = 188, gx1 = 400, gy0 = 46, gy1 = 182;
+          const xTo = (v) => gx0 + ((Math.max(-4.2, Math.min(4.2, v)) + 4.2) / 8.4) * (gx1 - gx0);
+          const yTo = (v) => gy1 - ((Math.max(-1.12, Math.min(1.12, v)) + 1.12) / 2.24) * (gy1 - gy0);
+          h += `<rect x="${{gx0}}" y="${{gy0}}" width="${{gx1 - gx0}}" height="${{gy1 - gy0}}" rx="7" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.2"/>`;
+          h += `<line x1="${{xTo(0).toFixed(1)}}" y1="${{gy0}}" x2="${{xTo(0).toFixed(1)}}" y2="${{gy1}}" stroke="#BDBDBD" stroke-width="1.1" stroke-dasharray="3,2"/>`;
+          h += `<line x1="${{gx0}}" y1="${{yTo(0).toFixed(1)}}" x2="${{gx1}}" y2="${{yTo(0).toFixed(1)}}" stroke="#BDBDBD" stroke-width="1.1" stroke-dasharray="3,2"/>`;
+          let ptsT = [];
+          for (let s = 0; s <= 64; s++) {{
+            const xv = -4.1 + (s / 64) * 8.2;
+            ptsT.push(`${{xTo(xv).toFixed(1)}},${{yTo(Math.tanh(xv)).toFixed(1)}}`);
+          }}
+          h += `<polyline points="${{ptsT.join(' ')}}" fill="none" stroke="#E37400" stroke-width="3" stroke-linecap="round"/>`;
+          h += `<text x="${{gx0 + 6}}" y="${{(yTo(0) - 4).toFixed(1)}}" font-family="Roboto Mono, monospace" font-size="7.4" font-weight="700" fill="#5F6368">Nol (0.00)</text>`;
+          const pxT = xTo(curZk), pyT = yTo(tanhK);
+          const tLblX = Math.max(gx0 + 26, Math.min(gx1 - 26, pxT));
+          const tLblY = pyT < gy0 + 28 ? pyT + 19 : pyT - 12;
+          h += `<circle cx="${{pxT.toFixed(1)}}" cy="${{pyT.toFixed(1)}}" r="10.5" fill="rgba(251,188,4,0.42)"/>`;
+          h += `<circle cx="${{pxT.toFixed(1)}}" cy="${{pyT.toFixed(1)}}" r="5.6" fill="#E37400" stroke="#202124" stroke-width="1.8"/>`;
+          h += `<text x="${{tLblX.toFixed(1)}}" y="${{tLblY.toFixed(1)}}" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="#202124">${{fmt2(tanhK)}}</text>`;
+          h += `<text x="294" y="199" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.4" fill="#5F6368">Sepupu Sigmoid: simetris di sekitar 0</text>`;
+
+          const isPosT = tanhK >= 0;
+          h += `<rect x="441" y="24" width="156" height="170" rx="11" fill="${{isPosT ? '#E6F4EA' : '#FCE8E6'}}" stroke="${{isPosT ? '#34A853' : '#EA4335'}}" stroke-width="1.8"/>`;
+          h += `<text x="519" y="42" text-anchor="middle" font-family="Poppins, Arial" font-size="8.6" font-weight="700" fill="${{isPosT ? '#137333' : '#C5221F'}}">Output Tanh (−1 s/d +1)</text>`;
+          h += `<rect x="451" y="58" width="136" height="72" rx="8" fill="#FFFFFF" stroke="${{isPosT ? '#34A853' : '#EA4335'}}" stroke-width="1.6"/>`;
+          h += `<text x="519" y="76" text-anchor="middle" font-family="Poppins, Arial" font-size="8.2" font-weight="700" fill="#202124">${{clsName}}</text>`;
+          h += `<text x="519" y="100" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="16" font-weight="800" fill="${{isPosT ? '#137333' : '#C5221F'}}">${{fmt2(tanhK)}}</text>`;
+          h += `<rect x="462" y="111" width="114" height="7" rx="3.5" fill="#ECEFF1"/>`;
+          h += `<line x1="519" y1="109" x2="519" y2="120" stroke="#5F6368" stroke-width="1.4"/>`;
+          const barHalf = Math.max(2, Math.round(Math.abs(tanhK) * 57));
+          const barStart = isPosT ? 519 : 519 - barHalf;
+          h += `<rect x="${{barStart}}" y="111" width="${{barHalf}}" height="7" rx="3.5" fill="${{isPosT ? '#34A853' : '#EA4335'}}"/>`;
+          h += `<text x="519" y="152" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" fill="#5F6368">Beda vs Sigmoid:</text>`;
+          h += `<text x="519" y="165" text-anchor="middle" font-family="Roboto, Arial" font-size="7.6" font-weight="700" fill="#202124">Sigmoid 0..1 · Tanh −1..+1</text>`;
+          h += `<text x="519" y="182" text-anchor="middle" font-family="Poppins, Arial" font-size="8.0" font-weight="700" fill="${{isPosT ? '#137333' : '#C5221F'}}">${{isPosT ? '✅ Aktivasi Positif' : '⚠ Aktivasi Negatif'}}</text>`;
+        }}
+
+        // --- TAB 4: Softmax (Output 5 Kelas — 100% IDENTICAL TO SLIDE 26!) ---
         else {{
           // Left box: 5 Raw Scores z1..z5 from Slide 24/25
           h += `<rect x="3" y="6" width="144" height="206" rx="11" fill="#FEF7E0" stroke="#FBBC04" stroke-width="1.8"/>`;
@@ -8993,16 +9459,19 @@ def build_extra_js(data: dict) -> str:
         svg.innerHTML = h;
       }}
 
-      // 3. Bottom Concrete Dataset Takeaway tying back to Slide 24 & Slide 25!
+      // 3. Bottom Concrete Dataset Takeaway tying back to Slide 26 & Slide 27!
       const cl = document.getElementById('act-callout');
       if (cl) {{
         if (actTab === 'relu') {{
           const negCnt = zArr.filter((v) => v <= 0).length;
           cl.className = reluArr[k] > 0 ? 'callout green' : 'callout red';
-          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (ReLU pada Foto ${{clsName}}):</strong> Dari 5 skor mentah Tahap 4.1, <strong>${{negCnt}} skor negatif dipotong jadi <code>0.00</code></strong> dan <strong>${{clsName}} (<code>z=${{fmt2(curZk)}}</code> → <code>${{reluArr[k].toFixed(2)}}</code>)</strong> ${{reluArr[k] > 0 ? 'lolos aktif ke layer berikutnya!' : 'ikut mati karena negatif!'}}`;
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (ReLU pada Foto ${{clsName}}):</strong> Dari 5 skor mentah Tahap 4.1, <strong>${{negCnt}} skor negatif dipotong jadi <code>0.00</code></strong> dan <strong>${{clsName}} (<code>z=${{fmt2(curZk)}}</code> → <code>${{reluArr[k].toFixed(2)}}</code>)</strong> ${{reluArr[k] > 0 ? 'tetap lolos aktif (positif) sementara sinyal negatif dimatikan!' : 'ikut dimatikan jadi 0.00 karena negatif!'}}`;
         }} else if (actTab === 'sigmoid') {{
           cl.className = sigK >= 50 ? 'callout green' : 'callout red';
           cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (Sigmoid pada Foto ${{clsName}}):</strong> Skor mentah Tahap 4.1 (<code>z${{k + 1}}=${{fmt2(curZk)}}</code>) diperas kurva-S menjadi <strong>${{sigK.toFixed(1)}}%</strong> (${{sigK >= 50 ? `di atas 50% → <strong>Ya, ${{clsName}} ✅</strong>` : `di bawah 50% → <strong>Bukan ${{clsName}} ❌</strong>`}}).`;
+        }} else if (actTab === 'tanh') {{
+          cl.className = tanhK >= 0 ? 'callout yellow' : 'callout red';
+          cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (Tanh pada Foto ${{clsName}}):</strong> Skor mentah <code>z${{k + 1}}=${{fmt2(curZk)}}</code> diperas ke rentang <code>−1 s/d +1</code> → <strong><code>${{fmt2(tanhK)}}</code></strong> (terpusat di nol, membantu sinyal belajar lebih seimbang).`;
         }} else {{
           cl.className = smWin === k ? 'callout green' : 'callout red';
           cl.innerHTML = `<strong>Zoom-In Tahap 4.2 (Softmax pada Foto ${{clsName}}):</strong> Persis Tahap 4! <code>e^(${{fmt2(curZk)}}) / ${{sumEx.toFixed(2)}}</code> = <strong>${{smArr[k].toFixed(1)}}% ${{clsName}}</strong> (${{smWin === k ? 'menang tertinggi ✅' : `kalah dari ${{cNames[smWin]}} ❌`}}), total 5 kelas selalu <code>100.0%</code>!`;
@@ -9280,6 +9749,7 @@ def build_extra_js(data: dict) -> str:
     // =========================================================================
     let trStage = 1; // 1: Forward Pass, 2: Hitung Loss, 3: Backprop+GD, 4: Epoch Loop
     let trTimer = null;
+    let trInteracted = false;
 
     function _trSetPlayBtn(running) {{
       const btn = document.getElementById('tr-btn-play');
@@ -9296,24 +9766,28 @@ def build_extra_js(data: dict) -> str:
 
     function setTrStage(st) {{
       _stopTrCycle();
+      trInteracted = true;
       trStage = st;
       renderTrCycle();
     }}
 
     function setTrPdfState(st) {{
       _stopTrCycle();
+      trInteracted = true;
       trStage = parseInt(st, 10) || 1;
       renderTrCycle();
     }}
 
     function stepTrCycle() {{
       _stopTrCycle();
+      trInteracted = true;
       trStage = (trStage % 4) + 1;
       renderTrCycle();
     }}
 
     function resetTrCycle() {{
       _stopTrCycle();
+      trInteracted = false;
       trStage = 1;
       renderTrCycle();
     }}
@@ -9324,6 +9798,7 @@ def build_extra_js(data: dict) -> str:
         return;
       }}
       _stopTrCycle();
+      trInteracted = true;
       _trSetPlayBtn(true);
       trStage = 1;
       renderTrCycle();
@@ -9346,7 +9821,7 @@ def build_extra_js(data: dict) -> str:
 
       const st = trStage;
       const trCardIdx = st <= 2 ? 0 : (st === 3 ? 1 : 2);
-      _syncCards(['tr-card-1', 'tr-card-2', 'tr-card-3'], trCardIdx, ['blue', 'yellow', 'green']);
+      _syncCards(['tr-card-1', 'tr-card-2', 'tr-card-3'], trInteracted ? trCardIdx : -1, ['blue', 'yellow', 'green']);
       const box = (id, x, y, w, h, fill, stroke, numCol, title, l1, l2, active) => {{
         const sw = active ? '2.6' : '1.4';
         const op = active ? '1' : '0.62';
@@ -9679,8 +10154,8 @@ def build_extra_js(data: dict) -> str:
         h += `<rect x="390" y="${{rowY[j] - 12}}" width="180" height="24" rx="7" fill="${{rFill}}" stroke="${{rStr}}" stroke-width="${{isTgt || isTop ? '1.7' : '1.0'}}"/>`;
         h += `<circle id="fnn-z-${{j}}" cx="403" cy="${{rowY[j]}}" r="8.2" fill="${{TM_OUT_COLS[j]}}"/>`;
         h += `<text x="403" y="${{rowY[j] + 2.8}}" text-anchor="middle" font-family="Roboto Mono, monospace" font-size="7.1" font-weight="700" fill="${{j === 2 ? '#202124' : '#FFFFFF'}}">z${{j + 1}}</text>`;
-        h += `<text x="415" y="${{rowY[j] + 2.9}}" font-family="Roboto Mono, monospace" font-size="6.8" fill="#5F6368">${{fmtS(wxv)}} ${{bv >= 0 ? '+' : '−'}}${{Math.abs(bv).toFixed(2)}}</text>`;
-        h += `<text x="564" y="${{rowY[j] + 3.0}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.0" font-weight="800" fill="${{zv >= 0 ? '#137333' : '#C5221F'}}">=${{fmtS(zv)}}${{isTgt ? '★' : ''}}</text>`;
+        h += `<text x="415" y="${{rowY[j] + 2.9}}" font-family="Roboto Mono, monospace" font-size="7.4" fill="#5F6368">${{fmtS(wxv)}} ${{bv >= 0 ? '+' : '−'}}${{Math.abs(bv).toFixed(2)}}</text>`;
+        h += `<text x="564" y="${{rowY[j] + 3.0}}" text-anchor="end" font-family="Roboto Mono, monospace" font-size="8.4" font-weight="800" fill="${{zv >= 0 ? '#137333' : '#C5221F'}}">=${{fmtS(zv)}}${{isTgt ? '★' : ''}}</text>`;
       }}
       h += `<rect x="390" y="232" width="180" height="36" rx="8" fill="#FFFFFF" stroke="#FDE293" stroke-width="1.3"/>`;
       h += `<text x="480" y="247" text-anchor="middle" font-family="Poppins, Arial" font-size="8.1" font-weight="800" fill="#B06000">Skor Tertinggi: z${{maxZIdx + 1}} = ${{(ph.z[maxZIdx] >= 0 ? '+' : '') + ph.z[maxZIdx].toFixed(2)}}</text>`;
@@ -9928,8 +10403,18 @@ def build_extra_js(data: dict) -> str:
       const dt = Math.min(0.033, Math.max(0.001, (ts - fnnLastTs) / 1000));
       fnnLastTs = ts;
 
-      // Identical comfortable 5-stage pace (Tahap 1 -> 2 -> 3 -> 4 -> 5) for BOTH '1 Foto' & 'Full 8 Epoch'!
-      const speed = fnnStage === 5 ? 0.55 : 0.72;
+      // Full 8 Epoch finishes cleanly in ~18 seconds (Epoch 1 Photo 1 slow to explain, then crisp forward/backprop pace!);
+      // 1 Foto mode stays slow & deliberate for explaining 1 character step-by-step.
+      let speed;
+      if (fnnMode === 'full') {{
+        if (fnnEpochIdx === 0 && fnnPhotoIdx === 0) {{
+          speed = fnnStage === 5 ? 1.15 : 1.55;
+        }} else {{
+          speed = fnnStage === 5 ? 6.2 : 11.5;
+        }}
+      }} else {{
+        speed = fnnStage === 5 ? 0.58 : 0.78;
+      }}
       fnnProg += dt * speed;
       if (fnnProg >= 1.0) {{
         fnnProg = 0;
@@ -10306,7 +10791,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       let w = w0, m = 0, v = 0;
       const b1 = 0.72, b2 = 0.90, eps = 1e-8;
       // Adaptive effective step bounded nicely to show real Adam stability vs SGD
-      const alpha = Math.min(0.62, Math.max(0.42, 0.35 + lr * 0.26));
+      const alpha = Math.min(0.66, Math.max(0.28, 0.26 + lr * 0.42));
       for (let t = 1; t <= steps; t++) {{
         const g = 2 * w;
         m = b1 * m + (1 - b1) * g;
@@ -10358,7 +10843,6 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       }} else {{
         gdMode = m;
         gdLr = m === 'small' ? 0.03 : (m === 'ideal' ? 0.20 : 1.06);
-        if (m === 'small' || m === 'large') gdOpt = 'sgd';
         gdCurStep = GD_MAX_STEPS;
         gdAnimT = 1.0;
         _setGdSyncCards(gdOpt === 'sgd' ? 2 : 3);
@@ -10383,7 +10867,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       gdMode = Math.abs(gdLr - 0.03) < 0.005 ? 'small' : (Math.abs(gdLr - 0.20) < 0.005 ? 'ideal' : (Math.abs(gdLr - 1.06) < 0.005 ? 'large' : 'custom'));
       if (gdCurStep === 0) gdCurStep = GD_MAX_STEPS;
       gdAnimT = 1.0;
-      _setGdSyncCards(2);
+      _setGdSyncCards(gdOpt === 'sgd' ? 2 : 3);
       _syncGdControls();
       renderGdCanvas();
     }}
@@ -10838,7 +11322,8 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
         }} else if (bsSize === 32) {{
           call.innerHTML = `<strong>Batch Sedang (32 foto):</strong> RAM sedang (<strong>64%</strong>), hanya butuh <strong>5 Step/Epoch</strong> (100× koreksi dalam 20 epoch).`;
         }} else {{
-          call.innerHTML = `<strong>Standar Hands-On (batch_size=16):</strong> RAM aman (<strong>36%</strong>) dan bobot W &amp; b dikoreksi <strong>9× tiap 1 Epoch</strong> (batch terakhir sisa 15 foto)!`;
+          const rem16 = BS_TOTAL % 16 || 16;
+          call.innerHTML = `<strong>Standar Hands-On (batch_size=16):</strong> RAM aman (<strong>36%</strong>) dan bobot W &amp; b dikoreksi <strong>${{nBatches}}× tiap 1 Epoch</strong> (batch terakhir sisa ${{rem16}} foto)!`;
         }}
       }}
 
@@ -11103,10 +11588,16 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
         ctx.beginPath(); ctx.arc(toLX(u), toLY(v), 4.2, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
       }});
       valPts.forEach(([u, v]) => {{
-        const cx = toLX(u), cy = toLY(v), r = 5.2;
+        const cx = toLX(u), cy = toLY(v), rOuter = 6.4, rInner = 2.8;
         ctx.fillStyle = '#137333'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 1.2;
         ctx.beginPath();
-        ctx.moveTo(cx, cy - r); ctx.lineTo(cx + r, cy); ctx.lineTo(cx, cy + r); ctx.lineTo(cx - r, cy);
+        for (let p = 0; p < 10; p++) {{
+          const ang = -Math.PI / 2 + (p * Math.PI) / 5;
+          const rad = (p % 2 === 0) ? rOuter : rInner;
+          const sx = cx + Math.cos(ang) * rad;
+          const sy = cy + Math.sin(ang) * rad;
+          if (p === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+        }}
         ctx.closePath(); ctx.fill(); ctx.stroke();
       }});
 
@@ -11124,8 +11615,17 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       ctx.fillStyle = '#3C4043'; ctx.font = '700 10px Poppins, Arial'; ctx.textAlign = 'center';
       ctx.fillText('Kurva Train Loss vs Val Loss', rx0 + rw / 2, 13);
 
-      const toRX = (ep) => rx0 + 16 + ((ep - 1) / (maxEp - 1)) * (rw - 26);
+      const toRX = (ep) => rx0 + 24 + ((ep - 1) / (maxEp - 1)) * (rw - 34);
       const toRY = (ls) => ry0 + rh - 14 - (Math.min(1.9, ls) / 1.9) * (rh - 26);
+
+      // Subtle horizontal Loss guide lines & numeric ticks (0.0, 0.9, 1.8)
+      for (const gl of [0.0, 0.9, 1.8]) {{
+        const gy = toRY(gl);
+        ctx.strokeStyle = '#ECEFF1'; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(rx0 + 22, gy); ctx.lineTo(rx0 + rw - 6, gy); ctx.stroke();
+        ctx.fillStyle = '#80868B'; ctx.font = '700 7.4px Roboto Mono'; ctx.textAlign = 'right';
+        ctx.fillText(gl.toFixed(1), rx0 + 20, gy + 2.5);
+      }}
 
       // Subtle background tint tailored to scenario!
       if (fitScenario === 'under') {{
@@ -11181,7 +11681,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
       // Crisp non-overlapping legend pill at top-right (or bottom-left when Val is high on right!)
       const legY = (fitScenario === 'over' && fitEpoch > 20) ? (ry0 + rh - 38) : (ry0 + 6);
-      const legX = (fitScenario === 'over' && fitEpoch > 20) ? (rx0 + 8) : (rx0 + rw - 88);
+      const legX = (fitScenario === 'over' && fitEpoch > 20) ? (rx0 + 26) : (rx0 + rw - 88);
       ctx.fillStyle = 'rgba(255,255,255,0.94)'; ctx.strokeStyle = '#E0E3E7'; ctx.lineWidth = 1;
       ctx.beginPath(); ctx.roundRect(legX, legY, 82, 30, 6); ctx.fill(); ctx.stroke();
       ctx.font = '700 8.8px Roboto Mono'; ctx.textAlign = 'left';
@@ -11357,7 +11857,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
     const DENSE_SCALES = {{
       8:   {{ dim: 8,   nIn: 192,     inStr: '192',     dimTxt: '(8×8×3)',     wStr: '960',     totStr: '965',     label: 'Mini 8×8×3',      ctx: 'Tahap 2.1 Hands-On' }},
       64:  {{ dim: 64,  nIn: 12288,   inStr: '12.288',  dimTxt: '(64×64×3)',   wStr: '61.440',  totStr: '61.445',  label: 'Hands-On 64×64×3', ctx: 'model.summary() Keras' }},
-      224: {{ dim: 224, nIn: 150528,  inStr: '150.528', dimTxt: '(224×224×3)', wStr: '752.640', totStr: '752.645', label: 'Penuh 224×224×3', ctx: 'Simulasi Penuh Slide 32' }},
+      224: {{ dim: 224, nIn: 150528,  inStr: '150.528', dimTxt: '(224×224×3)', wStr: '752.640', totStr: '752.645', label: 'Penuh 224×224×3', ctx: 'Simulasi Penuh Slide 33' }},
     }};
     const DENSE_INPUTS = [
       {{ id: 0, lbl: 'x₁', sub: 'Piksel 1 (R)', col: '#EA4335', y: 54 }},
@@ -11379,6 +11879,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
     let _denseTimer = null;
     let _denseRaf = null;
     let _densePulseT = 0;
+    let _denseInteracted = false;
 
     function _setDenseSyncCards(activeIdx) {{
       const colors = ['', 'sync-blue', 'sync-yellow', 'sync-green'];
@@ -11599,14 +12100,14 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
         if (badge) badge.textContent = `Inspeksi Input ${{inp.lbl}} → 5 Output`;
         if (eq) eq.textContent = `1 input (${{inp.lbl}}) × 5 output = 5 kabel Weight (W)`;
         if (call) call.innerHTML = `<strong>Fully Connected!</strong> Neuron <code>${{inp.lbl}}</code> (${{inp.sub}}) mengirim <strong>5 kabel bobot</strong> sekaligus ke Anna, Elsa, Kristoff, Olaf, &amp; Sven!`;
-        _setDenseSyncCards(1);
+        _setDenseSyncCards(_denseInteracted ? 1 : 0);
       }} else if (_denseSelOut >= 0) {{
         const outp = DENSE_OUTPUTS[_denseSelOut];
         const tot1 = (cfg.nIn + 1).toLocaleString('id-ID');
         if (badge) badge.textContent = `Inspeksi Output ${{outp.lbl}}`;
         if (eq) eq.textContent = `${{cfg.inStr}} kabel W + 1 Bias (${{outp.b}}) = ${{tot1}} Param`;
         if (call) call.innerHTML = `<strong>Khusus Neuron ${{outp.lbl}}:</strong> Menerima kabel dari <strong>semua ${{cfg.inStr}} piksel input</strong> ditambah <strong>1 Bias (${{outp.b}})</strong> = <code>${{tot1}}</code> parameter!`;
-        _setDenseSyncCards(2);
+        _setDenseSyncCards(_denseInteracted ? 2 : 0);
       }} else if (_denseStep === 0) {{
         if (badge) badge.textContent = `Tahap 0/5 · Siap Simulasi`;
         if (eq) eq.textContent = `(${{cfg.inStr}} × 5) + 5 = ${{cfg.totStr}} Param #`;
@@ -11617,17 +12118,17 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
         if (badge) badge.textContent = `Tahap ${{_denseStep}}/5 · Sambung ${{inp.lbl}} → 5 Output`;
         if (eq) eq.textContent = `${{_denseStep}} neuron × 5 output = ${{_denseStep * 5}} kabel W (pola n × 5)`;
         if (call) call.innerHTML = `<strong>Tahap ${{_denseStep}} (Fully Connected):</strong> Neuron <code>${{inp.lbl}}</code> menyambungkan <strong>5 kabel baru</strong> ke seluruh 5 kelas Frozen → total sementara <code>${{_denseStep * 5}} W</code>!`;
-        _setDenseSyncCards(1);
+        _setDenseSyncCards(_denseInteracted ? 1 : 0);
       }} else if (_denseStep === 4) {{
         if (badge) badge.textContent = `Tahap 4/5 · Semua Kabel Weight (W)`;
         if (eq) eq.textContent = `${{cfg.inStr}} × 5 = ${{cfg.wStr}} Weight (belum + Bias)`;
         if (call) call.innerHTML = `<strong>Tahap 4 (Seluruh Kabel W):</strong> Karena semua <code>${{cfg.inStr}}</code> neuron input tersambung ke 5 output, terbentuk tepat <code>${{cfg.wStr}}</code> bobot <code>W</code>!`;
-        _setDenseSyncCards(2);
+        _setDenseSyncCards(_denseInteracted ? 2 : 0);
       }} else {{
         if (badge) badge.textContent = `Tahap 5/5 · Lengkap (+ 5 Bias = ${{cfg.totStr}})`;
         if (eq) eq.textContent = `(${{cfg.inStr}} × 5) + 5 = ${{cfg.totStr}} Param #`;
         if (call) call.innerHTML = `<strong>${{cfg.label}}:</strong> <code>${{cfg.wStr}} Weight + 5 Bias = ${{cfg.totStr}} parameter</code> — cocok 100% dengan <strong>${{cfg.ctx}}</strong>!`;
-        _setDenseSyncCards(3);
+        _setDenseSyncCards(_denseInteracted ? 3 : 0);
       }}
 
       renderDenseSvg(_densePulseT || 0.55);
@@ -11662,6 +12163,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
         _stopDensePlay();
         return;
       }}
+      _denseInteracted = true;
       _denseSelIn = -1; _denseSelOut = -1;
       if (_denseStep >= 5) _denseStep = 0;
       const btn = document.getElementById('dense-btn-play');
@@ -11681,6 +12183,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
     function stepDenseSim() {{
       _stopDensePlay();
+      _denseInteracted = true;
       _denseSelIn = -1; _denseSelOut = -1;
       _denseStep = (_denseStep >= 5) ? 1 : (_denseStep + 1);
       _densePulseT = 0.52;
@@ -11689,6 +12192,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
     function resetDenseSim() {{
       _stopDensePlay();
+      _denseInteracted = false;
       _denseSelIn = -1; _denseSelOut = -1;
       _denseStep = 0;
       _densePulseT = 0.52;
@@ -11697,6 +12201,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
     function clickDenseInput(idx) {{
       _stopDensePlay();
+      _denseInteracted = true;
       _denseSelOut = -1;
       _denseSelIn = (_denseSelIn === idx) ? -1 : idx;
       _densePulseT = 0.55;
@@ -11705,6 +12210,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
     function clickDenseOutput(idx) {{
       _stopDensePlay();
+      _denseInteracted = true;
       _denseSelIn = -1;
       _denseSelOut = (_denseSelOut === idx) ? -1 : idx;
       _densePulseT = 0.55;
@@ -11720,6 +12226,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
 
     function setDensePdfState(st) {{
       _stopDensePlay();
+      _denseInteracted = true;
       _denseSelIn = -1; _denseSelOut = -1; _densePulseT = 0.52;
       if (st === 'x1') {{
         _denseScale = 224; _denseStep = 1;
@@ -11803,7 +12310,7 @@ Total      = ${{( (pr[0]+pr[1])*100 ).toFixed(2)}}%`;
       expandHelper('dense-ctrl', ['x1', 'full64'], setDensePdfState, 'dense');
       expandHelper('tm-ctrl', ['before', 'after'], setTmPdfState, 'tm');
       expandHelper('wb-presets', ['elsa_opt', 'no_bias', 'wrong_w'], setWbPdfState, 'wb');
-      expandHelper('act-tabs', ['relu', 'sigmoid', 'softmax'], setActPdfState, 'act');
+      expandHelper('act-tabs', ['relu', 'sigmoid', 'tanh', 'softmax'], setActPdfState, 'act');
       expandHelper('out-presets', ['trained', 'ragu', 'untrained'], setOutPdfState, 'out');
       expandHelper('tr-cycle-tabs', ['2', '4'], setTrPdfState, 'tr');
       expandHelper('fnn-ctrl', ['ep1_bp', 'ep8_done'], setFnnPdfState, 'fnn');
