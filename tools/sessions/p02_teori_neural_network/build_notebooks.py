@@ -278,7 +278,7 @@ def tampilkan_kurva_training(history, simpan_ke=None):
     plt.tight_layout()
     if simpan_ke is not None:
         fig.savefig(simpan_ke, dpi=150)
-        print("Grafik disimpan ke:", simpan_ke)
+        print("Grafik disimpan ke:", Path(simpan_ke).resolve())
     plt.show()
 
 def tampilkan_peta_bobot(model, W_awal, X_samp):
@@ -1005,7 +1005,7 @@ print("✅ Seluruh Hands-on P02 selesai! Siap lanjut ke Arsitektur Neural Networ
 
 
 def _execute_notebook_outputs() -> None:
-    """Execute full solution notebook (30 epochs) & student prefix cells so outputs match P01."""
+    """Execute full solution notebook (30 epochs) and sync all 21 code-cell outputs to student notebook."""
     import nbformat
 
     env = os.environ.copy()
@@ -1015,7 +1015,6 @@ def _execute_notebook_outputs() -> None:
     sol_path = SESSION.notebook_solution_path
     stu_path = SESSION.notebook_student_path
     tmp_sol_exec = sol_path.parent / f"_tmp_exec_sol_{SESSION.id}.ipynb"
-    tmp_stu = SESSION.material_dir / f"_tmp_exec_stu_{SESSION.id}.ipynb"
     tmp_stu_out = SESSION.material_dir / f"_tmp_write_stu_{SESSION.id}.ipynb"
 
     # 1. Execute complete solution notebook into ignored temp file, then atomically replace
@@ -1038,42 +1037,26 @@ def _execute_notebook_outputs() -> None:
                 errs = [o for o in cell.get("outputs", []) if o.get("output_type") == "error"]
                 assert not errs, f"Error on solution cell {idx}: {errs}"
         tmp_sol_exec.replace(sol_path)
-        print(f"Executed with outputs: {sol_path} ({len(nb_sol.cells)} cells)")
+        sol_code_cells = [c for c in nb_sol.cells if c.cell_type == "code"]
+        print(f"Executed with outputs: {sol_path} ({len(sol_code_cells)}/{len(sol_code_cells)} code cells)")
     finally:
         tmp_sol_exec.unlink(missing_ok=True)
 
-    # 2. Execute student prefix cells strictly before the first # TODO cell
+    # 2. Populate ALL code cells of student notebook with matching real reference outputs
     nb_stu = nbformat.read(stu_path, as_version=4)
-    first_todo = next(
-        i for i, c in enumerate(nb_stu.cells)
-        if c.cell_type == "code" and "# TODO" in c.get("source", "")
+    stu_code_cells = [c for c in nb_stu.cells if c.cell_type == "code"]
+    assert len(stu_code_cells) == len(sol_code_cells), (
+        f"Code cell count mismatch: student={len(stu_code_cells)} != solution={len(sol_code_cells)}"
     )
-    prefix_nb = nbformat.v4.new_notebook(metadata=nb_stu.metadata)
-    prefix_nb.cells = nb_stu.cells[:first_todo]
+    for c_stu, c_sol in zip(stu_code_cells, sol_code_cells):
+        c_stu["outputs"] = list(c_sol.get("outputs", []))
+        c_stu["execution_count"] = c_sol.get("execution_count")
+
     try:
-        nbformat.write(prefix_nb, tmp_stu)
-        subprocess.run(
-            [
-                sys.executable, "-m", "nbconvert",
-                "--to", "notebook", "--execute", "--inplace",
-                "--ExecutePreprocessor.timeout=180",
-                str(tmp_stu.resolve()),
-            ],
-            cwd=str(ROOT_DIR),
-            env=env,
-            check=True,
-        )
-        prefix_done = nbformat.read(tmp_stu, as_version=4)
-        for i in range(first_todo):
-            if nb_stu.cells[i].cell_type == "code":
-                nb_stu.cells[i]["outputs"] = prefix_done.cells[i].get("outputs", [])
-                nb_stu.cells[i]["execution_count"] = prefix_done.cells[i].get("execution_count")
         nbformat.write(nb_stu, tmp_stu_out)
         tmp_stu_out.replace(stu_path)
-        prefix_code_n = sum(1 for c in nb_stu.cells[:first_todo] if c.cell_type == "code")
-        print(f"Executed prefix outputs: {stu_path} ({prefix_code_n} cells before # TODO 1)")
+        print(f"Populated all outputs: {stu_path} ({len(stu_code_cells)}/{len(stu_code_cells)} code cells)")
     finally:
-        tmp_stu.unlink(missing_ok=True)
         tmp_stu_out.unlink(missing_ok=True)
 
 
