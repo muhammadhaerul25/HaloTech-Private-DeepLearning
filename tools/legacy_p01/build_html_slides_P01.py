@@ -17,7 +17,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 ASSETS_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01"
 STATS_PATH = ASSETS_DIR / "sample_stats.json"
 MNIST_PATH = ASSETS_DIR / "mnist_samples.json"

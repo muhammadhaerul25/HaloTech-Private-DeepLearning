@@ -6,6 +6,7 @@ __pycache__/
 notebooks/solutions/results/
 *.tmp
 _tmp_*
+_site/
 .DS_Store
 Thumbs.db
 .vercel/

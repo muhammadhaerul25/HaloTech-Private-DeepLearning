@@ -17,7 +17,7 @@ except ImportError:
     nbf = None
 
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 NB_STUDENT = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.ipynb"
 NB_SOLUTION = ROOT / "materials" / "P01" / "solutions" / "P01_understanding_images_processing_eda.ipynb"
 

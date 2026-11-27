@@ -15,8 +15,8 @@ import subprocess
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-TOOLS_DIR = ROOT / "tools"
+ROOT = Path(__file__).resolve().parent.parent.parent
+TOOLS_DIR = ROOT / "tools" / "legacy_p01"
 
 PIPELINE = [
     ("1/6 Generate sample dataset & MNIST", "make_sample_data.py"),

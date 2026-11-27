@@ -9,7 +9,9 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+import sys
+ROOT = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT / "tools" / "legacy_p01"))
 HTML_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
 PDF_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.pdf"
 PPTX_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.pptx"

@@ -1,0 +1,6 @@
+arsitektur,total_params,est_size_mb,latensi_ms,jumlah_layer_base
+1. MLP,9636101,36.76,14.5,4
+2. CNN Klasik,101829,0.39,132.0,9
+3. ResNet50,23597957,90.02,1499.6,175
+4. MobileNetV2,2264389,8.64,642.1,154
+5. EfficientNetB0,4055976,15.47,1009.3,237

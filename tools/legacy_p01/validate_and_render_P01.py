@@ -19,7 +19,7 @@ from PIL import Image, ImageDraw, ImageFont
 from pptx import Presentation
 from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 PPTX_PATH = ROOT_DIR / "materials" / "P01" / "P01_understanding_images_processing_eda.pptx"
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
 RENDER_DIR = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "rendered"

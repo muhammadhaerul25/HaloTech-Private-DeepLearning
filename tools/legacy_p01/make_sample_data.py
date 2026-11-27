@@ -37,7 +37,7 @@ CLASSES = ["lingkaran", "persegi", "segitiga", "bintang", "heksagon"]
 CONDITIONS = ["polos", "ramai"]
 IMAGES_PER_COMBO = 12
 
-ROOT_DIR = Path(__file__).resolve().parent.parent
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 SAMPLE_DIR = ROOT_DIR / "data" / "sample"
 MNIST_DIR = ROOT_DIR / "data" / "mnist"
 ASSETS_MNIST_JSON = ROOT_DIR / "materials" / "P01" / "assets" / "P01" / "mnist_samples.json"

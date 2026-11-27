@@ -223,3 +223,42 @@
   - Presenter Script (`51/51` halaman A4 Portrait),
   - Notebook (`60` sel peserta dengan `8` `# TODO` === `8` Hint, `52` sel solusi, `solution_smoke_executed = true`, `student_prefix_executed = true`),
   - Portal & PWA (`materials/P02/p02_teori_neural_network.*`, `sessions.json`, `vercel.json`, `sw.js` versi `dl-course-pwa-v15`).
+
+
+---
+
+## P03 — Arsitektur Neural Network (`MLP → CNN Klasik → ResNet → MobileNetV2 → EfficientNet`)
+
+### 1. Status Implementasi & Pembagian Kurikulum (`P03` vs `P04`)
+- **Status:** **FINAL & SIAP DIGUNAKAN** (`python tools/build_session.py P03 --validate` **PASSED 100%**, 6/6 Gerbang DoD).
+- **Penyelarasan `docs/PLAN.md` (`P03` ↔ `P04`) tanpa mengubah file kurikulum asli:**
+  - Sesuai arahan pengguna dan jembatan penutup P02, judul resmi **P03** diperbarui di `tools/core/registry.py` & `sessions.json` menjadi **`Arsitektur Neural Network`**.
+  - **P03** membedah tuntas evolusi **5 arsitektur paling relevan dengan proyek Disney Frozen** (`MLP → CNN Klasik → ResNet → MobileNetV2 → EfficientNet`), masing-masing dibedah dalam 4 sudut pandang konsisten (*In General → Fitur Khusus → Simulasi Full → Use Case Proyek*) + benchmark nyata `weights=None` offline-safe di Keras.
+  - **P04 (`Arsitektur CNN & Transfer Learning`)** tetap difokuskan secara mendalam ke strategi *Transfer Learning*, bobot *pretrained ImageNet*, `preprocess_input [-1, 1]`, *Feature Extraction*, dan *Fine-Tuning* di atas **MobileNetV2**.
+- **Standardisasi Template P02 (`tools/core/html_shell.py`, `tools/init_session.py`, & `docs/STANDAR_MATERI.md`):**
+  - Arsitektur P02 dibakukan menjadi template permanen (`White Google I/O` bookend Cover/Closing, `make_agenda_goals_slide`, `make_cover_roadmap_slide`, `make_qa_slide`, `make_handson_step_slide`, `make_glossary_slide`, `make_references_slide`, `make_summary_3pillars_slide`, `make_closing_slide`, serta notebook *Visual-First* `Alat Visualisasi Siap Pakai`).
+
+### 2. Struktur File & Artefak Tervalidasi (`P03`)
+- **Kode Modular (`tools/sessions/P03/`):**
+  - `build_assets.py` — mengekstrak grid piksel Elsa `16×16` nyata, 7 thumbnail Frozen (`thumb_*.jpg`), 6 grafik konsep + 6 grafik preview Hands-On, serta benchmark nyata Keras `224×224×3` dan training comparison `48×48` ke `p03_data.json`.
+  - `build_html.py` — dek interaktif **`52` slide** (`120.0` menit exact `data-notes`, `timeless_ok = true`, `20` aset lokal valid) dengan **5 Simulator Interaktif** terdaftar di `window.SLIDE_PDF_EXPANDERS` serta audit visual HD menyeluruh (Cover+Intro & Bab 1–5):
+    1. **Sim #1 MLP (`Slide 08`):** Node-link + Uji Geser 2 Piksel (`9,64M` param).
+    2. **Sim #2 CNN Klasik (`Slide 13`):** Kanvas konvolusi 2D nyata pada matriks `16×16` Elsa (`Sobel V/H/Pertajam`, `Stride 1/2`, `Padding Valid/Same`, `MaxPool 2×2`).
+    3. **Sim #3 ResNet (`Slide 19`):** Sinyal gradien `Plain Deep Net` vs `Skip Connection (+x)` + pemangkasan head `Flatten 51.38M → GAP 10.245` + diagram alur SVG.
+    4. **Sim #4 MobileNetV2 (`Slide 25`):** `Conv2D Biasa (231.2M ops)` vs `Inverted Residual Expand 6× → Depthwise 3×3 → Linear Project (27.5M ops = hemat 8.4×)`.
+    5. **Sim #5 EfficientNet (`Slide 29`):** Slider *Compound Scaling* (`B0/B1/B2`) + toggle *SE Channel Attention* (`16` blok `Multiply`) pada foto Elsa latar ramai.
+  - `presenter_notes.py` — `SLIDE_EXPLANATIONS` lengkap mencakup seluruh `52/52` slide.
+  - `build_notebooks.py` — notebook *Visual-First* `6` langkah (`8` `# TODO` === `8` `<details>` Hint & Jawaban, offline-safe `weights=None`, mengekspor `results/p03_5_architectures_benchmark.csv` & `.png`). Seluruh **`15/15` sel kode** di notebook solusi maupun peserta terisi output eksekusi nyata.
+- **Hasil Benchmark Keras Nyata (`224×224×3`, 5 kelas Frozen, `CPU` lokal):**
+  - `1. MLP (2 Hidden)`: `9.636.101` param (`36.76 MB`), `62.3 ms` (boros bobot & buta spasi).
+  - `2. CNN Klasik (3 Blok + GAP)`: `101.829` param (`0.39 MB`), `244.8 ms` (~95× lebih hemat dari MLP).
+  - `3. ResNet50 (+ GAP + Dense 5)`: `23.597.957` param (`90.02 MB`, `16` blok `Add()`), `1615.8 ms`.
+  - `4. MobileNetV2 ★ (+ GAP + Dense 5)`: `2.264.389` param (`8.64 MB`, `17` `DepthwiseConv2D`), `773.5 ms`.
+  - `5. EfficientNetB0 (+ GAP + Dense 5)`: `4.055.976` param (`15.47 MB`, `16` `DepthwiseConv2D` & `16` SE `Multiply`), `2238.9 ms`.
+- **Validasi 6 Gerbang DoD (`tools/build_session.py P03 --validate`):**
+  - **HTML:** `52` slide, `20` aset lokal valid, `120.0` menit `data-notes`, `timeless_ok = true`.
+  - **PDF & PPTX:** `66/66` halaman/slide `16:9` identik (`8.25 MB` PDF, `17.57 MB` PPTX HD), Speaker Notes `66/66`.
+  - **Presenter Script:** `52/52` halaman A4 Portrait (`7.15 MB`).
+  - **Notebooks:** Peserta (`45` sel, `8` `# TODO` === `8` Hint), Solusi (`37` sel), lolos eksekusi `SMOKE_TEST=1` (`solution_smoke_executed = true`, `student_prefix_executed = true`), dan penuh `15/15` sel ber-output.
+  - **Portal & PWA:** `sessions.json` (`P03` berstatus `available`), `vercel.json` (`/p3` & `/p03`), serta `sw.js` (`dl-course-pwa-v16`).
+

@@ -44,48 +44,54 @@ Penomoran kurikulum aktif mengikuti [sessions.json](../sessions.json) (**timeles
 | ID | URL Cepat | Fase | Warna Aksen | Slug File | Rujukan `docs/PLAN.md` |
 |---|---|---|---|---|---|
 | `P01` | `/p1` | Fondasi | `#4285F4` | `understanding_images_processing_eda` | P4: Image Processing & EDA |
-| `P02` | `/p2` | Fondasi | `#EA4335` | `neural_network_ann` | P5: Teori Neural Network (ANN) |
-| `P03` | `/p3` | Fondasi | `#FBBC04` | `cnn_fundamentals_cv` | P6: CNN Fundamentals & Tugas CV |
-| `P04` | `/p4` | Fondasi | `#34A853` | `cnn_architectures_transfer_learning` | P7: Arsitektur CNN & Transfer Learning |
-| `P05` | `/p5` | Eksperimen | `#4285F4` | `data_methodology_splitting` | P8: Metodologi Data, Splitting & Desain |
-| `P06` | `/p6` | Eksperimen | `#EA4335` | `data_pipeline_augmentation_baseline` | P9: Data Pipeline, Augmentation & Baseline |
-| `P07` | `/p7` | Eksperimen | `#FBBC04` | `training_finetuning` | P10: Training Lengkap & Fine-Tuning |
-| `P08` | `/p8` | Analisis & Pelaporan | `#34A853` | `evaluation_error_analysis_gradcam` | P11 + P12 (+ penutup / atau perluasan P09 opsional) |
+| `P02` | `/p2` | Fondasi | `#EA4335` | `teori_neural_network` | Teori Neural Network (AI/ML/DL, CV Tasks & Backprop) |
+| `P03` | `/p3` | Fondasi | `#FBBC04` | `arsitektur_neural_network` | Arsitektur Neural Network |
+| `P04` | `/p4` | Fondasi | `#34A853` | `cnn_architectures_transfer_learning` | Arsitektur CNN & Transfer Learning |
+| `P05` | `/p5` | Eksperimen | `#4285F4` | `data_methodology_splitting` | Metodologi Data, Splitting & Desain |
+| `P06` | `/p6` | Eksperimen | `#EA4335` | `data_pipeline_augmentation_baseline` | Data Pipeline, Augmentation & Baseline |
+| `P07` | `/p7` | Eksperimen | `#FBBC04` | `training_finetuning` | Training Lengkap & Fine-Tuning |
+| `P08` | `/p8` | Analisis & Pelaporan | `#34A853` | `evaluation_error_analysis_gradcam` | Evaluasi, Error Analysis & Grad-CAM |
 
 ---
 
-## 3. Standar Desain & Pedagogi HTML5 (`tools/core/html_shell.py`)
+## 3. Standar Desain & Pedagogi HTML5 (Acuan Resmi **P02 Standard** · `tools/core/html_shell.py`)
 
-### A. Tema Visual (Gaya Konferensi Google I/O — Tanpa Aset Resmi Google)
+### A. Tema Visual & Disiplin Layout (`1152×648`, Gaya Google I/O Cerah)
 - **Palet Warna Baku:**
   - Primer: `--blue: #4285F4` (`--blue-text: #1A73E8` di latar putih), `--red: #EA4335`, `--yellow: #FBBC04`, `--green: #34A853`.
   - Netral: `--dark: #202124`, `--muted: #5F6368`, `--border: #DADCE0`, `--surface: #F8F9FA`, `--white: #FFFFFF`.
   - Tint Kartu: `--tint-blue: #E8F0FE`, `--tint-red: #FCE8E6`, `--tint-yellow: #FEF7E0`, `--tint-green: #E6F4EA`.
 - **Tipografi:** `Poppins` (judul, kicker, pill), `Roboto` (isi), `Roboto Mono` (kode, angka metrik, badge teknis).
-- **Aturan Kontras:** Teks di atas kuning/hijau menggunakan `#202124`; jangan menaruh teks kuning di atas latar putih.
+- **Aturan Kontras & Kepadatan:**
+  - Teks di atas kuning/hijau memakai `#202124`; jangan menaruh teks kuning di atas latar putih (`--yellow` untuk bentuk/border/tint `#FEF7E0`).
+  - Wajib `0` scrollbar / overflow pada stage baku (`scrollHeight == 648`, `scrollWidth == 1152`, jarak konten ke `.slide-footer` $\ge 13\text{px}$).
 
-### B. Alur Pedagogi 5 Bab (~45–60 Slide · Tepat `120.0 Menit`)
-Setiap sesi mengikuti template 120 menit yang ramah pemula non-IT:
-1. **Slide Pembuka (5 slide · ~5–6 menit):**
-   - **Slide 01 (Cover):** Latar terang bergradien halus + ornamen SVG geometris + badge `DEEP LEARNING TRACK · Fase ... · 120 Menit` + `Presented by Muhammad Haerul` + pill topik & tools (tanpa tanggal/jam).
-   - **Slide 02 (Peta Perjalanan Belajar):** 5 Bab menggunakan `.step-list`.
-   - **Slide 03 (Alur Sesi 120 Menit):** 6 kartu blok waktu (`00–10`, `10–40`, `40–45`, `45–95`, `95–110`, `110–120`).
-   - **Slide 04 (Tujuan Belajar):** 3 kartu kompetensi inti + `.callout` hasil.
-   - **Slide 05 (Pemanasan / Recap):** Jembatan dari sesi sebelumnya ke masalah sesi hari ini.
-2. **Bab 1 s.d. Bab 4 (Teori Visual & Simulator · ~30–34 menit):**
-   - Setiap bab dimulai oleh slide pembatas penuh 1 warna bergantian (`bg-blue`, `bg-red`, `bg-green`, `bg-yellow`).
-   - Pola penjelasan tiap konsep: **Analogi → Visual/Simulator Interaktif → Intuisi/Rumus minimal → Contoh Disney/sampel → Dampak ke AI**.
-   - Minimal **3–5 simulator interaktif HTML5/Canvas/SVG** yang bisa diklik/digeser langsung di kelas.
-   - Minimal **3–5 slide Tanya-Jawab (`qa-box`)** di tengah teori dengan `.vis-q` (pertanyaan) / `.vis-a` (jawaban) & `toggleQA(...)`.
-3. **Bab 5 (Praktik, Diskusi, Glosarium, Kuis & Penutup · ~80 menit):**
-   - Pembatas Bab 5 (`Alokasi waktu: 5 menit` — jeda istirahat).
-   - Ringkasan 5–6 Langkah Praktik Hands-On (`40–50 menit`) + 1–2 slide "Di Balik Layar" kode penting.
-   - *Mini-Challenge / Diskusi Kasus* (`10–15 menit`).
-   - *Kamus Istilah Santai* (1–2 slide glosarium).
-   - *Kuis Interaktif 5 Soal* (3 slide: Soal 1–2, Soal 3–4, Soal 5, memakai `.quiz-item` & `.quiz-ans`).
-   - *3 Poin Utama Hari Ini* (slide `dark`).
-   - *Closing, Key Quote & Preview Sesi Berikutnya*.
-   - *Referensi Belajar Mandiri* (2 slide ber-alokasi `0 menit`, kartu `.ref-item`, URL hanya dari `docs/PLAN.md` atau berlabel `[CEK LINK]`).
+### B. Alur Pedagogi & Arsitektur Dek (~50–55 Slide · Tepat `120.0 Menit`)
+Mengikuti pola teruji **P02** agar ritme kelas 1-on-1 cepat masuk ke praktik dan bebas jargon prematur:
+1. **Pembuka Ringkas (`4` Slide · `~6.0 menit`):**
+   - **Slide 01 (Cover):** Latar putih radial gradien lembut + ornamen SVG sudut + badge `DEEP LEARNING TRACK · Fase ... · 120 Menit` + judul gradien + garis pembagi 4 warna (`4px`) + badge `[MH] Presented by Muhammad Haerul` + kartu kanan **1+4 Bento Showcase** foto nyata 5 karakter Frozen (`data/frozen_v1/`).
+   - **Slide 02 (Agenda + 3 Learning Goals Gabungan):** Layout `.split-60-40` — kiri `.step-list` blok bab beserta badge menit; kanan 3 kartu `.mini-box` berwarna (*Yang Akan Kamu Kuasai*) + `.callout` ritme `120 Menit`.
+   - **Slide 03 (Pemanasan / Recap Sesi Sebelumnya):** Jembatan konkret dari konsep & angka sesi sebelumnya ke masalah sesi hari ini.
+   - **Slide 04 (Tanya-Jawab #1):** Pemantik konsep awal memakai `make_qa_slide(...)`.
+2. **Bab Inti Teori (`~3`–`4` Bab · `~45–50 menit`):**
+   - Pembatas bab satu warna penuh bergantian (`bg-blue`, `bg-red`, `bg-green`, `bg-yellow`) via `make_divider_slide(...)`.
+   - Pola pedagogi **Micro-Ladder** (*tanpa lompatan konsep / istilah yang belum diajarkan*):
+     **Analogi Nyata $\rightarrow$ Visual / Animasi / Simulator $\rightarrow$ Rumus / Mekanisme Minimal $\rightarrow$ Contoh Piksel/Foto Frozen $\rightarrow$ Tanya-Jawab Checkpoint (`QA #2, #3, ...`)**.
+   - **Standar Animasi Kontinu (`@media print` Safe):** Untuk diagram pembanding (mis. Slide 06, 07, 12–16 P02), gunakan `@keyframes` CSS/SVG **loop otomatis tanpa tombol Play**, dilengkapi aturan `@media print { animation: none !important; opacity: 1 !important; transform: none !important; }` agar PDF & PPTX tetap tajam membeku pada kondisi terbaca.
+   - **Standar Simulator & Kartu Sinkron (`.sync-card` + `.ds-chip`):**
+     - **Resting State Penuh:** Saat slide dibuka atau di-reset, seluruh kartu penjelasan kiri tampil **terang 100%** (tidak redup); hanya menyorot `● AKTIF` saat tombol *Play/Step/Tab* sedang aktif.
+     - Tombol `▶ Play`, `⏭ +1 Langkah`, `↺ Reset`, chip 5 karakter Frozen (`.ds-chip`), dan slider bekerja sinkron tanpa menggeser layout (*zero layout shift*).
+3. **Evaluasi, Kamus & Referensi (`~7.5 menit`):**
+   - **Cover Evaluasi (`bg-yellow` · `0.5m`):** Menggunakan `.cover-roadmap` 3 chip.
+   - **Kuis 5 Soal Terpisah (`5` Slide · `5.0m`):** 1 soal per slide via `make_qa_slide(..., quiz_progress_idx=1..5)` — opsi A/B/C bisa diklik langsung (`pickQAChoice`) + stepper progres kanan atas + panel visual kanan yang berubah dari `.vis-q` (pertanyaan) menjadi `.vis-a` (ilustrasi jawaban).
+   - **Kamus Istilah Santai (`1` Slide · `2.0m`):** Menggunakan `make_glossary_slide(...)` — 2 kolom terkelompok per Bab (`.dict-grid`), dilengkapi input pencarian live (`.gloss-search`), filter tombol Bab (`.gloss-fbtn`), dan tombol lompat slide **`SXX ↗`**.
+   - **Referensi Materi (`2` Slide · `0.0m`):** Menggunakan `make_references_slide(...)` — grid **`2×3` kartu penuh** (`.ref-grid-full`, `.ref-card-rich` dengan badge konteks `Bab X (SXX)`) + strip bawah **3-Langkah Rute Belajar Mandiri** (`.ref-route-bar`). URL hanya berasal dari `docs/PLAN.md` (atau bertanda `[CEK LINK]`).
+4. **Hands-On Visual-First (`~55 menit`):**
+   - **Cover Hands-On (`bg-blue` · `1.0m`):** Memakai `.cover-roadmap-3x2` (6 chip peta mikro-task) + `.cover-env-strip` (nama `.ipynb`, folder dataset dinamis, aturan `1 Sel = 1 Visual Nyata`).
+   - **5–6 Slide Langkah Hands-On (`make_handson_step_slide`):** Header ber-stepper progres 6 tahap (`.ho-stepper`), kartu kiri (`.ho-sub-list` dengan badge warna tahap selaras `# TODO`, chip rujukan teori `🔗`, kotak `🎯 CEK BERHASIL`, & `.callout` Momen Aha), kolom kanan berisi kartu kode gelap `3–8 baris` ber-syntax highlight (`highlight_python` + tombol `Salin`) tepat di atas pratinjau **`.ho-vis-card` hasil plot nyata** dari dataset Frozen!
+5. **Penutup Simetris Putih Google I/O (`3.0 menit`):**
+   - **3 Poin Utama (`2.0m` · `make_summary_3pillars_slide`):** Tema **putih bersih Google I/O** (`#FFFFFF`, latar radial halus, 3 kartu `.finale-card` bernomor `01–03` lengkap dengan strip visual/pipeline, pill capaian nyata, dan banner footer menuju Kamus, Referensi, & file output di `results/`).
+   - **Closing & Key Quote (`1.0m` · `make_closing_slide`):** Slide penutup **putih lapang Google I/O** (header `CLOSING · P{NN}` + badge `✓ Fondasi/Sesi Selesai`, 4 titik Google kanan atas, ornamen sudut halus, 1 pesan inti penutup berbahasa lugas bebas jargon berlebihan, garis pembagi 4 warna, dan kalimat sambutan menuju `P{NN+1}`).
 
 ### C. Kontrak Ekspansi Interaktif untuk PDF & PPTX (`window.SLIDE_PDF_EXPANDERS`)
 Agar mesin `tools/core/exporter.py` tetap 100% generik untuk semua sesi, setiap simulator/tab di HTML yang ingin dipecah menjadi beberapa halaman di PDF & PPTX **wajib** mendaftarkan expander melalui kontrak baku berikut:
@@ -108,31 +114,32 @@ window.SLIDE_PDF_EXPANDERS.push(({ cloneSlideWithCanvases }) => {
 ```
 Selain expander kustom tersebut, `exporter.py` secara otomatis:
 - Menandai `data-orig-num="1..N"` sebelum ekspansi.
-- Memecah semua slide yang memiliki `.qa-answer` atau `.quiz-ans` menjadi 2 halaman berurutan (**Pertanyaan → Jawaban**).
+- Memecah semua slide yang memiliki `.qa-answer` atau `.quiz-ans` menjadi 2 halaman berurutan (**Pertanyaan $\rightarrow$ Jawaban**).
 - Menyalin seluruh isi `<canvas>` secara akurat saat mengkloning slide.
 
 ---
 
-## 4. Standar Ekspor PDF, PPTX & Presenter Script (`tools/core/exporter.py`)
+## 4. Standar Ekspor Atomik PDF, PPTX & Presenter Script (`tools/core/exporter.py`)
 
+Semua penulisan PDF, PPTX, dan notebook wajib memakai **temp file `_tmp_*` (di-ignore Git)** yang lalu dipindahkan secara **atomik** lewat `.replace(...)` agar tidak terjadi race condition *truncation* `mmap` pada Git Windows saat IDE memantau perubahan.
 1. **Slide PDF (`16:9`):** Dicetak via Chrome/Edge Headless (`--headless=new --no-pdf-header-footer --print-to-pdf`), ukuran `@page { size: 13.333in 7.5in; margin: 0; }`.
 2. **Slide PPTX (`16:9` HD):** Dirender via Chrome DevTools Protocol (CDP) pada viewport `1120×630` dengan `deviceScaleFactor: 2` (`2240×1260` Retina HD), disusun dengan `python-pptx` berukuran `13.333 × 7.5 in`, serta diisi **Speaker Notes** lengkap di setiap slide (gabungan `data-notes` HTML + `SLIDE_EXPLANATIONS[origNum]`).
 3. **Presenter Script PDF (`A4 Portrait`):** 1 slide HTML dasar = 1 halaman A4 berisi Header (`Slide N — Judul` + kicker), bingkai preview live 16:9 (`592×333px`), dan kotak *Penjelasan Detail Materi* dari `presenter_notes.py`.
 
 ---
 
-## 5. Standar Notebook Hands-On (`tools/core/notebook_builder.py`)
+## 5. Standar Notebook Hands-On *Visual-First* (`tools/core/notebook_builder.py`)
 
-- **Cell-by-Cell Ultra Awam-Friendly:** 5–15 baris per sel kode, 1 sel = 1 tugas, tanpa nested loop/comprehension rumit, komentar Bahasa Indonesia (`# ...`) di tiap baris penting.
-- **Markdown Sebelum Kode:** Setiap sel kode wajib didahului sel Markdown pengantar yang menautkan nomor slide HTML (`Sesuai Slide XX–YY`).
-- **Setup 3 Tahap Baku:**
+- **Pemisahan `Alat Visualisasi Siap Pakai` (Tahap 0.2):** Kode plotting `matplotlib` dan helper loader dinamis (mis. `muat_dataset_frozen`) dikumpulkan pada satu sel siap pakai di Tahap 0.2 agar setiap sel kerja peserta sangat pendek (**2–14 baris**), 1 sel = 1 tugas sederhana, tanpa nested loop/comprehension rumit, dan selalu menghasilkan output gambar/angka nyata.
+- **Markdown Sebelum Kode:** Setiap sel kode wajib didahului sel Markdown pengantar yang menautkan nomor slide HTML (`Sesuai Slide XX–YY`) dan diakhiri ringkasan *"Apa yang perlu diperhatikan?"* di akhir tiap tahap.
+- **Setup 3 Tahap Baku (`setup_cells_standard`):**
   1. `Setup 1/3`: Import library & cetak versi (`numpy`, `pandas`, `tensorflow`, dll.).
   2. `Setup 2/3`: Deteksi Colab/Lokal (`try: import google.colab`) + kunci `SEED = 42`.
   3. `Setup 3/3`: Konfigurasi tidak di-hardcode (`IMG_SIZE = 224`, `CLASS_NAMES`, `SMOKE_TEST`, auto-detect `BASE_DIR`, `DATA_DIR`, `RESULTS_DIR`).
-- **Latihan `# TODO` & Hint Terbuka:**
-  - Versi peserta: 6–10 sel `# TODO` singkat dengan `assert` otomatis + sel Markdown `<details><summary><b>💡 Hint & Jawaban ...</b></summary>` tepat setelahnya.
-  - Versi kunci (`solutions/`): seluruh `# TODO` terisi, tanpa sel `<details>`, seluruh sel & `assert` wajib lolos dengan `SMOKE_TEST=1`.
-- **Kebijakan Metodologi:** Augmentation & statistik normalisasi hanya pada `train`; test set dievaluasi sekali; hasil pada `data/sample/` diberi label *"contoh data sampel"*.
+- **Latihan `# TODO` & Output Referensi Tersimpan:**
+  - Versi peserta: 6–10 sel `# TODO` singkat (1–2 baris isian) dengan `assert` diagnostik Bahasa Indonesia + sel Markdown `<details><summary><b>💡 Hint & Jawaban ...</b></summary>` tepat setelahnya. Seluruh sel kode di notebook peserta juga boleh diisi pratinjau *saved outputs* hasil eksekusi nyata notebook solusi agar peserta langsung melihat target outputnya.
+  - Versi kunci (`solutions/`): seluruh `# TODO` terisi, tanpa sel `<details>`, seluruh sel dieksekusi penuh (`SMOKE_TEST=0`) dengan output tersimpan (`0` error) serta wajib lolos validasi `SMOKE_TEST=1`.
+- **Kebijakan Metodologi:** Augmentation & statistik normalisasi hanya pada `train`; test set dievaluasi sekali; grafik kunci disimpan ke `results/`; hasil pada `data/sample/` diberi label *"contoh data sampel"*.
 
 ---
 

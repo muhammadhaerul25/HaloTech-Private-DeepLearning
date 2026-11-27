@@ -26,8 +26,8 @@ from pptx.enum.text import MSO_ANCHOR, PP_ALIGN
 from pptx.util import Inches, Pt
 
 import sys
-ROOT_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(ROOT_DIR / "tools"))
+ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR / "tools" / "legacy_p01"))
 
 import slide_theme as st
 
@@ -2142,7 +2142,7 @@ def main() -> None:
     ASSETS_DIR.mkdir(parents=True, exist_ok=True)
     STATS_JSON.write_text(json.dumps(stats, indent=2, ensure_ascii=False), encoding="utf-8")
     vis = generate_visualizations(df, stats)
-    html_main = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
+    html_main = ROOT_DIR / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
     if html_main.exists():
         from export_pdf_P01 import export_pptx
         export_pptx()

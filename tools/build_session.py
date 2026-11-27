@@ -33,13 +33,14 @@ def _run_py(script_path: Path, label: str) -> None:
 
 def build_legacy_p01(session: SessionConfig, skip_data: bool = False) -> None:
     """Run preserved P01 build pipeline without changing P01 visual design."""
+    p01_dir = TOOLS_DIR / "legacy_p01"
     if not skip_data:
-        _run_py(TOOLS_DIR / "make_sample_data.py", "1/6 Generate sample dataset & MNIST")
-    _run_py(TOOLS_DIR / "build_slides_P01.py", "2/6 Generate P01 visual assets & sample_stats.json")
-    _run_py(TOOLS_DIR / "build_html_slides_P01.py", "3/6 Build P01 interactive HTML slides (Main Source)")
-    _run_py(TOOLS_DIR / "export_pdf_P01.py", "4/6 Export P01 PDF (16:9) & PPTX HD (16:9 + Notes)")
-    _run_py(TOOLS_DIR / "build_notebooks_P01.py", "5/6 Build P01 hands-on notebooks (Student & Solution)")
-    _run_py(TOOLS_DIR / "build_presenter_script_P01.py", "6/6 Build P01 per-slide presenter script PDF")
+        _run_py(p01_dir / "make_sample_data.py", "1/6 Generate sample dataset & MNIST")
+    _run_py(p01_dir / "build_slides_P01.py", "2/6 Generate P01 visual assets & sample_stats.json")
+    _run_py(p01_dir / "build_html_slides_P01.py", "3/6 Build P01 interactive HTML slides (Main Source)")
+    _run_py(p01_dir / "export_pdf_P01.py", "4/6 Export P01 PDF (16:9) & PPTX HD (16:9 + Notes)")
+    _run_py(p01_dir / "build_notebooks_P01.py", "5/6 Build P01 hands-on notebooks (Student & Solution)")
+    _run_py(p01_dir / "build_presenter_script_P01.py", "6/6 Build P01 per-slide presenter script PDF")
 
 
 def build_modular_session(session: SessionConfig) -> None:

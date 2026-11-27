@@ -47,12 +47,18 @@
       "phase": "Fondasi",
       "color": "#FBBC04",
       "tint": "#FEF7E0",
-      "title": "Arsitektur Neural Network & Konvolusi (CNN)",
-      "description": "Keterbatasan MLP pada foto, evolusi arsitektur CV (MLP → CNN → ResNet → MobileNetV2), konvolusi 2D, kernel/filter, stride, padding, pooling, dan feature map pada foto Disney Frozen.",
-      "topics": ["Arsitektur CV", "Convolution", "Pooling & Feature Map"],
+      "title": "Arsitektur Neural Network",
+      "description": "Bedah tuntas evolusi 5 arsitektur relevan proyek Frozen (MLP → CNN Klasik → ResNet → MobileNetV2 → EfficientNet): gambaran umum, fitur khusus, simulasi interaktif, use case, dan benchmark di Keras.",
+      "topics": ["MLP & CNN", "ResNet", "MobileNetV2", "EfficientNet"],
       "duration": "120 menit",
-      "status": "coming_soon",
-      "links": {}
+      "status": "available",
+      "links": {
+        "slidesHtml": "materials/P03/P03_arsitektur_neural_network.html",
+        "slidesPdf": "materials/P03/P03_arsitektur_neural_network.pdf",
+        "slidesPptx": "materials/P03/P03_arsitektur_neural_network.pptx",
+        "notebook": "materials/P03/P03_arsitektur_neural_network.ipynb",
+        "solution": "materials/P03/solutions/P03_arsitektur_neural_network.ipynb"
+      }
     },
     {
       "id": "P04",

@@ -14,7 +14,7 @@ import re
 import subprocess
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parent.parent.parent
 SLIDES_HTML_PATH = ROOT / "materials" / "P01" / "P01_understanding_images_processing_eda.html"
 OUT_PDF_PATH = ROOT / "materials" / "P01" / "P01_presenter_script.pdf"
 TMP_HTML_PATH = ROOT / "materials" / "P01" / "_tmp_presenter_script_P01.html"

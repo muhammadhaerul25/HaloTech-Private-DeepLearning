@@ -1,4 +1,0 @@
-learning_rate,loss_awal,loss_akhir,total_parameter
-0.0001,1.7479,1.6995,61445
-0.001,4.855,3.7794,61445
-0.01,53.6428,33.1742,61445

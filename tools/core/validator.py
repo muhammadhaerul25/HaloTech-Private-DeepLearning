@@ -29,6 +29,7 @@ def load_presenter_explanations(session: SessionConfig) -> dict[int, list[str]]:
     """Load `SLIDE_EXPLANATIONS` dict for either legacy P01 or modular P02+ sessions."""
     candidates = [
         session.code_dir / "presenter_notes.py",
+        ROOT_DIR / "tools" / "legacy_p01" / f"build_presenter_script_{session.id}.py",
         ROOT_DIR / "tools" / f"build_presenter_script_{session.id}.py",
     ]
     for path in candidates:
