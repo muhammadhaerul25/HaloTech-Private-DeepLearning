@@ -311,6 +311,14 @@ tampilkan_ledakan_mlp(model_mlp)
         hint_code='hidden_1 = tf.keras.layers.Dense(64, activation="relu")\nhidden_2 = tf.keras.layers.Dense(32, activation="relu")',
         hint_label="Tugas 1",
     )
+    cells.append(
+        md(
+            """
+> 💡 **Apa yang perlu diperhatikan pada grafik di atas?**  
+> Sekalipun hanya ditambah `2 Hidden Layer` kecil (`64 → 32`), jumlah parameter langsung melonjak menjadi **`9.636.101`** (lebih dari **12×** model 1-layer P02 `752.645` param) karena tiap neuron terhubung penuh ke seluruh `150.528` piksel.
+"""
+        )
+    )
 
     # ------------------------------------------------------------------
     # LANGKAH 2 — CONV2D & MAXPOOL (# TODO 2)
@@ -349,6 +357,14 @@ print(f"Ukuran menyusut rapi: (32,32) -> Feature Map {tuple(fmap.shape[1:3])} ->
 """,
         hint_code="conv_layer = tf.keras.layers.Conv2D(1, kernel_size=3, use_bias=False)\npool_layer = tf.keras.layers.MaxPooling2D(pool_size=(2, 2))",
         hint_label="Tugas 2",
+    )
+    cells.append(
+        md(
+            """
+> 💡 **Apa yang perlu diperhatikan pada 3 gambar Elsa di atas?**  
+> Panel tengah (**Feature Map**) menyala kuning-hijau tepat di garis batas rambut & gaun Elsa dengan ukuran menyusut tipis `32×32 → 30×30` (efek *Valid Padding*). Panel kanan (**MaxPool 2×2**) meringkasnya separuh menjadi **`15×15`** sambil tetap mempertahankan bentuk utama figurin!
+"""
+        )
     )
 
     # ------------------------------------------------------------------
@@ -427,6 +443,14 @@ Jalankan sel di bawah untuk melihat bagaimana **CNN Klasik** jauh lebih progresi
             """
 EPOCHS_UJI = 3 if SMOKE_TEST else 22
 bandingkan_training_mlp_vs_cnn(X_48, y_48, epochs=EPOCHS_UJI, seed=SEED)
+"""
+        )
+    )
+    cells.append(
+        md(
+            """
+> 💡 **Apa yang perlu diperhatikan pada kurva belajar ini?**  
+> Dengan jumlah parameter jauh lebih kecil, kurva **CNN Klasik** naik jauh lebih konsisten daripada **MLP**. Namun pada dataset mini `143` foto, CNN polos *from scratch* tetap terbatas — itulah alasan kita butuh **MobileNetV2 (Pretrained CNN)** di P04!
 """
         )
     )
@@ -643,6 +667,45 @@ print(f"✅ Tersimpan rapi: {out_csv.name} & {out_png.name}")
 """,
         hint_code="df_bench.to_csv(out_csv, index=False)\nplot_kuadran_5_arsitektur(df_bench, simpan_ke=out_png)",
         hint_label="Tugas 8",
+    )
+    cells.append(
+        md(
+            """
+> 💡 **Apa yang perlu diperhatikan pada grafik kuadran & CSV hasil?**  
+> Posisi paling ideal adalah **kuadran kiri-bawah** (parameter ringkas & latensi rendah). Amati bagaimana **MobileNetV2** (`2.26M` param / `8.64 MB`) jauh lebih ringan dari `ResNet50` (`23.60M`) dan ~`2.9×` lebih cepat daripada `EfficientNetB0` di CPU!
+"""
+        )
+    )
+    cells.append(
+        md(
+            """
+---
+### Bonus Eksperimen Bebas *(Opsional)*: Ubah 1 Angka `FILTER_PILIHAN` pada Foto Elsa *(Persis Slide 13!)*
+Coba ganti `FILTER_PILIHAN` antara **`"sobel_v"`** (garis vertikal), **`"sobel_h"`** (garis horizontal), atau **`"pertajam"`**, lalu tekan `Shift + Enter` untuk melihat perbedaan Feature Map-nya secara instan!
+"""
+        )
+    )
+    cells.append(
+        code(
+            """
+# Ubah 1 nilai ini ("sobel_v", "sobel_h", atau "pertajam") lalu tekan Shift+Enter!
+FILTER_PILIHAN = "sobel_h"
+k_uji = {
+    "sobel_v":  np.array([[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]], dtype=np.float32),
+    "sobel_h":  np.array([[-1, -2, -1], [0, 0, 0], [1, 2, 1]], dtype=np.float32),
+    "pertajam": np.array([[0, -1, 0], [-1, 5, -1], [0, -1, 0]], dtype=np.float32),
+}[FILTER_PILIHAN]
+c_uji = tf.keras.layers.Conv2D(1, 3, use_bias=False)
+_ = c_uji(elsa_32.reshape(1, 32, 32, 1))
+c_uji.set_weights([k_uji.reshape(3, 3, 1, 1)])
+fm_uji = tf.nn.relu(c_uji(elsa_32.reshape(1, 32, 32, 1)))
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6.2, 2.8), dpi=125)
+ax1.imshow(elsa_32, cmap="gray"); ax1.set_title("Asli Elsa (32x32)"); ax1.axis("off")
+ax2.imshow(fm_uji[0, :, :, 0], cmap="viridis"); ax2.set_title(f"Filter: {FILTER_PILIHAN}"); ax2.axis("off")
+plt.tight_layout(); plt.show()
+print("✅ Seluruh Hands-on P03 selesai! Siap menuju Transfer Learning di P04!")
+"""
+        )
     )
 
     # ------------------------------------------------------------------

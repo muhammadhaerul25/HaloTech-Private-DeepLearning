@@ -241,14 +241,14 @@
 ### 2. Struktur File & Artefak Tervalidasi (`P03`)
 - **Kode Modular (`tools/sessions/P03/`):**
   - `build_assets.py` — mengekstrak grid piksel Elsa `16×16` nyata, 7 thumbnail Frozen (`thumb_*.jpg`), 6 grafik konsep + 6 grafik preview Hands-On, serta benchmark nyata Keras `224×224×3` dan training comparison `48×48` ke `p03_data.json`.
-  - `build_html.py` — dek interaktif **`52` slide** (`120.0` menit exact `data-notes`, `timeless_ok = true`, `20` aset lokal valid) dengan **5 Simulator Interaktif** terdaftar di `window.SLIDE_PDF_EXPANDERS` serta audit visual HD menyeluruh (Cover+Intro & Bab 1–5):
-    1. **Sim #1 MLP (`Slide 08`):** Node-link + Uji Geser 2 Piksel (`9,64M` param).
-    2. **Sim #2 CNN Klasik (`Slide 13`):** Kanvas konvolusi 2D nyata pada matriks `16×16` Elsa (`Sobel V/H/Pertajam`, `Stride 1/2`, `Padding Valid/Same`, `MaxPool 2×2`).
-    3. **Sim #3 ResNet (`Slide 19`):** Sinyal gradien `Plain Deep Net` vs `Skip Connection (+x)` + pemangkasan head `Flatten 51.38M → GAP 10.245` + diagram alur SVG.
-    4. **Sim #4 MobileNetV2 (`Slide 25`):** `Conv2D Biasa (231.2M ops)` vs `Inverted Residual Expand 6× → Depthwise 3×3 → Linear Project (27.5M ops = hemat 8.4×)`.
-    5. **Sim #5 EfficientNet (`Slide 29`):** Slider *Compound Scaling* (`B0/B1/B2`) + toggle *SE Channel Attention* (`16` blok `Multiply`) pada foto Elsa latar ramai.
-  - `presenter_notes.py` — `SLIDE_EXPLANATIONS` lengkap mencakup seluruh `52/52` slide.
-  - `build_notebooks.py` — notebook *Visual-First* `6` langkah (`8` `# TODO` === `8` `<details>` Hint & Jawaban, offline-safe `weights=None`, mengekspor `results/p03_5_architectures_benchmark.csv` & `.png`). Seluruh **`15/15` sel kode** di notebook solusi maupun peserta terisi output eksekusi nyata.
+  - `build_html.py` — dek interaktif **`52` slide** (`120.0` menit exact `data-notes`, `timeless_ok = true`, `20` aset lokal valid) dengan **5 Simulator Interaktif** bermode **`▶ Play / ⏭ +1 Langkah / ↺ Reset` + sinkronisasi `.sync-card` bergaya P02** terdaftar di `window.SLIDE_PDF_EXPANDERS` serta audit visual HD menyeluruh (Cover+Intro, Bab 1–5, & lintas-cek P02):
+    1. **Sim #1 MLP (`Slide 08`):** Node-link + Uji Geser 2 Piksel (`9,64M` param) + tombol `▶ Play 3 Tahap` (`Flatten -> Hidden Dense -> Softmax`).
+    2. **Sim #2 CNN Klasik (`Slide 13`):** Kanvas konvolusi 2D nyata pada matriks `16×16` Elsa (`Sobel V/H/Pertajam`, `Stride 1/2`, `Padding Valid/Same`, `MaxPool 2×2`) + `▶ Play 3×3` / `⏭ +1 Kotak` menyorot kotak `3×3` di input ke sel Feature Map & MaxPool (`scanIdx=92`, `ReLU=1.44` pada PDF).
+    3. **Sim #3 ResNet (`Slide 19`):** Sinyal gradien `Plain Deep Net` vs `Skip Connection (+x)` + pemangkasan head `Flatten 51.38M → GAP 10.245` + `▶ Play Backprop` (`L20 → L1` dengan animasi pulsa tol `+x`).
+    4. **Sim #4 MobileNetV2 (`Slide 25`):** `Conv2D Biasa (231.2M ops)` vs `Inverted Residual Expand 6× → Depthwise 3×3 → Linear Project (27.5M ops = hemat 8.4×)` + `▶ Play Aliran Blok`.
+    5. **Sim #5 EfficientNet (`Slide 29`):** *Compound Scaling* (`B0/B1/B2`) + *SE Channel Attention* (`16` blok `Multiply`) pada foto Elsa latar ramai + `▶ Play SE Gate` (`Scaling -> Squeeze -> Excite`).
+  - `presenter_notes.py` — `SLIDE_EXPLANATIONS` lengkap mencakup seluruh `52/52` slide dengan **struktur 3 bagian standar P02** (*Tujuan Slide + Alokasi Waktu*, *Panduan Demo Interaktif / Naskah Pengajar*, *Transisi ke Slide Berikutnya*), terhubung dinamis dari `p03_data.json`.
+  - `build_notebooks.py` — notebook *Visual-First* `6` langkah (`8` `# TODO` === `8` `<details>` Hint & Jawaban, offline-safe `weights=None`, mengekspor `results/p03_5_architectures_benchmark.csv` & `.png`), dilengkapi refleksi bergaya P02 (`> 💡 Apa yang perlu diperhatikan...?`) serta sel **Bonus Eksperimen Bebas (`FILTER_PILIHAN`)**. Seluruh **`16/16` sel kode** di notebook solusi maupun peserta terisi output eksekusi nyata (`51` sel peserta, `43` sel solusi).
 - **Hasil Benchmark Keras Nyata (`224×224×3`, 5 kelas Frozen, `CPU` lokal):**
   - `1. MLP (2 Hidden)`: `9.636.101` param (`36.76 MB`), `62.3 ms` (boros bobot & buta spasi).
   - `2. CNN Klasik (3 Blok + GAP)`: `101.829` param (`0.39 MB`), `244.8 ms` (~95× lebih hemat dari MLP).
