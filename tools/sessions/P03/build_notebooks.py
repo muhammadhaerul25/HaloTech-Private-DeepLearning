@@ -560,7 +560,8 @@ print(f"EfficientNetB0 backbone: {eff_base.count_params():,} param | Gerbang SE 
             """
 ---
 ## Langkah 6 (7 menit): Benchmark 5 Arsitektur & Simpan ke `results/` *(Sesuai Slide 31 & 41)*
-Mari pasang kepala klasifikasi 5 kelas (`GAP → Dense(5, softmax)`) di atas `ResNet50`, `MobileNetV2`, dan `EfficientNetB0`, lalu jalankan helper pengukur inferensi nyata pada 8 foto Frozen!
+Mari pasang kepala klasifikasi 5 kelas (`GAP → Dense(5, softmax)`) di atas `ResNet50`, `MobileNetV2`, dan `EfficientNetB0`, lalu jalankan helper pengukur inferensi nyata pada 8 foto Frozen!  
+*(Catatan penting: Pada **MobileNetV2**, kepala `1.280 → 5` ini hanya berisi **`6.405` parameter terlatih** saat backbone dibekukan, dan `base_model(inp, training=False)` menjaga statistik `BatchNorm` tetap stabil.)*
 """
         )
     )
@@ -651,14 +652,14 @@ print(f"✅ Tersimpan rapi: {out_csv.name} & {out_png.name}")
         md(
             """
 ---
-## Ringkasan & Mini-Challenge *(Selaras Slide 42 & 49–50)*
-- Dari eksperimen nyata barusan:
-  1. **MLP** (`9.64M` param) boros bobot karena `Flatten`.
-  2. **CNN Klasik** (`101.8K` param) memangkas parameter ~95× lewat *Parameter Sharing & Pooling*.
-  3. **ResNet50** (`23.60M` param / `90.0 MB`) memakai `16` blok *Skip Connection* (`Add()`), akurat tapi berat.
-  4. **MobileNetV2** (`2.26M` param / `8.64 MB`) memakai `17` `DepthwiseConv2D` & cepat dieksekusi → **kandidat #1 proyek Frozen!**
-  5. **EfficientNetB0** (`4.06M` param / `15.5 MB`) menambah `16` gerbang *SE Attention* (`Multiply`) untuk fokus kanal penting.
-- **Persiapan P04:** Di **P04 — Arsitektur CNN & Transfer Learning**, kita akan menyalakan bobot *pretrained ImageNet* pada **MobileNetV2** agar akurasi di 143 foto Frozen melonjak tinggi!
+## Ringkasan & Rekomendasi Arsitektur Resmi *(Selaras Slide 26, 31, 42 & 49–50)*
+- Dari eksperimen nyata barusan (`224×224×3` + uji `48×48`):
+  1. **MLP** (`9.64M` param) boros bobot karena `Flatten` dan buta spasial (`acc` stagnan `22.2%`).
+  2. **CNN Klasik (*from scratch*)** (`101.8K` param) memangkas bobot ~95× lewat *Parameter Sharing & Pooling*, cocok sebagai **Baseline #1** (namun pada `143` foto, belajar dari nol mentok di `val_acc ~34.3%`).
+  3. **ResNet50** (`23.60M` param / `90.0 MB`) memakai `16` blok *Skip Connection* (`Add()`), akurat tapi terlalu gemuk untuk ~85–100 foto train.
+  4. **MobileNetV2 (*Pretrained CNN*) ★** (`2.26M` param / `8.64 MB`, `17` `DepthwiseConv2D`): **tetap 100% keluarga CNN**, cepat (`~2.9×` lebih cepat di CPU dibanding EffNetB0), dan saat *base* dibekukan kita cukup melatih head **`6.405` param (`1.280 → 5`)** → **Paling Direkomendasikan untuk P04–P08!**
+  5. **EfficientNetB0** (`4.06M` param / `15.5 MB`, `16` SE `Multiply`) menjadi **Runner-Up / pembanding khusus skenario `ramai`**.
+- **Persiapan P04–P08:** Di **P04 — Arsitektur CNN & Transfer Learning**, kita akan mengaktifkan **MobileNetV2 Transfer Learning 2 Tahap** (Tahap 1: *Feature Extraction* latih head `6.405` param; Tahap 2: *Fine-Tuning* ringan dengan `training=False` pada *base*) sebelum audit **Grad-CAM (`7×7×1280`)** di P08!
 
 ### Referensi Materi *(Selaras Slide 51–52 · `docs/PLAN.md`)*
 1. [3Blue1Brown — *But what is a Neural Network?*](https://www.youtube.com/watch?v=aircAruvnKk)

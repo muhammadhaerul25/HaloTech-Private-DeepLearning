@@ -60,8 +60,7 @@ SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "**Poin Demo:** Perhatikan kanvas *Feature Map* dan hasil *MaxPool 2×2* berubah langsung menghitung matriks asli `16×16` dari foto Elsa `data/frozen_v1/`, serta lihat betapa hematnya parameter (`101.829` di model 3-blok vs `9,64 juta` di MLP).",
     ],
     14: [
-        "**Use Case CNN Klasik & Munculnya Masalah Baru:** Efektif untuk OCR, klasifikasi ikon, dan deteksi cacat industri sederhana.",
-        "**Cacat Generasi Ini:** Saat ditumpuk dalam agar tahan latar `ramai` (misal era VGG16 ~138 juta param), sinyal gradien melemah (*Vanishing Gradient*) dan kepala `Flatten → Dense` tetap menyedot puluhan juta bobot.",
+        "**Use Case CNN Klasik & Munculnya Masalah Baru:** Efektif untuk OCR dan deteksi cacat industri berlatar seragam, namun pada `143` foto Frozen (~85–100 train) belajar dari nol mentok di `val_acc 34.3%` (uji 48×48). Karena itu CNN Klasik dijadikan **Baseline #1**, lalu berevolusi menuju **ResNet** & **MobileNetV2 (Pretrained CNN)**.",
     ],
     15: [
         "**Q&A #1 — Cek Pemahaman CNN Klasik:** Minta peserta memilih opsi `A/B/C` untuk menghitung ukuran output `28×28` dengan `Kernel 3×3, Stride 1, Padding Valid`, baru klik *Lihat Jawaban*.",
@@ -100,7 +99,8 @@ SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "**Simulator #4 — MobileNetV2 Conv Biasa vs Bottleneck:** Bandingkan langsung operasi `Conv2D 3×3` biasa (`231.2M` perkalian) dengan `Depthwise + Pointwise` (`27.5M` perkalian), serta telusuri langkah `Expand → Depthwise → Project + Skip`.",
     ],
     26: [
-        "**Use Case MobileNetV2 & Kandidat Utama Proyek Frozen:** Jelaskan mengapa **MobileNetV2 dipilih sebagai arsitektur inti proyek kita (`P04–P08`)**: hemat RAM Colab, cepat inferensi (`773.5 ms` per 8 foto di CPU, jauh lebih cepat di GPU), minim *overfitting* di `143+` foto, dan punya bobot ImageNet siap Transfer Learning di P04.",
+        "**Use Case MobileNetV2 & Kandidat Utama Proyek Frozen:** Tekankan bahwa **MobileNetV2 tetaplah 100% arsitektur CNN** (bukan model non-konvolusi), sehingga memilih MobileNetV2 berarti memakai CNN versi paling modern dan hemat (`2.264.389` param total, `8.64 MB`, `773.5 ms` per 8 foto CPU).",
+        "**Setup Proyek Frozen (P04–P08):** Dengan `143` foto (`102 polos` vs `41 ramai` → ~85–100 foto train), CNN polos *from scratch* mentok (`val_acc ~34.3%`). Dengan MobileNetV2, Tahap 1 hanya melatih kepala `6.405` param (`base beku`), Tahap 2 *fine-tuning* memakai `training=False` untuk BatchNorm, dan blok akhir `7×7×1280` bersih untuk Grad-CAM P08.",
     ],
     27: [
         "**EfficientNet In General:** Setelah MobileNetV2 membuktikan arsitektur ramping itu mungkin, pertanyaan berikutnya muncul: bagaimana menaikkan kapasitas model secara sistematis (`B0 → B1 → B2 → B7`) tanpa tebak-tebakan?",
@@ -116,7 +116,7 @@ SLIDE_EXPLANATIONS: dict[int, list[str]] = {
         "**Use Case EfficientNet & Perbandingannya dengan MobileNetV2:** Sangat kuat di layanan *cloud* yang mengejar rasio akurasi per FLOPs (`EfficientNetB0: 4.06M param, 15.47 MB, 16 SE blocks`), namun memiliki operasi per-blok lebih banyak (`237` layer, `2238.9 ms` di CPU) sehingga **MobileNetV2** lebih praktis & stabil sebagai baseline utama peserta.",
     ],
     31: [
-        "**Matriks Rangkuman 5 Arsitektur (+ Konteks Modern ViT/YOLO):** Tampilkan grafik `06_5arch_comparison_chart.png` hasil benchmark Keras nyata pada mesin ini + kartu kecil menjelaskan di mana posisi **Vision Transformer (ViT)** dan **YOLO** agar wawasan peserta utuh.",
+        "**Matriks Rangkuman 5 Arsitektur (+ Posisi Model Modern):** Tampilkan `06_5arch_comparison_chart.png` dan tegaskan pembagian peran resmi proyek: **CNN Klasik *from scratch*** sebagai Baseline #1 (bukti batas data ~100 foto), **MobileNetV2 (*Pretrained CNN* 2 Tahap)** sebagai Model Utama (`8.64 MB`), dan **EfficientNetB0** sebagai Runner-Up pembanding akurasi latar `ramai`.",
     ],
     32: [
         "**Q&A #3 — Konsultan Keputusan Arsitektur:** Latih peserta memilih arsitektur paling rasional untuk kasus dataset kecil `143` foto `polos vs ramai` dengan keterbatasan komputasi Colab gratis.",

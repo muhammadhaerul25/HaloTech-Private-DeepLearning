@@ -255,10 +255,13 @@
   - `3. ResNet50 (+ GAP + Dense 5)`: `23.597.957` param (`90.02 MB`, `16` blok `Add()`), `1615.8 ms`.
   - `4. MobileNetV2 ★ (+ GAP + Dense 5)`: `2.264.389` param (`8.64 MB`, `17` `DepthwiseConv2D`), `773.5 ms`.
   - `5. EfficientNetB0 (+ GAP + Dense 5)`: `4.055.976` param (`15.47 MB`, `16` `DepthwiseConv2D` & `16` SE `Multiply`), `2238.9 ms`.
-- **Validasi 6 Gerbang DoD (`tools/build_session.py P03 --validate`):**
+- **Keputusan Arsitektur Proyek (`Slide 14, 26, 31–32, 42, 49` & Notebook):**
+  - Ditegaskan bahwa **MobileNetV2 adalah 100% keluarga CNN modern** dan menjadi **Rekomendasi Utama P04–P08** lewat strategi **Transfer Learning 2 Tahap** (Tahap 1: *base* beku + latih head `6.405` param `1.280 → 5`; Tahap 2: *fine-tuning* dengan `base_model(inp, training=False)` + siap Grad-CAM `7×7×1280` di P08).
+  - **CNN Klasik *from scratch*** (`101.829` param) ditetapkan sebagai **Baseline #1** (terbukti pada uji 48×48 di ~100 foto train mentok `val_acc 34.3%`), sementara **EfficientNetB0** menjadi **Runner-Up pembanding `ramai`**.
+- **Validasi 6 Gerbang DoD (`tools/build_session.py P03 --validate-only`):**
   - **HTML:** `52` slide, `20` aset lokal valid, `120.0` menit `data-notes`, `timeless_ok = true`.
-  - **PDF & PPTX:** `66/66` halaman/slide `16:9` identik (`8.25 MB` PDF, `17.57 MB` PPTX HD), Speaker Notes `66/66`.
-  - **Presenter Script:** `52/52` halaman A4 Portrait (`7.15 MB`).
-  - **Notebooks:** Peserta (`45` sel, `8` `# TODO` === `8` Hint), Solusi (`37` sel), lolos eksekusi `SMOKE_TEST=1` (`solution_smoke_executed = true`, `student_prefix_executed = true`), dan penuh `15/15` sel ber-output.
+  - **PDF & PPTX:** `66/66` halaman/slide `16:9` identik (`8.34 MB` PDF, `17.64 MB` PPTX HD), Speaker Notes `66/66`.
+  - **Presenter Script:** `52/52` halaman A4 Portrait (`7.27 MB`).
+  - **Notebooks:** Peserta (`45` sel, `8` `# TODO` === `8` Hint), Solusi (`37` sel), lolos eksekusi `SMOKE_TEST=1` (`solution_smoke_executed = true`, `student_prefix_executed = true`), dan penuh `15/15` sel ber-output (`15/15` code cells).
   - **Portal & PWA:** `sessions.json` (`P03` berstatus `available`), `vercel.json` (`/p3` & `/p03`), serta `sw.js` (`dl-course-pwa-v16`).
 

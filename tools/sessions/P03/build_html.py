@@ -897,21 +897,21 @@ def build_slides_html(data: dict) -> str:
 
         <div class="uc-card" style="border-top:5px solid #FBBC04; justify-content:space-between; gap:8px;">
           <div style="display:flex; flex-direction:column; gap:5px;">
-            <span class="pill yellow" style="width:fit-content;">⚠ MENTOK SAAT DALAM (ERA VGG)</span>
-            <div class="card-title" style="font-size:14px;">3. Foto Kompleks &amp; Latar Ramai</div>
-            <p class="card-text" style="font-size:11.8px;">Menumpuk &gt;16–20 layer CNN polos seperti gaya VGG membuat sinyal training melemah &amp; ekornya super berat!</p>
+            <span class="pill yellow" style="width:fit-content;">⚠ MENTOK SAAT DALAM &amp; DATA MINI</span>
+            <div class="card-title" style="font-size:14px;">3. Foto Ramai &amp; Dataset 143 Foto</div>
+            <p class="card-text" style="font-size:11.8px;">Menumpuk &gt;16 layer CNN polos memicu <em>Vanishing Gradient</em>, sedangkan melatih 3 blok dari nol di ~100 foto train Frozen hanya mentok <code>val_acc 34.3%</code> (uji 48×48)!</p>
           </div>
           <div style="display:flex; align-items:center; gap:9px; background:#FEF7E0; border:1px solid #FDE293; border-radius:9px; padding:7px 9px;">
             <img src="assets/P03/thumb_elsa_ramai.jpg" alt="Elsa Ramai" style="width:42px; height:42px; border-radius:7px; object-fit:cover;"/>
-            <div style="font-family:var(--font-code); font-size:9.8px; color:#B06000; line-height:1.35;"><strong>VGG16 ~138M param</strong><br/>Terkena <em>Vanishing Grad!</em></div>
+            <div style="font-family:var(--font-code); font-size:9.8px; color:#B06000; line-height:1.35;"><strong>From Scratch = Baseline #1</strong><br/>Butuh Pretrained CNN!</div>
           </div>
-          <div class="mini-box" style="background:#FEF7E0; border-color:#FDE293; font-size:10.8px; padding:6px 9px;"><strong>Aturan:</strong> Butuh Skip Connection + GAP!</div>
+          <div class="mini-box" style="background:#FEF7E0; border-color:#FDE293; font-size:10.8px; padding:6px 9px;"><strong>Peran Frozen:</strong> Jadi pembanding awal vs MobileNetV2!</div>
         </div>
       </div>
       <div class="verdict-box foundation" style="margin-top:10px;">
         <div>
-          <div style="font-family:var(--font-title); font-size:12.5px; font-weight:700; color:#174EA6;">2 CACAT YANG MEMICU LAHIRNYA RESNET (#3)</div>
-          <div style="font-size:12px; color:#202124; margin-top:2px;">(1) <strong>Vanishing Gradient / Degradation:</strong> gradien melemah saat melewati puluhan lapisan berturut-turut. (2) Kepala <code>Flatten &#8594; Dense</code> pada model gaya VGG masih menyedot puluhan juta parameter!</div>
+          <div style="font-family:var(--font-title); font-size:12.5px; font-weight:700; color:#174EA6;">BASELINE #1 PROYEK FROZEN &amp; PEMICU RESNET (#3)</div>
+          <div style="font-size:12px; color:#202124; margin-top:2px;">(1) CNN polos 3 blok hanya jadi <strong>Baseline awal (from scratch)</strong>. (2) Menumpuk CNN dalam terhalang <strong>Vanishing Gradient</strong> &amp; kepala <code>Flatten</code> boros — memicu lahirnya <strong>ResNet (#3) &#8594; MobileNetV2 (#4)</strong>!</div>
         </div>
         <span class="pill blue" style="font-size:11px; flex-shrink:0;">3-Blok CNN: {r_cnn['total_params']:,} Param</span>
       </div>
@@ -1551,32 +1551,32 @@ def build_slides_html(data: dict) -> str:
           </ul>
           <div class="mini-box" style="margin-top:auto; font-size:11px; line-height:1.45;">
             <strong style="color:#1A73E8;">Cocok untuk {tot_imgs} Foto Frozen:</strong>
-            <div>• Kepala klasifikasi kecil (1.280 &#8594; 5 kelas).</div>
-            <div>• Tidak mudah menghafal latar <code>polos/ramai</code>.</div>
+            <div>• Kepala klasifikasi hanya <code>6.405</code> param (<code>1.280→5</code>).</div>
+            <div>• Tahan overfit pada ~85–100 foto train <code>polos/ramai</code>.</div>
           </div>
-          <div style="font-family:var(--font-code); font-size:10.5px; color:#1A73E8; background:#E8F0FE; border-radius:7px; padding:5px 8px;">Kunci: Generalisasi tinggi di dataset mini!</div>
+          <div style="font-family:var(--font-code); font-size:10.5px; color:#1A73E8; background:#E8F0FE; border-radius:7px; padding:5px 8px;">Kunci: Tetap 100% CNN + Generalisasi Tinggi!</div>
         </div>
 
         <div class="uc-card" style="border-top:4px solid #FBBC04;">
-          <span class="pill yellow" style="width:fit-content;">&#10003; RAMAH GOOGLE COLAB</span>
-          <div class="card-title" style="font-size:14px;">3. Iterasi Cepat Saat Eksperimen</div>
-          <p class="card-text" style="font-size:12px; line-height:1.45;">Hanya butuh ~{r_mob['est_size_mb']} MB dan latensi {r_mob['latency_ms_8imgs']:.1f} ms/batch CPU, sehingga eksperimen skenario <code>polos vs ramai</code> di P05–P08 berjalan cepat.</p>
+          <span class="pill yellow" style="width:fit-content;">&#10003; TRANSFER LEARNING 2 TAHAP</span>
+          <div class="card-title" style="font-size:14px;">3. Setup Resmi &amp; Eksperimen Cepat</div>
+          <p class="card-text" style="font-size:12px; line-height:1.45;">Ringan (~{r_mob['est_size_mb']} MB, {r_mob['latency_ms_8imgs']:.1f} ms/8 foto CPU) serta siap <strong>Grad-CAM</strong> lewat peta akhir <code>7×7×1280</code>.</p>
           <ul class="clean" style="font-size:11.4px; line-height:1.45; margin-top:4px;">
-            <li><strong>Training Stabil:</strong> Cukup 15–20 epoch di Colab gratis.</li>
-            <li><strong>Kompatibel Penuh:</strong> Mendukung Grad-CAM (P08) dengan peta akhir <code>7×7</code>.</li>
+            <li><strong>Tahap 1 (P04/P06):</strong> Base beku + latih head <code>6.405</code> param.</li>
+            <li><strong>Tahap 2 (P07/P08):</strong> <em>Fine-tune</em> akhir dengan <code>training=False</code>.</li>
           </ul>
           <div class="mini-box" style="margin-top:auto; font-size:11px; line-height:1.45;">
-            <strong style="color:#B06000;">Alur Silabus P04–P08:</strong>
-            <div>• P04/P06: Feature extraction (base beku).</div>
-            <div>• P07/P08: Fine-tuning &amp; audit Grad-CAM.</div>
+            <strong style="color:#B06000;">vs CNN Polos Dari Nol:</strong>
+            <div>• CNN polos 3 blok di 48×48 mentok <code>val_acc 34.3%</code>.</div>
+            <div>• CNN Klasik dijadikan Baseline #1, MobV2 model utama!</div>
           </div>
-          <div style="font-family:var(--font-code); font-size:10.5px; color:#B06000; background:#FEF7E0; border-radius:7px; padding:5px 8px;">Status: Pemenang Rasio Akurasi vs Kecepatan</div>
+          <div style="font-family:var(--font-code); font-size:10.5px; color:#B06000; background:#FEF7E0; border-radius:7px; padding:5px 8px;">Status: Rekomendasi Utama P04–P08</div>
         </div>
       </div>
       <div class="verdict-box winner" style="margin-top:10px;">
         <div>
-          <div style="font-family:var(--font-title); font-size:12.5px; font-weight:700; color:#137333;">VERDICT PROYEK FROZEN · PILIHAN UTAMA #1 &#9733;</div>
-          <div style="font-size:12px; color:#202124; margin-top:2px;"><strong>MobileNetV2</strong> dipilih sebagai tulang punggung resmi proyek Klasifikasi Karakter Disney Frozen hingga <strong>P08 (Evaluasi &amp; Grad-CAM)</strong>!</div>
+          <div style="font-family:var(--font-title); font-size:12.5px; font-weight:700; color:#137333;">VERDICT PROYEK FROZEN · PILIHAN UTAMA: MOBILENETV2 (PRETRAINED CNN) &#9733;</div>
+          <div style="font-size:12px; color:#202124; margin-top:2px;"><strong>MobileNetV2</strong> adalah CNN modern paling optimal untuk {tot_imgs} foto Frozen: memakai strategi <strong>Transfer Learning 2 Tahap</strong> (<code>training=False</code>) &amp; siap diaudit Grad-CAM di <strong>P08</strong>!</div>
         </div>
         <span class="pill green" style="font-size:11px; flex-shrink:0;">{r_mob['total_params']/1e6:.2f}M Param · {r_mob['est_size_mb']} MB</span>
       </div>
@@ -1846,20 +1846,20 @@ def build_slides_html(data: dict) -> str:
             </thead>
             <tbody>
               <tr><td><strong>1. MLP (2 Hidden)</strong></td><td>{r_mlp['total_params']:,}</td><td>{r_mlp['est_size_mb']} MB</td><td>{r_mlp['latency_ms_8imgs']} ms</td><td>Kontrol Negatif (Buta Spasial)</td></tr>
-              <tr><td><strong>2. CNN Klasik</strong></td><td>{r_cnn['total_params']:,}</td><td>{r_cnn['est_size_mb']} MB</td><td>{r_cnn['latency_ms_8imgs']} ms</td><td>Fondasi Conv2D + Pool</td></tr>
+              <tr><td><strong>2. CNN Klasik</strong></td><td>{r_cnn['total_params']:,}</td><td>{r_cnn['est_size_mb']} MB</td><td>{r_cnn['latency_ms_8imgs']} ms</td><td>Baseline Awal (From Scratch)</td></tr>
               <tr><td><strong>3. ResNet50</strong></td><td>{r_res['total_params']:,}</td><td>{r_res['est_size_mb']} MB</td><td>{r_res['latency_ms_8imgs']} ms</td><td>Pembanding Berat (16 Skip)</td></tr>
-              <tr class="row-winner"><td><strong>4. MobileNetV2 &#9733;</strong></td><td>{r_mob['total_params']:,}</td><td>{r_mob['est_size_mb']} MB</td><td>{r_mob['latency_ms_8imgs']} ms</td><td><strong>Backbone Utama Proyek</strong></td></tr>
+              <tr class="row-winner"><td><strong>4. MobileNetV2 &#9733;</strong></td><td>{r_mob['total_params']:,}</td><td>{r_mob['est_size_mb']} MB</td><td>{r_mob['latency_ms_8imgs']} ms</td><td><strong>Pretrained CNN Utama ★</strong></td></tr>
               <tr><td><strong>5. EfficientNetB0</strong></td><td>{r_eff['total_params']:,}</td><td>{r_eff['est_size_mb']} MB</td><td>{r_eff['latency_ms_8imgs']} ms</td><td>Runner-Up (16 SE Attention)</td></tr>
             </tbody>
           </table>
           <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div class="mini-box" style="background:#E6F4EA; border-color:#CEEAD6; padding:8px 10px;">
-              <div style="font-family:var(--font-code); font-size:9.5px; font-weight:700; color:#137333;">ATURAN PILIH · UTAMA</div>
-              <div style="font-size:11.3px; color:#202124; margin-top:2px;">Pakai <strong>MobileNetV2</strong> untuk baseline utama: ukuran <code>{r_mob['est_size_mb']} MB</code>, cepat, &amp; tahan overfit di <code>{tot_imgs}</code> foto.</div>
+              <div style="font-family:var(--font-code); font-size:9.5px; font-weight:700; color:#137333;">REKOMENDASI UTAMA · PRETRAINED CNN</div>
+              <div style="font-size:11.1px; color:#202124; margin-top:2px;"><strong>MobileNetV2</strong> (<code>8.64 MB</code>): latih head <code>6.405</code> param di P04/P06 lalu <em>fine-tune</em> <code>training=False</code> (P07) &amp; Grad-CAM <code>7×7</code> (P08).</div>
             </div>
             <div class="mini-box" style="background:#F3E8FD; border-color:#D7AEFB; padding:8px 10px;">
-              <div style="font-family:var(--font-code); font-size:9.5px; font-weight:700; color:#681DA8;">ATURAN PILIH · UPGRADE / BENCHMARK</div>
-              <div style="font-size:11.3px; color:#202124; margin-top:2px;">Uji <strong>EfficientNetB0</strong> &amp; <strong>ResNet50</strong> sebagai pembanding ilmiah akurasi latar <code>ramai</code>.</div>
+              <div style="font-family:var(--font-code); font-size:9.5px; font-weight:700; color:#681DA8;">BASELINE &amp; RUNNER-UP PEMBANDING</div>
+              <div style="font-size:11.1px; color:#202124; margin-top:2px;"><strong>CNN Klasik</strong> jadi Baseline #1 (uji 48×48: <code>val_acc 34.3%</code>); <strong>EfficientNetB0</strong> (~2.9&times; lebih lambat) pembanding uji <code>ramai</code>.</div>
             </div>
           </div>
           <div class="callout blue" style="font-size:11.3px; margin-top:auto;">
@@ -1896,7 +1896,7 @@ def build_slides_html(data: dict) -> str:
                 f"B. ResNet50 karena jumlah parameternya paling besar ({r_res['total_params']/1e6:.2f}M param)",
                 f"C. MobileNetV2 karena ringan ({r_mob['total_params']/1e6:.2f}M param / {r_mob['est_size_mb']} MB), cepat, dan tahan overfit pada data kecil",
             ],
-            answer_html=f"<strong>Jawaban: C (MobileNetV2).</strong><br/>Kecepatan MLP (opsi A) tidak ada artinya karena ia kehilangan struktur 2D gambar, sementara <code>ResNet50</code> (opsi B) terlalu berat dan rakus memori untuk dataset kecil. <strong>MobileNetV2</strong> memberi rasio paling sehat antara akurasi spasial CNN + keringanan perangkat mobile!",
+            answer_html=f"<strong>Jawaban: C (MobileNetV2 — Pretrained CNN).</strong><br/>MobileNetV2 <strong>tetap keluarga CNN</strong>, tetapi saat base dibekukan kita hanya melatih <code>6.405</code> parameter kepala (sangat aman untuk ~85–100 foto train) dibanding CNN polos dari nol atau <code>ResNet50</code> ({r_res['est_size_mb']} MB)!",
             vis_q_html=f"""<svg viewBox="0 0 320 296" style="width:100%; max-width:360px; height:auto;" aria-label="Syarat Proyek Frozen">
               <rect x="6" y="6" width="308" height="136" rx="12" fill="#E8F0FE" stroke="#4285F4" stroke-width="1.5"/>
               <text x="160" y="30" text-anchor="middle" font-family="Poppins" font-size="13" font-weight="700" fill="#1A73E8">Kandidat Soal &amp; Batasan Proyek</text>
@@ -2255,7 +2255,7 @@ plot_kuadran_5_arsitektur(df_bench, RESULTS_DIR / "p03_5_architectures_benchmark
           <strong>Jawaban Tepat:</strong><br/>
           • <strong>Kasus A &#8594; MLP:</strong> Data tabular 1D tidak memiliki grid piksel spasial sehingga lapisan <em>Fully-Connected Dense</em> sudah tepat.<br/>
           • <strong>Kasus B &#8594; ResNet50 (atau EfficientNet seri menengah):</strong> Tersedia GPU besar &amp; ratusan ribu citra; <em>Skip Connection</em> menjaga akurasi layer dalam.<br/>
-          • <strong>Kasus C &#8594; MobileNetV2:</strong> Hanya <code>{r_mob['total_params']/1e6:.2f}M param ({r_mob['est_size_mb']} MB)</code> berkat <em>Depthwise Separable + Inverted Residual</em>, cepat di CPU/HP, &amp; siap Transfer Learning di P04!
+          • <strong>Kasus C &#8594; MobileNetV2 (Pretrained CNN):</strong> Hanya <code>{r_mob['total_params']/1e6:.2f}M param ({r_mob['est_size_mb']} MB)</code> — latih head <code>6.405</code> param dulu (P04/P06), lalu <em>fine-tune</em> akhir dengan <code>training=False</code> (P07) &amp; audit Grad-CAM (P08)!
         </div>
       </div>
       <div class="slide-footer"><span>{FOOTER}</span><span>__NUM__</span></div>
@@ -2607,12 +2607,12 @@ plot_kuadran_5_arsitektur(df_bench, RESULTS_DIR / "p03_5_architectures_benchmark
                 {
                     "bar": "green",
                     "badge": "PILIHAN PROYEK → P04",
-                    "title": "MobileNetV2 Terpilih ★",
+                    "title": "MobileNetV2 = CNN Utama ★",
                     "bullets": [
-                        "Di notebook P03 kita buktikan: <strong>MobileNetV2 (<code>2.26M</code> param / <code>8.64 MB</code>)</strong> paling seimbang dibanding <code>ResNet50 (90 MB)</code> &amp; <code>EffNetB0 (15.5 MB)</code>.",
-                        "Langkah berikutnya di <strong>P04</strong>: aktifkan bobot ImageNet lewat <em>Transfer Learning</em>!",
+                        "<strong>MobileNetV2 tetap 100% CNN!</strong> CNN Klasik (<code>101.8K</code>) dipakai sebagai <em>Baseline #1 from scratch</em>, lalu <strong>MobileNetV2</strong> (<code>8.64 MB</code>, <code>6.405</code> param head) jadi model inti.",
+                        "Di <strong>P04–P08</strong>: aktifkan <em>Transfer Learning 2 Tahap</em> (<code>training=False</code>) &amp; audit Grad-CAM (<code>7×7</code>), dengan <strong>EffNetB0</strong> sebagai pembanding <code>ramai</code>.",
                     ],
-                    "strip_html": "<span style='color:#1A73E8;'>P03: Arsitektur</span><span>&#8594;</span><strong style='color:#137333;'>P04: Transfer Learning</strong>",
+                    "strip_html": "<span style='color:#1A73E8;'>Baseline CNN</span><span>&#8594;</span><strong style='color:#137333;'>MobV2 (2 Tahap)</strong>",
                     "foot_cls": "green",
                     "foot_html": "Artefak: results/p03_5_architectures_benchmark.csv &amp; .png",
                 },
